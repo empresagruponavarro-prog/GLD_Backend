@@ -1,0 +1,936 @@
+{
+  "schemaVersion": "1",
+  "targetFamily": "sql",
+  "target": "postgres",
+  "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
+  "roots": {
+    "categoria": {
+      "model": "categoria",
+      "namespace": "public"
+    },
+    "producto": {
+      "model": "producto",
+      "namespace": "public"
+    },
+    "tipo_categoria": {
+      "model": "tipo_categoria",
+      "namespace": "public"
+    },
+    "unidad_medida": {
+      "model": "unidad_medida",
+      "namespace": "public"
+    },
+    "unidad_medida_equivalencia": {
+      "model": "unidad_medida_equivalencia",
+      "namespace": "public"
+    }
+  },
+  "domain": {
+    "namespaces": {
+      "public": {
+        "enum": {
+          "tipo_item": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PRODUCTO",
+                "value": "PRODUCTO"
+              },
+              {
+                "name": "SERVICIO",
+                "value": "SERVICIO"
+              }
+            ]
+          }
+        },
+        "models": {
+          "categoria": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_tipo_categoria": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "productos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "tipo_categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_categoria",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_tipo_categoria": {
+                  "column": "id_tipo_categoria"
+                }
+              },
+              "namespaceId": "public",
+              "table": "categoria"
+            }
+          },
+          "producto": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "comentarios": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_categoria": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_unidad_medida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "imagen_url": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "stock": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "tipo_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "tipo_item",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              },
+              "unidad_medida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_unidad_medida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "comentarios": {
+                  "column": "comentarios"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_categoria": {
+                  "column": "id_categoria"
+                },
+                "id_unidad_medida": {
+                  "column": "id_unidad_medida"
+                },
+                "imagen_url": {
+                  "column": "imagen_url"
+                },
+                "stock": {
+                  "column": "stock"
+                },
+                "tipo_producto": {
+                  "column": "tipo_producto"
+                }
+              },
+              "namespaceId": "public",
+              "table": "producto"
+            }
+          },
+          "tipo_categoria": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "categorias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "tipo_categoria"
+            }
+          },
+          "unidad_medida": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "simbolo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "equivalenciasDestino": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_uni_med_destino"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida_equivalencia",
+                  "namespace": "public"
+                }
+              },
+              "equivalenciasOrigen": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_uni_med_origen"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida_equivalencia",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "simbolo": {
+                  "column": "simbolo"
+                }
+              },
+              "namespaceId": "public",
+              "table": "unidad_medida"
+            }
+          },
+          "unidad_medida_equivalencia": {
+            "fields": {
+              "factor_conversion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_uni_med_destino": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_uni_med_origen": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "unidadDestino": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_uni_med_destino"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida",
+                  "namespace": "public"
+                }
+              },
+              "unidadOrigen": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_uni_med_origen"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "factor_conversion": {
+                  "column": "factor_conversion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_uni_med_destino": {
+                  "column": "id_uni_med_destino"
+                },
+                "id_uni_med_origen": {
+                  "column": "id_uni_med_origen"
+                }
+              },
+              "namespaceId": "public",
+              "table": "unidad_medida_equivalencia"
+            }
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "namespaces": {
+      "public": {
+        "entries": {
+          "table": {
+            "categoria": {
+              "columns": {
+                "codigo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_tipo_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_tipo_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_categoria"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_tipo_categoria"
+                  ],
+                  "name": "categoria_id_tipo_categoria_idx_ac61ceef",
+                  "prefix": "categoria_id_tipo_categoria_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "producto": {
+              "checks": [
+                {
+                  "expression": "\"tipo_producto\" IN ('PRODUCTO', 'SERVICIO')",
+                  "name": "producto_tipo_producto_check_45026309",
+                  "prefix": "producto_tipo_producto_check"
+                }
+              ],
+              "columns": {
+                "codigo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "comentarios": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_unidad_medida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "imagen_url": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "stock": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "tipo_producto": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PRODUCTO"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_item",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_unidad_medida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_categoria"
+                  ],
+                  "name": "producto_id_categoria_idx_dc879264",
+                  "prefix": "producto_id_categoria_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_unidad_medida"
+                  ],
+                  "name": "producto_id_unidad_medida_idx_e475ad90",
+                  "prefix": "producto_id_unidad_medida_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "tipo_categoria": {
+              "columns": {
+                "codigo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "unidad_medida": {
+              "columns": {
+                "codigo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "simbolo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "unidad_medida_equivalencia": {
+              "columns": {
+                "factor_conversion": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_uni_med_destino": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_uni_med_origen": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_uni_med_origen"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida_equivalencia"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_uni_med_destino"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida_equivalencia"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_uni_med_destino"
+                  ],
+                  "name": "unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc",
+                  "prefix": "unidad_medida_equivalencia_id_uni_med_destino_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_uni_med_origen"
+                  ],
+                  "name": "unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333",
+                  "prefix": "unidad_medida_equivalencia_id_uni_med_origen_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_uni_med_origen",
+                    "id_uni_med_destino"
+                  ]
+                }
+              ]
+            }
+          },
+          "valueSet": {
+            "tipo_item": {
+              "kind": "valueSet",
+              "values": [
+                "PRODUCTO",
+                "SERVICIO"
+              ]
+            }
+          }
+        },
+        "id": "public",
+        "kind": "postgres-schema"
+      }
+    },
+    "storageHash": "e079c776e75cad27cba358a452d5cedb8948f06a894ebb7061c8e14f3ceb99fa"
+  },
+  "capabilities": {
+    "postgres": {
+      "distinctOn": true,
+      "jsonAgg": true,
+      "lateral": true,
+      "limit": true,
+      "orderBy": true,
+      "returning": true
+    },
+    "sql": {
+      "checkConstraint": true,
+      "defaultInInsert": true,
+      "enums": true,
+      "lateral": true,
+      "returning": true,
+      "scalarList": true
+    }
+  },
+  "extensions": {},
+  "meta": {},
+  "_generated": {
+    "warning": "⚠️  GENERATED FILE - DO NOT EDIT",
+    "message": "This file is automatically generated by \"prisma contract emit\".",
+    "regenerate": "To regenerate, run: prisma contract emit"
+  }
+}
