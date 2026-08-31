@@ -4,16 +4,38 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { and } from '@prisma/orm-postgres/orm-client';
+import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { CreateCategoriaDto, type CategoriaRow, UpdateCategoriaDto } from './categoria.dto.js';
+import {
+  CreateCategoriaDto,
+  ListCategoriaQueryDto,
+  type CategoriaRow,
+  UpdateCategoriaDto,
+} from './categoria.dto.js';
 
 @Injectable()
 export class CategoriaHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(): Promise<CategoriaRow[]> {
-    return await this.db.orm.public.categoria.orderBy((c) => c.id.asc()).all();
+  async list(query: ListCategoriaQueryDto): Promise<Paginated<CategoriaRow>> {
+    const { page, pageSize, offset } = pageParams(query);
+    const base = this.db.orm.public.categoria.orderBy((c) => c.id.asc());
+    const collection = hasFilters(query)
+      ? base.where((c) =>
+          and(
+            ...(query.codigo ? [c.codigo.ilike(`%${query.codigo}%`)] : []),
+            ...(query.descripcion ? [c.descripcion.ilike(`%${query.descripcion}%`)] : []),
+            ...(query.estado !== undefined ? [c.estado.eq(query.estado)] : []),
+          ),
+        )
+      : base;
+    const [total, data] = await Promise.all([
+      collection.aggregate((agg) => ({ total: agg.count() })),
+      collection.limit(pageSize).offset(offset).all(),
+    ]);
+    return toPaginated(data, total.total, page, pageSize);
   }
 
   async getById(id: number): Promise<CategoriaRow> {
@@ -66,4 +88,10 @@ export class CategoriaHandler {
     const tipo = await this.db.orm.public.tipo_categoria.first({ id });
     if (!tipo) throw new BadRequestException(`Tipo de categoría ${id} no existe`);
   }
+}
+
+function hasFilters(query: ListCategoriaQueryDto): boolean {
+  return (
+    query.codigo !== undefined || query.descripcion !== undefined || query.estado !== undefined
+  );
 }

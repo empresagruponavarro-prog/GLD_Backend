@@ -159,6 +159,13 @@
                   "kind": "scalar"
                 }
               },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -251,6 +258,9 @@
                 "descripcion": {
                   "column": "descripcion"
                 },
+                "estado": {
+                  "column": "estado"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -280,6 +290,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
                   "kind": "scalar"
                 }
               },
@@ -320,6 +337,9 @@
                 "codigo": {
                   "column": "codigo"
                 },
+                "estado": {
+                  "column": "estado"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -344,6 +364,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
                   "kind": "scalar"
                 }
               },
@@ -402,6 +429,9 @@
                 "descripcion": {
                   "column": "descripcion"
                 },
+                "estado": {
+                  "column": "estado"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -415,6 +445,13 @@
           },
           "unidad_medida_equivalencia": {
             "fields": {
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "factor_conversion": {
                 "nullable": false,
                 "type": {
@@ -478,6 +515,9 @@
             },
             "storage": {
               "fields": {
+                "estado": {
+                  "column": "estado"
+                },
                 "factor_conversion": {
                   "column": "factor_conversion"
                 },
@@ -605,6 +645,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -726,6 +775,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -768,6 +826,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -800,6 +867,15 @@
             },
             "unidad_medida_equivalencia": {
               "columns": {
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "factor_conversion": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
@@ -906,7 +982,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e079c776e75cad27cba358a452d5cedb8948f06a894ebb7061c8e14f3ceb99fa"
+    "storageHash": "d66a410c0a0ccb1017a95611a2aa912a426ab9bc461142859c34e8c968d79b6b"
   },
   "capabilities": {
     "postgres": {

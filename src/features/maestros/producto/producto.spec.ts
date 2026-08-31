@@ -14,15 +14,16 @@ const ROW = {
   stock: '0',
   comentarios: null,
   imagen_url: null,
+  estado: true,
 } as const;
 
 describe('producto', () => {
   let controller: ProductoController;
   const all = vi.fn();
+  const aggregate = vi.fn();
   const first = vi.fn();
   const create = vi.fn();
   const update = vi.fn();
-  const remove = vi.fn();
   const categoriaFirst = vi.fn();
   const unidadFirst = vi.fn();
 
@@ -33,10 +34,17 @@ describe('producto', () => {
       orm: {
         public: {
           producto: {
-            orderBy: vi.fn(() => ({ all })),
+            orderBy: vi.fn(() => ({
+              aggregate,
+              where: vi.fn(() => ({
+                aggregate,
+                limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+              })),
+              limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+            })),
             first,
             create,
-            where: vi.fn(() => ({ update, delete: remove })),
+            where: vi.fn(() => ({ update })),
           },
           categoria: { first: categoriaFirst },
           unidad_medida: { first: unidadFirst },
@@ -52,9 +60,30 @@ describe('producto', () => {
     controller = moduleRef.get(ProductoController);
   });
 
-  it('lista los productos', async () => {
+  it('lista los productos paginado', async () => {
     all.mockResolvedValue([ROW]);
-    await expect(controller.list()).resolves.toEqual([ROW]);
+    aggregate.mockResolvedValue({ total: 57 });
+    await expect(controller.list({ page: 2, pageSize: 10 })).resolves.toEqual({
+      data: [ROW],
+      page: 2,
+      pageSize: 10,
+      total: 57,
+      totalPages: 6,
+    });
+  });
+
+  it('lista aplicando filtros', async () => {
+    all.mockResolvedValue([ROW]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(
+      controller.list({ descripcion: 'CEM', tipo_producto: 'PRODUCTO', estado: true }),
+    ).resolves.toEqual({
+      data: [ROW],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it('obtiene por id', async () => {
@@ -84,6 +113,7 @@ describe('producto', () => {
       stock: undefined,
       comentarios: undefined,
       imagen_url: undefined,
+      estado: undefined,
     });
   });
 
@@ -133,18 +163,14 @@ describe('producto', () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it('elimina un producto', async () => {
-    remove.mockResolvedValue(ROW);
+  it('desactiva el producto al eliminar', async () => {
+    update.mockResolvedValue(ROW);
     await expect(controller.remove(1)).resolves.toBeUndefined();
+    expect(update).toHaveBeenCalledWith({ estado: false });
   });
 
   it('responde 404 al eliminar un inexistente', async () => {
-    remove.mockResolvedValue(null);
+    update.mockResolvedValue(null);
     await expect(controller.remove(99)).rejects.toBeInstanceOf(NotFoundException);
-  });
-
-  it('responde 409 al eliminar con dependencias', async () => {
-    remove.mockRejectedValue(Object.assign(new Error('fk violation'), { code: '23503' }));
-    await expect(controller.remove(1)).rejects.toBeInstanceOf(ConflictException);
   });
 });

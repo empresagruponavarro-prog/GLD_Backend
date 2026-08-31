@@ -9,6 +9,7 @@ model tipo_categoria {
   id         Int          @id @default(autoincrement())
   codigo     String       @unique
   nombre     String
+  estado     Boolean      @default(true)
   categorias categoria[]
 }
 
@@ -23,10 +24,11 @@ model categoria {
 }
 
 model unidad_medida {
-  id                 Int                         @id @default(autoincrement())
-  codigo             String                      @unique
-  descripcion        String
-  simbolo            String?
+  id                   Int                         @id @default(autoincrement())
+  codigo               String                      @unique
+  descripcion          String
+  simbolo              String?
+  estado               Boolean                     @default(true)
   equivalenciasOrigen  unidad_medida_equivalencia[] @relation("origen")
   equivalenciasDestino unidad_medida_equivalencia[] @relation("destino")
 }
@@ -36,6 +38,7 @@ model unidad_medida_equivalencia {
   id_uni_med_origen  Int
   id_uni_med_destino Int
   factor_conversion  Decimal
+  estado             Boolean       @default(true)
   unidadOrigen       unidad_medida @relation("origen", fields: [id_uni_med_origen], references: [id])
   unidadDestino      unidad_medida @relation("destino", fields: [id_uni_med_destino], references: [id])
 
@@ -52,6 +55,7 @@ model producto {
   stock            Decimal     @default("0")
   comentarios      String?
   imagen_url       String?
+  estado           Boolean     @default(true)
   categoria        categoria   @relation(fields: [id_categoria], references: [id])
   unidad_medida    unidad_medida @relation(fields: [id_unidad_medida], references: [id])
 }

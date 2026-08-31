@@ -1,5 +1,6 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsIn,
   IsInt,
   IsNotEmpty,
@@ -9,6 +10,8 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
+import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
+import { toBoolean } from '../../../platform/db/transform.js';
 
 const DECIMAL = /^\d+(\.\d+)?$/;
 export const TIPO_PRODUCTO_VALUES = ['PRODUCTO', 'SERVICIO'] as const;
@@ -37,31 +40,73 @@ export class CreateProductoDto {
   @IsPositive()
   id_unidad_medida: number;
 
-  @ApiProperty({ required: false, enum: TIPO_PRODUCTO_VALUES, default: 'PRODUCTO' })
+  @ApiPropertyOptional({ enum: TIPO_PRODUCTO_VALUES, default: 'PRODUCTO' })
   @IsOptional()
   @IsIn(TIPO_PRODUCTO_VALUES)
   tipo_producto?: TipoProducto;
 
-  @ApiProperty({ required: false, example: '0' })
+  @ApiPropertyOptional({ example: '0' })
   @IsOptional()
   @IsString()
   @Matches(DECIMAL, { message: 'stock debe ser un decimal válido' })
   stock?: string;
 
-  @ApiProperty({ required: false, example: 'Compra directa' })
+  @ApiPropertyOptional({ example: 'Compra directa' })
   @IsOptional()
   @IsString()
   @MaxLength(1000)
   comentarios?: string;
 
-  @ApiProperty({ required: false, example: 'https://cdn.example.com/img.png' })
+  @ApiPropertyOptional({ example: 'https://cdn.example.com/img.png' })
   @IsOptional()
   @IsString()
   @MaxLength(1000)
   imagen_url?: string;
+
+  @ApiPropertyOptional({ default: true })
+  @IsOptional()
+  @IsBoolean()
+  estado?: boolean;
 }
 
 export class UpdateProductoDto extends PartialType(CreateProductoDto) {}
+
+export class ListProductoQueryDto extends PaginationQueryDto {
+  @ApiPropertyOptional({ description: 'Filtro parcial por código' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  codigo?: string;
+
+  @ApiPropertyOptional({ description: 'Filtro parcial por descripción' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  descripcion?: string;
+
+  @ApiPropertyOptional({ description: 'Filtro por categoría' })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  id_categoria?: number;
+
+  @ApiPropertyOptional({ description: 'Filtro por unidad de medida' })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  id_unidad_medida?: number;
+
+  @ApiPropertyOptional({ enum: TIPO_PRODUCTO_VALUES, description: 'Filtro por tipo' })
+  @IsOptional()
+  @IsIn(TIPO_PRODUCTO_VALUES)
+  tipo_producto?: TipoProducto;
+
+  @ApiPropertyOptional({ description: 'Filtro por estado' })
+  @IsOptional()
+  @toBoolean()
+  @IsBoolean()
+  estado?: boolean;
+}
 
 export type ProductoRow = {
   id: number;
@@ -73,4 +118,5 @@ export type ProductoRow = {
   stock: string;
   comentarios: string | null;
   imagen_url: string | null;
+  estado: boolean;
 };

@@ -7,10 +7,12 @@ import { UnidadMedidaHandler } from './unidad-medida.handler.js';
 describe('unidad-medida', () => {
   let controller: UnidadMedidaController;
   const all = vi.fn();
+  const aggregate = vi.fn();
   const first = vi.fn();
   const create = vi.fn();
   const update = vi.fn();
-  const remove = vi.fn();
+
+  const row = { id: 1, codigo: 'CIEN', descripcion: 'CIENTO', simbolo: '100', estado: true };
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -19,10 +21,17 @@ describe('unidad-medida', () => {
       orm: {
         public: {
           unidad_medida: {
-            orderBy: vi.fn(() => ({ all })),
+            orderBy: vi.fn(() => ({
+              aggregate,
+              where: vi.fn(() => ({
+                aggregate,
+                limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+              })),
+              limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+            })),
             first,
             create,
-            where: vi.fn(() => ({ update, delete: remove })),
+            where: vi.fn(() => ({ update })),
           },
         },
       },
@@ -36,14 +45,31 @@ describe('unidad-medida', () => {
     controller = moduleRef.get(UnidadMedidaController);
   });
 
-  it('lista las unidades de medida', async () => {
-    const rows = [{ id: 1, codigo: 'CIEN', descripcion: 'CIENTO', simbolo: null }];
-    all.mockResolvedValue(rows);
-    await expect(controller.list()).resolves.toEqual(rows);
+  it('lista las unidades de medida paginado', async () => {
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list({ page: 1, pageSize: 20 })).resolves.toEqual({
+      data: [row],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
+  });
+
+  it('lista aplicando filtros', async () => {
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list({ descripcion: 'CIENTO', estado: true })).resolves.toEqual({
+      data: [row],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it('obtiene por id', async () => {
-    const row = { id: 1, codigo: 'CIEN', descripcion: 'CIENTO', simbolo: null };
     first.mockResolvedValue(row);
     await expect(controller.getById(1)).resolves.toEqual(row);
     expect(first).toHaveBeenCalledWith({ id: 1 });
@@ -55,7 +81,6 @@ describe('unidad-medida', () => {
   });
 
   it('crea una unidad de medida', async () => {
-    const row = { id: 1, codigo: 'CIEN', descripcion: 'CIENTO', simbolo: '100' };
     create.mockResolvedValue(row);
     await expect(
       controller.create({ codigo: 'CIEN', descripcion: 'CIENTO', simbolo: '100' }),
@@ -64,6 +89,7 @@ describe('unidad-medida', () => {
       codigo: 'CIEN',
       descripcion: 'CIENTO',
       simbolo: '100',
+      estado: undefined,
     });
   });
 
@@ -75,7 +101,6 @@ describe('unidad-medida', () => {
   });
 
   it('actualiza solo los campos enviados', async () => {
-    const row = { id: 1, codigo: 'CIEN', descripcion: 'CIENTO', simbolo: '100' };
     update.mockResolvedValue(row);
     await expect(controller.update(1, { simbolo: '100' })).resolves.toEqual(row);
     expect(update).toHaveBeenCalledWith({ simbolo: '100' });
@@ -88,18 +113,14 @@ describe('unidad-medida', () => {
     );
   });
 
-  it('elimina una unidad de medida', async () => {
-    remove.mockResolvedValue({ id: 1 });
+  it('desactiva la unidad de medida al eliminar', async () => {
+    update.mockResolvedValue(row);
     await expect(controller.remove(1)).resolves.toBeUndefined();
+    expect(update).toHaveBeenCalledWith({ estado: false });
   });
 
   it('responde 404 al eliminar una inexistente', async () => {
-    remove.mockResolvedValue(null);
+    update.mockResolvedValue(null);
     await expect(controller.remove(99)).rejects.toBeInstanceOf(NotFoundException);
-  });
-
-  it('responde 409 al eliminar con dependencias', async () => {
-    remove.mockRejectedValue(Object.assign(new Error('fk violation'), { code: '23503' }));
-    await expect(controller.remove(1)).rejects.toBeInstanceOf(ConflictException);
   });
 });

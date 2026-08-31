@@ -7,6 +7,7 @@ import { CategoriaHandler } from './categoria.handler.js';
 describe('categoria', () => {
   let controller: CategoriaController;
   const all = vi.fn();
+  const aggregate = vi.fn();
   const first = vi.fn();
   const create = vi.fn();
   const update = vi.fn();
@@ -19,7 +20,14 @@ describe('categoria', () => {
       orm: {
         public: {
           categoria: {
-            orderBy: vi.fn(() => ({ all })),
+            orderBy: vi.fn(() => ({
+              aggregate,
+              where: vi.fn(() => ({
+                aggregate,
+                limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+              })),
+              limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+            })),
             first,
             create,
             where: vi.fn(() => ({ update })),
@@ -37,10 +45,17 @@ describe('categoria', () => {
     controller = moduleRef.get(CategoriaController);
   });
 
-  it('lista las categorías', async () => {
+  it('lista las categorías paginado', async () => {
     const rows = [{ id: 1, codigo: 'MAT', id_tipo_categoria: 1, descripcion: null, estado: true }];
     all.mockResolvedValue(rows);
-    await expect(controller.list()).resolves.toEqual(rows);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list({})).resolves.toEqual({
+      data: rows,
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it('obtiene por id', async () => {

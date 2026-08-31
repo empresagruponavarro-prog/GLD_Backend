@@ -4,19 +4,32 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  throwIfForeignKeyViolation,
-  throwIfUniqueViolation,
-} from '../../../platform/db/pg-errors.js';
+import { and } from '@prisma/orm-postgres/orm-client';
+import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
+import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { CreateProductoDto, type ProductoRow, UpdateProductoDto } from './producto.dto.js';
+import { CreateProductoDto, ListProductoQueryDto, type ProductoRow, UpdateProductoDto } from './producto.dto.js';
 
 @Injectable()
 export class ProductoHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(): Promise<ProductoRow[]> {
-    return await this.db.orm.public.producto.orderBy((p) => p.id.asc()).all();
+  async list(query: ListProductoQueryDto): Promise<Paginated<ProductoRow>> {
+    return this.listWithFilters(undefined, query);
+  }
+
+  async listByCategoria(
+    categoriaId: number,
+    query: ListProductoQueryDto,
+  ): Promise<Paginated<ProductoRow>> {
+    return this.listWithFilters({ id_categoria: categoriaId }, query);
+  }
+
+  async listByUnidadMedida(
+    unidadMedidaId: number,
+    query: ListProductoQueryDto,
+  ): Promise<Paginated<ProductoRow>> {
+    return this.listWithFilters({ id_unidad_medida: unidadMedidaId }, query);
   }
 
   async getById(id: number): Promise<ProductoRow> {
@@ -38,6 +51,7 @@ export class ProductoHandler {
         stock: dto.stock,
         comentarios: dto.comentarios,
         imagen_url: dto.imagen_url,
+        estado: dto.estado,
       });
     } catch (error) {
       throwIfUniqueViolation(error, `El código "${dto.codigo}" ya existe`);
@@ -62,6 +76,7 @@ export class ProductoHandler {
     if (dto.stock !== undefined) data.stock = dto.stock;
     if (dto.comentarios !== undefined) data.comentarios = dto.comentarios;
     if (dto.imagen_url !== undefined) data.imagen_url = dto.imagen_url;
+    if (dto.estado !== undefined) data.estado = dto.estado;
 
     try {
       const row = await this.db.orm.public.producto.where({ id }).update(data);
@@ -74,13 +89,44 @@ export class ProductoHandler {
   }
 
   async remove(id: number): Promise<void> {
-    try {
-      const row = await this.db.orm.public.producto.where({ id }).delete();
-      if (!row) throw new NotFoundException(`Producto ${id} no encontrado`);
-    } catch (error) {
-      throwIfForeignKeyViolation(error, 'No se puede eliminar: tiene dependencias asociadas');
-      throw error;
-    }
+    const row = await this.db.orm.public.producto.where({ id }).update({ estado: false });
+    if (!row) throw new NotFoundException(`Producto ${id} no encontrado`);
+  }
+
+  private async listWithFilters(
+    forced: Partial<ProductoRow> | undefined,
+    query: ListProductoQueryDto,
+  ): Promise<Paginated<ProductoRow>> {
+    const { page, pageSize, offset } = pageParams(query);
+    const filtered = hasFilters(query) || forced !== undefined;
+    const base = this.db.orm.public.producto.orderBy((p) => p.id.asc());
+    const collection = filtered
+      ? base.where((p) =>
+          and(
+            ...(forced?.id_categoria !== undefined
+              ? [p.id_categoria.eq(forced.id_categoria)]
+              : []),
+            ...(forced?.id_unidad_medida !== undefined
+              ? [p.id_unidad_medida.eq(forced.id_unidad_medida)]
+              : []),
+            ...(query.codigo ? [p.codigo.ilike(`%${query.codigo}%`)] : []),
+            ...(query.descripcion ? [p.descripcion.ilike(`%${query.descripcion}%`)] : []),
+            ...(query.id_categoria !== undefined ? [p.id_categoria.eq(query.id_categoria)] : []),
+            ...(query.id_unidad_medida !== undefined
+              ? [p.id_unidad_medida.eq(query.id_unidad_medida)]
+              : []),
+            ...(query.tipo_producto !== undefined
+              ? [p.tipo_producto.eq(query.tipo_producto)]
+              : []),
+            ...(query.estado !== undefined ? [p.estado.eq(query.estado)] : []),
+          ),
+        )
+      : base;
+    const [total, data] = await Promise.all([
+      collection.aggregate((agg) => ({ total: agg.count() })),
+      collection.limit(pageSize).offset(offset).all(),
+    ]);
+    return toPaginated(data, total.total, page, pageSize);
   }
 
   private async assertCategoriaExists(id: number): Promise<void> {
@@ -92,4 +138,15 @@ export class ProductoHandler {
     const unidad = await this.db.orm.public.unidad_medida.first({ id });
     if (!unidad) throw new BadRequestException(`Unidad de medida ${id} no existe`);
   }
+}
+
+function hasFilters(query: ListProductoQueryDto): boolean {
+  return (
+    query.codigo !== undefined ||
+    query.descripcion !== undefined ||
+    query.id_categoria !== undefined ||
+    query.id_unidad_medida !== undefined ||
+    query.tipo_producto !== undefined ||
+    query.estado !== undefined
+  );
 }

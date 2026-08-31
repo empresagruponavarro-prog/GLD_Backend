@@ -7,10 +7,12 @@ import { TipoCategoriaHandler } from './tipo-categoria.handler.js';
 describe('tipo-categoria', () => {
   let controller: TipoCategoriaController;
   const all = vi.fn();
+  const aggregate = vi.fn();
   const first = vi.fn();
   const create = vi.fn();
   const update = vi.fn();
-  const remove = vi.fn();
+
+  const row = { id: 1, codigo: 'CD', nombre: 'COSTO DIRECTO', estado: true };
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -19,10 +21,17 @@ describe('tipo-categoria', () => {
       orm: {
         public: {
           tipo_categoria: {
-            orderBy: vi.fn(() => ({ all })),
+            orderBy: vi.fn(() => ({
+              aggregate,
+              where: vi.fn(() => ({
+                aggregate,
+                limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+              })),
+              limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+            })),
             first,
             create,
-            where: vi.fn(() => ({ update, delete: remove })),
+            where: vi.fn(() => ({ update })),
           },
         },
       },
@@ -36,14 +45,31 @@ describe('tipo-categoria', () => {
     controller = moduleRef.get(TipoCategoriaController);
   });
 
-  it('lista los tipos de categoría', async () => {
-    const rows = [{ id: 1, codigo: 'CD', nombre: 'COSTO DIRECTO' }];
-    all.mockResolvedValue(rows);
-    await expect(controller.list()).resolves.toEqual(rows);
+  it('lista los tipos de categoría paginado', async () => {
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 3 });
+    await expect(controller.list({ page: 2, pageSize: 10 })).resolves.toEqual({
+      data: [row],
+      page: 2,
+      pageSize: 10,
+      total: 3,
+      totalPages: 1,
+    });
+  });
+
+  it('lista aplicando filtros', async () => {
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list({ codigo: 'CD', estado: true })).resolves.toEqual({
+      data: [row],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it('obtiene por id', async () => {
-    const row = { id: 1, codigo: 'CD', nombre: 'COSTO DIRECTO' };
     first.mockResolvedValue(row);
     await expect(controller.getById(1)).resolves.toEqual(row);
     expect(first).toHaveBeenCalledWith({ id: 1 });
@@ -55,10 +81,9 @@ describe('tipo-categoria', () => {
   });
 
   it('crea un tipo de categoría', async () => {
-    const row = { id: 1, codigo: 'CD', nombre: 'COSTO DIRECTO' };
     create.mockResolvedValue(row);
     await expect(controller.create({ codigo: 'CD', nombre: 'COSTO DIRECTO' })).resolves.toEqual(row);
-    expect(create).toHaveBeenCalledWith({ codigo: 'CD', nombre: 'COSTO DIRECTO' });
+    expect(create).toHaveBeenCalledWith({ codigo: 'CD', nombre: 'COSTO DIRECTO', estado: undefined });
   });
 
   it('responde 409 cuando el código ya existe', async () => {
@@ -69,7 +94,6 @@ describe('tipo-categoria', () => {
   });
 
   it('actualiza un tipo de categoría', async () => {
-    const row = { id: 1, codigo: 'CD', nombre: 'NUEVO' };
     update.mockResolvedValue(row);
     await expect(controller.update(1, { nombre: 'NUEVO' })).resolves.toEqual(row);
   });
@@ -79,18 +103,14 @@ describe('tipo-categoria', () => {
     await expect(controller.update(99, { nombre: 'X' })).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('elimina un tipo de categoría', async () => {
-    remove.mockResolvedValue({ id: 1 });
+  it('desactiva el tipo de categoría al eliminar', async () => {
+    update.mockResolvedValue(row);
     await expect(controller.remove(1)).resolves.toBeUndefined();
+    expect(update).toHaveBeenCalledWith({ estado: false });
   });
 
   it('responde 404 al eliminar uno inexistente', async () => {
-    remove.mockResolvedValue(null);
+    update.mockResolvedValue(null);
     await expect(controller.remove(99)).rejects.toBeInstanceOf(NotFoundException);
-  });
-
-  it('responde 409 al eliminar con categorías asociadas', async () => {
-    remove.mockRejectedValue(Object.assign(new Error('fk violation'), { code: '23503' }));
-    await expect(controller.remove(1)).rejects.toBeInstanceOf(ConflictException);
   });
 });

@@ -9,11 +9,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { type Paginated } from '../../../platform/db/pagination.js';
 import { TipoCategoriaHandler } from './tipo-categoria.handler.js';
 import {
   CreateTipoCategoriaDto,
+  ListTipoCategoriaQueryDto,
   type TipoCategoriaRow,
   UpdateTipoCategoriaDto,
 } from './tipo-categoria.dto.js';
@@ -25,8 +28,8 @@ export class TipoCategoriaController {
 
   @Get()
   @ApiOperation({ summary: 'Listar tipos de categoría' })
-  list(): Promise<TipoCategoriaRow[]> {
-    return this.handler.list();
+  list(@Query() query: ListTipoCategoriaQueryDto): Promise<Paginated<TipoCategoriaRow>> {
+    return this.handler.list(query);
   }
 
   @Get(':id')

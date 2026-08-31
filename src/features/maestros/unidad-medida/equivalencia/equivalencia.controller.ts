@@ -9,11 +9,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { type Paginated } from '../../../../platform/db/pagination.js';
 import { EquivalenciaHandler } from './equivalencia.handler.js';
 import {
   CreateEquivalenciaDto,
+  ListEquivalenciaQueryDto,
   type EquivalenciaRow,
   UpdateEquivalenciaDto,
 } from './equivalencia.dto.js';
@@ -25,8 +28,11 @@ export class EquivalenciaController {
 
   @Get()
   @ApiOperation({ summary: 'Listar equivalencias de una unidad de medida' })
-  list(@Param('id', ParseIntPipe) id: number): Promise<EquivalenciaRow[]> {
-    return this.handler.list(id);
+  list(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: ListEquivalenciaQueryDto,
+  ): Promise<Paginated<EquivalenciaRow>> {
+    return this.handler.list(id, query);
   }
 
   @Get(':equivalenciaId')

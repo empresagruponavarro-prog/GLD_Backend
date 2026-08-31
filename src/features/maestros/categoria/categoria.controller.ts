@@ -9,10 +9,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { type Paginated } from '../../../platform/db/pagination.js';
 import { CategoriaHandler } from './categoria.handler.js';
-import { CreateCategoriaDto, type CategoriaRow, UpdateCategoriaDto } from './categoria.dto.js';
+import {
+  CreateCategoriaDto,
+  ListCategoriaQueryDto,
+  type CategoriaRow,
+  UpdateCategoriaDto,
+} from './categoria.dto.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria')
@@ -21,8 +28,8 @@ export class CategoriaController {
 
   @Get()
   @ApiOperation({ summary: 'Listar categorías' })
-  list(): Promise<CategoriaRow[]> {
-    return this.handler.list();
+  list(@Query() query: ListCategoriaQueryDto): Promise<Paginated<CategoriaRow>> {
+    return this.handler.list(query);
   }
 
   @Get(':id')

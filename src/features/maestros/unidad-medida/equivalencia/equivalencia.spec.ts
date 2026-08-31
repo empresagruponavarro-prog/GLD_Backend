@@ -7,11 +7,19 @@ import { EquivalenciaHandler } from './equivalencia.handler.js';
 describe('equivalencia', () => {
   let controller: EquivalenciaController;
   const all = vi.fn();
+  const aggregate = vi.fn();
   const first = vi.fn();
   const create = vi.fn();
   const update = vi.fn();
-  const remove = vi.fn();
   const unidadFirst = vi.fn();
+
+  const row = {
+    id: 1,
+    id_uni_med_origen: 1,
+    id_uni_med_destino: 2,
+    factor_conversion: '100',
+    estado: true,
+  };
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -21,13 +29,18 @@ describe('equivalencia', () => {
         public: {
           unidad_medida: { first: unidadFirst },
           unidad_medida_equivalencia: {
-            orderBy: vi.fn(() => ({ all })),
             first,
             create,
             where: vi.fn(() => ({
-              orderBy: vi.fn(() => ({ all })),
+              orderBy: vi.fn(() => ({
+                aggregate,
+                where: vi.fn(() => ({
+                  aggregate,
+                  limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+                })),
+                limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
+              })),
               update,
-              delete: remove,
             })),
           },
         },
@@ -42,21 +55,39 @@ describe('equivalencia', () => {
     controller = moduleRef.get(EquivalenciaController);
   });
 
-  it('lista las equivalencias de la unidad', async () => {
-    const rows = [{ id: 1, id_uni_med_origen: 1, id_uni_med_destino: 2, factor_conversion: '100' }];
+  it('lista las equivalencias de la unidad paginado', async () => {
     unidadFirst.mockResolvedValue({ id: 1 });
-    all.mockResolvedValue(rows);
-    await expect(controller.list(1)).resolves.toEqual(rows);
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list(1, {})).resolves.toEqual({
+      data: [row],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
+  });
+
+  it('lista aplicando filtros', async () => {
+    unidadFirst.mockResolvedValue({ id: 1 });
+    all.mockResolvedValue([row]);
+    aggregate.mockResolvedValue({ total: 1 });
+    await expect(controller.list(1, { id_uni_med_destino: 2 })).resolves.toEqual({
+      data: [row],
+      page: 1,
+      pageSize: 20,
+      total: 1,
+      totalPages: 1,
+    });
   });
 
   it('responde 404 si la unidad origen no existe', async () => {
     unidadFirst.mockResolvedValue(null);
-    await expect(controller.list(99)).rejects.toBeInstanceOf(NotFoundException);
+    await expect(controller.list(99, {})).rejects.toBeInstanceOf(NotFoundException);
     expect(all).not.toHaveBeenCalled();
   });
 
   it('obtiene una equivalencia del origen indicado', async () => {
-    const row = { id: 1, id_uni_med_origen: 1, id_uni_med_destino: 2, factor_conversion: '100' };
     first.mockResolvedValue(row);
     await expect(controller.getById(1, 1)).resolves.toEqual(row);
     expect(first).toHaveBeenCalledWith({ id: 1, id_uni_med_origen: 1 });
@@ -68,7 +99,6 @@ describe('equivalencia', () => {
   });
 
   it('crea una equivalencia', async () => {
-    const row = { id: 1, id_uni_med_origen: 1, id_uni_med_destino: 2, factor_conversion: '100' };
     unidadFirst.mockResolvedValue({ id: 1 }).mockResolvedValueOnce({ id: 1 }).mockResolvedValueOnce({ id: 2 });
     create.mockResolvedValue(row);
     await expect(
@@ -78,6 +108,7 @@ describe('equivalencia', () => {
       id_uni_med_origen: 1,
       id_uni_med_destino: 2,
       factor_conversion: '100',
+      estado: undefined,
     });
   });
 
@@ -89,7 +120,6 @@ describe('equivalencia', () => {
   });
 
   it('responde 400 si la unidad destino no existe', async () => {
-    unidadFirst.mockResolvedValue({ id: 1 });
     unidadFirst.mockResolvedValueOnce({ id: 1 }).mockResolvedValueOnce(null);
     await expect(
       controller.create(1, { id_uni_med_destino: 99, factor_conversion: '1' }),
@@ -98,7 +128,7 @@ describe('equivalencia', () => {
   });
 
   it('responde 409 si la equivalencia ya existe', async () => {
-    unidadFirst.mockResolvedValue({ id: 1 }).mockResolvedValueOnce({ id: 1 }).mockResolvedValueOnce({ id: 2 });
+    unidadFirst.mockResolvedValueOnce({ id: 1 }).mockResolvedValueOnce({ id: 2 });
     create.mockRejectedValue(Object.assign(new Error('duplicate key'), { code: '23505' }));
     await expect(
       controller.create(1, { id_uni_med_destino: 2, factor_conversion: '100' }),
@@ -106,7 +136,6 @@ describe('equivalencia', () => {
   });
 
   it('actualiza una equivalencia', async () => {
-    const row = { id: 1, id_uni_med_origen: 1, id_uni_med_destino: 2, factor_conversion: '50' };
     first.mockResolvedValue(row);
     update.mockResolvedValue(row);
     await expect(controller.update(1, 1, { factor_conversion: '50' })).resolves.toEqual(row);
@@ -121,14 +150,14 @@ describe('equivalencia', () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it('elimina una equivalencia', async () => {
-    remove.mockResolvedValue({ id: 1 });
+  it('desactiva la equivalencia al eliminar', async () => {
+    update.mockResolvedValue(row);
     await expect(controller.remove(1, 1)).resolves.toBeUndefined();
-    expect(remove).toHaveBeenCalled();
+    expect(update).toHaveBeenCalledWith({ estado: false });
   });
 
   it('responde 404 al eliminar una equivalencia de otro origen', async () => {
-    remove.mockResolvedValue(null);
+    update.mockResolvedValue(null);
     await expect(controller.remove(5, 1)).rejects.toBeInstanceOf(NotFoundException);
   });
 });

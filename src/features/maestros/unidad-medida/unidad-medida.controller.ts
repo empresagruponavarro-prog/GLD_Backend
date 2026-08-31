@@ -9,11 +9,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { type Paginated } from '../../../platform/db/pagination.js';
 import { UnidadMedidaHandler } from './unidad-medida.handler.js';
 import {
   CreateUnidadMedidaDto,
+  ListUnidadMedidaQueryDto,
   type UnidadMedidaRow,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
@@ -25,8 +28,8 @@ export class UnidadMedidaController {
 
   @Get()
   @ApiOperation({ summary: 'Listar unidades de medida' })
-  list(): Promise<UnidadMedidaRow[]> {
-    return this.handler.list();
+  list(@Query() query: ListUnidadMedidaQueryDto): Promise<Paginated<UnidadMedidaRow>> {
+    return this.handler.list(query);
   }
 
   @Get(':id')

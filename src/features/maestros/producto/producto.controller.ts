@@ -9,10 +9,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { type Paginated } from '../../../platform/db/pagination.js';
 import { ProductoHandler } from './producto.handler.js';
-import { CreateProductoDto, type ProductoRow, UpdateProductoDto } from './producto.dto.js';
+import {
+  CreateProductoDto,
+  ListProductoQueryDto,
+  type ProductoRow,
+  UpdateProductoDto,
+} from './producto.dto.js';
 
 @ApiTags('maestros/producto')
 @Controller('maestros/producto')
@@ -21,8 +28,8 @@ export class ProductoController {
 
   @Get()
   @ApiOperation({ summary: 'Listar productos' })
-  list(): Promise<ProductoRow[]> {
-    return this.handler.list();
+  list(@Query() query: ListProductoQueryDto): Promise<Paginated<ProductoRow>> {
+    return this.handler.list(query);
   }
 
   @Get(':id')
