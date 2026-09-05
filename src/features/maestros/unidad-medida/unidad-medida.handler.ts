@@ -6,7 +6,7 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
   CreateUnidadMedidaDto,
   ListUnidadMedidaQueryDto,
-  type UnidadMedidaRow,
+  UnidadMedidaResponseDto,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
 
@@ -14,7 +14,7 @@ import {
 export class UnidadMedidaHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(query: ListUnidadMedidaQueryDto): Promise<Paginated<UnidadMedidaRow>> {
+  async list(query: ListUnidadMedidaQueryDto): Promise<Paginated<UnidadMedidaResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const base = this.db.orm.public.unidad_medida.orderBy((u) => u.id.asc());
     const collection = hasFilters(query)
@@ -33,13 +33,13 @@ export class UnidadMedidaHandler {
     return toPaginated(data, total.total, page, pageSize);
   }
 
-  async getById(id: number): Promise<UnidadMedidaRow> {
+  async getById(id: number): Promise<UnidadMedidaResponseDto> {
     const row = await this.db.orm.public.unidad_medida.first({ id });
     if (!row) throw new NotFoundException(`Unidad de medida ${id} no encontrada`);
     return row;
   }
 
-  async create(dto: CreateUnidadMedidaDto): Promise<UnidadMedidaRow> {
+  async create(dto: CreateUnidadMedidaDto): Promise<UnidadMedidaResponseDto> {
     try {
       return await this.db.orm.public.unidad_medida.create({
         codigo: dto.codigo,
@@ -53,8 +53,8 @@ export class UnidadMedidaHandler {
     }
   }
 
-  async update(id: number, dto: UpdateUnidadMedidaDto): Promise<UnidadMedidaRow> {
-    const data: Partial<UnidadMedidaRow> = {};
+  async update(id: number, dto: UpdateUnidadMedidaDto): Promise<UnidadMedidaResponseDto> {
+    const data: Partial<UnidadMedidaResponseDto> = {};
     if (dto.codigo !== undefined) data.codigo = dto.codigo;
     if (dto.descripcion !== undefined) data.descripcion = dto.descripcion;
     if (dto.simbolo !== undefined) data.simbolo = dto.simbolo;

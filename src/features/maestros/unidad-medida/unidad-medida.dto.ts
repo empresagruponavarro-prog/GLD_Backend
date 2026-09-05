@@ -50,10 +50,21 @@ export class ListUnidadMedidaQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
-export type UnidadMedidaRow = {
+export class UnidadMedidaResponseDto {
+  @ApiProperty({ example: 1 })
   id: number;
+
+  @ApiProperty({ example: 'CIEN' })
   codigo: string;
+
+  @ApiProperty({ example: 'CIENTO' })
   descripcion: string;
+
+  @ApiPropertyOptional({ example: '100' })
   simbolo: string | null;
+
+  @ApiProperty({ example: true })
   estado: boolean;
-};
+}
+
+export type UnidadMedidaRow = UnidadMedidaResponseDto;

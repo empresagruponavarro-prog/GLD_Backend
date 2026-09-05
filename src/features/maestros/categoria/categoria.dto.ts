@@ -49,10 +49,21 @@ export class ListCategoriaQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
-export type CategoriaRow = {
+export class CategoriaResponseDto {
+  @ApiProperty({ example: 1, description: 'Identificador único de la categoría' })
   id: number;
+
+  @ApiProperty({ example: 'MAT', description: 'Código único de la categoría' })
   codigo: string;
+
+  @ApiProperty({ example: 1, description: 'ID del tipo de categoría al que pertenece' })
   id_tipo_categoria: number;
+
+  @ApiPropertyOptional({ example: 'Materiales de construcción', description: 'Descripción detallada' })
   descripcion: string | null;
+
+  @ApiProperty({ example: true, description: 'Estado activo o inactivo de la categoría' })
   estado: boolean;
-};
+}
+
+export type CategoriaRow = CategoriaResponseDto;

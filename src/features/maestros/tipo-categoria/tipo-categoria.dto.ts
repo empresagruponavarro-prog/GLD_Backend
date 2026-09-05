@@ -44,9 +44,18 @@ export class ListTipoCategoriaQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
-export type TipoCategoriaRow = {
+export class TipoCategoriaResponseDto {
+  @ApiProperty({ example: 1 })
   id: number;
+
+  @ApiProperty({ example: 'COSTO_DIRECTO' })
   codigo: string;
+
+  @ApiProperty({ example: 'COSTO DIRECTO, GASTO GENERAL' })
   nombre: string;
+
+  @ApiProperty({ example: true })
   estado: boolean;
-};
+}
+
+export type TipoCategoriaRow = TipoCategoriaResponseDto;

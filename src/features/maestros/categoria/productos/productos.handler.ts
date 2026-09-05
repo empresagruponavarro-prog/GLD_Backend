@@ -2,8 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { type Paginated } from '../../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import {
-  type ProductoRow,
   ListProductoQueryDto,
+  type ProductoRow,
 } from '../../producto/producto.dto.js';
 import { ProductoHandler } from '../../producto/producto.handler.js';
 
@@ -14,7 +14,10 @@ export class CategoriaProductosHandler {
     private readonly productos: ProductoHandler,
   ) {}
 
-  async list(categoriaId: number, query: ListProductoQueryDto): Promise<Paginated<ProductoRow>> {
+  async list(
+    categoriaId: number,
+    query: ListProductoQueryDto,
+  ): Promise<Paginated<ProductoRow>> {
     const categoria = await this.db.orm.public.categoria.first({ id: categoriaId });
     if (!categoria) throw new NotFoundException(`Categoría ${categoriaId} no encontrada`);
     return this.productos.listByCategoria(categoriaId, query);

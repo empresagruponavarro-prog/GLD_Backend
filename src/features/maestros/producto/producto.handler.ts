@@ -8,37 +8,42 @@ import { and } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { CreateProductoDto, ListProductoQueryDto, type ProductoRow, UpdateProductoDto } from './producto.dto.js';
+import {
+  CreateProductoDto,
+  ListProductoQueryDto,
+  ProductoResponseDto,
+  UpdateProductoDto,
+} from './producto.dto.js';
 
 @Injectable()
 export class ProductoHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(query: ListProductoQueryDto): Promise<Paginated<ProductoRow>> {
+  async list(query: ListProductoQueryDto): Promise<Paginated<ProductoResponseDto>> {
     return this.listWithFilters(undefined, query);
   }
 
   async listByCategoria(
     categoriaId: number,
     query: ListProductoQueryDto,
-  ): Promise<Paginated<ProductoRow>> {
+  ): Promise<Paginated<ProductoResponseDto>> {
     return this.listWithFilters({ id_categoria: categoriaId }, query);
   }
 
   async listByUnidadMedida(
     unidadMedidaId: number,
     query: ListProductoQueryDto,
-  ): Promise<Paginated<ProductoRow>> {
+  ): Promise<Paginated<ProductoResponseDto>> {
     return this.listWithFilters({ id_unidad_medida: unidadMedidaId }, query);
   }
 
-  async getById(id: number): Promise<ProductoRow> {
+  async getById(id: number): Promise<ProductoResponseDto> {
     const row = await this.db.orm.public.producto.first({ id });
     if (!row) throw new NotFoundException(`Producto ${id} no encontrado`);
     return row;
   }
 
-  async create(dto: CreateProductoDto): Promise<ProductoRow> {
+  async create(dto: CreateProductoDto): Promise<ProductoResponseDto> {
     await this.assertCategoriaExists(dto.id_categoria);
     await this.assertUnidadMedidaExists(dto.id_unidad_medida);
     try {
@@ -59,7 +64,7 @@ export class ProductoHandler {
     }
   }
 
-  async update(id: number, dto: UpdateProductoDto): Promise<ProductoRow> {
+  async update(id: number, dto: UpdateProductoDto): Promise<ProductoResponseDto> {
     if (dto.id_categoria !== undefined) {
       await this.assertCategoriaExists(dto.id_categoria);
     }
@@ -67,7 +72,7 @@ export class ProductoHandler {
       await this.assertUnidadMedidaExists(dto.id_unidad_medida);
     }
 
-    const data: Partial<ProductoRow> = {};
+    const data: Partial<ProductoResponseDto> = {};
     if (dto.codigo !== undefined) data.codigo = dto.codigo;
     if (dto.descripcion !== undefined) data.descripcion = dto.descripcion;
     if (dto.id_categoria !== undefined) data.id_categoria = dto.id_categoria;
@@ -94,9 +99,9 @@ export class ProductoHandler {
   }
 
   private async listWithFilters(
-    forced: Partial<ProductoRow> | undefined,
+    forced: Partial<ProductoResponseDto> | undefined,
     query: ListProductoQueryDto,
-  ): Promise<Paginated<ProductoRow>> {
+  ): Promise<Paginated<ProductoResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const filtered = hasFilters(query) || forced !== undefined;
     const base = this.db.orm.public.producto.orderBy((p) => p.id.asc());

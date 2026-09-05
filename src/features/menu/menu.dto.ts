@@ -1,6 +1,6 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn, IsOptional, IsString } from 'class-validator';
-import { ROLES, type MenuItemDef, type MenuSectionDef } from './menu.definition.js';
+import { ROLES } from './menu.definition.js';
 
 export class GetMenuQueryDto {
   @ApiPropertyOptional({
@@ -13,6 +13,33 @@ export class GetMenuQueryDto {
   rol?: string;
 }
 
-export type MenuItem = Omit<MenuItemDef, 'roles'>;
+export class MenuItemResponseDto {
+  @ApiProperty({ example: 'producto' })
+  key: string;
 
-export type MenuSection = Omit<MenuSectionDef, 'roles'>;
+  @ApiProperty({ example: 'Productos' })
+  label: string;
+
+  @ApiProperty({ example: '/maestros/producto' })
+  path: string;
+
+  @ApiPropertyOptional({ example: 'inventory' })
+  icon?: string;
+}
+
+export class MenuSectionResponseDto {
+  @ApiProperty({ example: 'maestros' })
+  key: string;
+
+  @ApiProperty({ example: 'Maestros' })
+  label: string;
+
+  @ApiPropertyOptional({ example: 'inventory_2' })
+  icon?: string;
+
+  @ApiProperty({ type: [MenuItemResponseDto] })
+  items: MenuItemResponseDto[];
+}
+
+export type MenuItem = MenuItemResponseDto;
+export type MenuSection = MenuSectionResponseDto;

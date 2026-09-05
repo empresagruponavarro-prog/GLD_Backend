@@ -108,15 +108,36 @@ export class ListProductoQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
-export type ProductoRow = {
+export class ProductoResponseDto {
+  @ApiProperty({ example: 1, description: 'Identificador único del producto' })
   id: number;
+
+  @ApiProperty({ example: 'PROD-001', description: 'Código único del producto' })
   codigo: string;
+
+  @ApiProperty({ example: 'CEMENTO PORTLAND TIPO I', description: 'Descripción detallada del producto' })
   descripcion: string;
+
+  @ApiProperty({ example: 1, description: 'ID de la categoría a la que pertenece' })
   id_categoria: number;
+
+  @ApiProperty({ example: 1, description: 'ID de la unidad de medida principal' })
   id_unidad_medida: number;
+
+  @ApiProperty({ enum: TIPO_PRODUCTO_VALUES, example: 'PRODUCTO', description: 'Tipo: PRODUCTO o SERVICIO' })
   tipo_producto: TipoProducto;
+
+  @ApiProperty({ example: '100.00', description: 'Stock actual disponible' })
   stock: string;
+
+  @ApiPropertyOptional({ example: 'Compra directa a proveedor', description: 'Comentarios o notas adicionales' })
   comentarios: string | null;
+
+  @ApiPropertyOptional({ example: 'https://cdn.example.com/cemento.png', description: 'URL de la imagen' })
   imagen_url: string | null;
+
+  @ApiProperty({ example: true, description: 'Estado activo o inactivo' })
   estado: boolean;
-};
+}
+
+export type ProductoRow = ProductoResponseDto;

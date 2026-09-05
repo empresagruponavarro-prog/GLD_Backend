@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { type Paginated } from '../../../../platform/db/pagination.js';
 import {
-  type ProductoRow,
   ListProductoQueryDto,
+  ProductoResponseDto,
 } from '../../producto/producto.dto.js';
 import { UnidadMedidaProductosHandler } from './productos.handler.js';
 
@@ -14,10 +14,15 @@ export class UnidadMedidaProductosController {
 
   @Get()
   @ApiOperation({ summary: 'Listar productos de una unidad de medida' })
+  @ApiParam({ name: 'id', type: Number, description: 'ID de la unidad de medida' })
+  @ApiOkResponse({
+    description: 'Lista paginada de productos de la unidad de medida',
+  })
+  @ApiNotFoundResponse({ description: 'Unidad de medida no encontrada' })
   list(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: ListProductoQueryDto,
-  ): Promise<Paginated<ProductoRow>> {
+  ): Promise<Paginated<ProductoResponseDto>> {
     return this.handler.list(id, query);
   }
 }

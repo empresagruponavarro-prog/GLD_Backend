@@ -9,9 +9,9 @@ import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pa
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
+  CategoriaResponseDto,
   CreateCategoriaDto,
   ListCategoriaQueryDto,
-  type CategoriaRow,
   UpdateCategoriaDto,
 } from './categoria.dto.js';
 
@@ -19,7 +19,7 @@ import {
 export class CategoriaHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(query: ListCategoriaQueryDto): Promise<Paginated<CategoriaRow>> {
+  async list(query: ListCategoriaQueryDto): Promise<Paginated<CategoriaResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const base = this.db.orm.public.categoria.orderBy((c) => c.id.asc());
     const collection = hasFilters(query)
@@ -38,13 +38,13 @@ export class CategoriaHandler {
     return toPaginated(data, total.total, page, pageSize);
   }
 
-  async getById(id: number): Promise<CategoriaRow> {
+  async getById(id: number): Promise<CategoriaResponseDto> {
     const row = await this.db.orm.public.categoria.first({ id });
     if (!row) throw new NotFoundException(`Categoría ${id} no encontrada`);
     return row;
   }
 
-  async create(dto: CreateCategoriaDto): Promise<CategoriaRow> {
+  async create(dto: CreateCategoriaDto): Promise<CategoriaResponseDto> {
     await this.assertTipoCategoriaExists(dto.id_tipo_categoria);
     try {
       return await this.db.orm.public.categoria.create({
@@ -59,11 +59,11 @@ export class CategoriaHandler {
     }
   }
 
-  async update(id: number, dto: UpdateCategoriaDto): Promise<CategoriaRow> {
+  async update(id: number, dto: UpdateCategoriaDto): Promise<CategoriaResponseDto> {
     if (dto.id_tipo_categoria !== undefined) {
       await this.assertTipoCategoriaExists(dto.id_tipo_categoria);
     }
-    const data: Partial<CategoriaRow> = {};
+    const data: Partial<CategoriaResponseDto> = {};
     if (dto.codigo !== undefined) data.codigo = dto.codigo;
     if (dto.id_tipo_categoria !== undefined) data.id_tipo_categoria = dto.id_tipo_categoria;
     if (dto.descripcion !== undefined) data.descripcion = dto.descripcion;

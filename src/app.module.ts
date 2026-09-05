@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { AdministrationModule } from './features/administration/administration.module.js';
+import { CentrosCostosModule } from './features/centros-costos/centros-costos.module.js';
+import { IncidenciasModule } from './features/incidencias/incidencias.module.js';
 import { MaestrosModule } from './features/maestros/maestros.module.js';
 import { MenuModule } from './features/menu/menu.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
@@ -20,6 +23,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     PrismaModule,
     MaestrosModule,
     MenuModule,
+    IncidenciasModule,
+    AdministrationModule,
+    CentrosCostosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

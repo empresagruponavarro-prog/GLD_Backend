@@ -1,9 +1,15 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { type Paginated } from '../../../../platform/db/pagination.js';
 import {
-  type ProductoRow,
   ListProductoQueryDto,
+  type ProductoRow,
 } from '../../producto/producto.dto.js';
 import { CategoriaProductosHandler } from './productos.handler.js';
 
@@ -14,6 +20,11 @@ export class CategoriaProductosController {
 
   @Get()
   @ApiOperation({ summary: 'Listar productos de una categoría' })
+  @ApiParam({ name: 'id', description: 'ID numérico de la categoría', type: Number })
+  @ApiOkResponse({
+    description: 'Lista paginada de productos asociados a la categoría',
+  })
+  @ApiNotFoundResponse({ description: 'Categoría no encontrada' })
   list(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: ListProductoQueryDto,

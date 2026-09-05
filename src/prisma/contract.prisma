@@ -5,6 +5,10 @@ enum tipo_item {
   SERVICIO
 }
 
+// ============================================================
+// Maestros modernos
+// ============================================================
+
 model tipo_categoria {
   id         Int          @id @default(autoincrement())
   codigo     String       @unique
@@ -58,4 +62,698 @@ model producto {
   estado           Boolean     @default(true)
   categoria        categoria   @relation(fields: [id_categoria], references: [id])
   unidad_medida    unidad_medida @relation(fields: [id_unidad_medida], references: [id])
+}
+
+// ============================================================
+// Legacy modernizado (tipos reales + PK uniforme)
+// ============================================================
+
+model AlmacenMovimientoDetalle {
+  id                   Int         @id @default(autoincrement())
+  CodMovimientoDetalle VarChar(255)?
+  CodMovimiento        VarChar(255)?
+  ProductoCodigo       VarChar(255)?
+  Comportamiento       VarChar(255)?
+  Cantidad             Decimal?
+}
+
+model AlmacenMovimientos {
+  id                   Int           @id @default(autoincrement())
+  CodMovimiento        VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoCosto            VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  CodAlmacen           VarChar(255)?
+  CodTipoMov           VarChar(255)?
+  Comportamiento       VarChar(255)?
+  Fecha                Timestamptz(3)?
+}
+
+model AlmacenTipoMovimiento {
+  id             Int          @id @default(autoincrement())
+  CodTipoMov     VarChar(255)?
+  TipoMovimiento VarChar(255)?
+  Comportamiento VarChar(255)?
+}
+
+model Almacenes {
+  id         Int          @id @default(autoincrement())
+  CodAlmacen VarChar(255)?
+  CodEmpresa VarChar(255)?
+  Almacen    VarChar(255)?
+}
+
+model Anexo_Especialidad {
+  id                   Int          @id @default(autoincrement())
+  AnexoCodEspecialidad VarChar(255)?
+  TipoAnexo            VarChar(255)?
+  Anexo_Especialidad   VarChar(255)? @map("Anexo Especialidad")
+}
+
+model Anexo_TipoDocIDE {
+  id                  Int          @id @default(autoincrement())
+  AnexoCodTipoDocIde  VarChar(255)?
+  TipoAnexo           VarChar(255)?
+  Anexo_Documento_IDE VarChar(255)?
+}
+
+model Anexos {
+  id                   Int          @id @default(autoincrement())
+  CodigoAnexo          VarChar(255)?
+  TipoAnexo            VarChar(255)?
+  AnexoCodEspecialidad VarChar(255)?
+  AnexoCodTipoDocIde   VarChar(255)?
+  NumeroDocIde         VarChar(255)?
+  Anexo                VarChar(255)?
+  NombreComercial      VarChar(255)?
+  Direccion            VarChar(255)?
+  Contacto             VarChar(255)?
+  Telefono             VarChar(255)?
+  Correo               VarChar(255)?
+  Estado               VarChar(50)?
+}
+
+model Bancos {
+  id      Int          @id @default(autoincrement())
+  IdBanco VarChar(255)?
+  Banco   VarChar(255)?
+}
+
+model CajaEgresosRetail {
+  id                   Int           @id @default(autoincrement())
+  IdMov                VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoCosto            VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  IdpptoFase           VarChar(255)?
+  IdpptoFaseCategoria  VarChar(255)?
+  TipoAnexo            VarChar(255)?
+  CodMotivo            VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  Fecha                Timestamptz(3)?
+  IdCtaCajaBanco       VarChar(255)?
+  MedioPago            VarChar(255)?
+  NumOperacion         VarChar(255)?
+  CodDocSunat          VarChar(255)?
+  DocSunat             VarChar(255)?
+  Concepto             String?
+  CodCentroCtoTerminado VarChar(255)?
+  CategoriaCodigo      VarChar(255)?
+  MonedaId             VarChar(255)?
+  TotalSinDocumento    Decimal?
+  TotalPagoDocumentos  Decimal?
+  Monto_Total          Decimal? @map("Monto Total")
+  VoucherDeposito      VarChar(255)?
+  Ajuste               VarChar(255)?
+}
+
+model CajaIngresos {
+  id                   Int           @id @default(autoincrement())
+  IdMov                VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  TipoAnexo            VarChar(255)?
+  CodMotivo            VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  Fecha                Timestamptz(3)?
+  IdCtaCajaBanco       VarChar(255)?
+  MedioPago            VarChar(255)?
+  NumOperacion         VarChar(255)?
+  Concepto             String?
+  TotalSinDocumento    Decimal?
+  TotalPagoDocumentos  Decimal?
+  Monto_Total          Decimal? @map("Monto Total")
+  VoucherDeposito      VarChar(255)?
+}
+
+model CajaIngresos_DocVenta {
+  id            Int          @id @default(autoincrement())
+  IdMovDocVenta VarChar(255)?
+  IdMov         VarChar(255)?
+  CodigoAnexo   VarChar(255)?
+  CodDocSunat   VarChar(255)?
+  NumDocumento  VarChar(255)?
+  IdDocVenta    VarChar(255)?
+  MontoPagado   Decimal?
+}
+
+model CajaMotivos {
+  id            Int          @id @default(autoincrement())
+  CodMotivo     VarChar(255)?
+  TipoMotivo    VarChar(255)?
+  Motivo        VarChar(255)?
+  Comportamiento VarChar(255)?
+  Resultado     VarChar(255)?
+}
+
+model Categorias {
+  id             Int          @id @default(autoincrement())
+  CategoriaCodigo VarChar(255)?
+  Descripcion    VarChar(255)?
+  TIPOCATE       VarChar(255)?
+  Estado         VarChar(50)?
+}
+
+model CentroCostos {
+  id                      Int           @id @default(autoincrement())
+  CodCentroCto            VarChar(255)?
+  CodEmpresa              VarChar(255)?
+  IdPeriodo               VarChar(255)?
+  CodCliente              VarChar(255)?
+  CodCentroCtoPrincipal   VarChar(255)?
+  CentroCosto             VarChar(255)?
+  Estado                  VarChar(50)?
+  FechaIncio              Timestamptz(3)?
+  FechaFinProg            Timestamptz(3)?
+  FechaFinReal            Timestamptz(3)?
+  PresupuestoEstado       VarChar(50)?
+  PresupuestoCostoDirecto Decimal?
+  PresupuestoGastosGenerales Decimal?
+  PresupuestoViaticos     Decimal?
+  PresupuestoMonto        Decimal?
+  OCFile                  VarChar(255)?
+}
+
+model Contrataciones {
+  id                    Int           @id @default(autoincrement())
+  Codcontratacion       VarChar(255)?
+  CodEmpresa            VarChar(255)?
+  IdPeriodo             VarChar(255)?
+  CodCliente            VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CentroCosto           VarChar(255)?
+  CodProveedor          VarChar(255)?
+  Proveedor             VarChar(255)?
+  CategoriaCodigo       VarChar(255)?
+  Categoria             VarChar(255)?
+  TIPOCATE              VarChar(255)?
+  TipoContratacion      VarChar(255)?
+  Numero                VarChar(255)?
+  Concepto              String?
+  PptoMetaTotal         Decimal?
+  PresupuestoMonto      Decimal?
+  PresupuestoIGV        Decimal?
+  PresupuestoTotal      Decimal?
+  MaterialesManual      Decimal?
+  DsctoPostVenta        Decimal?
+  DsctoPersonalCasa     Decimal?
+  DsctoIntervencion     Decimal?
+  DsctoFacturacion      Decimal?
+  EstadoObra            VarChar(50)?
+  LiquidacionPDF        VarChar(255)?
+  ContratoPDF           VarChar(255)?
+  PresupuestoFile       VarChar(255)?
+}
+
+model Contrataciones_PPTOMeta {
+  id                     Int           @id @default(autoincrement())
+  Codcontratacionpptometa VarChar(255)?
+  Codcontratacion        VarChar(255)?
+  CodEmpresa             VarChar(255)?
+  CodCentroCtoPrincipal  VarChar(255)?
+  CodCentroCto           VarChar(255)?
+  CodProveedor           VarChar(255)?
+  Fecha                  Timestamptz(3)?
+  Concepto               String?
+  Monto                  Decimal?
+  File                   VarChar(255)?
+}
+
+model Contrataciones_PostVenta {
+  id                     Int           @id @default(autoincrement())
+  CodcontratacionPostVenta VarChar(255)?
+  Codcontratacion        VarChar(255)?
+  CodEmpresa             VarChar(255)?
+  CodCentroCtoPrincipal  VarChar(255)?
+  CentroCosto            VarChar(255)?
+  CodProveedor           VarChar(255)?
+  Proveedor              VarChar(255)?
+  Fecha                  Timestamptz(3)?
+  Concepto               String?
+  Monto                  Decimal?
+  File                   VarChar(255)?
+}
+
+model CuentasCajaBancos {
+  id                Int           @id @default(autoincrement())
+  IdCtaCajaBanco    VarChar(255)?
+  CodEmpresa        VarChar(255)?
+  Tipo              VarChar(255)?
+  IdBanco           VarChar(255)?
+  NroCuenta         VarChar(255)?
+  CCICuenta         VarChar(255)?
+  Descripcion       VarChar(255)?
+  IdMoneda          VarChar(255)?
+  FechaSaldoInicial Timestamptz(3)?
+  SaldoInicial      Decimal?
+}
+
+model DocCompra {
+  id                   Int           @id @default(autoincrement())
+  IdDocCompra          VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoCosto            VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  Periodo              VarChar(255)?
+  Mes                  VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  Codcontratacion      VarChar(255)?
+  CodigoAnexoDscto     VarChar(255)?
+  TipoOC               VarChar(255)?
+  IdOC                 VarChar(255)?
+  CodDocSunat          VarChar(255)?
+  NumDocumento         VarChar(255)?
+  FechaEmision         Timestamptz(3)?
+  FechaVencimiento     Timestamptz(3)?
+  FormaPago            VarChar(255)?
+  MonedaId             VarChar(255)?
+  TC                   Decimal?
+  Monto                Decimal?
+  IGV                  Decimal?
+  Total                Decimal?
+  CategoriaCodigo      VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  IdpptoFase           VarChar(255)?
+  IdpptoFaseCategoria  VarChar(255)?
+  Comentarios          String?
+  PDF_Documento        VarChar(255)?
+  IdUsuario            VarChar(255)?
+  Usuario              VarChar(255)?
+  FechaCrecion         Timestamptz(3)?
+  Ajuste               VarChar(255)?
+}
+
+model DocCompraDetalle {
+  id                   Int           @id @default(autoincrement())
+  IdDocCompra          VarChar(255)?
+  IdDocCompraDetalle   VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoProducto         tipo_item?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  CategoriaCodigo      VarChar(255)?
+  CodigoAnexoDscto     VarChar(255)?
+  Codcontratacion      VarChar(255)?
+  ProductoCodigo       VarChar(255)?
+  MonedaId             VarChar(255)?
+  Cantidad             Decimal?
+  Precio               Decimal?
+  monto                Decimal?
+}
+
+model DocCompra_AplicacionAnticipo {
+  id                   Int           @id @default(autoincrement())
+  IdDocCompra          VarChar(255)?
+  IdDocCompraAplicacion VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  TipoOC               VarChar(255)?
+  IdOC                 VarChar(255)?
+  MontoPagado          Decimal?
+}
+
+model DocVenta {
+  id                   Int           @id @default(autoincrement())
+  IdDocVenta           VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoCosto            VarChar(255)?
+  Periodo              VarChar(255)?
+  Mes                  VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  CodDocSunat          VarChar(255)?
+  NumDocumento         VarChar(255)?
+  FechaEmision         Timestamptz(3)?
+  FechaVencimiento     Timestamptz(3)?
+  FormaPago            VarChar(255)?
+  MonedaId             VarChar(255)?
+  Monto                Decimal?
+  IGV                  Decimal?
+  Total                Decimal?
+  Comentarios          String?
+  PDF_Documento        VarChar(255)?
+  Usuario              VarChar(255)?
+  FechaCrecion         Timestamptz(3)?
+}
+
+model DocVentaDetalle {
+  id                   Int           @id @default(autoincrement())
+  IdDocVenta           VarChar(255)?
+  IdDocVentaDetalle    VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  TipoProducto         tipo_item?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  CategoriaCodigo      VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  ProductoCodigo       VarChar(255)?
+  Cantidad             Decimal?
+  Precio               Decimal?
+  monto                Decimal?
+}
+
+model Egresos_AnticiposOC {
+  id             Int           @id @default(autoincrement())
+  IdMov          VarChar(255)?
+  IdMovOC        VarChar(255)?
+  CodEmpresa     VarChar(255)?
+  CodCentroCto   VarChar(255)?
+  FechaPago      Timestamptz(3)?
+  NumeroOperacion VarChar(255)?
+  TipoOC         VarChar(255)?
+  NumeroOC       VarChar(255)?
+  IdOC           VarChar(255)?
+  CodigoAnexo    VarChar(255)?
+  MontoPagado    Decimal?
+}
+
+model Egresos_DocCompra {
+  id           Int          @id @default(autoincrement())
+  IdMov        VarChar(255)?
+  IdMovDocCompra VarChar(255)?
+  CodigoAnexo  VarChar(255)?
+  CodDocSunat  VarChar(255)?
+  NumDocumento VarChar(255)?
+  IdDocCompra  VarChar(255)?
+  IdOC         VarChar(255)?
+  Monto_Pagado Decimal? @map("Monto Pagado")
+}
+
+model Egresos_Otros {
+  id             Int           @id @default(autoincrement())
+  IdMov          VarChar(255)?
+  IdMovOtros     VarChar(255)?
+  TipoAnexo      VarChar(255)?
+  CodMotivo      VarChar(255)?
+  CodigoAnexo    VarChar(255)?
+  Fecha          Timestamptz(3)?
+  MedioPago      VarChar(255)?
+  CategoriaCodigo VarChar(255)?
+  Monto_Total    Decimal? @map("Monto Total")
+}
+
+model Empresas {
+  id              Int          @id @default(autoincrement())
+  CodEmpresa      VarChar(255)?
+  RUC             VarChar(255)?
+  RazonSocial     VarChar(255)?
+  DomicilioFiscal VarChar(255)?
+  DireccionEntrega VarChar(255)?
+  CorreoCompras   VarChar(255)?
+}
+
+model Menu {
+  MenuId     VarChar(255) @id
+  MenuNombre VarChar(255)?
+  Imagen     VarChar(255)?
+}
+
+model Monedas {
+  id      Int          @id @default(autoincrement())
+  MonedaId VarChar(255)?
+  Moneda  VarChar(255)?
+  Simbolo VarChar(255)?
+}
+
+model OrdenCompra {
+  id                   Int           @id @default(autoincrement())
+  IdOC                 VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  TipoCosto            VarChar(255)?
+  TipoOC               VarChar(255)?
+  NumeroOC             VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto         VarChar(255)?
+  CategoriaCodigo      VarChar(255)?
+  Periodo              VarChar(255)?
+  Mes                  VarChar(255)?
+  CodigoAnexo          VarChar(255)?
+  FechaEmision         Timestamptz(3)?
+  FormaPago            VarChar(255)?
+  MonedaId             VarChar(255)?
+  MonedaSimbolo        VarChar(255)?
+  Monto                Decimal?
+  IGV                  Decimal?
+  Renta4ta             Decimal?
+  DsctoCompras         Decimal?
+  DsctoIntervencion    Decimal?
+  DsctoOtros           Decimal?
+  Total                Decimal?
+  Comentarios          String?
+  OCPDF                VarChar(255)?
+  Usuario              VarChar(255)?
+  FechaCreacion        Timestamptz(3)?
+  HoraCreacion         VarChar(10)?
+  Cotizacion           VarChar(255)?
+}
+
+model OrdenCompraDetalle {
+  id            Int           @id @default(autoincrement())
+  IdOC          VarChar(255)?
+  IdOCDetalle   VarChar(255)?
+  TipoProducto  tipo_item?
+  ProductoCodigo VarChar(255)?
+  Cantidad      Decimal?
+  Precio        Decimal?
+  monto         Decimal?
+}
+
+model Periodos {
+  id        Int          @id @default(autoincrement())
+  IdPeriodo VarChar(255)?
+}
+
+model PlanillaPago {
+  id                     Int           @id @default(autoincrement())
+  Codcontratacion        VarChar(255)?
+  CodcontratacionDetalle VarChar(255)?
+  CodEmpresa             VarChar(255)?
+  IdPeriodo              VarChar(255)?
+  CodCliente             VarChar(255)?
+  CodCentroCtoPrincipal  VarChar(255)?
+  CentroCosto            VarChar(255)?
+  CodProveedor           VarChar(255)?
+  Proveedor              VarChar(255)?
+  CategoriaCodigo        VarChar(255)?
+  Categoria              VarChar(255)?
+  TipoContratacion       VarChar(255)?
+  Numero                 VarChar(255)?
+  CodSemana              VarChar(255)?
+  Semana                 VarChar(255)?
+  FechaInicio            Timestamptz(3)?
+  FechaFinal             Timestamptz(3)?
+  PresupuestoSaldoMonto  Decimal?
+  PresupuestoSaldoIGV    Decimal?
+  PresupuestoSaldoTotal  Decimal?
+  MontoSemana            Decimal?
+  DsctoIntervencion      Decimal?
+  DsctoCompras           Decimal?
+  DsctoPostVenta         Decimal?
+  PlanillaMonto          Decimal?
+  PlanillaIGV            Decimal?
+  PlanillaTotal          Decimal?
+  Estado                 VarChar(50)?
+}
+
+model Productos {
+  id            Int          @id @default(autoincrement())
+  ProductoCodigo VarChar(255)?
+  CategoriaCodigo VarChar(255)?
+  Descripcion   String?
+  UniMedCodigo  VarChar(255)?
+  Comentarios   String?
+  Imagen        VarChar(255)?
+  TipoProducto  tipo_item?
+}
+
+model Semana {
+  id          Int           @id @default(autoincrement())
+  CodSemana   VarChar(255)?
+  IdPeriodo   VarChar(255)?
+  Semana      VarChar(255)?
+  FechaInicio Timestamptz(3)?
+  FechaFinal  Timestamptz(3)?
+}
+
+model SubMenu {
+  id            Int          @id @default(autoincrement())
+  MenuId        VarChar(255)?
+  TipoSubMenu   VarChar(255)?
+  SubMenuNombre VarChar(255)?
+  SubMenuVista  VarChar(255)?
+  Imagen        VarChar(255)?
+}
+
+model TipoDocumentoSunat {
+  id            Int          @id @default(autoincrement())
+  CodDocSunat   VarChar(255)?
+  DocumentoSunat VarChar(255)?
+}
+
+model UnidadMedida {
+  id           Int          @id @default(autoincrement())
+  UniMedCodigo VarChar(255)?
+  Descripcion  VarChar(255)?
+  Simbolo      VarChar(255)?
+}
+
+model Usuarios {
+  IdUsuario VarChar(255) @id
+  Nombres   VarChar(255)?
+  Usuario   VarChar(255)?
+  Clave     VarChar(255)?
+  Rol       VarChar(255)?
+}
+
+model UsuariosMenus {
+  id            Int          @id @default(autoincrement())
+  IdUsuarioMenu VarChar(255)?
+  IdUsuario     VarChar(255)?
+  MenuId        VarChar(255)?
+}
+
+model UsuariosPermisos {
+  IdUsuarioPermiso VarChar(255) @id
+  IdUsuario        VarChar(255)?
+  MenuId           VarChar(255)?
+  SubMenuId        VarChar(255)?
+}
+
+model Incidencia {
+  id                    Int           @id @default(autoincrement())
+
+  // I.- Datos del Registrador
+  promotor              VarChar(255)?
+  docRegistrador        VarChar(255)?
+  cargoRegistrador      VarChar(255)?
+
+  // II.- Datos del Solicitante
+  solicitante           VarChar(255)?
+  docSolicitante        VarChar(255)?
+  telefonoSolicitante   VarChar(255)?
+  domicilioSolicitante  VarChar(255)?
+
+  // III.- Datos de la Incidencia
+  fechaIncidencia       Timestamptz(3)?
+  horaIncidencia        VarChar(10)?
+  origenIncidencia      VarChar(255)?
+  viaOrigen             VarChar(255)?
+  cuadra                VarChar(255)?
+  urbanizacion          VarChar(255)?
+  sectorVecinal         VarChar(255)?
+  tipificacion          VarChar(255)?
+  direccionExacta       VarChar(255)?
+  incidencia            String?
+  prioridadCategoria    VarChar(255)?
+  latitud               VarChar(50)?
+  longitud              VarChar(50)?
+
+  // IV.- Atención de la Incidencia
+  gerenciaAsignada      VarChar(255)?
+  representante         VarChar(255)?
+  estado                VarChar(50) @default("PENDIENTE")
+  accionPrevia          String?
+  accionTomada          String?
+  aprobacion            VarChar(255)?
+  documentoGestrad      VarChar(255)?
+
+  // Metadatos
+  fechaInicio           DateTime  @default(now())
+  fechaFin              DateTime?
+  fechaCreacion         DateTime  @default(now())
+}
+
+model ppto_DetalleFases {
+  id                    Int           @id @default(autoincrement())
+  IdPresupuestoDetalle  VarChar(255)?
+  IdPresupuesto         VarChar(255)?
+  CodEmpresa            VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto          VarChar(255)?
+  IdpptoFase            VarChar(255)?
+  CostoDirecto          Decimal?
+  Usuario               VarChar(255)?
+  FechaCreacion         Timestamptz(3)?
+}
+
+model ppto_DetalleFasesCate {
+  id                        Int           @id @default(autoincrement())
+  IdPresupuestoDetalleCategoria VarChar(255)?
+  IdPresupuesto             VarChar(255)?
+  IdPresupuestoDetalle      VarChar(255)?
+  CodEmpresa                VarChar(255)?
+  CodCentroCtoPrincipal     VarChar(255)?
+  CodCentroCto              VarChar(255)?
+  IdpptoFase                VarChar(255)?
+  IdpptoFaseCategoria       VarChar(255)?
+  CostoDirecto              Decimal?
+  Usuario                   VarChar(255)?
+  FechaCreacion             Timestamptz(3)?
+}
+
+model ppto_Fases {
+  id                   Int          @id @default(autoincrement())
+  IdpptoFase           VarChar(255)?
+  CodEmpresa           VarChar(255)?
+  CodCentroCtoPrincipal VarChar(255)?
+  FaseProyecto         VarChar(255)?
+}
+
+model ppto_FasesCategorias {
+  id                  Int          @id @default(autoincrement())
+  IdpptoFaseCategoria VarChar(255)?
+  IdpptoFase          VarChar(255)?
+  Descripcion         VarChar(255)?
+}
+
+model ppto_Principal {
+  id                  Int           @id @default(autoincrement())
+  IdPresupuesto       VarChar(255)?
+  CodEmpresa          VarChar(255)?
+  IdPeriodo           VarChar(255)?
+  Version             VarChar(255)?
+  CodigoAnexo         VarChar(255)?
+  TipoPpto            VarChar(255)?
+  Proyecto            VarChar(255)?
+  Concepto            String?
+  CodCentroCtoPrincipal VarChar(255)?
+  CodCentroCto        VarChar(255)?
+  FechaRequerimiento  Timestamptz(3)?
+  FechaEntrega        Timestamptz(3)?
+  CostoDirecto        Decimal?
+  GGPorcentaje        Decimal?
+  GastosGenerales     Decimal?
+  UtiliPorcentaje     Decimal?
+  Utilidad            Decimal?
+  Viaticos            Decimal?
+  DsctoComercial      Decimal?
+  SubTotalSinIGV      Decimal?
+  IGV                 Decimal?
+  Total               Decimal?
+  Estado              VarChar(50)?
+  File                VarChar(255)?
+  FILE_Presupuesto    VarChar(255)?
+  Comentarios         String?
+  IdUsuario           VarChar(255)?
+  Usuario             VarChar(255)?
+  FechaCreacion       Timestamptz(3)?
+}
+
+model ppto_Principal_Historial {
+  id                   Int          @id @default(autoincrement())
+  IdPresupuestoVersion VarChar(255)?
+  IdPresupuesto        VarChar(255)?
+  NumVersion           VarChar(255)?
+  FilePpto             VarChar(255)?
+  FileCorreo           VarChar(255)?
 }

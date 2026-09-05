@@ -1,14 +1,12 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
-import {
-  throwIfUniqueViolation,
-} from '../../../platform/db/pg-errors.js';
+import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
   CreateTipoCategoriaDto,
   ListTipoCategoriaQueryDto,
-  type TipoCategoriaRow,
+  TipoCategoriaResponseDto,
   UpdateTipoCategoriaDto,
 } from './tipo-categoria.dto.js';
 
@@ -16,7 +14,7 @@ import {
 export class TipoCategoriaHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async list(query: ListTipoCategoriaQueryDto): Promise<Paginated<TipoCategoriaRow>> {
+  async list(query: ListTipoCategoriaQueryDto): Promise<Paginated<TipoCategoriaResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const base = this.db.orm.public.tipo_categoria.orderBy((t) => t.id.asc());
     const collection = hasFilters(query)
@@ -35,13 +33,13 @@ export class TipoCategoriaHandler {
     return toPaginated(data, total.total, page, pageSize);
   }
 
-  async getById(id: number): Promise<TipoCategoriaRow> {
+  async getById(id: number): Promise<TipoCategoriaResponseDto> {
     const row = await this.db.orm.public.tipo_categoria.first({ id });
     if (!row) throw new NotFoundException(`Tipo de categoría ${id} no encontrado`);
     return row;
   }
 
-  async create(dto: CreateTipoCategoriaDto): Promise<TipoCategoriaRow> {
+  async create(dto: CreateTipoCategoriaDto): Promise<TipoCategoriaResponseDto> {
     try {
       return await this.db.orm.public.tipo_categoria.create({
         codigo: dto.codigo,
@@ -54,8 +52,8 @@ export class TipoCategoriaHandler {
     }
   }
 
-  async update(id: number, dto: UpdateTipoCategoriaDto): Promise<TipoCategoriaRow> {
-    const data: Partial<TipoCategoriaRow> = {};
+  async update(id: number, dto: UpdateTipoCategoriaDto): Promise<TipoCategoriaResponseDto> {
+    const data: Partial<TipoCategoriaResponseDto> = {};
     if (dto.codigo !== undefined) data.codigo = dto.codigo;
     if (dto.nombre !== undefined) data.nombre = dto.nombre;
     if (dto.estado !== undefined) data.estado = dto.estado;

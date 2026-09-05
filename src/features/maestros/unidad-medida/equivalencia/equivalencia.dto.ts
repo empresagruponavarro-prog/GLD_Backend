@@ -39,10 +39,21 @@ export class ListEquivalenciaQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
-export type EquivalenciaRow = {
+export class EquivalenciaResponseDto {
+  @ApiProperty({ example: 1 })
   id: number;
+
+  @ApiProperty({ example: 1 })
   id_uni_med_origen: number;
+
+  @ApiProperty({ example: 2 })
   id_uni_med_destino: number;
+
+  @ApiProperty({ example: '100' })
   factor_conversion: string;
+
+  @ApiProperty({ example: true })
   estado: boolean;
-};
+}
+
+export type EquivalenciaRow = EquivalenciaResponseDto;
