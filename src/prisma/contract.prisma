@@ -1,0 +1,61 @@
+// use prisma-next
+
+enum tipo_item {
+  PRODUCTO
+  SERVICIO
+}
+
+model tipo_categoria {
+  id         Int          @id @default(autoincrement())
+  codigo     String       @unique
+  nombre     String
+  estado     Boolean      @default(true)
+  categorias categoria[]
+}
+
+model categoria {
+  id                Int            @id @default(autoincrement())
+  codigo            String         @unique
+  id_tipo_categoria Int
+  descripcion       String?
+  estado            Boolean        @default(true)
+  tipo_categoria    tipo_categoria @relation(fields: [id_tipo_categoria], references: [id])
+  productos         producto[]
+}
+
+model unidad_medida {
+  id                   Int                         @id @default(autoincrement())
+  codigo               String                      @unique
+  descripcion          String
+  simbolo              String?
+  estado               Boolean                     @default(true)
+  equivalenciasOrigen  unidad_medida_equivalencia[] @relation("origen")
+  equivalenciasDestino unidad_medida_equivalencia[] @relation("destino")
+}
+
+model unidad_medida_equivalencia {
+  id                 Int           @id @default(autoincrement())
+  id_uni_med_origen  Int
+  id_uni_med_destino Int
+  factor_conversion  Decimal
+  estado             Boolean       @default(true)
+  unidadOrigen       unidad_medida @relation("origen", fields: [id_uni_med_origen], references: [id])
+  unidadDestino      unidad_medida @relation("destino", fields: [id_uni_med_destino], references: [id])
+
+  @@unique([id_uni_med_origen, id_uni_med_destino])
+}
+
+model producto {
+  id               Int         @id @default(autoincrement())
+  codigo           String      @unique
+  descripcion      String
+  id_categoria     Int
+  id_unidad_medida Int
+  tipo_producto    tipo_item   @default(PRODUCTO)
+  stock            Decimal     @default("0")
+  comentarios      String?
+  imagen_url       String?
+  estado           Boolean     @default(true)
+  categoria        categoria   @relation(fields: [id_categoria], references: [id])
+  unidad_medida    unidad_medida @relation(fields: [id_unidad_medida], references: [id])
+}
