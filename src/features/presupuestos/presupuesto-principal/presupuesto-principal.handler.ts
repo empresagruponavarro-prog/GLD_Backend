@@ -42,10 +42,14 @@ export class PresupuestoPrincipalHandler {
   }
 
   async getById(idOrCode: string | number): Promise<PresupuestoPrincipalResponseDto> {
-    const numId = Number(idOrCode);
-    const row = isNaN(numId)
-      ? await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) })
-      : await this.db.orm.public.ppto_Principal.first({ id: numId });
+    // Always search by IdPresupuesto first, then fallback to numeric id
+    let row = await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) });
+    if (!row) {
+      const numId = Number(idOrCode);
+      if (!isNaN(numId)) {
+        row = await this.db.orm.public.ppto_Principal.first({ id: numId });
+      }
+    }
 
     if (!row) throw new NotFoundException(`Presupuesto "${idOrCode}" no encontrado`);
     return row as unknown as PresupuestoPrincipalResponseDto;
@@ -133,10 +137,14 @@ export class PresupuestoPrincipalHandler {
       await this.assertCentroCostoExists(dto.CodCentroCto);
     }
 
-    const numId = Number(idOrCode);
-    const current = isNaN(numId)
-      ? await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) })
-      : await this.db.orm.public.ppto_Principal.first({ id: numId });
+    // Always search by IdPresupuesto first, then fallback to numeric id
+    let current = await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) });
+    if (!current) {
+      const numId = Number(idOrCode);
+      if (!isNaN(numId)) {
+        current = await this.db.orm.public.ppto_Principal.first({ id: numId });
+      }
+    }
     if (!current) throw new NotFoundException(`Presupuesto "${idOrCode}" no encontrado`);
     const id = current.id;
     if (!current) throw new NotFoundException(`Presupuesto ${id} no encontrado`);
@@ -217,10 +225,14 @@ export class PresupuestoPrincipalHandler {
   }
 
   async remove(idOrCode: string | number): Promise<{ deleted: boolean; id: number; code: string | null }> {
-    const numId = Number(idOrCode);
-    const ppto = isNaN(numId)
-      ? await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) })
-      : await this.db.orm.public.ppto_Principal.first({ id: numId });
+    // Always search by IdPresupuesto first, then fallback to numeric id
+    let ppto = await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) });
+    if (!ppto) {
+      const numId = Number(idOrCode);
+      if (!isNaN(numId)) {
+        ppto = await this.db.orm.public.ppto_Principal.first({ id: numId });
+      }
+    }
     if (!ppto) throw new NotFoundException(`Presupuesto "${idOrCode}" no encontrado`);
 
     const idPresupuesto = ppto.IdPresupuesto;
