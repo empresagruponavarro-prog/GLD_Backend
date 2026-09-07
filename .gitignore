@@ -22,3 +22,13 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+
+# Backups
+*.full_backup
+
+# Prisma generated skills & agent folders
+.agents/
+.claude/
+.cursor/
+.devin/

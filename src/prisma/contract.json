@@ -4,6 +4,10 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "CentroCostos": {
+      "model": "CentroCostos",
+      "namespace": "public"
+    },
     "almacenMovimientoDetalle": {
       "model": "AlmacenMovimientoDetalle",
       "namespace": "public"
@@ -58,10 +62,6 @@
     },
     "categorias": {
       "model": "Categorias",
-      "namespace": "public"
-    },
-    "centroCostos": {
-      "model": "CentroCostos",
       "namespace": "public"
     },
     "contrataciones": {
@@ -1844,30 +1844,30 @@
               "FechaFinProg": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
               "FechaFinReal": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
               "FechaIncio": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
@@ -1937,7 +1937,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "presupuestos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "CodCentroCto"
+                  ],
+                  "targetFields": [
+                    "CodCentroCto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "CentroCosto": {
@@ -1993,7 +2009,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "centroCostos"
+              "table": "CentroCostos"
             }
           },
           "Contrataciones": {
@@ -6593,10 +6609,10 @@
               "FechaCreacion": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
@@ -6648,7 +6664,53 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "categoriasDetalle": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "targetFields": [
+                    "IdPresupuestoDetalle"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
+              "fase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Fases",
+                  "namespace": "public"
+                }
+              },
+              "presupuesto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "CodCentroCto": {
@@ -6728,10 +6790,10 @@
               "FechaCreacion": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
@@ -6803,7 +6865,38 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "detalleFase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "targetFields": [
+                    "IdPresupuestoDetalle"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
+              "faseCategoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdpptoFaseCategoria"
+                  ],
+                  "targetFields": [
+                    "IdpptoFaseCategoria"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_FasesCategorias",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "CodCentroCto": {
@@ -6897,7 +6990,38 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "categorias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_FasesCategorias",
+                  "namespace": "public"
+                }
+              },
+              "detallesFases": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "CodCentroCtoPrincipal": {
@@ -6960,7 +7084,38 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "detallesFasesCate": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdpptoFaseCategoria"
+                  ],
+                  "targetFields": [
+                    "IdpptoFaseCategoria"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
+              "fase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Fases",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "Descripcion": {
@@ -7073,30 +7228,30 @@
               "FechaCreacion": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
               "FechaEntrega": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
               "FechaRequerimiento": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
+                  "codecId": "sql/varchar@1",
                   "kind": "scalar",
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 }
               },
@@ -7244,7 +7399,53 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "CodCentroCto"
+                  ],
+                  "targetFields": [
+                    "CodCentroCto"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "detallesFases": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
+              "historiales": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal_Historial",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "CodCentroCto": {
@@ -7402,7 +7603,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "presupuestoPrincipal": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "FileCorreo": {
@@ -7836,6 +8053,149 @@
       "public": {
         "entries": {
           "table": {
+            "CentroCostos": {
+              "columns": {
+                "CentroCosto": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCentroCto": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCentroCtoPrincipal": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCliente": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodEmpresa": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Estado": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "FechaFinProg": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "FechaFinReal": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "FechaIncio": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdPeriodo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "OCFile": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "PresupuestoCostoDirecto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoEstado": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "PresupuestoGastosGenerales": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoMonto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoViaticos": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "CodCentroCto"
+                  ]
+                }
+              ]
+            },
             "almacenMovimientoDetalle": {
               "columns": {
                 "Cantidad": {
@@ -8936,143 +9296,6 @@
                   "typeParams": {
                     "length": 255
                   }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "centroCostos": {
-              "columns": {
-                "CentroCosto": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCentroCto": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCentroCtoPrincipal": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCliente": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodEmpresa": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Estado": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
-                  }
-                },
-                "FechaFinProg": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "FechaFinReal": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "FechaIncio": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "IdPeriodo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "OCFile": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "PresupuestoCostoDirecto": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoEstado": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
-                  }
-                },
-                "PresupuestoGastosGenerales": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoMonto": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoViaticos": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -11635,11 +11858,11 @@
                   "nullable": true
                 },
                 "FechaCreacion": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 },
                 "IdPresupuesto": {
@@ -11684,14 +11907,70 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Fases"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_DetalleFases_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_DetalleFases_IdPresupuesto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "IdpptoFase"
+                  ],
+                  "name": "ppto_DetalleFases_IdpptoFase_idx_3132f24e",
+                  "prefix": "ppto_DetalleFases_IdpptoFase_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "IdPresupuestoDetalle"
+                  ]
+                }
+              ]
             },
             "ppto_DetalleFasesCate": {
               "columns": {
@@ -11725,11 +12004,11 @@
                   "nullable": true
                 },
                 "FechaCreacion": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 },
                 "IdPresupuesto": {
@@ -11790,14 +12069,70 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdPresupuestoDetalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuestoDetalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "IdpptoFaseCategoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdpptoFaseCategoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_FasesCategorias"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "name": "ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6",
+                  "prefix": "ppto_DetalleFasesCate_IdPresupuestoDetalle_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "IdpptoFaseCategoria"
+                  ],
+                  "name": "ppto_DetalleFasesCate_IdpptoFaseCategoria_idx_e20ae790",
+                  "prefix": "ppto_DetalleFasesCate_IdpptoFaseCategoria_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "IdPresupuestoDetalleCategoria"
+                  ]
+                }
+              ]
             },
             "ppto_Fases": {
               "columns": {
@@ -11850,7 +12185,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "IdpptoFase"
+                  ]
+                }
+              ]
             },
             "ppto_FasesCategorias": {
               "columns": {
@@ -11888,14 +12229,46 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_FasesCategorias"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Fases"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdpptoFase"
+                  ],
+                  "name": "ppto_FasesCategorias_IdpptoFase_idx_3132f24e",
+                  "prefix": "ppto_FasesCategorias_IdpptoFase_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "IdpptoFaseCategoria"
+                  ]
+                }
+              ]
             },
             "ppto_Principal": {
               "columns": {
@@ -11968,27 +12341,27 @@
                   }
                 },
                 "FechaCreacion": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 },
                 "FechaEntrega": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 },
                 "FechaRequerimiento": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
-                    "precision": 3
+                    "length": 255
                   }
                 },
                 "File": {
@@ -12105,14 +12478,46 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "CodCentroCto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  },
+                  "target": {
+                    "columns": [
+                      "CodCentroCto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "CodCentroCto"
+                  ],
+                  "name": "ppto_Principal_CodCentroCto_idx_8457262b",
+                  "prefix": "ppto_Principal_CodCentroCto_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ]
+                }
+              ]
             },
             "ppto_Principal_Historial": {
               "columns": {
@@ -12166,8 +12571,34 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal_Historial"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_Principal_Historial_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_Principal_Historial_IdPresupuesto_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -12962,7 +13393,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6bcf5f774a1e56588fc8d91a5cc4e2ac2e281c9b5effd5fc9f8347bce68e3385"
+    "storageHash": "cbe8db52d470c11ee5ca27752c8807572420f75e52d7617bf6932eaf223045d2"
   },
   "capabilities": {
     "postgres": {
