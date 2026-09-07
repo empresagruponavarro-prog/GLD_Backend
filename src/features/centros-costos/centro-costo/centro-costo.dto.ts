@@ -1,5 +1,107 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+
+export class CreateCentroCostoDto {
+  @ApiProperty({ example: 'CC-2026-001', description: 'Código único del centro de costo' })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  CodCentroCto: string;
+
+  @ApiPropertyOptional({ example: 'E1', description: 'Código de empresa' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  CodEmpresa?: string;
+
+  @ApiPropertyOptional({ example: '2026', description: 'Periodo fiscal' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  IdPeriodo?: string;
+
+  @ApiPropertyOptional({ example: 'CLI-001', description: 'Código del cliente' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  CodCliente?: string;
+
+  @ApiPropertyOptional({ example: 'CT1', description: 'Código del centro de costo principal' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  CodCentroCtoPrincipal?: string;
+
+  @ApiProperty({ example: 'PROYECTO EDIFICIO MULTIFAMILIAR', description: 'Nombre del centro de costo' })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  CentroCosto: string;
+
+  @ApiPropertyOptional({ example: 'ABIERTO', description: 'Estado operativo (ABIERTO, CERRADO)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  Estado?: string;
+
+  @ApiPropertyOptional({ example: '2026-01-01', description: 'Fecha de inicio' })
+  @IsOptional()
+  @IsString()
+  FechaIncio?: string;
+
+  @ApiPropertyOptional({ example: '2026-12-31', description: 'Fecha de fin programada' })
+  @IsOptional()
+  @IsString()
+  FechaFinProg?: string;
+
+  @ApiPropertyOptional({ example: '2026-12-31', description: 'Fecha de fin real' })
+  @IsOptional()
+  @IsString()
+  FechaFinReal?: string;
+
+  @ApiPropertyOptional({ example: 'Aprobado', description: 'Estado del presupuesto asignado' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  PresupuestoEstado?: string;
+
+  @ApiPropertyOptional({ example: 100000.00, description: 'Costo directo presupuestado' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  PresupuestoCostoDirecto?: number;
+
+  @ApiPropertyOptional({ example: 10000.00, description: 'Gastos generales presupuestados' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  PresupuestoGastosGenerales?: number;
+
+  @ApiPropertyOptional({ example: 5000.00, description: 'Viáticos presupuestados' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  PresupuestoViaticos?: number;
+
+  @ApiPropertyOptional({ example: 1450000.00, description: 'Monto total presupuestado' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  PresupuestoMonto?: number;
+
+  @ApiPropertyOptional({ example: 'OC-12345.pdf', description: 'Archivo de orden de compra' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  OCFile?: string;
+}
+
+export class UpdateCentroCostoDto extends PartialType(CreateCentroCostoDto) {}
 
 export class ListCentroCostoQueryDto {
   @ApiPropertyOptional({ description: 'Búsqueda general por texto libre' })
@@ -39,6 +141,9 @@ export class ListCentroCostoQueryDto {
 }
 
 export class CentroCostoResponseDto {
+  @ApiPropertyOptional({ example: 1 })
+  id?: number;
+
   @ApiProperty({ example: 'CC-2026-001', description: 'Código único del centro de costos' })
   CodCentroCto: string | null;
 
@@ -46,7 +151,7 @@ export class CentroCostoResponseDto {
   CodCentroCtoPrincipal: string | null;
 
   @ApiPropertyOptional({ example: 'OFICINA PRINCIPAL GLD', description: 'Nombre del centro de costo principal' })
-  CentroCostoPrincipal: string | null;
+  CentroCostoPrincipal?: string | null;
 
   @ApiProperty({ example: 'Proyecto Edificio GLD', description: 'Nombre o descripción del centro de costo' })
   CentroCosto: string | null;
@@ -58,7 +163,7 @@ export class CentroCostoResponseDto {
   CodEmpresa: string | null;
 
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
-  Empresa: string | null;
+  Empresa?: string | null;
 
   @ApiPropertyOptional({ example: '2026', description: 'Periodo fiscal' })
   IdPeriodo: string | null;
@@ -67,13 +172,22 @@ export class CentroCostoResponseDto {
   CodCliente: string | null;
 
   @ApiPropertyOptional({ example: 'CLIENTE SA', description: 'Nombre o razón social del cliente' })
-  Cliente: string | null;
+  Cliente?: string | null;
 
   @ApiPropertyOptional({ example: 'Aprobado', description: 'Estado del presupuesto asignado' })
   PresupuestoEstado: string | null;
 
   @ApiPropertyOptional({ example: '1450000.00', description: 'Monto presupuestado' })
   PresupuestoMonto: string | null;
+
+  @ApiPropertyOptional({ example: '2026-01-01' })
+  FechaIncio?: string | null;
+
+  @ApiPropertyOptional({ example: '2026-12-31' })
+  FechaFinProg?: string | null;
+
+  @ApiPropertyOptional({ example: '2026-12-31' })
+  FechaFinReal?: string | null;
 }
 
 export type CentroCostoRow = CentroCostoResponseDto;

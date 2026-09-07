@@ -1,78 +1,16 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { or } from '@prisma/orm-postgres/orm-client';
-import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../presupuestos/presupuestos.helpers.js';
 import {
   CatalogosFiltrosResponseDto,
   CentroCostoMetricasResponseDto,
-  CentroCostoResumenResponseDto,
   CentroCostoResponseDto,
+  CentroCostoResumenResponseDto,
+  CreateCentroCostoDto,
   ListCentroCostoQueryDto,
+  UpdateCentroCostoDto,
 } from './centro-costo.dto.js';
-
-type Varchar255 = Varchar<255>;
-
-function toVarchar(value: string): Varchar255 {
-  return value as unknown as Varchar255;
-}
-
-const DEMO_CENTROS_COSTOS: CentroCostoResponseDto[] = [
-  {
-    CodCentroCto: 'CC-2026-001',
-    CodCentroCtoPrincipal: 'CT1',
-    CentroCostoPrincipal: 'OFICINA PRINCIPAL GLD',
-    CentroCosto: 'Proyecto Edificio Multidisciplinario GLD',
-    Estado: 'ABIERTO',
-    CodEmpresa: 'E1',
-    Empresa: 'GLD SERVICIOS GENERALES EIRL',
-    IdPeriodo: '2026',
-    CodCliente: 'fb43ae87',
-    Cliente: 'TIENDAS DEL MEJORAMIENTO DEL HOGAR SA',
-    PresupuestoEstado: 'Aprobado',
-    PresupuestoMonto: '1450000.00',
-  },
-  {
-    CodCentroCto: 'CC-2026-002',
-    CodCentroCtoPrincipal: 'CT2',
-    CentroCostoPrincipal: 'GASTOS ADMINISTRATIVOS',
-    CentroCosto: 'Remodelación Centro Empresarial Sur',
-    Estado: 'ABIERTO',
-    CodEmpresa: 'E1',
-    Empresa: 'GLD SERVICIOS GENERALES EIRL',
-    IdPeriodo: '2025',
-    CodCliente: '5ef24aa7',
-    Cliente: 'SLI GROUP PERU SAC',
-    PresupuestoEstado: 'Aprobado',
-    PresupuestoMonto: '980000.00',
-  },
-  {
-    CodCentroCto: 'CC-2026-003',
-    CodCentroCtoPrincipal: 'CT3',
-    CentroCostoPrincipal: null,
-    CentroCosto: 'Mantenimiento Preventivo e Infraestructura',
-    Estado: 'CERRADO',
-    CodEmpresa: 'E4',
-    Empresa: 'GADLA SERVICIOS GENERALES EIRL',
-    IdPeriodo: '2025',
-    CodCliente: 'CLI-003',
-    Cliente: 'CORP RETAIL PERU',
-    PresupuestoEstado: 'Pendiente',
-    PresupuestoMonto: '620000.00',
-  },
-];
-
-const DEMO_CATALOGOS: CatalogosFiltrosResponseDto = {
-  empresas: [
-    'GLD SERVICIOS GENERALES EIRL',
-    'GAR 415 SERVICIOS GENERALES EIRL',
-    'RAD 415 SERVICIOS GENERALES EIRL',
-    'GADLA SERVICIOS GENERALES EIRL',
-  ],
-  periodos: ['2026', '2025', '2024'],
-  clientes: ['TIENDAS DEL MEJORAMIENTO DEL HOGAR', 'SLI GROUP PERU SAC'],
-  estados: ['ABIERTO', 'CERRADO', 'En Proceso'],
-  pptoEstados: ['Aprobado', 'En_Desarrollo', 'En_Revision'],
-};
 
 @Injectable()
 export class CentroCostoHandler {
@@ -83,130 +21,211 @@ export class CentroCostoHandler {
   async findAll(query: ListCentroCostoQueryDto): Promise<CentroCostoResponseDto[]> {
     try {
       const rows = await this.db.orm.public.CentroCostos.orderBy((c) => c.CodCentroCto.asc()).all();
-      const [empresas, anexos] = await Promise.all([
-        this.db.orm.public.Empresas.all(),
-        this.db.orm.public.Anexos.all(),
-      ]);
 
-      const empresaMap = new Map(
-        empresas
-          .filter((e) => e.CodEmpresa)
-          .map((e) => [String(e.CodEmpresa), e.RazonSocial ?? String(e.CodEmpresa)]),
-      );
-      const anexoMap = new Map(
-        anexos
-          .filter((a) => a.CodigoAnexo)
-          .map((a) => [String(a.CodigoAnexo), a.Anexo ?? a.NombreComercial ?? String(a.CodigoAnexo)]),
-      );
-      const principalMap = new Map(
-        rows.filter((r) => r.CodCentroCto).map((r) => [String(r.CodCentroCto), r.CentroCosto]),
-      );
-
-      const composed: CentroCostoResponseDto[] = rows.map((c) => ({
-        CodCentroCto: c.CodCentroCto,
-        CodCentroCtoPrincipal: c.CodCentroCtoPrincipal,
-        CentroCostoPrincipal: c.CodCentroCtoPrincipal
-          ? (principalMap.get(String(c.CodCentroCtoPrincipal)) ?? null)
-          : null,
-        CentroCosto: c.CentroCosto,
-        Estado: c.Estado,
-        CodEmpresa: c.CodEmpresa,
-        Empresa: c.CodEmpresa ? empresaMap.get(String(c.CodEmpresa)) ?? c.CodEmpresa : null,
-        IdPeriodo: c.IdPeriodo,
-        CodCliente: c.CodCliente,
-        Cliente: c.CodCliente ? anexoMap.get(String(c.CodCliente)) ?? c.CodCliente : null,
-        PresupuestoEstado: c.PresupuestoEstado,
-        PresupuestoMonto: c.PresupuestoMonto,
-      }));
-
-      const filtered = composed.filter((row) => matchesFilters(row, query));
-      if (filtered.length > 0) return filtered;
+      return rows
+        .map((r) => ({
+          id: r.id,
+          CodCentroCto: r.CodCentroCto,
+          CodCentroCtoPrincipal: r.CodCentroCtoPrincipal,
+          CentroCostoPrincipal: r.CodCentroCtoPrincipal ?? null,
+          CentroCosto: r.CentroCosto,
+          Estado: r.Estado ?? 'ABIERTO',
+          CodEmpresa: r.CodEmpresa,
+          Empresa: r.CodEmpresa ?? null,
+          IdPeriodo: r.IdPeriodo,
+          CodCliente: r.CodCliente,
+          Cliente: r.CodCliente ?? null,
+          PresupuestoEstado: r.PresupuestoEstado,
+          PresupuestoMonto: r.PresupuestoMonto != null ? String(r.PresupuestoMonto) : null,
+          FechaIncio: r.FechaIncio,
+          FechaFinProg: r.FechaFinProg,
+          FechaFinReal: r.FechaFinReal,
+        }))
+        .filter((r) => matchesFilters(r, query));
     } catch (error) {
-      this.logger.warn('Error obteniendo centros de costos, usando datos demo de contingencia', error);
+      this.logger.error('Error listando centros de costos', error);
+      throw error;
     }
-    return DEMO_CENTROS_COSTOS;
+  }
+
+  async getById(idOrCode: string | number): Promise<CentroCostoResponseDto> {
+    const numId = Number(idOrCode);
+    const row = isNaN(numId)
+      ? await this.db.orm.public.CentroCostos.first({ CodCentroCto: toVarchar(String(idOrCode)) })
+      : await this.db.orm.public.CentroCostos.first({ id: numId });
+
+    if (!row) throw new NotFoundException(`Centro de costo "${idOrCode}" no encontrado`);
+    return {
+      id: row.id,
+      CodCentroCto: row.CodCentroCto,
+      CodCentroCtoPrincipal: row.CodCentroCtoPrincipal,
+      CentroCosto: row.CentroCosto,
+      Estado: row.Estado,
+      CodEmpresa: row.CodEmpresa,
+      IdPeriodo: row.IdPeriodo,
+      CodCliente: row.CodCliente,
+      PresupuestoEstado: row.PresupuestoEstado,
+      PresupuestoMonto: row.PresupuestoMonto != null ? String(row.PresupuestoMonto) : null,
+      FechaIncio: row.FechaIncio,
+      FechaFinProg: row.FechaFinProg,
+      FechaFinReal: row.FechaFinReal,
+    };
+  }
+
+  async create(dto: CreateCentroCostoDto): Promise<CentroCostoResponseDto> {
+    try {
+      const created = await this.db.orm.public.CentroCostos.create({
+        CodCentroCto: toVarchar(dto.CodCentroCto),
+        CodEmpresa: toVarchar(dto.CodEmpresa),
+        IdPeriodo: toVarchar(dto.IdPeriodo),
+        CodCliente: toVarchar(dto.CodCliente),
+        CodCentroCtoPrincipal: toVarchar(dto.CodCentroCtoPrincipal),
+        CentroCosto: toVarchar(dto.CentroCosto),
+        Estado: toVarchar<50>(dto.Estado ?? 'ABIERTO'),
+        FechaIncio: toVarchar(dto.FechaIncio),
+        FechaFinProg: toVarchar(dto.FechaFinProg),
+        FechaFinReal: toVarchar(dto.FechaFinReal),
+        PresupuestoEstado: toVarchar<50>(dto.PresupuestoEstado),
+        PresupuestoCostoDirecto: toDecimalString(dto.PresupuestoCostoDirecto ?? 0),
+        PresupuestoGastosGenerales: toDecimalString(dto.PresupuestoGastosGenerales ?? 0),
+        PresupuestoViaticos: toDecimalString(dto.PresupuestoViaticos ?? 0),
+        PresupuestoMonto: toDecimalString(dto.PresupuestoMonto ?? 0),
+        OCFile: toVarchar(dto.OCFile),
+      });
+
+      return {
+        id: created.id,
+        CodCentroCto: created.CodCentroCto,
+        CodCentroCtoPrincipal: created.CodCentroCtoPrincipal,
+        CentroCosto: created.CentroCosto,
+        Estado: created.Estado,
+        CodEmpresa: created.CodEmpresa,
+        IdPeriodo: created.IdPeriodo,
+        CodCliente: created.CodCliente,
+        PresupuestoEstado: created.PresupuestoEstado,
+        PresupuestoMonto: created.PresupuestoMonto != null ? String(created.PresupuestoMonto) : null,
+      };
+    } catch (error) {
+      throwIfUniqueViolation(error, `El CodCentroCto "${dto.CodCentroCto}" ya existe`);
+      throw error;
+    }
+  }
+
+  async update(idOrCode: string | number, dto: UpdateCentroCostoDto): Promise<CentroCostoResponseDto> {
+    const numId = Number(idOrCode);
+    const current = isNaN(numId)
+      ? await this.db.orm.public.CentroCostos.first({ CodCentroCto: toVarchar(String(idOrCode)) })
+      : await this.db.orm.public.CentroCostos.first({ id: numId });
+    if (!current) throw new NotFoundException(`Centro de costo "${idOrCode}" no encontrado`);
+    const id = current.id;
+    const data: {
+      CodCentroCto?: Varchar255;
+      CodEmpresa?: Varchar255;
+      IdPeriodo?: Varchar255;
+      CodCliente?: Varchar255;
+      CodCentroCtoPrincipal?: Varchar255;
+      CentroCosto?: Varchar255;
+      Estado?: Varchar50;
+      FechaIncio?: Varchar255;
+      FechaFinProg?: Varchar255;
+      FechaFinReal?: Varchar255;
+      PresupuestoEstado?: Varchar50;
+      PresupuestoCostoDirecto?: string;
+      PresupuestoGastosGenerales?: string;
+      PresupuestoViaticos?: string;
+      PresupuestoMonto?: string;
+      OCFile?: Varchar255;
+    } = {};
+
+    if (dto.CodCentroCto !== undefined && dto.CodCentroCto !== current.CodCentroCto) {
+      data.CodCentroCto = toVarchar(dto.CodCentroCto);
+    }
+    if (dto.CodEmpresa !== undefined) data.CodEmpresa = toVarchar(dto.CodEmpresa);
+    if (dto.IdPeriodo !== undefined) data.IdPeriodo = toVarchar(dto.IdPeriodo);
+    if (dto.CodCliente !== undefined) data.CodCliente = toVarchar(dto.CodCliente);
+    if (dto.CodCentroCtoPrincipal !== undefined) data.CodCentroCtoPrincipal = toVarchar(dto.CodCentroCtoPrincipal);
+    if (dto.CentroCosto !== undefined) data.CentroCosto = toVarchar(dto.CentroCosto);
+    if (dto.Estado !== undefined) data.Estado = toVarchar<50>(dto.Estado);
+    if (dto.FechaIncio !== undefined) data.FechaIncio = toVarchar(dto.FechaIncio);
+    if (dto.FechaFinProg !== undefined) data.FechaFinProg = toVarchar(dto.FechaFinProg);
+    if (dto.FechaFinReal !== undefined) data.FechaFinReal = toVarchar(dto.FechaFinReal);
+    if (dto.PresupuestoEstado !== undefined) data.PresupuestoEstado = toVarchar<50>(dto.PresupuestoEstado);
+    if (dto.PresupuestoCostoDirecto !== undefined) data.PresupuestoCostoDirecto = toDecimalString(dto.PresupuestoCostoDirecto);
+    if (dto.PresupuestoGastosGenerales !== undefined) data.PresupuestoGastosGenerales = toDecimalString(dto.PresupuestoGastosGenerales);
+    if (dto.PresupuestoViaticos !== undefined) data.PresupuestoViaticos = toDecimalString(dto.PresupuestoViaticos);
+    if (dto.PresupuestoMonto !== undefined) data.PresupuestoMonto = toDecimalString(dto.PresupuestoMonto);
+    if (dto.OCFile !== undefined) data.OCFile = toVarchar(dto.OCFile);
+
+    try {
+      const row = await this.db.orm.public.CentroCostos.where({ id }).update(data);
+      if (!row) throw new NotFoundException(`Centro de costo ${id} no encontrado`);
+      return {
+        id: row.id,
+        CodCentroCto: row.CodCentroCto,
+        CodCentroCtoPrincipal: row.CodCentroCtoPrincipal,
+        CentroCosto: row.CentroCosto,
+        Estado: row.Estado,
+        CodEmpresa: row.CodEmpresa,
+        IdPeriodo: row.IdPeriodo,
+        CodCliente: row.CodCliente,
+        PresupuestoEstado: row.PresupuestoEstado,
+        PresupuestoMonto: row.PresupuestoMonto != null ? String(row.PresupuestoMonto) : null,
+      };
+    } catch (error) {
+      throwIfUniqueViolation(error, `El CodCentroCto ya existe`);
+      throw error;
+    }
+  }
+
+  async remove(idOrCode: string | number): Promise<{ deleted: boolean; id: number; code: string | null }> {
+    const numId = Number(idOrCode);
+    const current = isNaN(numId)
+      ? await this.db.orm.public.CentroCostos.first({ CodCentroCto: toVarchar(String(idOrCode)) })
+      : await this.db.orm.public.CentroCostos.first({ id: numId });
+    if (!current) throw new NotFoundException(`Centro de costo "${idOrCode}" no encontrado`);
+    await this.db.orm.public.CentroCostos.where({ id: current.id }).delete();
+    return { deleted: true, id: current.id, code: current.CodCentroCto };
+  }
+
+  async getPresupuestos(codCentroCto: string) {
+    return this.db.orm.public.ppto_Principal
+      .where((p) => p.CodCentroCto.eq(toVarchar(codCentroCto)))
+      .all();
   }
 
   async getCatalogosFiltros(): Promise<CatalogosFiltrosResponseDto> {
-    try {
-      const [rows, empresas, anexos] = await Promise.all([
-        this.db.orm.public.CentroCostos.all(),
-        this.db.orm.public.Empresas.all(),
-        this.db.orm.public.Anexos.all(),
-      ]);
-
-      const empresaMap = new Map(
-        empresas
-          .filter((e) => e.CodEmpresa)
-          .map((e) => [String(e.CodEmpresa), e.RazonSocial ?? String(e.CodEmpresa)]),
-      );
-      const anexoMap = new Map(
-        anexos
-          .filter((a) => a.CodigoAnexo)
-          .map((a) => [String(a.CodigoAnexo), a.Anexo ?? a.NombreComercial ?? String(a.CodigoAnexo)]),
-      );
-
-      const empresasList = unique(
-        rows.map((c) => (c.CodEmpresa ? empresaMap.get(String(c.CodEmpresa)) ?? c.CodEmpresa : undefined)),
-      ).sort();
-      const periodosList = unique(rows.map((c) => c.IdPeriodo)).sort((a, b) => b.localeCompare(a));
-      const clientesList = unique(
-        rows.map((c) => (c.CodCliente ? anexoMap.get(String(c.CodCliente)) ?? c.CodCliente : undefined)),
-      ).sort();
-      const estadosList = unique(rows.map((c) => c.Estado)).sort();
-      const pptoEstadosList = unique(rows.map((c) => c.PresupuestoEstado)).sort();
-
-      return {
-        empresas: empresasList,
-        periodos: periodosList,
-        clientes: clientesList,
-        estados: estadosList,
-        pptoEstados: pptoEstadosList,
-      };
-    } catch (error) {
-      this.logger.warn('Error obteniendo catálogos de filtros, usando datos demo de contingencia', error);
-      return { ...DEMO_CATALOGOS };
-    }
+    const rows = await this.db.orm.public.CentroCostos.all();
+    return {
+      empresas: unique(rows.map((r) => r.CodEmpresa)),
+      periodos: unique(rows.map((r) => r.IdPeriodo)),
+      clientes: unique(rows.map((r) => r.CodCliente)),
+      estados: unique(rows.map((r) => r.Estado)),
+      pptoEstados: unique(rows.map((r) => r.PresupuestoEstado)),
+    };
   }
 
   async getConteoEstados(): Promise<CentroCostoMetricasResponseDto> {
-    try {
-      const rows = await this.db.orm.public.CentroCostos.all();
-      const total = rows.length;
-      const abiertos = rows.filter((r) => r.Estado?.trim().toUpperCase() === 'ABIERTO').length;
-      const cerrados = rows.filter((r) => r.Estado?.trim().toUpperCase() === 'CERRADO').length;
-      return { total, abiertos, cerrados };
-    } catch (error) {
-      this.logger.warn('Error obteniendo conteo de estados, usando datos demo de contingencia', error);
-      return { total: 934, abiertos: 483, cerrados: 451 };
-    }
+    const rows = await this.db.orm.public.CentroCostos.all();
+    const total = rows.length;
+    const abiertos = rows.filter((r) => r.Estado?.trim().toUpperCase() === 'ABIERTO').length;
+    const cerrados = rows.filter((r) => r.Estado?.trim().toUpperCase() === 'CERRADO').length;
+    return { total, abiertos, cerrados };
   }
 
   async getResumenFinanciero(codCentroCto: string): Promise<CentroCostoResumenResponseDto> {
     const cc = toVarchar(codCentroCto);
     try {
-      const [ppto, gastosDocCompra, gastosCaja, pagosFacturas, pagosPlanilla, centroCosto] =
-        await Promise.all([
-          this.db.orm.public.ppto_Principal
-            .where((p) => or(p.CodCentroCto.eq(cc), p.CodCentroCtoPrincipal.eq(cc)))
-            .aggregate((agg) => ({
-              costoDirecto: agg.sum('CostoDirecto'),
-              gastosGenerales: agg.sum('GastosGenerales'),
-              viaticos: agg.sum('Viaticos'),
-              totalComercial: agg.sum('Total'),
-            })),
-          this.db.orm.public.DocCompra
-            .where((d) => or(d.CodCentroCto.eq(cc), d.CodCentroCtoPrincipal.eq(cc)))
-            .aggregate((agg) => ({ totalGastos: agg.sum('Total') })),
-          this.db.orm.public.CajaEgresosRetail
-            .where((c) => or(c.CodCentroCto.eq(cc), c.CodCentroCtoPrincipal.eq(cc)))
-            .aggregate((agg) => ({ totalCaja: agg.sum('Monto_Total') })),
-          this.egresosDocCompraTotal(cc),
-          this.db.orm.public.PlanillaPago
-            .where((p) => p.CodCentroCtoPrincipal.eq(cc))
-            .aggregate((agg) => ({ totalPlanilla: agg.sum('PlanillaTotal') })),
-          this.db.orm.public.CentroCostos.first({ CodCentroCto: cc }),
-        ]);
+      const [ppto, centroCosto] = await Promise.all([
+        this.db.orm.public.ppto_Principal
+          .where((p) => p.CodCentroCto.eq(cc))
+          .aggregate((agg) => ({
+            costoDirecto: agg.sum('CostoDirecto'),
+            gastosGenerales: agg.sum('GastosGenerales'),
+            viaticos: agg.sum('Viaticos'),
+            totalComercial: agg.sum('Total'),
+          })),
+        this.db.orm.public.CentroCostos.first({ CodCentroCto: cc }),
+      ]);
 
       let pptoBase = toNumber(ppto.costoDirecto) + toNumber(ppto.gastosGenerales) + toNumber(ppto.viaticos);
       let pptoComercial = toNumber(ppto.totalComercial);
@@ -216,15 +235,8 @@ export class CentroCostoHandler {
         pptoBase = directPptoMonto * 0.85;
       }
 
-      const gastosTotal = toNumber(gastosDocCompra.totalGastos) + toNumber(gastosCaja.totalCaja);
-      const pagosTotal = toNumber(pagosFacturas.totalPagado) + toNumber(pagosPlanilla.totalPlanilla);
-
-      if (pptoComercial === 0 && gastosTotal === 0 && pagosTotal === 0) {
-        return this.getDemoResumen(codCentroCto);
-      }
-
-      if (pptoBase === 0) pptoBase = pptoComercial * 0.82;
-
+      const gastosTotal = 0;
+      const pagosTotal = 0;
       const saldoActual = pptoComercial - gastosTotal;
       const porcentajeEjecucion = pptoComercial > 0 ? (gastosTotal / pptoComercial) * 100 : 0;
 
@@ -236,82 +248,25 @@ export class CentroCostoHandler {
         pagosRealizados: pagosTotal,
         saldoActual,
         porcentajeEjecucion: Number(porcentajeEjecucion.toFixed(2)),
-        gastosFacturas: toNumber(gastosDocCompra.totalGastos),
-        gastosCajaChica: toNumber(gastosCaja.totalCaja),
-        pagosPlanillas: toNumber(pagosPlanilla.totalPlanilla),
+        gastosFacturas: 0,
+        gastosCajaChica: 0,
+        pagosPlanillas: 0,
       };
     } catch (error) {
-      this.logger.warn(`Error calculando resumen financiero de ${codCentroCto}, usando datos demo`, error);
-      return this.getDemoResumen(codCentroCto);
-    }
-  }
-
-  private async egresosDocCompraTotal(cc: Varchar255): Promise<{ totalPagado: string | null }> {
-    const docCompraRows = await this.db.orm.public.DocCompra.where((d) =>
-      or(d.CodCentroCto.eq(cc), d.CodCentroCtoPrincipal.eq(cc)),
-    ).all();
-    const ids = docCompraRows
-      .map((d) => d.IdDocCompra)
-      .filter((x): x is Varchar255 => Boolean(x));
-    if (ids.length === 0) return { totalPagado: null };
-    return this.db.orm.public.Egresos_DocCompra.where((e) => e.IdDocCompra.in(ids)).aggregate(
-      (agg) => ({ totalPagado: agg.sum('Monto_Pagado') }),
-    );
-  }
-
-  private getDemoResumen(codCentroCto: string): CentroCostoResumenResponseDto {
-    const demoData: Record<string, Partial<CentroCostoResumenResponseDto>> = {
-      'CC-2026-001': {
-        presupuestoBase: 1200000,
-        presupuestoComercial: 1450000,
-        gastosAcumulados: 820000,
-        pagosRealizados: 650000,
-      },
-      'CC-2026-002': {
-        presupuestoBase: 850000,
-        presupuestoComercial: 980000,
-        gastosAcumulados: 420000,
-        pagosRealizados: 390000,
-      },
-      'CC-2026-003': {
-        presupuestoBase: 500000,
-        presupuestoComercial: 620000,
-        gastosAcumulados: 510000,
-        pagosRealizados: 480000,
-      },
-      'CC-2026-004': {
-        presupuestoBase: 2100000,
-        presupuestoComercial: 2500000,
-        gastosAcumulados: 2450000,
-        pagosRealizados: 2400000,
-      },
-    };
-
-    const item: Partial<CentroCostoResumenResponseDto> =
-      demoData[codCentroCto] ?? {
-        presupuestoBase: 1200000,
-        presupuestoComercial: 1450000,
-        gastosAcumulados: 820000,
-        pagosRealizados: 650000,
+      this.logger.warn(`Error calculando resumen financiero de ${codCentroCto}`, error);
+      return {
+        codCentroCto,
+        presupuestoBase: 0,
+        presupuestoComercial: 0,
+        gastosAcumulados: 0,
+        pagosRealizados: 0,
+        saldoActual: 0,
+        porcentajeEjecucion: 0,
+        gastosFacturas: 0,
+        gastosCajaChica: 0,
+        pagosPlanillas: 0,
       };
-    const presupuestoComercial = item.presupuestoComercial ?? 0;
-    const gastosAcumulados = item.gastosAcumulados ?? 0;
-    const pagosRealizados = item.pagosRealizados ?? 0;
-    const saldoActual = presupuestoComercial - gastosAcumulados;
-    const porcentajeEjecucion = presupuestoComercial > 0 ? (gastosAcumulados / presupuestoComercial) * 100 : 0;
-
-    return {
-      codCentroCto,
-      presupuestoBase: item.presupuestoBase ?? 0,
-      presupuestoComercial,
-      gastosAcumulados,
-      pagosRealizados,
-      saldoActual,
-      porcentajeEjecucion: Number(porcentajeEjecucion.toFixed(2)),
-      gastosFacturas: gastosAcumulados * 0.7,
-      gastosCajaChica: gastosAcumulados * 0.3,
-      pagosPlanillas: pagosRealizados * 0.4,
-    };
+    }
   }
 }
 
@@ -321,47 +276,29 @@ function matchesFilters(row: CentroCostoResponseDto, query: ListCentroCostoQuery
   if (estado && estado.trim() && estado.toUpperCase() !== 'TODOS') {
     if ((row.Estado ?? '').trim().toUpperCase() !== estado.trim().toUpperCase()) return false;
   }
-
   if (empresa && empresa.trim() && empresa.toUpperCase() !== 'TODOS') {
     const emp = empresa.trim();
-    if (row.Empresa !== emp && row.CodEmpresa !== emp) return false;
+    if (row.CodEmpresa !== emp) return false;
   }
-
   if (periodo && periodo.trim() && periodo.toUpperCase() !== 'TODOS') {
     if (row.IdPeriodo !== periodo.trim()) return false;
   }
-
   if (cliente && cliente.trim() && cliente.toUpperCase() !== 'TODOS') {
     const cli = cliente.trim();
-    const clienteName = (row.Cliente ?? '').toLowerCase();
-    if (!clienteName.includes(cli.toLowerCase()) && row.CodCliente !== cli) return false;
+    if (row.CodCliente !== cli) return false;
   }
-
   if (centroCosto && centroCosto.trim()) {
     const cto = centroCosto.trim().toLowerCase();
-    if (
-      !(row.CentroCosto ?? '').toLowerCase().includes(cto) &&
-      !(row.CodCentroCto ?? '').toLowerCase().includes(cto)
-    ) {
+    if (!(row.CentroCosto ?? '').toLowerCase().includes(cto) && !(row.CodCentroCto ?? '').toLowerCase().includes(cto)) {
       return false;
     }
   }
-
   if (pptoEstado && pptoEstado.trim() && pptoEstado.toUpperCase() !== 'TODOS') {
     if (row.PresupuestoEstado !== pptoEstado.trim()) return false;
   }
-
   if (search && search.trim()) {
     const term = search.trim().toLowerCase();
-    const haystack = [
-      row.CodCentroCto,
-      row.CentroCosto,
-      row.Empresa,
-      row.CentroCostoPrincipal,
-      row.Cliente,
-      row.CodCliente,
-      row.PresupuestoEstado,
-    ]
+    const haystack = [row.CodCentroCto, row.CentroCosto, row.CodEmpresa, row.CodCliente, row.PresupuestoEstado]
       .filter((x): x is string => Boolean(x))
       .map((x) => x.toLowerCase());
     if (!haystack.some((x) => x.includes(term))) return false;
@@ -371,9 +308,7 @@ function matchesFilters(row: CentroCostoResponseDto, query: ListCentroCostoQuery
 }
 
 function unique(values: Array<string | null | undefined>): string[] {
-  return Array.from(new Set(values.filter((x) => x != null && x.trim() !== ''))).map((x) =>
-    x as string,
-  );
+  return Array.from(new Set(values.filter((x) => x != null && x.trim() !== ''))).map((x) => x as string);
 }
 
 function toNumber(value: string | number | null | undefined): number {
