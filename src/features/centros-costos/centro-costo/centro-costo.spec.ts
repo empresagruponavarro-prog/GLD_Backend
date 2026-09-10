@@ -60,8 +60,8 @@ describe('centro-costo', () => {
             })),
           },
           CajaEgresosRetail: { where: vi.fn(() => ({ aggregate: cajaAggregate })) },
-          Egresos_DocCompra: { where: vi.fn(() => ({ aggregate: egresosAggregate })) },
-          PlanillaPago: { where: vi.fn(() => ({ aggregate: planillaAggregate })) },
+          Egresos_DocCompra: { aggregate: egresosAggregate, where: vi.fn(() => ({ aggregate: egresosAggregate })) },
+          PlanillaPago: { aggregate: planillaAggregate, where: vi.fn(() => ({ aggregate: planillaAggregate })) },
         },
       },
     } as unknown as Database;

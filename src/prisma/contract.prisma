@@ -236,8 +236,6 @@ model CentroCostos {
   PresupuestoMonto           Decimal?
   OCFile                     VarChar(255)?
 
-  presupuestos               ppto_Principal[]
-
   @@map("CentroCostos")
 }
 
@@ -675,8 +673,8 @@ model Incidencia {
 }
 
 model ppto_DetalleFases {
-  id                    Int                     @id @default(autoincrement())
-  IdPresupuestoDetalle  VarChar(255)?           @unique
+  id                    Int           @id @default(autoincrement())
+  IdPresupuestoDetalle  VarChar(255)? @unique
   IdPresupuesto         VarChar(255)?
   CodEmpresa            VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
@@ -685,15 +683,11 @@ model ppto_DetalleFases {
   CostoDirecto          Decimal?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
-
-  presupuesto           ppto_Principal?         @relation(fields:[IdPresupuesto], references:[IdPresupuesto])
-  fase                  ppto_Fases?             @relation(fields:[IdpptoFase], references:[IdpptoFase])
-  categoriasDetalle     ppto_DetalleFasesCate[]
 }
 
 model ppto_DetalleFasesCate {
-  id                            Int                   @id @default(autoincrement())
-  IdPresupuestoDetalleCategoria VarChar(255)?         @unique
+  id                            Int           @id @default(autoincrement())
+  IdPresupuestoDetalleCategoria VarChar(255)? @unique
   IdPresupuesto                 VarChar(255)?
   IdPresupuestoDetalle          VarChar(255)?
   CodEmpresa                    VarChar(255)?
@@ -704,35 +698,26 @@ model ppto_DetalleFasesCate {
   CostoDirecto                  Decimal?
   Usuario                       VarChar(255)?
   FechaCreacion                 VarChar(255)?
-
-  detalleFase                   ppto_DetalleFases?    @relation(fields:[IdPresupuestoDetalle], references:[IdPresupuestoDetalle])
-  faseCategoria                 ppto_FasesCategorias? @relation(fields:[IdpptoFaseCategoria], references:[IdpptoFaseCategoria])
 }
 
 model ppto_Fases {
-  id                    Int                    @id @default(autoincrement())
-  IdpptoFase            VarChar(255)?          @unique
+  id                    Int           @id @default(autoincrement())
+  IdpptoFase            VarChar(255)? @unique
   CodEmpresa            VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   FaseProyecto          VarChar(255)?
-
-  categorias            ppto_FasesCategorias[]
-  detallesFases         ppto_DetalleFases[]
 }
 
 model ppto_FasesCategorias {
-  id                  Int                     @id @default(autoincrement())
-  IdpptoFaseCategoria VarChar(255)?           @unique
+  id                  Int           @id @default(autoincrement())
+  IdpptoFaseCategoria VarChar(255)? @unique
   IdpptoFase          VarChar(255)?
   Descripcion         VarChar(255)?
-
-  fase                ppto_Fases?             @relation(fields:[IdpptoFase], references:[IdpptoFase])
-  detallesFasesCate   ppto_DetalleFasesCate[]
 }
 
 model ppto_Principal {
-  id                    Int                        @id @default(autoincrement())
-  IdPresupuesto         VarChar(255)?              @unique
+  id                    Int           @id @default(autoincrement())
+  IdPresupuesto         VarChar(255)? @unique
   CodEmpresa            VarChar(255)?
   IdPeriodo             VarChar(255)?
   Version               VarChar(255)?
@@ -761,19 +746,13 @@ model ppto_Principal {
   IdUsuario             VarChar(255)?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
-
-  centroCosto           CentroCostos?              @relation(fields:[CodCentroCto], references:[CodCentroCto])
-  historiales           ppto_Principal_Historial[]
-  detallesFases         ppto_DetalleFases[]
 }
 
 model ppto_Principal_Historial {
-  id                   Int             @id @default(autoincrement())
+  id                   Int           @id @default(autoincrement())
   IdPresupuestoVersion VarChar(255)?
   IdPresupuesto        VarChar(255)?
   NumVersion           VarChar(255)?
   FilePpto             VarChar(255)?
   FileCorreo           VarChar(255)?
-
-  presupuestoPrincipal ppto_Principal? @relation(fields:[IdPresupuesto], references:[IdPresupuesto])
 }
