@@ -28,17 +28,19 @@ export class CentroCostoHandler {
 
       const empresasByCode = new Map(empresas.map((e) => [e.CodEmpresa, e.RazonSocial]));
       const anexosByCode = new Map(anexos.map((a) => [a.CodigoAnexo, a.Anexo]));
+      const centrosByCode = new Map(rows.map((row) => [row.CodCentroCto, row]));
 
       return rows
         .map((r) => {
           const codEmpresa = r.CodEmpresa;
           const codCliente = r.CodCliente;
+          const principal = r.CodCentroCtoPrincipal ? centrosByCode.get(r.CodCentroCtoPrincipal) : null;
 
           return {
             id: r.id,
             CodCentroCto: r.CodCentroCto,
             CodCentroCtoPrincipal: r.CodCentroCtoPrincipal,
-            CentroCostoPrincipal: r.CodCentroCtoPrincipal ?? null,
+            CentroCostoPrincipal: principal?.CentroCosto ?? r.CodCentroCtoPrincipal ?? null,
             CentroCosto: r.CentroCosto,
             Estado: r.Estado ?? 'ABIERTO',
             CodEmpresa: r.CodEmpresa,
