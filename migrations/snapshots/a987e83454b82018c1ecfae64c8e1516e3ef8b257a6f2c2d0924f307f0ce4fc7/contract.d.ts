@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9c1d3ea755b10b5d3b6f7feec5df729d2ee951b95d76edd4bf3c41f4be9fa08a'>;
+  StorageHashBase<'a987e83454b82018c1ecfae64c8e1516e3ef8b257a6f2c2d0924f307f0ce4fc7'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -285,7 +285,8 @@ export type FieldOutputTypes = {
     };
     readonly Anexos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
+      readonly CodigoAnexo: Varchar<255> | null;
+      readonly TipoAnexo: Varchar<255> | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['output'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['output'] | null;
       readonly NumeroDocIde: Varchar<255> | null;
@@ -295,7 +296,7 @@ export type FieldOutputTypes = {
       readonly Contacto: Varchar<255> | null;
       readonly Telefono: Varchar<255> | null;
       readonly Correo: Varchar<255> | null;
-      readonly estado: CodecTypes['pg/bool@1']['output'];
+      readonly Estado: Varchar<50> | null;
     };
     readonly Bancos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -957,7 +958,8 @@ export type FieldInputTypes = {
     };
     readonly Anexos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
+      readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly TipoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['input'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['input'] | null;
       readonly NumeroDocIde: CodecTypes['sql/varchar@1']['input'] | null;
@@ -967,7 +969,7 @@ export type FieldInputTypes = {
       readonly Contacto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Telefono: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Correo: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly estado: CodecTypes['pg/bool@1']['input'];
+      readonly Estado: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly Bancos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -1631,15 +1633,16 @@ export type StorageColumnTypes = {
       readonly Anexo: Varchar<255> | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['output'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['output'] | null;
+      readonly CodigoAnexo: Varchar<255> | null;
       readonly Contacto: Varchar<255> | null;
       readonly Correo: Varchar<255> | null;
       readonly Direccion: Varchar<255> | null;
-      readonly estado: CodecTypes['pg/bool@1']['output'];
+      readonly Estado: Varchar<50> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly NombreComercial: Varchar<255> | null;
       readonly NumeroDocIde: Varchar<255> | null;
       readonly Telefono: Varchar<255> | null;
-      readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
+      readonly TipoAnexo: Varchar<255> | null;
     };
     readonly bancos: {
       readonly Banco: Varchar<255> | null;
@@ -2303,15 +2306,16 @@ export type StorageColumnInputTypes = {
       readonly Anexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['input'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['input'] | null;
+      readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Contacto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Correo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Direccion: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly estado: CodecTypes['pg/bool@1']['input'];
+      readonly Estado: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly NombreComercial: CodecTypes['sql/varchar@1']['input'] | null;
       readonly NumeroDocIde: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Telefono: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
+      readonly TipoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly bancos: {
       readonly Banco: CodecTypes['sql/varchar@1']['input'] | null;
@@ -3206,10 +3210,17 @@ type ContractBase = Omit<
                     readonly expression: 'autoincrement()';
                   };
                 };
-                readonly tipoAnexo: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
+                readonly CodigoAnexo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
                   readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly TipoAnexo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
                 };
                 readonly AnexoEspecialidadId: {
                   readonly nativeType: 'int4';
@@ -3263,14 +3274,11 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly typeParams: { readonly length: 255 };
                 };
-                readonly estado: {
-                  readonly nativeType: 'bool';
-                  readonly codecId: 'pg/bool@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
-                  };
+                readonly Estado: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -6947,10 +6955,6 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['PRODUCTO', 'SERVICIO'];
             };
-            readonly TipoAnexo: {
-              readonly kind: 'valueSet';
-              readonly values: readonly ['Proveedor', 'Cliente', 'Trabajador'];
-            };
           };
         };
       };
@@ -7481,9 +7485,21 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly tipoAnexo: {
+              readonly CodigoAnexo: {
                 readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly TipoAnexo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
               };
               readonly AnexoEspecialidadId: {
                 readonly nullable: true;
@@ -7549,9 +7565,13 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
               };
-              readonly estado: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              readonly Estado: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
               };
             };
             readonly relations: {
@@ -7583,7 +7603,8 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly tipoAnexo: { readonly column: 'tipoAnexo' };
+                readonly CodigoAnexo: { readonly column: 'CodigoAnexo' };
+                readonly TipoAnexo: { readonly column: 'TipoAnexo' };
                 readonly AnexoEspecialidadId: { readonly column: 'AnexoEspecialidadId' };
                 readonly AnexoTipoDocIdeId: { readonly column: 'AnexoTipoDocIdeId' };
                 readonly NumeroDocIde: { readonly column: 'NumeroDocIde' };
@@ -7593,7 +7614,7 @@ type ContractBase = Omit<
                 readonly Contacto: { readonly column: 'Contacto' };
                 readonly Telefono: { readonly column: 'Telefono' };
                 readonly Correo: { readonly column: 'Correo' };
-                readonly estado: { readonly column: 'estado' };
+                readonly Estado: { readonly column: 'Estado' };
               };
             };
           };
@@ -12254,14 +12275,6 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'PRODUCTO'; readonly value: 'PRODUCTO' },
               { readonly name: 'SERVICIO'; readonly value: 'SERVICIO' },
-            ];
-          };
-          readonly TipoAnexo: {
-            readonly codecId: 'pg/text@1';
-            readonly members: readonly [
-              { readonly name: 'Proveedor'; readonly value: 'Proveedor' },
-              { readonly name: 'Cliente'; readonly value: 'Cliente' },
-              { readonly name: 'Trabajador'; readonly value: 'Trabajador' },
             ];
           };
         };

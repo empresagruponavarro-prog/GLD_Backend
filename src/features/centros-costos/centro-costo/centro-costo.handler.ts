@@ -20,14 +20,12 @@ export class CentroCostoHandler {
 
   async findAll(query: ListCentroCostoQueryDto): Promise<CentroCostoResponseDto[]> {
     try {
-      const [rows, empresas, anexos] = await Promise.all([
+      const [rows, empresas] = await Promise.all([
         this.db.orm.public.CentroCostos.orderBy((c) => c.CodCentroCto.asc()).all(),
         this.db.orm.public.Empresas.all(),
-        this.db.orm.public.Anexos.all(),
       ]);
 
       const empresasByCode = new Map(empresas.map((e) => [e.CodEmpresa, e.RazonSocial]));
-      const anexosByCode = new Map(anexos.map((a) => [a.CodigoAnexo, a.Anexo]));
       const centrosByCode = new Map(rows.map((row) => [row.CodCentroCto, row]));
 
       return rows
@@ -47,7 +45,7 @@ export class CentroCostoHandler {
             Empresa: codEmpresa ? empresasByCode.get(codEmpresa) ?? codEmpresa : null,
             IdPeriodo: r.IdPeriodo,
             CodCliente: r.CodCliente,
-            Cliente: codCliente ? anexosByCode.get(codCliente) ?? codCliente : null,
+            Cliente: codCliente,
             PresupuestoEstado: r.PresupuestoEstado,
             PresupuestoMonto: r.PresupuestoMonto != null ? String(r.PresupuestoMonto) : null,
             FechaIncio: r.FechaIncio,
@@ -208,14 +206,12 @@ export class CentroCostoHandler {
   }
 
   async getCatalogosFiltros(): Promise<CatalogosFiltrosResponseDto> {
-    const [rows, empresas, anexos] = await Promise.all([
+    const [rows, empresas] = await Promise.all([
       this.db.orm.public.CentroCostos.all(),
       this.db.orm.public.Empresas.all(),
-      this.db.orm.public.Anexos.all(),
     ]);
 
     const empresasByCode = new Map(empresas.map((e) => [e.CodEmpresa, e.RazonSocial]));
-    const anexosByCode = new Map(anexos.map((a) => [a.CodigoAnexo, a.Anexo]));
 
     return {
       empresas: unique(
@@ -225,12 +221,7 @@ export class CentroCostoHandler {
         }),
       ),
       periodos: unique(rows.map((r) => r.IdPeriodo)),
-      clientes: unique(
-        rows.map((r) => {
-          const codCliente = r.CodCliente;
-          return codCliente ? anexosByCode.get(codCliente) ?? codCliente : null;
-        }),
-      ),
+      clientes: unique(rows.map((r) => r.CodCliente)),
       estados: unique(rows.map((r) => r.Estado)),
       pptoEstados: unique(rows.map((r) => r.PresupuestoEstado)),
     };

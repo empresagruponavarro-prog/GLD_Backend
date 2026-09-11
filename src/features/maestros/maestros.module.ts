@@ -4,8 +4,14 @@ import { CategoriaController } from './categoria/categoria.controller.js';
 import { CategoriaHandler } from './categoria/categoria.handler.js';
 import { CategoriaProductosController } from './categoria/productos/productos.controller.js';
 import { CategoriaProductosHandler } from './categoria/productos/productos.handler.js';
+import { AnexoController } from './anexo/anexo.controller.js';
+import { AnexoHandler } from './anexo/anexo.handler.js';
+import { EspecialidadController } from './especialidad/especialidad.controller.js';
+import { EspecialidadHandler } from './especialidad/especialidad.handler.js';
 import { ProductoController } from './producto/producto.controller.js';
 import { ProductoHandler } from './producto/producto.handler.js';
+import { TipoDocIdentidadController } from './tipo-doc-identidad/tipo-doc-identidad.controller.js';
+import { TipoDocIdentidadHandler } from './tipo-doc-identidad/tipo-doc-identidad.handler.js';
 import { TipoCategoriaController } from './tipo-categoria/tipo-categoria.controller.js';
 import { TipoCategoriaHandler } from './tipo-categoria/tipo-categoria.handler.js';
 import { EquivalenciaController } from './unidad-medida/equivalencia/equivalencia.controller.js';
@@ -25,6 +31,9 @@ import { UnidadMedidaProductosHandler } from './unidad-medida/productos/producto
     ProductoController,
     CategoriaProductosController,
     UnidadMedidaProductosController,
+    EspecialidadController,
+    TipoDocIdentidadController,
+    AnexoController,
   ],
   providers: [
     TipoCategoriaHandler,
@@ -34,6 +43,9 @@ import { UnidadMedidaProductosHandler } from './unidad-medida/productos/producto
     ProductoHandler,
     CategoriaProductosHandler,
     UnidadMedidaProductosHandler,
+    EspecialidadHandler,
+    TipoDocIdentidadHandler,
+    AnexoHandler,
   ],
 })
 export class MaestrosModule {}

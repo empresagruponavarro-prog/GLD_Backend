@@ -221,6 +221,23 @@
     "namespaces": {
       "public": {
         "enum": {
+          "TipoAnexo": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Proveedor",
+                "value": "Proveedor"
+              },
+              {
+                "name": "Cliente",
+                "value": "Cliente"
+              },
+              {
+                "name": "Trabajador",
+                "value": "Trabajador"
+              }
+            ]
+          },
           "tipo_item": {
             "codecId": "pg/text@1",
             "members": [
@@ -592,16 +609,6 @@
           },
           "Anexo_Especialidad": {
             "fields": {
-              "AnexoCodEspecialidad": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
               "Anexo_Especialidad": {
                 "nullable": true,
                 "type": {
@@ -630,12 +637,25 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "anexos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "AnexoEspecialidadId"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
-                "AnexoCodEspecialidad": {
-                  "column": "AnexoCodEspecialidad"
-                },
                 "Anexo_Especialidad": {
                   "column": "Anexo Especialidad"
                 },
@@ -652,16 +672,6 @@
           },
           "Anexo_TipoDocIDE": {
             "fields": {
-              "AnexoCodTipoDocIde": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
               "Anexo_Documento_IDE": {
                 "nullable": true,
                 "type": {
@@ -690,12 +700,25 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "anexos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "AnexoTipoDocIdeId"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
-                "AnexoCodTipoDocIde": {
-                  "column": "AnexoCodTipoDocIde"
-                },
                 "Anexo_Documento_IDE": {
                   "column": "Anexo_Documento_IDE"
                 },
@@ -722,34 +745,18 @@
                   }
                 }
               },
-              "AnexoCodEspecialidad": {
+              "AnexoEspecialidadId": {
                 "nullable": true,
                 "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
                 }
               },
-              "AnexoCodTipoDocIde": {
+              "AnexoTipoDocIdeId": {
                 "nullable": true,
                 "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
-              "CodigoAnexo": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
                 }
               },
               "Contacto": {
@@ -779,16 +786,6 @@
                   "kind": "scalar",
                   "typeParams": {
                     "length": 255
-                  }
-                }
-              },
-              "Estado": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 50
                   }
                 }
               },
@@ -822,14 +819,11 @@
                   }
                 }
               },
-              "TipoAnexo": {
-                "nullable": true,
+              "estado": {
+                "nullable": false,
                 "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
                 }
               },
               "id": {
@@ -838,22 +832,63 @@
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
+              },
+              "tipoAnexo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "TipoAnexo",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
               }
             },
-            "relations": {},
+            "relations": {
+              "especialidad": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "AnexoEspecialidadId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexo_Especialidad",
+                  "namespace": "public"
+                }
+              },
+              "tipoDocIdentidad": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "AnexoTipoDocIdeId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexo_TipoDocIDE",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "Anexo": {
                   "column": "Anexo"
                 },
-                "AnexoCodEspecialidad": {
-                  "column": "AnexoCodEspecialidad"
+                "AnexoEspecialidadId": {
+                  "column": "AnexoEspecialidadId"
                 },
-                "AnexoCodTipoDocIde": {
-                  "column": "AnexoCodTipoDocIde"
-                },
-                "CodigoAnexo": {
-                  "column": "CodigoAnexo"
+                "AnexoTipoDocIdeId": {
+                  "column": "AnexoTipoDocIdeId"
                 },
                 "Contacto": {
                   "column": "Contacto"
@@ -864,9 +899,6 @@
                 "Direccion": {
                   "column": "Direccion"
                 },
-                "Estado": {
-                  "column": "Estado"
-                },
                 "NombreComercial": {
                   "column": "NombreComercial"
                 },
@@ -876,11 +908,14 @@
                 "Telefono": {
                   "column": "Telefono"
                 },
-                "TipoAnexo": {
-                  "column": "TipoAnexo"
+                "estado": {
+                  "column": "estado"
                 },
                 "id": {
                   "column": "id"
+                },
+                "tipoAnexo": {
+                  "column": "tipoAnexo"
                 }
               },
               "namespaceId": "public",
@@ -8238,14 +8273,6 @@
                     "length": 255
                   }
                 },
-                "AnexoCodEspecialidad": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
                 "TipoAnexo": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -8275,14 +8302,6 @@
             },
             "anexo_TipoDocIDE": {
               "columns": {
-                "AnexoCodTipoDocIde": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
                 "Anexo_Documento_IDE": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -8319,6 +8338,13 @@
               "uniques": []
             },
             "anexos": {
+              "checks": [
+                {
+                  "expression": "\"tipoAnexo\" IN ('Proveedor', 'Cliente', 'Trabajador')",
+                  "name": "anexos_tipoAnexo_check_6ec6fe70",
+                  "prefix": "anexos_tipoAnexo_check"
+                }
+              ],
               "columns": {
                 "Anexo": {
                   "codecId": "sql/varchar@1",
@@ -8328,29 +8354,15 @@
                     "length": 255
                   }
                 },
-                "AnexoCodEspecialidad": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
+                "AnexoEspecialidadId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 },
-                "AnexoCodTipoDocIde": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodigoAnexo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
+                "AnexoTipoDocIdeId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 },
                 "Contacto": {
                   "codecId": "sql/varchar@1",
@@ -8374,14 +8386,6 @@
                   "nullable": true,
                   "typeParams": {
                     "length": 255
-                  }
-                },
-                "Estado": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
                   }
                 },
                 "NombreComercial": {
@@ -8408,13 +8412,14 @@
                     "length": 255
                   }
                 },
-                "TipoAnexo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -8424,10 +8429,73 @@
                   },
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "tipoAnexo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "TipoAnexo",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "AnexoEspecialidadId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexo_Especialidad"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "AnexoTipoDocIdeId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexo_TipoDocIDE"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "AnexoEspecialidadId"
+                  ],
+                  "name": "anexos_AnexoEspecialidadId_idx_343e8198",
+                  "prefix": "anexos_AnexoEspecialidadId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "AnexoTipoDocIdeId"
+                  ],
+                  "name": "anexos_AnexoTipoDocIdeId_idx_85b59811",
+                  "prefix": "anexos_AnexoTipoDocIdeId_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -12985,6 +13053,14 @@
             }
           },
           "valueSet": {
+            "TipoAnexo": {
+              "kind": "valueSet",
+              "values": [
+                "Proveedor",
+                "Cliente",
+                "Trabajador"
+              ]
+            },
             "tipo_item": {
               "kind": "valueSet",
               "values": [
@@ -12998,7 +13074,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b64b73a8b74801f57cd6d2289dd2841f3f9ca8f7f0b83342c51c4d33b0a2ac66"
+    "storageHash": "9c1d3ea755b10b5d3b6f7feec5df729d2ee951b95d76edd4bf3c41f4be9fa08a"
   },
   "capabilities": {
     "postgres": {

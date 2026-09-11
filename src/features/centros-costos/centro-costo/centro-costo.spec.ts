@@ -79,13 +79,13 @@ describe('centro-costo', () => {
     empresasAll.mockResolvedValue([
       { id: 1, CodEmpresa: 'E1', RazonSocial: 'GLD SERVICIOS GENERALES EIRL' },
     ]);
-    anexosAll.mockResolvedValue([{ id: 1, CodigoAnexo: 'A1', Anexo: 'CLIENTE MAYORISTA' }]);
+    anexosAll.mockResolvedValue([]);
 
     const result = await controller.findAll({});
     expect(result[0]).toMatchObject({
       CodCentroCto: 'CC-2026-001',
       Empresa: 'GLD SERVICIOS GENERALES EIRL',
-      Cliente: 'CLIENTE MAYORISTA',
+      Cliente: 'A1',
       PresupuestoMonto: '1450000.00',
     });
   });
@@ -122,7 +122,7 @@ describe('centro-costo', () => {
       ccRow({ CodCentroCto: 'CC-2026-002', IdPeriodo: '2025', PresupuestoEstado: 'Pendiente' }),
     ]);
     empresasAll.mockResolvedValue([{ id: 1, CodEmpresa: 'E1', RazonSocial: 'GLD EIRL' }]);
-    anexosAll.mockResolvedValue([{ id: 1, CodigoAnexo: 'A1', Anexo: 'CLIENTE A' }]);
+    anexosAll.mockResolvedValue([]);
 
     const result = await controller.getCatalogosFiltros();
     expect(result.empresas).toContain('GLD EIRL');

@@ -103,33 +103,41 @@ model Almacenes {
 }
 
 model Anexo_Especialidad {
-  id                   Int           @id @default(autoincrement())
-  AnexoCodEspecialidad VarChar(255)?
-  TipoAnexo            VarChar(255)?
-  Anexo_Especialidad   VarChar(255)? @map("Anexo Especialidad")
+  id                 Int           @id @default(autoincrement())
+  TipoAnexo          VarChar(255)?
+  Anexo_Especialidad VarChar(255)? @map("Anexo Especialidad")
+  anexos             Anexos[]
 }
 
 model Anexo_TipoDocIDE {
   id                  Int           @id @default(autoincrement())
-  AnexoCodTipoDocIde  VarChar(255)?
   TipoAnexo           VarChar(255)?
   Anexo_Documento_IDE VarChar(255)?
+  anexos              Anexos[]
+}
+
+enum TipoAnexo {
+  @@type("pg/text@1")
+  Proveedor = "Proveedor"
+  Cliente = "Cliente"
+  Trabajador = "Trabajador"
 }
 
 model Anexos {
-  id                   Int           @id @default(autoincrement())
-  CodigoAnexo          VarChar(255)?
-  TipoAnexo            VarChar(255)?
-  AnexoCodEspecialidad VarChar(255)?
-  AnexoCodTipoDocIde   VarChar(255)?
-  NumeroDocIde         VarChar(255)?
-  Anexo                VarChar(255)?
-  NombreComercial      VarChar(255)?
-  Direccion            VarChar(255)?
-  Contacto             VarChar(255)?
-  Telefono             VarChar(255)?
-  Correo               VarChar(255)?
-  Estado               VarChar(50)?
+  id                  Int           @id @default(autoincrement())
+  tipoAnexo           TipoAnexo?
+  AnexoEspecialidadId Int?
+  especialidad        Anexo_Especialidad? @relation(fields: [AnexoEspecialidadId], references: [id], onDelete: SetNull)
+  AnexoTipoDocIdeId   Int?
+  tipoDocIdentidad    Anexo_TipoDocIDE? @relation(fields: [AnexoTipoDocIdeId], references: [id], onDelete: SetNull)
+  NumeroDocIde        VarChar(255)?
+  Anexo               VarChar(255)?
+  NombreComercial     VarChar(255)?
+  Direccion           VarChar(255)?
+  Contacto            VarChar(255)?
+  Telefono            VarChar(255)?
+  Correo              VarChar(255)?
+  estado              Boolean       @default(true)
 }
 
 model Bancos {
