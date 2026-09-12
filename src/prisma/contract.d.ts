@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9c1d3ea755b10b5d3b6f7feec5df729d2ee951b95d76edd4bf3c41f4be9fa08a'>;
+  StorageHashBase<'8756d0be695eee9f013f4cb126c0a232417ad22c99dca61028a5f56f05ed58f0'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1584,13 +1584,13 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
-    readonly almacenes: {
+    readonly Almacenes: {
       readonly Almacen: Varchar<255> | null;
       readonly CodAlmacen: Varchar<255> | null;
       readonly CodEmpresa: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
     };
-    readonly almacenMovimientoDetalle: {
+    readonly AlmacenMovimientoDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
       readonly CodMovimiento: Varchar<255> | null;
       readonly CodMovimientoDetalle: Varchar<255> | null;
@@ -1598,7 +1598,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly ProductoCodigo: Varchar<255> | null;
     };
-    readonly almacenMovimientos: {
+    readonly AlmacenMovimientos: {
       readonly CodAlmacen: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
@@ -1611,23 +1611,23 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly TipoCosto: Varchar<255> | null;
     };
-    readonly almacenTipoMovimiento: {
+    readonly AlmacenTipoMovimiento: {
       readonly CodTipoMov: Varchar<255> | null;
       readonly Comportamiento: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly TipoMovimiento: Varchar<255> | null;
     };
-    readonly anexo_Especialidad: {
+    readonly Anexo_Especialidad: {
       readonly 'Anexo Especialidad': Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly TipoAnexo: Varchar<255> | null;
     };
-    readonly anexo_TipoDocIDE: {
+    readonly Anexo_TipoDocIDE: {
       readonly Anexo_Documento_IDE: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly TipoAnexo: Varchar<255> | null;
     };
-    readonly anexos: {
+    readonly Anexos: {
       readonly Anexo: Varchar<255> | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['output'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['output'] | null;
@@ -1641,12 +1641,12 @@ export type StorageColumnTypes = {
       readonly Telefono: Varchar<255> | null;
       readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
     };
-    readonly bancos: {
+    readonly Bancos: {
       readonly Banco: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdBanco: Varchar<255> | null;
     };
-    readonly cajaEgresosRetail: {
+    readonly CajaEgresosRetail: {
       readonly Ajuste: Varchar<255> | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
@@ -1675,7 +1675,7 @@ export type StorageColumnTypes = {
       readonly TotalSinDocumento: CodecTypes['pg/numeric@1']['output'] | null;
       readonly VoucherDeposito: Varchar<255> | null;
     };
-    readonly cajaIngresos: {
+    readonly CajaIngresos: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly CodEmpresa: Varchar<255> | null;
@@ -1695,7 +1695,7 @@ export type StorageColumnTypes = {
       readonly TotalSinDocumento: CodecTypes['pg/numeric@1']['output'] | null;
       readonly VoucherDeposito: Varchar<255> | null;
     };
-    readonly cajaIngresos_DocVenta: {
+    readonly CajaIngresos_DocVenta: {
       readonly CodDocSunat: Varchar<255> | null;
       readonly CodigoAnexo: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1705,7 +1705,7 @@ export type StorageColumnTypes = {
       readonly MontoPagado: CodecTypes['pg/numeric@1']['output'] | null;
       readonly NumDocumento: Varchar<255> | null;
     };
-    readonly cajaMotivos: {
+    readonly CajaMotivos: {
       readonly CodMotivo: Varchar<255> | null;
       readonly Comportamiento: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1720,7 +1720,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_tipo_categoria: CodecTypes['pg/int4@1']['output'];
     };
-    readonly categorias: {
+    readonly Categorias: {
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly Descripcion: Varchar<255> | null;
       readonly Estado: Varchar<50> | null;
@@ -1746,7 +1746,7 @@ export type StorageColumnTypes = {
       readonly PresupuestoMonto: CodecTypes['pg/numeric@1']['output'] | null;
       readonly PresupuestoViaticos: CodecTypes['pg/numeric@1']['output'] | null;
     };
-    readonly contrataciones: {
+    readonly Contrataciones: {
       readonly Categoria: Varchar<255> | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CentroCosto: Varchar<255> | null;
@@ -1776,7 +1776,7 @@ export type StorageColumnTypes = {
       readonly TIPOCATE: Varchar<255> | null;
       readonly TipoContratacion: Varchar<255> | null;
     };
-    readonly contrataciones_PostVenta: {
+    readonly Contrataciones_PostVenta: {
       readonly CentroCosto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly Codcontratacion: Varchar<255> | null;
@@ -1790,7 +1790,7 @@ export type StorageColumnTypes = {
       readonly Monto: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Proveedor: Varchar<255> | null;
     };
-    readonly contrataciones_PPTOMeta: {
+    readonly Contrataciones_PPTOMeta: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly Codcontratacion: Varchar<255> | null;
@@ -1803,7 +1803,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly Monto: CodecTypes['pg/numeric@1']['output'] | null;
     };
-    readonly cuentasCajaBancos: {
+    readonly CuentasCajaBancos: {
       readonly CCICuenta: Varchar<255> | null;
       readonly CodEmpresa: Varchar<255> | null;
       readonly Descripcion: Varchar<255> | null;
@@ -1816,7 +1816,7 @@ export type StorageColumnTypes = {
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Tipo: Varchar<255> | null;
     };
-    readonly docCompra: {
+    readonly DocCompra: {
       readonly Ajuste: Varchar<255> | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
@@ -1851,7 +1851,7 @@ export type StorageColumnTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Usuario: Varchar<255> | null;
     };
-    readonly docCompra_AplicacionAnticipo: {
+    readonly DocCompra_AplicacionAnticipo: {
       readonly CodEmpresa: Varchar<255> | null;
       readonly CodigoAnexo: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1861,7 +1861,7 @@ export type StorageColumnTypes = {
       readonly MontoPagado: CodecTypes['pg/numeric@1']['output'] | null;
       readonly TipoOC: Varchar<255> | null;
     };
-    readonly docCompraDetalle: {
+    readonly DocCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
@@ -1878,7 +1878,7 @@ export type StorageColumnTypes = {
       readonly ProductoCodigo: Varchar<255> | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly docVenta: {
+    readonly DocVenta: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly CodDocSunat: Varchar<255> | null;
@@ -1903,7 +1903,7 @@ export type StorageColumnTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Usuario: Varchar<255> | null;
     };
-    readonly docVentaDetalle: {
+    readonly DocVentaDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
@@ -1919,7 +1919,7 @@ export type StorageColumnTypes = {
       readonly ProductoCodigo: Varchar<255> | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly egresos_AnticiposOC: {
+    readonly Egresos_AnticiposOC: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodEmpresa: Varchar<255> | null;
       readonly CodigoAnexo: Varchar<255> | null;
@@ -1933,7 +1933,7 @@ export type StorageColumnTypes = {
       readonly NumeroOperacion: Varchar<255> | null;
       readonly TipoOC: Varchar<255> | null;
     };
-    readonly egresos_DocCompra: {
+    readonly Egresos_DocCompra: {
       readonly CodDocSunat: Varchar<255> | null;
       readonly CodigoAnexo: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1944,7 +1944,7 @@ export type StorageColumnTypes = {
       readonly 'Monto Pagado': CodecTypes['pg/numeric@1']['output'] | null;
       readonly NumDocumento: Varchar<255> | null;
     };
-    readonly egresos_Otros: {
+    readonly Egresos_Otros: {
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodigoAnexo: Varchar<255> | null;
       readonly CodMotivo: Varchar<255> | null;
@@ -1956,7 +1956,7 @@ export type StorageColumnTypes = {
       readonly 'Monto Total': CodecTypes['pg/numeric@1']['output'] | null;
       readonly TipoAnexo: Varchar<255> | null;
     };
-    readonly empresas: {
+    readonly Empresas: {
       readonly CodEmpresa: Varchar<255> | null;
       readonly CorreoCompras: Varchar<255> | null;
       readonly DireccionEntrega: Varchar<255> | null;
@@ -1965,7 +1965,7 @@ export type StorageColumnTypes = {
       readonly RazonSocial: Varchar<255> | null;
       readonly RUC: Varchar<255> | null;
     };
-    readonly incidencia: {
+    readonly Incidencia: {
       readonly accionPrevia: CodecTypes['pg/text@1']['output'] | null;
       readonly accionTomada: CodecTypes['pg/text@1']['output'] | null;
       readonly aprobacion: Varchar<255> | null;
@@ -1998,18 +1998,18 @@ export type StorageColumnTypes = {
       readonly urbanizacion: Varchar<255> | null;
       readonly viaOrigen: Varchar<255> | null;
     };
-    readonly menu: {
+    readonly Menu: {
       readonly Imagen: Varchar<255> | null;
       readonly MenuId: Varchar<255>;
       readonly MenuNombre: Varchar<255> | null;
     };
-    readonly monedas: {
+    readonly Monedas: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly Moneda: Varchar<255> | null;
       readonly MonedaId: Varchar<255> | null;
       readonly Simbolo: Varchar<255> | null;
     };
-    readonly ordenCompra: {
+    readonly OrdenCompra: {
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
@@ -2040,7 +2040,7 @@ export type StorageColumnTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Usuario: Varchar<255> | null;
     };
-    readonly ordenCompraDetalle: {
+    readonly OrdenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdOC: Varchar<255> | null;
@@ -2050,11 +2050,11 @@ export type StorageColumnTypes = {
       readonly ProductoCodigo: Varchar<255> | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly periodos: {
+    readonly Periodos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdPeriodo: Varchar<255> | null;
     };
-    readonly planillaPago: {
+    readonly PlanillaPago: {
       readonly Categoria: Varchar<255> | null;
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly CentroCosto: Varchar<255> | null;
@@ -2176,7 +2176,7 @@ export type StorageColumnTypes = {
       readonly stock: CodecTypes['pg/numeric@1']['output'];
       readonly tipo_producto: 'PRODUCTO' | 'SERVICIO';
     };
-    readonly productos: {
+    readonly Productos: {
       readonly CategoriaCodigo: Varchar<255> | null;
       readonly Comentarios: CodecTypes['pg/text@1']['output'] | null;
       readonly Descripcion: CodecTypes['pg/text@1']['output'] | null;
@@ -2186,7 +2186,7 @@ export type StorageColumnTypes = {
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
       readonly UniMedCodigo: Varchar<255> | null;
     };
-    readonly semana: {
+    readonly Semana: {
       readonly CodSemana: Varchar<255> | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly FechaInicio: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -2194,7 +2194,7 @@ export type StorageColumnTypes = {
       readonly IdPeriodo: Varchar<255> | null;
       readonly Semana: Varchar<255> | null;
     };
-    readonly subMenu: {
+    readonly SubMenu: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly Imagen: Varchar<255> | null;
       readonly MenuId: Varchar<255> | null;
@@ -2208,7 +2208,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly nombre: CodecTypes['pg/text@1']['output'];
     };
-    readonly tipoDocumentoSunat: {
+    readonly TipoDocumentoSunat: {
       readonly CodDocSunat: Varchar<255> | null;
       readonly DocumentoSunat: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2227,26 +2227,26 @@ export type StorageColumnTypes = {
       readonly id_uni_med_destino: CodecTypes['pg/int4@1']['output'];
       readonly id_uni_med_origen: CodecTypes['pg/int4@1']['output'];
     };
-    readonly unidadMedida: {
+    readonly UnidadMedida: {
       readonly Descripcion: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly Simbolo: Varchar<255> | null;
       readonly UniMedCodigo: Varchar<255> | null;
     };
-    readonly usuarios: {
+    readonly Usuarios: {
       readonly Clave: Varchar<255> | null;
       readonly IdUsuario: Varchar<255>;
       readonly Nombres: Varchar<255> | null;
       readonly Rol: Varchar<255> | null;
       readonly Usuario: Varchar<255> | null;
     };
-    readonly usuariosMenus: {
+    readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdUsuario: Varchar<255> | null;
       readonly IdUsuarioMenu: Varchar<255> | null;
       readonly MenuId: Varchar<255> | null;
     };
-    readonly usuariosPermisos: {
+    readonly UsuariosPermisos: {
       readonly IdUsuario: Varchar<255> | null;
       readonly IdUsuarioPermiso: Varchar<255>;
       readonly MenuId: Varchar<255> | null;
@@ -2256,13 +2256,13 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
-    readonly almacenes: {
+    readonly Almacenes: {
       readonly Almacen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodAlmacen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
     };
-    readonly almacenMovimientoDetalle: {
+    readonly AlmacenMovimientoDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
       readonly CodMovimiento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodMovimientoDetalle: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2270,7 +2270,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly ProductoCodigo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly almacenMovimientos: {
+    readonly AlmacenMovimientos: {
       readonly CodAlmacen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2283,23 +2283,23 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly TipoCosto: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly almacenTipoMovimiento: {
+    readonly AlmacenTipoMovimiento: {
       readonly CodTipoMov: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Comportamiento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly TipoMovimiento: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly anexo_Especialidad: {
+    readonly Anexo_Especialidad: {
       readonly 'Anexo Especialidad': CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly TipoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly anexo_TipoDocIDE: {
+    readonly Anexo_TipoDocIDE: {
       readonly Anexo_Documento_IDE: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly TipoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly anexos: {
+    readonly Anexos: {
       readonly Anexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly AnexoEspecialidadId: CodecTypes['pg/int4@1']['input'] | null;
       readonly AnexoTipoDocIdeId: CodecTypes['pg/int4@1']['input'] | null;
@@ -2313,12 +2313,12 @@ export type StorageColumnInputTypes = {
       readonly Telefono: CodecTypes['sql/varchar@1']['input'] | null;
       readonly tipoAnexo: 'Proveedor' | 'Cliente' | 'Trabajador' | null;
     };
-    readonly bancos: {
+    readonly Bancos: {
       readonly Banco: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdBanco: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly cajaEgresosRetail: {
+    readonly CajaEgresosRetail: {
       readonly Ajuste: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2347,7 +2347,7 @@ export type StorageColumnInputTypes = {
       readonly TotalSinDocumento: CodecTypes['pg/numeric@1']['input'] | null;
       readonly VoucherDeposito: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly cajaIngresos: {
+    readonly CajaIngresos: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2367,7 +2367,7 @@ export type StorageColumnInputTypes = {
       readonly TotalSinDocumento: CodecTypes['pg/numeric@1']['input'] | null;
       readonly VoucherDeposito: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly cajaIngresos_DocVenta: {
+    readonly CajaIngresos_DocVenta: {
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2377,7 +2377,7 @@ export type StorageColumnInputTypes = {
       readonly MontoPagado: CodecTypes['pg/numeric@1']['input'] | null;
       readonly NumDocumento: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly cajaMotivos: {
+    readonly CajaMotivos: {
       readonly CodMotivo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Comportamiento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2392,7 +2392,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_tipo_categoria: CodecTypes['pg/int4@1']['input'];
     };
-    readonly categorias: {
+    readonly Categorias: {
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Estado: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2418,7 +2418,7 @@ export type StorageColumnInputTypes = {
       readonly PresupuestoMonto: CodecTypes['pg/numeric@1']['input'] | null;
       readonly PresupuestoViaticos: CodecTypes['pg/numeric@1']['input'] | null;
     };
-    readonly contrataciones: {
+    readonly Contrataciones: {
       readonly Categoria: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CentroCosto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2448,7 +2448,7 @@ export type StorageColumnInputTypes = {
       readonly TIPOCATE: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoContratacion: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly contrataciones_PostVenta: {
+    readonly Contrataciones_PostVenta: {
       readonly CentroCosto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Codcontratacion: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2462,7 +2462,7 @@ export type StorageColumnInputTypes = {
       readonly Monto: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Proveedor: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly contrataciones_PPTOMeta: {
+    readonly Contrataciones_PPTOMeta: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Codcontratacion: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2475,7 +2475,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly Monto: CodecTypes['pg/numeric@1']['input'] | null;
     };
-    readonly cuentasCajaBancos: {
+    readonly CuentasCajaBancos: {
       readonly CCICuenta: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2488,7 +2488,7 @@ export type StorageColumnInputTypes = {
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Tipo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly docCompra: {
+    readonly DocCompra: {
       readonly Ajuste: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2523,7 +2523,7 @@ export type StorageColumnInputTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly docCompra_AplicacionAnticipo: {
+    readonly DocCompra_AplicacionAnticipo: {
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2533,7 +2533,7 @@ export type StorageColumnInputTypes = {
       readonly MontoPagado: CodecTypes['pg/numeric@1']['input'] | null;
       readonly TipoOC: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly docCompraDetalle: {
+    readonly DocCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2550,7 +2550,7 @@ export type StorageColumnInputTypes = {
       readonly ProductoCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly docVenta: {
+    readonly DocVenta: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2575,7 +2575,7 @@ export type StorageColumnInputTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly docVentaDetalle: {
+    readonly DocVentaDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2591,7 +2591,7 @@ export type StorageColumnInputTypes = {
       readonly ProductoCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly egresos_AnticiposOC: {
+    readonly Egresos_AnticiposOC: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2605,7 +2605,7 @@ export type StorageColumnInputTypes = {
       readonly NumeroOperacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoOC: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly egresos_DocCompra: {
+    readonly Egresos_DocCompra: {
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2616,7 +2616,7 @@ export type StorageColumnInputTypes = {
       readonly 'Monto Pagado': CodecTypes['pg/numeric@1']['input'] | null;
       readonly NumDocumento: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly egresos_Otros: {
+    readonly Egresos_Otros: {
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodigoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodMotivo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2628,7 +2628,7 @@ export type StorageColumnInputTypes = {
       readonly 'Monto Total': CodecTypes['pg/numeric@1']['input'] | null;
       readonly TipoAnexo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly empresas: {
+    readonly Empresas: {
       readonly CodEmpresa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CorreoCompras: CodecTypes['sql/varchar@1']['input'] | null;
       readonly DireccionEntrega: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2637,7 +2637,7 @@ export type StorageColumnInputTypes = {
       readonly RazonSocial: CodecTypes['sql/varchar@1']['input'] | null;
       readonly RUC: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly incidencia: {
+    readonly Incidencia: {
       readonly accionPrevia: CodecTypes['pg/text@1']['input'] | null;
       readonly accionTomada: CodecTypes['pg/text@1']['input'] | null;
       readonly aprobacion: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2670,18 +2670,18 @@ export type StorageColumnInputTypes = {
       readonly urbanizacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly viaOrigen: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly menu: {
+    readonly Menu: {
       readonly Imagen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly MenuId: CodecTypes['sql/varchar@1']['input'];
       readonly MenuNombre: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly monedas: {
+    readonly Monedas: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly Moneda: CodecTypes['sql/varchar@1']['input'] | null;
       readonly MonedaId: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Simbolo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly ordenCompra: {
+    readonly OrdenCompra: {
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2712,7 +2712,7 @@ export type StorageColumnInputTypes = {
       readonly Total: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly ordenCompraDetalle: {
+    readonly OrdenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdOC: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2722,11 +2722,11 @@ export type StorageColumnInputTypes = {
       readonly ProductoCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
     };
-    readonly periodos: {
+    readonly Periodos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdPeriodo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly planillaPago: {
+    readonly PlanillaPago: {
       readonly Categoria: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CentroCosto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2848,7 +2848,7 @@ export type StorageColumnInputTypes = {
       readonly stock: CodecTypes['pg/numeric@1']['input'];
       readonly tipo_producto: 'PRODUCTO' | 'SERVICIO';
     };
-    readonly productos: {
+    readonly Productos: {
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Comentarios: CodecTypes['pg/text@1']['input'] | null;
       readonly Descripcion: CodecTypes['pg/text@1']['input'] | null;
@@ -2858,7 +2858,7 @@ export type StorageColumnInputTypes = {
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
       readonly UniMedCodigo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly semana: {
+    readonly Semana: {
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly FechaInicio: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -2866,7 +2866,7 @@ export type StorageColumnInputTypes = {
       readonly IdPeriodo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Semana: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly subMenu: {
+    readonly SubMenu: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly Imagen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly MenuId: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2880,7 +2880,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly nombre: CodecTypes['pg/text@1']['input'];
     };
-    readonly tipoDocumentoSunat: {
+    readonly TipoDocumentoSunat: {
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly DocumentoSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2899,26 +2899,26 @@ export type StorageColumnInputTypes = {
       readonly id_uni_med_destino: CodecTypes['pg/int4@1']['input'];
       readonly id_uni_med_origen: CodecTypes['pg/int4@1']['input'];
     };
-    readonly unidadMedida: {
+    readonly UnidadMedida: {
       readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly Simbolo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly UniMedCodigo: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly usuarios: {
+    readonly Usuarios: {
       readonly Clave: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdUsuario: CodecTypes['sql/varchar@1']['input'];
       readonly Nombres: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Rol: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly usuariosMenus: {
+    readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdUsuario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdUsuarioMenu: CodecTypes['sql/varchar@1']['input'] | null;
       readonly MenuId: CodecTypes['sql/varchar@1']['input'] | null;
     };
-    readonly usuariosPermisos: {
+    readonly UsuariosPermisos: {
       readonly IdUsuario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdUsuarioPermiso: CodecTypes['sql/varchar@1']['input'];
       readonly MenuId: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2944,7 +2944,7 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
-            readonly almacenes: {
+            readonly Almacenes: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -2979,7 +2979,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly almacenMovimientoDetalle: {
+            readonly AlmacenMovimientoDetalle: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3025,7 +3025,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly almacenMovimientos: {
+            readonly AlmacenMovimientos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3102,7 +3102,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly almacenTipoMovimiento: {
+            readonly AlmacenTipoMovimiento: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3137,7 +3137,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly anexo_Especialidad: {
+            readonly Anexo_Especialidad: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3166,7 +3166,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly anexo_TipoDocIDE: {
+            readonly Anexo_TipoDocIDE: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3195,7 +3195,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly anexos: {
+            readonly Anexos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3277,14 +3277,14 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'anexos_AnexoEspecialidadId_idx_343e8198';
-                  readonly prefix: 'anexos_AnexoEspecialidadId_idx';
+                  readonly name: 'Anexos_AnexoEspecialidadId_idx_343e8198';
+                  readonly prefix: 'Anexos_AnexoEspecialidadId_idx';
                   readonly columns: readonly ['AnexoEspecialidadId'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'anexos_AnexoTipoDocIdeId_idx_85b59811';
-                  readonly prefix: 'anexos_AnexoTipoDocIdeId_idx';
+                  readonly name: 'Anexos_AnexoTipoDocIdeId_idx_85b59811';
+                  readonly prefix: 'Anexos_AnexoTipoDocIdeId_idx';
                   readonly columns: readonly ['AnexoTipoDocIdeId'];
                   readonly unique: false;
                 },
@@ -3293,30 +3293,30 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'anexos';
+                    readonly tableName: 'Anexos';
                     readonly columns: readonly ['AnexoEspecialidadId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'anexo_Especialidad';
+                    readonly tableName: 'Anexo_Especialidad';
                     readonly columns: readonly ['id'];
                   };
                 },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'anexos';
+                    readonly tableName: 'Anexos';
                     readonly columns: readonly ['AnexoTipoDocIdeId'];
                   };
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'anexo_TipoDocIDE';
+                    readonly tableName: 'Anexo_TipoDocIDE';
                     readonly columns: readonly ['id'];
                   };
                 },
               ];
             };
-            readonly bancos: {
+            readonly Bancos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3345,7 +3345,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly cajaEgresosRetail: {
+            readonly CajaEgresosRetail: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3514,7 +3514,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly cajaIngresos: {
+            readonly CajaIngresos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3629,7 +3629,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly cajaIngresos_DocVenta: {
+            readonly CajaIngresos_DocVenta: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3687,7 +3687,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly cajaMotivos: {
+            readonly CajaMotivos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3795,7 +3795,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly categorias: {
+            readonly Categorias: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -3945,7 +3945,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly contrataciones: {
+            readonly Contrataciones: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4114,7 +4114,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly contrataciones_PostVenta: {
+            readonly Contrataciones_PostVenta: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4195,7 +4195,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly contrataciones_PPTOMeta: {
+            readonly Contrataciones_PPTOMeta: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4270,7 +4270,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly cuentasCajaBancos: {
+            readonly CuentasCajaBancos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4346,7 +4346,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly docCompra: {
+            readonly DocCompra: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4550,7 +4550,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly docCompra_AplicacionAnticipo: {
+            readonly DocCompra_AplicacionAnticipo: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4608,7 +4608,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly docCompraDetalle: {
+            readonly DocCompraDetalle: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4705,7 +4705,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly docVenta: {
+            readonly DocVenta: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4850,7 +4850,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly docVentaDetalle: {
+            readonly DocVentaDetalle: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -4941,7 +4941,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly egresos_AnticiposOC: {
+            readonly Egresos_AnticiposOC: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5023,7 +5023,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly egresos_DocCompra: {
+            readonly Egresos_DocCompra: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5087,7 +5087,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly egresos_Otros: {
+            readonly Egresos_Otros: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5157,7 +5157,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly empresas: {
+            readonly Empresas: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5210,7 +5210,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly incidencia: {
+            readonly Incidencia: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5407,7 +5407,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly menu: {
+            readonly Menu: {
               columns: {
                 readonly MenuId: {
                   readonly nativeType: 'character varying';
@@ -5433,7 +5433,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly monedas: {
+            readonly Monedas: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5468,7 +5468,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly ordenCompra: {
+            readonly OrdenCompra: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5645,7 +5645,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly ordenCompraDetalle: {
+            readonly OrdenCompraDetalle: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5700,7 +5700,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly periodos: {
+            readonly Periodos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -5723,7 +5723,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly planillaPago: {
+            readonly PlanillaPago: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6464,7 +6464,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly productos: {
+            readonly Productos: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6520,7 +6520,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly semana: {
+            readonly Semana: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6567,7 +6567,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly subMenu: {
+            readonly SubMenu: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6650,7 +6650,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly tipoDocumentoSunat: {
+            readonly TipoDocumentoSunat: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6801,7 +6801,7 @@ type ContractBase = Omit<
                 },
               ];
             };
-            readonly unidadMedida: {
+            readonly UnidadMedida: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6836,7 +6836,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly usuarios: {
+            readonly Usuarios: {
               columns: {
                 readonly IdUsuario: {
                   readonly nativeType: 'character varying';
@@ -6874,7 +6874,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly usuariosMenus: {
+            readonly UsuariosMenus: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'int4';
@@ -6909,7 +6909,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly usuariosPermisos: {
+            readonly UsuariosPermisos: {
               columns: {
                 readonly IdUsuarioPermiso: {
                   readonly nativeType: 'character varying';
@@ -6976,46 +6976,46 @@ type ContractBase = Omit<
       readonly model: 'unidad_medida_equivalencia';
     };
     readonly producto: { readonly namespace: 'public' & NamespaceId; readonly model: 'producto' };
-    readonly almacenMovimientoDetalle: {
+    readonly AlmacenMovimientoDetalle: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AlmacenMovimientoDetalle';
     };
-    readonly almacenMovimientos: {
+    readonly AlmacenMovimientos: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AlmacenMovimientos';
     };
-    readonly almacenTipoMovimiento: {
+    readonly AlmacenTipoMovimiento: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AlmacenTipoMovimiento';
     };
-    readonly almacenes: { readonly namespace: 'public' & NamespaceId; readonly model: 'Almacenes' };
-    readonly anexo_Especialidad: {
+    readonly Almacenes: { readonly namespace: 'public' & NamespaceId; readonly model: 'Almacenes' };
+    readonly Anexo_Especialidad: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Anexo_Especialidad';
     };
-    readonly anexo_TipoDocIDE: {
+    readonly Anexo_TipoDocIDE: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Anexo_TipoDocIDE';
     };
-    readonly anexos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Anexos' };
-    readonly bancos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Bancos' };
-    readonly cajaEgresosRetail: {
+    readonly Anexos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Anexos' };
+    readonly Bancos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Bancos' };
+    readonly CajaEgresosRetail: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CajaEgresosRetail';
     };
-    readonly cajaIngresos: {
+    readonly CajaIngresos: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CajaIngresos';
     };
-    readonly cajaIngresos_DocVenta: {
+    readonly CajaIngresos_DocVenta: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CajaIngresos_DocVenta';
     };
-    readonly cajaMotivos: {
+    readonly CajaMotivos: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CajaMotivos';
     };
-    readonly categorias: {
+    readonly Categorias: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Categorias';
     };
@@ -7023,85 +7023,85 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CentroCostos';
     };
-    readonly contrataciones: {
+    readonly Contrataciones: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Contrataciones';
     };
-    readonly contrataciones_PPTOMeta: {
+    readonly Contrataciones_PPTOMeta: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Contrataciones_PPTOMeta';
     };
-    readonly contrataciones_PostVenta: {
+    readonly Contrataciones_PostVenta: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Contrataciones_PostVenta';
     };
-    readonly cuentasCajaBancos: {
+    readonly CuentasCajaBancos: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CuentasCajaBancos';
     };
-    readonly docCompra: { readonly namespace: 'public' & NamespaceId; readonly model: 'DocCompra' };
-    readonly docCompraDetalle: {
+    readonly DocCompra: { readonly namespace: 'public' & NamespaceId; readonly model: 'DocCompra' };
+    readonly DocCompraDetalle: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'DocCompraDetalle';
     };
-    readonly docCompra_AplicacionAnticipo: {
+    readonly DocCompra_AplicacionAnticipo: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'DocCompra_AplicacionAnticipo';
     };
-    readonly docVenta: { readonly namespace: 'public' & NamespaceId; readonly model: 'DocVenta' };
-    readonly docVentaDetalle: {
+    readonly DocVenta: { readonly namespace: 'public' & NamespaceId; readonly model: 'DocVenta' };
+    readonly DocVentaDetalle: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'DocVentaDetalle';
     };
-    readonly egresos_AnticiposOC: {
+    readonly Egresos_AnticiposOC: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Egresos_AnticiposOC';
     };
-    readonly egresos_DocCompra: {
+    readonly Egresos_DocCompra: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Egresos_DocCompra';
     };
-    readonly egresos_Otros: {
+    readonly Egresos_Otros: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Egresos_Otros';
     };
-    readonly empresas: { readonly namespace: 'public' & NamespaceId; readonly model: 'Empresas' };
-    readonly menu: { readonly namespace: 'public' & NamespaceId; readonly model: 'Menu' };
-    readonly monedas: { readonly namespace: 'public' & NamespaceId; readonly model: 'Monedas' };
-    readonly ordenCompra: {
+    readonly Empresas: { readonly namespace: 'public' & NamespaceId; readonly model: 'Empresas' };
+    readonly Menu: { readonly namespace: 'public' & NamespaceId; readonly model: 'Menu' };
+    readonly Monedas: { readonly namespace: 'public' & NamespaceId; readonly model: 'Monedas' };
+    readonly OrdenCompra: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'OrdenCompra';
     };
-    readonly ordenCompraDetalle: {
+    readonly OrdenCompraDetalle: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'OrdenCompraDetalle';
     };
-    readonly periodos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Periodos' };
-    readonly planillaPago: {
+    readonly Periodos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Periodos' };
+    readonly PlanillaPago: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'PlanillaPago';
     };
-    readonly productos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Productos' };
-    readonly semana: { readonly namespace: 'public' & NamespaceId; readonly model: 'Semana' };
-    readonly subMenu: { readonly namespace: 'public' & NamespaceId; readonly model: 'SubMenu' };
-    readonly tipoDocumentoSunat: {
+    readonly Productos: { readonly namespace: 'public' & NamespaceId; readonly model: 'Productos' };
+    readonly Semana: { readonly namespace: 'public' & NamespaceId; readonly model: 'Semana' };
+    readonly SubMenu: { readonly namespace: 'public' & NamespaceId; readonly model: 'SubMenu' };
+    readonly TipoDocumentoSunat: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'TipoDocumentoSunat';
     };
-    readonly unidadMedida: {
+    readonly UnidadMedida: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'UnidadMedida';
     };
-    readonly usuarios: { readonly namespace: 'public' & NamespaceId; readonly model: 'Usuarios' };
-    readonly usuariosMenus: {
+    readonly Usuarios: { readonly namespace: 'public' & NamespaceId; readonly model: 'Usuarios' };
+    readonly UsuariosMenus: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'UsuariosMenus';
     };
-    readonly usuariosPermisos: {
+    readonly UsuariosPermisos: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'UsuariosPermisos';
     };
-    readonly incidencia: {
+    readonly Incidencia: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Incidencia';
     };
@@ -7167,7 +7167,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'almacenes';
+              readonly table: 'Almacenes';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7222,7 +7222,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'almacenMovimientoDetalle';
+              readonly table: 'AlmacenMovimientoDetalle';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7323,7 +7323,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'almacenMovimientos';
+              readonly table: 'AlmacenMovimientos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7373,7 +7373,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'almacenTipoMovimiento';
+              readonly table: 'AlmacenTipoMovimiento';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7420,7 +7420,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'anexo_Especialidad';
+              readonly table: 'Anexo_Especialidad';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7466,7 +7466,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'anexo_TipoDocIDE';
+              readonly table: 'Anexo_TipoDocIDE';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7579,7 +7579,7 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'anexos';
+              readonly table: 'Anexos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7622,7 +7622,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'bancos';
+              readonly table: 'Bancos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7832,7 +7832,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'cajaEgresosRetail';
+              readonly table: 'CajaEgresosRetail';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -7994,7 +7994,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'cajaIngresos';
+              readonly table: 'CajaIngresos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8079,7 +8079,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'cajaIngresos_DocVenta';
+              readonly table: 'CajaIngresos_DocVenta';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8142,7 +8142,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'cajaMotivos';
+              readonly table: 'CajaMotivos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8254,7 +8254,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'categorias';
+              readonly table: 'Categorias';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8596,7 +8596,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'contrataciones';
+              readonly table: 'Contrataciones';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8719,7 +8719,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'contrataciones_PostVenta';
+              readonly table: 'Contrataciones_PostVenta';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8818,7 +8818,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'contrataciones_PPTOMeta';
+              readonly table: 'Contrataciones_PPTOMeta';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -8920,7 +8920,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'cuentasCajaBancos';
+              readonly table: 'CuentasCajaBancos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9182,7 +9182,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'docCompra';
+              readonly table: 'DocCompra';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9282,7 +9282,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'docCompra_AplicacionAnticipo';
+              readonly table: 'DocCompra_AplicacionAnticipo';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9401,7 +9401,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'docCompraDetalle';
+              readonly table: 'DocCompraDetalle';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9591,7 +9591,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'docVenta';
+              readonly table: 'DocVenta';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9717,7 +9717,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'docVentaDetalle';
+              readonly table: 'DocVentaDetalle';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9830,7 +9830,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'egresos_AnticiposOC';
+              readonly table: 'Egresos_AnticiposOC';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -9917,7 +9917,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'egresos_DocCompra';
+              readonly table: 'Egresos_DocCompra';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10009,7 +10009,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'egresos_Otros';
+              readonly table: 'Egresos_Otros';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10082,7 +10082,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'empresas';
+              readonly table: 'Empresas';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10329,7 +10329,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'incidencia';
+              readonly table: 'Incidencia';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10395,7 +10395,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'menu';
+              readonly table: 'Menu';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly MenuId: { readonly column: 'MenuId' };
@@ -10437,7 +10437,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'monedas';
+              readonly table: 'Monedas';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10648,7 +10648,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'ordenCompra';
+              readonly table: 'OrdenCompra';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10732,7 +10732,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'ordenCompraDetalle';
+              readonly table: 'OrdenCompraDetalle';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10763,7 +10763,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'periodos';
+              readonly table: 'Periodos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -10964,7 +10964,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'planillaPago';
+              readonly table: 'PlanillaPago';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -11727,7 +11727,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'productos';
+              readonly table: 'Productos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -11790,7 +11790,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'semana';
+              readonly table: 'Semana';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -11851,7 +11851,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'subMenu';
+              readonly table: 'SubMenu';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -11931,7 +11931,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'tipoDocumentoSunat';
+              readonly table: 'TipoDocumentoSunat';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -12091,7 +12091,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'unidadMedida';
+              readonly table: 'UnidadMedida';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -12146,7 +12146,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'usuarios';
+              readonly table: 'Usuarios';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly IdUsuario: { readonly column: 'IdUsuario' };
@@ -12190,7 +12190,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'usuariosMenus';
+              readonly table: 'UsuariosMenus';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
@@ -12237,7 +12237,7 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'usuariosPermisos';
+              readonly table: 'UsuariosPermisos';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly IdUsuarioPermiso: { readonly column: 'IdUsuarioPermiso' };

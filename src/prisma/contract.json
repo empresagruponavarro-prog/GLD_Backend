@@ -4,144 +4,176 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "AlmacenMovimientoDetalle": {
+      "model": "AlmacenMovimientoDetalle",
+      "namespace": "public"
+    },
+    "AlmacenMovimientos": {
+      "model": "AlmacenMovimientos",
+      "namespace": "public"
+    },
+    "AlmacenTipoMovimiento": {
+      "model": "AlmacenTipoMovimiento",
+      "namespace": "public"
+    },
+    "Almacenes": {
+      "model": "Almacenes",
+      "namespace": "public"
+    },
+    "Anexo_Especialidad": {
+      "model": "Anexo_Especialidad",
+      "namespace": "public"
+    },
+    "Anexo_TipoDocIDE": {
+      "model": "Anexo_TipoDocIDE",
+      "namespace": "public"
+    },
+    "Anexos": {
+      "model": "Anexos",
+      "namespace": "public"
+    },
+    "Bancos": {
+      "model": "Bancos",
+      "namespace": "public"
+    },
+    "CajaEgresosRetail": {
+      "model": "CajaEgresosRetail",
+      "namespace": "public"
+    },
+    "CajaIngresos": {
+      "model": "CajaIngresos",
+      "namespace": "public"
+    },
+    "CajaIngresos_DocVenta": {
+      "model": "CajaIngresos_DocVenta",
+      "namespace": "public"
+    },
+    "CajaMotivos": {
+      "model": "CajaMotivos",
+      "namespace": "public"
+    },
+    "Categorias": {
+      "model": "Categorias",
+      "namespace": "public"
+    },
     "CentroCostos": {
       "model": "CentroCostos",
       "namespace": "public"
     },
-    "almacenMovimientoDetalle": {
-      "model": "AlmacenMovimientoDetalle",
+    "Contrataciones": {
+      "model": "Contrataciones",
       "namespace": "public"
     },
-    "almacenMovimientos": {
-      "model": "AlmacenMovimientos",
+    "Contrataciones_PPTOMeta": {
+      "model": "Contrataciones_PPTOMeta",
       "namespace": "public"
     },
-    "almacenTipoMovimiento": {
-      "model": "AlmacenTipoMovimiento",
+    "Contrataciones_PostVenta": {
+      "model": "Contrataciones_PostVenta",
       "namespace": "public"
     },
-    "almacenes": {
-      "model": "Almacenes",
+    "CuentasCajaBancos": {
+      "model": "CuentasCajaBancos",
       "namespace": "public"
     },
-    "anexo_Especialidad": {
-      "model": "Anexo_Especialidad",
+    "DocCompra": {
+      "model": "DocCompra",
       "namespace": "public"
     },
-    "anexo_TipoDocIDE": {
-      "model": "Anexo_TipoDocIDE",
+    "DocCompraDetalle": {
+      "model": "DocCompraDetalle",
       "namespace": "public"
     },
-    "anexos": {
-      "model": "Anexos",
+    "DocCompra_AplicacionAnticipo": {
+      "model": "DocCompra_AplicacionAnticipo",
       "namespace": "public"
     },
-    "bancos": {
-      "model": "Bancos",
+    "DocVenta": {
+      "model": "DocVenta",
       "namespace": "public"
     },
-    "cajaEgresosRetail": {
-      "model": "CajaEgresosRetail",
+    "DocVentaDetalle": {
+      "model": "DocVentaDetalle",
       "namespace": "public"
     },
-    "cajaIngresos": {
-      "model": "CajaIngresos",
+    "Egresos_AnticiposOC": {
+      "model": "Egresos_AnticiposOC",
       "namespace": "public"
     },
-    "cajaIngresos_DocVenta": {
-      "model": "CajaIngresos_DocVenta",
+    "Egresos_DocCompra": {
+      "model": "Egresos_DocCompra",
       "namespace": "public"
     },
-    "cajaMotivos": {
-      "model": "CajaMotivos",
+    "Egresos_Otros": {
+      "model": "Egresos_Otros",
+      "namespace": "public"
+    },
+    "Empresas": {
+      "model": "Empresas",
+      "namespace": "public"
+    },
+    "Incidencia": {
+      "model": "Incidencia",
+      "namespace": "public"
+    },
+    "Menu": {
+      "model": "Menu",
+      "namespace": "public"
+    },
+    "Monedas": {
+      "model": "Monedas",
+      "namespace": "public"
+    },
+    "OrdenCompra": {
+      "model": "OrdenCompra",
+      "namespace": "public"
+    },
+    "OrdenCompraDetalle": {
+      "model": "OrdenCompraDetalle",
+      "namespace": "public"
+    },
+    "Periodos": {
+      "model": "Periodos",
+      "namespace": "public"
+    },
+    "PlanillaPago": {
+      "model": "PlanillaPago",
+      "namespace": "public"
+    },
+    "Productos": {
+      "model": "Productos",
+      "namespace": "public"
+    },
+    "Semana": {
+      "model": "Semana",
+      "namespace": "public"
+    },
+    "SubMenu": {
+      "model": "SubMenu",
+      "namespace": "public"
+    },
+    "TipoDocumentoSunat": {
+      "model": "TipoDocumentoSunat",
+      "namespace": "public"
+    },
+    "UnidadMedida": {
+      "model": "UnidadMedida",
+      "namespace": "public"
+    },
+    "Usuarios": {
+      "model": "Usuarios",
+      "namespace": "public"
+    },
+    "UsuariosMenus": {
+      "model": "UsuariosMenus",
+      "namespace": "public"
+    },
+    "UsuariosPermisos": {
+      "model": "UsuariosPermisos",
       "namespace": "public"
     },
     "categoria": {
       "model": "categoria",
-      "namespace": "public"
-    },
-    "categorias": {
-      "model": "Categorias",
-      "namespace": "public"
-    },
-    "contrataciones": {
-      "model": "Contrataciones",
-      "namespace": "public"
-    },
-    "contrataciones_PPTOMeta": {
-      "model": "Contrataciones_PPTOMeta",
-      "namespace": "public"
-    },
-    "contrataciones_PostVenta": {
-      "model": "Contrataciones_PostVenta",
-      "namespace": "public"
-    },
-    "cuentasCajaBancos": {
-      "model": "CuentasCajaBancos",
-      "namespace": "public"
-    },
-    "docCompra": {
-      "model": "DocCompra",
-      "namespace": "public"
-    },
-    "docCompraDetalle": {
-      "model": "DocCompraDetalle",
-      "namespace": "public"
-    },
-    "docCompra_AplicacionAnticipo": {
-      "model": "DocCompra_AplicacionAnticipo",
-      "namespace": "public"
-    },
-    "docVenta": {
-      "model": "DocVenta",
-      "namespace": "public"
-    },
-    "docVentaDetalle": {
-      "model": "DocVentaDetalle",
-      "namespace": "public"
-    },
-    "egresos_AnticiposOC": {
-      "model": "Egresos_AnticiposOC",
-      "namespace": "public"
-    },
-    "egresos_DocCompra": {
-      "model": "Egresos_DocCompra",
-      "namespace": "public"
-    },
-    "egresos_Otros": {
-      "model": "Egresos_Otros",
-      "namespace": "public"
-    },
-    "empresas": {
-      "model": "Empresas",
-      "namespace": "public"
-    },
-    "incidencia": {
-      "model": "Incidencia",
-      "namespace": "public"
-    },
-    "menu": {
-      "model": "Menu",
-      "namespace": "public"
-    },
-    "monedas": {
-      "model": "Monedas",
-      "namespace": "public"
-    },
-    "ordenCompra": {
-      "model": "OrdenCompra",
-      "namespace": "public"
-    },
-    "ordenCompraDetalle": {
-      "model": "OrdenCompraDetalle",
-      "namespace": "public"
-    },
-    "periodos": {
-      "model": "Periodos",
-      "namespace": "public"
-    },
-    "planillaPago": {
-      "model": "PlanillaPago",
       "namespace": "public"
     },
     "ppto_DetalleFases": {
@@ -172,28 +204,8 @@
       "model": "producto",
       "namespace": "public"
     },
-    "productos": {
-      "model": "Productos",
-      "namespace": "public"
-    },
-    "semana": {
-      "model": "Semana",
-      "namespace": "public"
-    },
-    "subMenu": {
-      "model": "SubMenu",
-      "namespace": "public"
-    },
-    "tipoDocumentoSunat": {
-      "model": "TipoDocumentoSunat",
-      "namespace": "public"
-    },
     "tipo_categoria": {
       "model": "tipo_categoria",
-      "namespace": "public"
-    },
-    "unidadMedida": {
-      "model": "UnidadMedida",
       "namespace": "public"
     },
     "unidad_medida": {
@@ -202,18 +214,6 @@
     },
     "unidad_medida_equivalencia": {
       "model": "unidad_medida_equivalencia",
-      "namespace": "public"
-    },
-    "usuarios": {
-      "model": "Usuarios",
-      "namespace": "public"
-    },
-    "usuariosMenus": {
-      "model": "UsuariosMenus",
-      "namespace": "public"
-    },
-    "usuariosPermisos": {
-      "model": "UsuariosPermisos",
       "namespace": "public"
     }
   },
@@ -333,7 +333,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "almacenMovimientoDetalle"
+              "table": "AlmacenMovimientoDetalle"
             }
           },
           "AlmacenMovimientos": {
@@ -484,7 +484,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "almacenMovimientos"
+              "table": "AlmacenMovimientos"
             }
           },
           "AlmacenTipoMovimiento": {
@@ -544,7 +544,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "almacenTipoMovimiento"
+              "table": "AlmacenTipoMovimiento"
             }
           },
           "Almacenes": {
@@ -604,7 +604,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "almacenes"
+              "table": "Almacenes"
             }
           },
           "Anexo_Especialidad": {
@@ -667,7 +667,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "anexo_Especialidad"
+              "table": "Anexo_Especialidad"
             }
           },
           "Anexo_TipoDocIDE": {
@@ -730,7 +730,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "anexo_TipoDocIDE"
+              "table": "Anexo_TipoDocIDE"
             }
           },
           "Anexos": {
@@ -919,7 +919,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "anexos"
+              "table": "Anexos"
             }
           },
           "Bancos": {
@@ -966,7 +966,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "bancos"
+              "table": "Bancos"
             }
           },
           "CajaEgresosRetail": {
@@ -1313,7 +1313,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "cajaEgresosRetail"
+              "table": "CajaEgresosRetail"
             }
           },
           "CajaIngresos": {
@@ -1543,7 +1543,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "cajaIngresos"
+              "table": "CajaIngresos"
             }
           },
           "CajaIngresos_DocVenta": {
@@ -1652,7 +1652,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "cajaIngresos_DocVenta"
+              "table": "CajaIngresos_DocVenta"
             }
           },
           "CajaMotivos": {
@@ -1738,7 +1738,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "cajaMotivos"
+              "table": "CajaMotivos"
             }
           },
           "Categorias": {
@@ -1811,7 +1811,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "categorias"
+              "table": "Categorias"
             }
           },
           "CentroCostos": {
@@ -2370,7 +2370,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "contrataciones"
+              "table": "Contrataciones"
             }
           },
           "Contrataciones_PPTOMeta": {
@@ -2515,7 +2515,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "contrataciones_PPTOMeta"
+              "table": "Contrataciones_PPTOMeta"
             }
           },
           "Contrataciones_PostVenta": {
@@ -2673,7 +2673,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "contrataciones_PostVenta"
+              "table": "Contrataciones_PostVenta"
             }
           },
           "CuentasCajaBancos": {
@@ -2821,7 +2821,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "cuentasCajaBancos"
+              "table": "CuentasCajaBancos"
             }
           },
           "DocCompra": {
@@ -3243,7 +3243,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "docCompra"
+              "table": "DocCompra"
             }
           },
           "DocCompraDetalle": {
@@ -3440,7 +3440,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "docCompraDetalle"
+              "table": "DocCompraDetalle"
             }
           },
           "DocCompra_AplicacionAnticipo": {
@@ -3549,7 +3549,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "docCompra_AplicacionAnticipo"
+              "table": "DocCompra_AplicacionAnticipo"
             }
           },
           "DocVenta": {
@@ -3844,7 +3844,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "docVenta"
+              "table": "DocVenta"
             }
           },
           "DocVentaDetalle": {
@@ -4028,7 +4028,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "docVentaDetalle"
+              "table": "DocVentaDetalle"
             }
           },
           "Egresos_AnticiposOC": {
@@ -4189,7 +4189,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "egresos_AnticiposOC"
+              "table": "Egresos_AnticiposOC"
             }
           },
           "Egresos_DocCompra": {
@@ -4311,7 +4311,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "egresos_DocCompra"
+              "table": "Egresos_DocCompra"
             }
           },
           "Egresos_Otros": {
@@ -4446,7 +4446,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "egresos_Otros"
+              "table": "Egresos_Otros"
             }
           },
           "Empresas": {
@@ -4545,7 +4545,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "empresas"
+              "table": "Empresas"
             }
           },
           "Incidencia": {
@@ -4938,7 +4938,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "incidencia"
+              "table": "Incidencia"
             }
           },
           "Menu": {
@@ -4988,7 +4988,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "menu"
+              "table": "Menu"
             }
           },
           "Monedas": {
@@ -5048,7 +5048,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "monedas"
+              "table": "Monedas"
             }
           },
           "OrdenCompra": {
@@ -5409,7 +5409,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "ordenCompra"
+              "table": "OrdenCompra"
             }
           },
           "OrdenCompraDetalle": {
@@ -5515,7 +5515,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "ordenCompraDetalle"
+              "table": "OrdenCompraDetalle"
             }
           },
           "Periodos": {
@@ -5549,7 +5549,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "periodos"
+              "table": "Periodos"
             }
           },
           "PlanillaPago": {
@@ -5904,7 +5904,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "planillaPago"
+              "table": "PlanillaPago"
             }
           },
           "Productos": {
@@ -6013,7 +6013,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "productos"
+              "table": "Productos"
             }
           },
           "Semana": {
@@ -6099,7 +6099,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "semana"
+              "table": "Semana"
             }
           },
           "SubMenu": {
@@ -6185,7 +6185,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "subMenu"
+              "table": "SubMenu"
             }
           },
           "TipoDocumentoSunat": {
@@ -6232,7 +6232,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "tipoDocumentoSunat"
+              "table": "TipoDocumentoSunat"
             }
           },
           "UnidadMedida": {
@@ -6292,7 +6292,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "unidadMedida"
+              "table": "UnidadMedida"
             }
           },
           "Usuarios": {
@@ -6368,7 +6368,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "usuarios"
+              "table": "Usuarios"
             }
           },
           "UsuariosMenus": {
@@ -6428,7 +6428,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "usuariosMenus"
+              "table": "UsuariosMenus"
             }
           },
           "UsuariosPermisos": {
@@ -6491,7 +6491,7 @@
                 }
               },
               "namespaceId": "public",
-              "table": "usuariosPermisos"
+              "table": "UsuariosPermisos"
             }
           },
           "categoria": {
@@ -7871,150 +7871,7 @@
       "public": {
         "entries": {
           "table": {
-            "CentroCostos": {
-              "columns": {
-                "CentroCosto": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCentroCto": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCentroCtoPrincipal": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodCliente": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "CodEmpresa": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Estado": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
-                  }
-                },
-                "FechaFinProg": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "FechaFinReal": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "FechaIncio": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "IdPeriodo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "OCFile": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "PresupuestoCostoDirecto": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoEstado": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
-                  }
-                },
-                "PresupuestoGastosGenerales": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoMonto": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "PresupuestoViaticos": {
-                  "codecId": "pg/numeric@1",
-                  "nativeType": "numeric",
-                  "nullable": true
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "CodCentroCto"
-                  ]
-                }
-              ]
-            },
-            "almacenMovimientoDetalle": {
+            "AlmacenMovimientoDetalle": {
               "columns": {
                 "Cantidad": {
                   "codecId": "pg/numeric@1",
@@ -8072,7 +7929,7 @@
               },
               "uniques": []
             },
-            "almacenMovimientos": {
+            "AlmacenMovimientos": {
               "columns": {
                 "CodAlmacen": {
                   "codecId": "sql/varchar@1",
@@ -8173,7 +8030,7 @@
               },
               "uniques": []
             },
-            "almacenTipoMovimiento": {
+            "AlmacenTipoMovimiento": {
               "columns": {
                 "CodTipoMov": {
                   "codecId": "sql/varchar@1",
@@ -8218,7 +8075,7 @@
               },
               "uniques": []
             },
-            "almacenes": {
+            "Almacenes": {
               "columns": {
                 "Almacen": {
                   "codecId": "sql/varchar@1",
@@ -8263,7 +8120,7 @@
               },
               "uniques": []
             },
-            "anexo_Especialidad": {
+            "Anexo_Especialidad": {
               "columns": {
                 "Anexo Especialidad": {
                   "codecId": "sql/varchar@1",
@@ -8300,7 +8157,7 @@
               },
               "uniques": []
             },
-            "anexo_TipoDocIDE": {
+            "Anexo_TipoDocIDE": {
               "columns": {
                 "Anexo_Documento_IDE": {
                   "codecId": "sql/varchar@1",
@@ -8337,12 +8194,12 @@
               },
               "uniques": []
             },
-            "anexos": {
+            "Anexos": {
               "checks": [
                 {
                   "expression": "\"tipoAnexo\" IN ('Proveedor', 'Cliente', 'Trabajador')",
-                  "name": "anexos_tipoAnexo_check_6ec6fe70",
-                  "prefix": "anexos_tipoAnexo_check"
+                  "name": "Anexos_tipoAnexo_check_6ec6fe70",
+                  "prefix": "Anexos_tipoAnexo_check"
                 }
               ],
               "columns": {
@@ -8450,14 +8307,14 @@
                       "AnexoEspecialidadId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "anexos"
+                    "tableName": "Anexos"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "anexo_Especialidad"
+                    "tableName": "Anexo_Especialidad"
                   }
                 },
                 {
@@ -8467,14 +8324,14 @@
                       "AnexoTipoDocIdeId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "anexos"
+                    "tableName": "Anexos"
                   },
                   "target": {
                     "columns": [
                       "id"
                     ],
                     "namespaceId": "public",
-                    "tableName": "anexo_TipoDocIDE"
+                    "tableName": "Anexo_TipoDocIDE"
                   }
                 }
               ],
@@ -8483,16 +8340,16 @@
                   "columns": [
                     "AnexoEspecialidadId"
                   ],
-                  "name": "anexos_AnexoEspecialidadId_idx_343e8198",
-                  "prefix": "anexos_AnexoEspecialidadId_idx",
+                  "name": "Anexos_AnexoEspecialidadId_idx_343e8198",
+                  "prefix": "Anexos_AnexoEspecialidadId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
                     "AnexoTipoDocIdeId"
                   ],
-                  "name": "anexos_AnexoTipoDocIdeId_idx_85b59811",
-                  "prefix": "anexos_AnexoTipoDocIdeId_idx",
+                  "name": "Anexos_AnexoTipoDocIdeId_idx_85b59811",
+                  "prefix": "Anexos_AnexoTipoDocIdeId_idx",
                   "unique": false
                 }
               ],
@@ -8503,7 +8360,7 @@
               },
               "uniques": []
             },
-            "bancos": {
+            "Bancos": {
               "columns": {
                 "Banco": {
                   "codecId": "sql/varchar@1",
@@ -8540,7 +8397,7 @@
               },
               "uniques": []
             },
-            "cajaEgresosRetail": {
+            "CajaEgresosRetail": {
               "columns": {
                 "Ajuste": {
                   "codecId": "sql/varchar@1",
@@ -8757,7 +8614,7 @@
               },
               "uniques": []
             },
-            "cajaIngresos": {
+            "CajaIngresos": {
               "columns": {
                 "CodCentroCto": {
                   "codecId": "sql/varchar@1",
@@ -8902,7 +8759,7 @@
               },
               "uniques": []
             },
-            "cajaIngresos_DocVenta": {
+            "CajaIngresos_DocVenta": {
               "columns": {
                 "CodDocSunat": {
                   "codecId": "sql/varchar@1",
@@ -8976,7 +8833,7 @@
               },
               "uniques": []
             },
-            "cajaMotivos": {
+            "CajaMotivos": {
               "columns": {
                 "CodMotivo": {
                   "codecId": "sql/varchar@1",
@@ -9037,84 +8894,7 @@
               },
               "uniques": []
             },
-            "categoria": {
-              "columns": {
-                "codigo": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "descripcion": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
-                "estado": {
-                  "codecId": "pg/bool@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": true
-                  },
-                  "nativeType": "bool",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                },
-                "id_tipo_categoria": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [
-                {
-                  "source": {
-                    "columns": [
-                      "id_tipo_categoria"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "categoria"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "tipo_categoria"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "id_tipo_categoria"
-                  ],
-                  "name": "categoria_id_tipo_categoria_idx_ac61ceef",
-                  "prefix": "categoria_id_tipo_categoria_idx",
-                  "unique": false
-                }
-              ],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": [
-                {
-                  "columns": [
-                    "codigo"
-                  ]
-                }
-              ]
-            },
-            "categorias": {
+            "Categorias": {
               "columns": {
                 "CategoriaCodigo": {
                   "codecId": "sql/varchar@1",
@@ -9167,7 +8947,150 @@
               },
               "uniques": []
             },
-            "contrataciones": {
+            "CentroCostos": {
+              "columns": {
+                "CentroCosto": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCentroCto": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCentroCtoPrincipal": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodCliente": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "CodEmpresa": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Estado": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "FechaFinProg": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "FechaFinReal": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "FechaIncio": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdPeriodo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "OCFile": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "PresupuestoCostoDirecto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoEstado": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "PresupuestoGastosGenerales": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoMonto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "PresupuestoViaticos": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "CodCentroCto"
+                  ]
+                }
+              ]
+            },
+            "Contrataciones": {
               "columns": {
                 "Categoria": {
                   "codecId": "sql/varchar@1",
@@ -9374,7 +9297,7 @@
               },
               "uniques": []
             },
-            "contrataciones_PPTOMeta": {
+            "Contrataciones_PPTOMeta": {
               "columns": {
                 "CodCentroCto": {
                   "codecId": "sql/varchar@1",
@@ -9469,7 +9392,7 @@
               },
               "uniques": []
             },
-            "contrataciones_PostVenta": {
+            "Contrataciones_PostVenta": {
               "columns": {
                 "CentroCosto": {
                   "codecId": "sql/varchar@1",
@@ -9572,7 +9495,7 @@
               },
               "uniques": []
             },
-            "cuentasCajaBancos": {
+            "CuentasCajaBancos": {
               "columns": {
                 "CCICuenta": {
                   "codecId": "sql/varchar@1",
@@ -9670,7 +9593,7 @@
               },
               "uniques": []
             },
-            "docCompra": {
+            "DocCompra": {
               "columns": {
                 "Ajuste": {
                   "codecId": "sql/varchar@1",
@@ -9932,12 +9855,12 @@
               },
               "uniques": []
             },
-            "docCompraDetalle": {
+            "DocCompraDetalle": {
               "checks": [
                 {
                   "expression": "\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO')",
-                  "name": "docCompraDetalle_TipoProducto_check_2fa7d18d",
-                  "prefix": "docCompraDetalle_TipoProducto_check"
+                  "name": "DocCompraDetalle_TipoProducto_check_2fa7d18d",
+                  "prefix": "DocCompraDetalle_TipoProducto_check"
                 }
               ],
               "columns": {
@@ -10066,7 +9989,7 @@
               },
               "uniques": []
             },
-            "docCompra_AplicacionAnticipo": {
+            "DocCompra_AplicacionAnticipo": {
               "columns": {
                 "CodEmpresa": {
                   "codecId": "sql/varchar@1",
@@ -10140,7 +10063,7 @@
               },
               "uniques": []
             },
-            "docVenta": {
+            "DocVenta": {
               "columns": {
                 "CodCentroCto": {
                   "codecId": "sql/varchar@1",
@@ -10325,12 +10248,12 @@
               },
               "uniques": []
             },
-            "docVentaDetalle": {
+            "DocVentaDetalle": {
               "checks": [
                 {
                   "expression": "\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO')",
-                  "name": "docVentaDetalle_TipoProducto_check_2fa7d18d",
-                  "prefix": "docVentaDetalle_TipoProducto_check"
+                  "name": "DocVentaDetalle_TipoProducto_check_2fa7d18d",
+                  "prefix": "DocVentaDetalle_TipoProducto_check"
                 }
               ],
               "columns": {
@@ -10451,7 +10374,7 @@
               },
               "uniques": []
             },
-            "egresos_AnticiposOC": {
+            "Egresos_AnticiposOC": {
               "columns": {
                 "CodCentroCto": {
                   "codecId": "sql/varchar@1",
@@ -10557,7 +10480,7 @@
               },
               "uniques": []
             },
-            "egresos_DocCompra": {
+            "Egresos_DocCompra": {
               "columns": {
                 "CodDocSunat": {
                   "codecId": "sql/varchar@1",
@@ -10639,7 +10562,7 @@
               },
               "uniques": []
             },
-            "egresos_Otros": {
+            "Egresos_Otros": {
               "columns": {
                 "CategoriaCodigo": {
                   "codecId": "sql/varchar@1",
@@ -10729,7 +10652,7 @@
               },
               "uniques": []
             },
-            "empresas": {
+            "Empresas": {
               "columns": {
                 "CodEmpresa": {
                   "codecId": "sql/varchar@1",
@@ -10798,7 +10721,7 @@
               },
               "uniques": []
             },
-            "incidencia": {
+            "Incidencia": {
               "columns": {
                 "accionPrevia": {
                   "codecId": "pg/text@1",
@@ -11053,7 +10976,7 @@
               },
               "uniques": []
             },
-            "menu": {
+            "Menu": {
               "columns": {
                 "Imagen": {
                   "codecId": "sql/varchar@1",
@@ -11089,7 +11012,7 @@
               },
               "uniques": []
             },
-            "monedas": {
+            "Monedas": {
               "columns": {
                 "Moneda": {
                   "codecId": "sql/varchar@1",
@@ -11134,7 +11057,7 @@
               },
               "uniques": []
             },
-            "ordenCompra": {
+            "OrdenCompra": {
               "columns": {
                 "CategoriaCodigo": {
                   "codecId": "sql/varchar@1",
@@ -11355,12 +11278,12 @@
               },
               "uniques": []
             },
-            "ordenCompraDetalle": {
+            "OrdenCompraDetalle": {
               "checks": [
                 {
                   "expression": "\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO')",
-                  "name": "ordenCompraDetalle_TipoProducto_check_2fa7d18d",
-                  "prefix": "ordenCompraDetalle_TipoProducto_check"
+                  "name": "OrdenCompraDetalle_TipoProducto_check_2fa7d18d",
+                  "prefix": "OrdenCompraDetalle_TipoProducto_check"
                 }
               ],
               "columns": {
@@ -11433,7 +11356,7 @@
               },
               "uniques": []
             },
-            "periodos": {
+            "Periodos": {
               "columns": {
                 "IdPeriodo": {
                   "codecId": "sql/varchar@1",
@@ -11462,7 +11385,7 @@
               },
               "uniques": []
             },
-            "planillaPago": {
+            "PlanillaPago": {
               "columns": {
                 "Categoria": {
                   "codecId": "sql/varchar@1",
@@ -11676,6 +11599,509 @@
                 ]
               },
               "uniques": []
+            },
+            "Productos": {
+              "checks": [
+                {
+                  "expression": "\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO')",
+                  "name": "Productos_TipoProducto_check_2fa7d18d",
+                  "prefix": "Productos_TipoProducto_check"
+                }
+              ],
+              "columns": {
+                "CategoriaCodigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Comentarios": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "Descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "Imagen": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "ProductoCodigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "TipoProducto": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_item",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "UniMedCodigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "Semana": {
+              "columns": {
+                "CodSemana": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "FechaFinal": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "FechaInicio": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true,
+                  "typeParams": {
+                    "precision": 3
+                  }
+                },
+                "IdPeriodo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Semana": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "SubMenu": {
+              "columns": {
+                "Imagen": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "MenuId": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "SubMenuNombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "SubMenuVista": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "TipoSubMenu": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "TipoDocumentoSunat": {
+              "columns": {
+                "CodDocSunat": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "DocumentoSunat": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "UnidadMedida": {
+              "columns": {
+                "Descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Simbolo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "UniMedCodigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "Usuarios": {
+              "columns": {
+                "Clave": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdUsuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Nombres": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Rol": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Usuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "IdUsuario"
+                ]
+              },
+              "uniques": []
+            },
+            "UsuariosMenus": {
+              "columns": {
+                "IdUsuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdUsuarioMenu": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "MenuId": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "UsuariosPermisos": {
+              "columns": {
+                "IdUsuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdUsuarioPermiso": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "MenuId": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "SubMenuId": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "IdUsuarioPermiso"
+                ]
+              },
+              "uniques": []
+            },
+            "categoria": {
+              "columns": {
+                "codigo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "descripcion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_tipo_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_tipo_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_categoria"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_tipo_categoria"
+                  ],
+                  "name": "categoria_id_tipo_categoria_idx_ac61ceef",
+                  "prefix": "categoria_id_tipo_categoria_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
             },
             "ppto_DetalleFases": {
               "columns": {
@@ -12426,246 +12852,6 @@
                 }
               ]
             },
-            "productos": {
-              "checks": [
-                {
-                  "expression": "\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO')",
-                  "name": "productos_TipoProducto_check_2fa7d18d",
-                  "prefix": "productos_TipoProducto_check"
-                }
-              ],
-              "columns": {
-                "CategoriaCodigo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Comentarios": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
-                "Descripcion": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
-                "Imagen": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "ProductoCodigo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "TipoProducto": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "tipo_item",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                },
-                "UniMedCodigo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "semana": {
-              "columns": {
-                "CodSemana": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "FechaFinal": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "FechaInicio": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "IdPeriodo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Semana": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "subMenu": {
-              "columns": {
-                "Imagen": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "MenuId": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "SubMenuNombre": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "SubMenuVista": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "TipoSubMenu": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "tipoDocumentoSunat": {
-              "columns": {
-                "CodDocSunat": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "DocumentoSunat": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
             "tipo_categoria": {
               "columns": {
                 "codigo": {
@@ -12711,51 +12897,6 @@
                   ]
                 }
               ]
-            },
-            "unidadMedida": {
-              "columns": {
-                "Descripcion": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Simbolo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "UniMedCodigo": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
             },
             "unidad_medida": {
               "columns": {
@@ -12909,147 +13050,6 @@
                   ]
                 }
               ]
-            },
-            "usuarios": {
-              "columns": {
-                "Clave": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "IdUsuario": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Nombres": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Rol": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "Usuario": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "IdUsuario"
-                ]
-              },
-              "uniques": []
-            },
-            "usuariosMenus": {
-              "columns": {
-                "IdUsuario": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "IdUsuarioMenu": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "MenuId": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "id": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "usuariosPermisos": {
-              "columns": {
-                "IdUsuario": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "IdUsuarioPermiso": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "MenuId": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                },
-                "SubMenuId": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "IdUsuarioPermiso"
-                ]
-              },
-              "uniques": []
             }
           },
           "valueSet": {
@@ -13074,7 +13074,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "9c1d3ea755b10b5d3b6f7feec5df729d2ee951b95d76edd4bf3c41f4be9fa08a"
+    "storageHash": "8756d0be695eee9f013f4cb126c0a232417ad22c99dca61028a5f56f05ed58f0"
   },
   "capabilities": {
     "postgres": {

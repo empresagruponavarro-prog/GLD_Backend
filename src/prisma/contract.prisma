@@ -13,6 +13,7 @@ model tipo_categoria {
   nombre     String
   estado     Boolean     @default(true)
   categorias categoria[]
+  @@map("tipo_categoria")
 }
 
 model categoria {
@@ -23,6 +24,7 @@ model categoria {
   estado            Boolean        @default(true)
   tipo_categoria    tipo_categoria @relation(fields:[id_tipo_categoria], references:[id])
   productos         producto[]
+  @@map("categoria")
 }
 
 model unidad_medida {
@@ -33,6 +35,7 @@ model unidad_medida {
   estado               Boolean                      @default(true)
   equivalenciasOrigen  unidad_medida_equivalencia[] @relation("origen")
   equivalenciasDestino unidad_medida_equivalencia[] @relation("destino")
+  @@map("unidad_medida")
 }
 
 model unidad_medida_equivalencia {
@@ -45,6 +48,7 @@ model unidad_medida_equivalencia {
   unidadDestino      unidad_medida @relation("destino", fields:[id_uni_med_destino], references:[id])
 
   @@unique([id_uni_med_origen, id_uni_med_destino])
+  @@map("unidad_medida_equivalencia")
 }
 
 model producto {
@@ -60,6 +64,7 @@ model producto {
   estado           Boolean       @default(true)
   categoria        categoria     @relation(fields:[id_categoria], references:[id])
   unidad_medida    unidad_medida @relation(fields:[id_unidad_medida], references:[id])
+  @@map("producto")
 }
 
 // ============================================================
@@ -72,6 +77,7 @@ model AlmacenMovimientoDetalle {
   ProductoCodigo       VarChar(255)?
   Comportamiento       VarChar(255)?
   Cantidad             Decimal?
+  @@map("AlmacenMovimientoDetalle")
 }
 
 model AlmacenMovimientos {
@@ -86,6 +92,7 @@ model AlmacenMovimientos {
   CodTipoMov            VarChar(255)?
   Comportamiento        VarChar(255)?
   Fecha                 Timestamptz(3)?
+  @@map("AlmacenMovimientos")
 }
 
 model AlmacenTipoMovimiento {
@@ -93,6 +100,7 @@ model AlmacenTipoMovimiento {
   CodTipoMov     VarChar(255)?
   TipoMovimiento VarChar(255)?
   Comportamiento VarChar(255)?
+  @@map("AlmacenTipoMovimiento")
 }
 
 model Almacenes {
@@ -100,6 +108,7 @@ model Almacenes {
   CodAlmacen VarChar(255)?
   CodEmpresa VarChar(255)?
   Almacen    VarChar(255)?
+  @@map("Almacenes")
 }
 
 model Anexo_Especialidad {
@@ -107,6 +116,7 @@ model Anexo_Especialidad {
   TipoAnexo          VarChar(255)?
   Anexo_Especialidad VarChar(255)? @map("Anexo Especialidad")
   anexos             Anexos[]
+  @@map("Anexo_Especialidad")
 }
 
 model Anexo_TipoDocIDE {
@@ -114,6 +124,7 @@ model Anexo_TipoDocIDE {
   TipoAnexo           VarChar(255)?
   Anexo_Documento_IDE VarChar(255)?
   anexos              Anexos[]
+  @@map("Anexo_TipoDocIDE")
 }
 
 enum TipoAnexo {
@@ -138,12 +149,14 @@ model Anexos {
   Telefono            VarChar(255)?
   Correo              VarChar(255)?
   estado              Boolean       @default(true)
+  @@map("Anexos")
 }
 
 model Bancos {
   id      Int           @id @default(autoincrement())
   IdBanco VarChar(255)?
   Banco   VarChar(255)?
+  @@map("Bancos")
 }
 
 model CajaEgresosRetail {
@@ -174,6 +187,7 @@ model CajaEgresosRetail {
   Monto_Total           Decimal?        @map("Monto Total")
   VoucherDeposito       VarChar(255)?
   Ajuste                VarChar(255)?
+  @@map("CajaEgresosRetail")
 }
 
 model CajaIngresos {
@@ -195,6 +209,7 @@ model CajaIngresos {
   TotalPagoDocumentos   Decimal?
   Monto_Total           Decimal?        @map("Monto Total")
   VoucherDeposito       VarChar(255)?
+  @@map("CajaIngresos")
 }
 
 model CajaIngresos_DocVenta {
@@ -206,6 +221,7 @@ model CajaIngresos_DocVenta {
   NumDocumento  VarChar(255)?
   IdDocVenta    VarChar(255)?
   MontoPagado   Decimal?
+  @@map("CajaIngresos_DocVenta")
 }
 
 model CajaMotivos {
@@ -215,6 +231,7 @@ model CajaMotivos {
   Motivo         VarChar(255)?
   Comportamiento VarChar(255)?
   Resultado      VarChar(255)?
+  @@map("CajaMotivos")
 }
 
 model Categorias {
@@ -223,6 +240,7 @@ model Categorias {
   Descripcion     VarChar(255)?
   TIPOCATE        VarChar(255)?
   Estado          VarChar(50)?
+  @@map("Categorias")
 }
 
 model CentroCostos {
@@ -276,6 +294,7 @@ model Contrataciones {
   LiquidacionPDF        VarChar(255)?
   ContratoPDF           VarChar(255)?
   PresupuestoFile       VarChar(255)?
+  @@map("Contrataciones")
 }
 
 model Contrataciones_PPTOMeta {
@@ -290,6 +309,7 @@ model Contrataciones_PPTOMeta {
   Concepto                String?
   Monto                   Decimal?
   File                    VarChar(255)?
+  @@map("Contrataciones_PPTOMeta")
 }
 
 model Contrataciones_PostVenta {
@@ -305,6 +325,7 @@ model Contrataciones_PostVenta {
   Concepto                 String?
   Monto                    Decimal?
   File                     VarChar(255)?
+  @@map("Contrataciones_PostVenta")
 }
 
 model CuentasCajaBancos {
@@ -319,6 +340,7 @@ model CuentasCajaBancos {
   IdMoneda          VarChar(255)?
   FechaSaldoInicial Timestamptz(3)?
   SaldoInicial      Decimal?
+  @@map("CuentasCajaBancos")
 }
 
 model DocCompra {
@@ -355,6 +377,7 @@ model DocCompra {
   Usuario               VarChar(255)?
   FechaCrecion          Timestamptz(3)?
   Ajuste                VarChar(255)?
+  @@map("DocCompra")
 }
 
 model DocCompraDetalle {
@@ -373,6 +396,7 @@ model DocCompraDetalle {
   Cantidad              Decimal?
   Precio                Decimal?
   monto                 Decimal?
+  @@map("DocCompraDetalle")
 }
 
 model DocCompra_AplicacionAnticipo {
@@ -384,6 +408,7 @@ model DocCompra_AplicacionAnticipo {
   TipoOC                VarChar(255)?
   IdOC                  VarChar(255)?
   MontoPagado           Decimal?
+  @@map("DocCompra_AplicacionAnticipo")
 }
 
 model DocVenta {
@@ -410,6 +435,7 @@ model DocVenta {
   PDF_Documento         VarChar(255)?
   Usuario               VarChar(255)?
   FechaCrecion          Timestamptz(3)?
+  @@map("DocVenta")
 }
 
 model DocVentaDetalle {
@@ -427,6 +453,7 @@ model DocVentaDetalle {
   Cantidad              Decimal?
   Precio                Decimal?
   monto                 Decimal?
+  @@map("DocVentaDetalle")
 }
 
 model Egresos_AnticiposOC {
@@ -442,6 +469,7 @@ model Egresos_AnticiposOC {
   IdOC            VarChar(255)?
   CodigoAnexo     VarChar(255)?
   MontoPagado     Decimal?
+  @@map("Egresos_AnticiposOC")
 }
 
 model Egresos_DocCompra {
@@ -454,6 +482,7 @@ model Egresos_DocCompra {
   IdDocCompra    VarChar(255)?
   IdOC           VarChar(255)?
   Monto_Pagado   Decimal?      @map("Monto Pagado")
+  @@map("Egresos_DocCompra")
 }
 
 model Egresos_Otros {
@@ -467,6 +496,7 @@ model Egresos_Otros {
   MedioPago       VarChar(255)?
   CategoriaCodigo VarChar(255)?
   Monto_Total     Decimal?        @map("Monto Total")
+  @@map("Egresos_Otros")
 }
 
 model Empresas {
@@ -477,12 +507,14 @@ model Empresas {
   DomicilioFiscal  VarChar(255)?
   DireccionEntrega VarChar(255)?
   CorreoCompras    VarChar(255)?
+  @@map("Empresas")
 }
 
 model Menu {
   MenuId     VarChar(255)  @id
   MenuNombre VarChar(255)?
   Imagen     VarChar(255)?
+  @@map("Menu")
 }
 
 model Monedas {
@@ -490,6 +522,7 @@ model Monedas {
   MonedaId VarChar(255)?
   Moneda   VarChar(255)?
   Simbolo  VarChar(255)?
+  @@map("Monedas")
 }
 
 model OrdenCompra {
@@ -522,6 +555,7 @@ model OrdenCompra {
   FechaCreacion         Timestamptz(3)?
   HoraCreacion          VarChar(10)?
   Cotizacion            VarChar(255)?
+  @@map("OrdenCompra")
 }
 
 model OrdenCompraDetalle {
@@ -533,11 +567,13 @@ model OrdenCompraDetalle {
   Cantidad       Decimal?
   Precio         Decimal?
   monto          Decimal?
+  @@map("OrdenCompraDetalle")
 }
 
 model Periodos {
   id        Int           @id @default(autoincrement())
   IdPeriodo VarChar(255)?
+  @@map("Periodos")
 }
 
 model PlanillaPago {
@@ -570,6 +606,7 @@ model PlanillaPago {
   PlanillaIGV            Decimal?
   PlanillaTotal          Decimal?
   Estado                 VarChar(50)?
+  @@map("PlanillaPago")
 }
 
 model Productos {
@@ -581,6 +618,7 @@ model Productos {
   Comentarios     String?
   Imagen          VarChar(255)?
   TipoProducto    tipo_item?
+  @@map("Productos")
 }
 
 model Semana {
@@ -590,6 +628,7 @@ model Semana {
   Semana      VarChar(255)?
   FechaInicio Timestamptz(3)?
   FechaFinal  Timestamptz(3)?
+  @@map("Semana")
 }
 
 model SubMenu {
@@ -599,12 +638,14 @@ model SubMenu {
   SubMenuNombre VarChar(255)?
   SubMenuVista  VarChar(255)?
   Imagen        VarChar(255)?
+  @@map("SubMenu")
 }
 
 model TipoDocumentoSunat {
   id             Int           @id @default(autoincrement())
   CodDocSunat    VarChar(255)?
   DocumentoSunat VarChar(255)?
+  @@map("TipoDocumentoSunat")
 }
 
 model UnidadMedida {
@@ -612,6 +653,7 @@ model UnidadMedida {
   UniMedCodigo VarChar(255)?
   Descripcion  VarChar(255)?
   Simbolo      VarChar(255)?
+  @@map("UnidadMedida")
 }
 
 model Usuarios {
@@ -620,6 +662,7 @@ model Usuarios {
   Usuario   VarChar(255)?
   Clave     VarChar(255)?
   Rol       VarChar(255)?
+  @@map("Usuarios")
 }
 
 model UsuariosMenus {
@@ -627,6 +670,7 @@ model UsuariosMenus {
   IdUsuarioMenu VarChar(255)?
   IdUsuario     VarChar(255)?
   MenuId        VarChar(255)?
+  @@map("UsuariosMenus")
 }
 
 model UsuariosPermisos {
@@ -634,6 +678,7 @@ model UsuariosPermisos {
   IdUsuario        VarChar(255)?
   MenuId           VarChar(255)?
   SubMenuId        VarChar(255)?
+  @@map("UsuariosPermisos")
 }
 
 model Incidencia {
@@ -678,6 +723,7 @@ model Incidencia {
   fechaInicio          DateTime        @default(now())
   fechaFin             DateTime?
   fechaCreacion        DateTime        @default(now())
+  @@map("Incidencia")
 }
 
 model ppto_DetalleFases {
@@ -691,6 +737,7 @@ model ppto_DetalleFases {
   CostoDirecto          Decimal?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
+  @@map("ppto_DetalleFases")
 }
 
 model ppto_DetalleFasesCate {
@@ -706,6 +753,7 @@ model ppto_DetalleFasesCate {
   CostoDirecto                  Decimal?
   Usuario                       VarChar(255)?
   FechaCreacion                 VarChar(255)?
+  @@map("ppto_DetalleFasesCate")
 }
 
 model ppto_Fases {
@@ -714,6 +762,7 @@ model ppto_Fases {
   CodEmpresa            VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   FaseProyecto          VarChar(255)?
+  @@map("ppto_Fases")
 }
 
 model ppto_FasesCategorias {
@@ -721,6 +770,7 @@ model ppto_FasesCategorias {
   IdpptoFaseCategoria VarChar(255)? @unique
   IdpptoFase          VarChar(255)?
   Descripcion         VarChar(255)?
+  @@map("ppto_FasesCategorias")
 }
 
 model ppto_Principal {
@@ -754,6 +804,7 @@ model ppto_Principal {
   IdUsuario             VarChar(255)?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
+  @@map("ppto_Principal")
 }
 
 model ppto_Principal_Historial {
@@ -763,4 +814,5 @@ model ppto_Principal_Historial {
   NumVersion           VarChar(255)?
   FilePpto             VarChar(255)?
   FileCorreo           VarChar(255)?
+  @@map("ppto_Principal_Historial")
 }
