@@ -61,17 +61,26 @@ export class PresupuestoPrincipalHandler {
     const idPresupuesto = ppto.IdPresupuesto;
     if (!idPresupuesto) return { ...ppto, centroCosto: null, fases: [], historiales: [] };
 
-    const [centroCosto, detallesFases, historiales, todasCategorias] = await Promise.all([
+const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, pptoFasesCat] = await Promise.all([
       ppto.id_centro_costo ? this.db.orm.public.CentroCostos.first({ id: ppto.id_centro_costo }) : null,
       this.db.orm.public.ppto_DetalleFases.where((d) => d.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Principal_Historial.where((h) => h.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_DetalleFasesCate.where((c) => c.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
+      this.db.orm.public.ppto_Fases.all(),
+      this.db.orm.public.ppto_FasesCategorias.all(),
     ]);
 
+    const fasesMap = new Map(pptoFases.map(f => [f.IdpptoFase, f.FaseProyecto]));
+    const catMap = new Map(pptoFasesCat.map(c => [c.IdpptoFaseCategoria, c.Descripcion]));
+
     const fasesConCategorias = detallesFases.map((fase) => {
-      const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle);
+      const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).map(cat => ({
+        ...cat,
+        CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null
+      }));
       return {
         ...fase,
+        NombreFase: fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) || fase.IdpptoFase : null,
         categorias,
       };
     });
