@@ -326,11 +326,15 @@ function matchesFilters(row: CentroCostoResponseDto, query: ListCentroCostoQuery
     }
   }
   if (pptoEstado && pptoEstado.trim() && pptoEstado.toUpperCase() !== 'TODOS') {
-    if (row.PresupuestoEstado !== pptoEstado.trim()) return false;
+    const filterNorm = normalizePptoEstado(pptoEstado);
+    const rowNorm = normalizePptoEstado(row.PresupuestoEstado);
+    if (rowNorm !== filterNorm) return false;
   }
   if (search && search.trim()) {
     const term = search.trim().toLowerCase();
     const haystack = [
+      row.id != null ? String(row.id) : null,
+      (row as any).CodCentroCto != null ? String((row as any).CodCentroCto) : null,
       row.CentroCosto,
       row.id_empresa != null ? String(row.id_empresa) : null,
       row.Empresa,
@@ -354,4 +358,9 @@ function unique<T>(values: Array<T | null | undefined>): T[] {
 
 function toNumber(value: string | number | null | undefined): number {
   return Number(value ?? 0);
+}
+
+function normalizePptoEstado(val: string | null | undefined): string {
+  if (!val) return '';
+  return val.trim().toLowerCase().replace(/[\s_\-]+/g, '');
 }
