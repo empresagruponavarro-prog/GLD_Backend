@@ -1,0 +1,632 @@
+[
+  {
+    "id": "column.public.CentroCostos.cod_centro_cto",
+    "label": "Rename column \"CodCentroCto\" to \"cod_centro_cto\" on \"CentroCostos\"",
+    "summary": "Renames column \"CodCentroCto\" to \"cod_centro_cto\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "cod_centro_cto",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"cod_centro_cto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_centro_cto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"CodCentroCto\" to \"cod_centro_cto\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"CodCentroCto\" TO \"cod_centro_cto\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"cod_centro_cto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_centro_cto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "constraint.public.CentroCostos.CentroCostos_cod_centro_cto_key",
+    "label": "Rename constraint \"CentroCostos_CodCentroCto_key\" to \"CentroCostos_cod_centro_cto_key\" on \"CentroCostos\"",
+    "summary": "Renames the unique constraint backing cod_centro_cto on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "constraint",
+        "name": "CentroCostos_cod_centro_cto_key",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure new constraint name is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" WHERE (\"conname\" = $1)) AS \"result\"",
+        "params": [
+          "CentroCostos_cod_centro_cto_key"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename unique constraint",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME CONSTRAINT \"CentroCostos_CodCentroCto_key\" TO \"CentroCostos_cod_centro_cto_key\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify new constraint name exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" WHERE (\"conname\" = $1)) AS \"result\"",
+        "params": [
+          "CentroCostos_cod_centro_cto_key"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.centro_costo",
+    "label": "Rename column \"CentroCosto\" to \"centro_costo\" on \"CentroCostos\"",
+    "summary": "Renames column \"CentroCosto\" to \"centro_costo\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "centro_costo",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"CentroCosto\" to \"centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"CentroCosto\" TO \"centro_costo\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.cod_cliente",
+    "label": "Rename column \"CodCliente\" to \"cod_cliente\" on \"CentroCostos\"",
+    "summary": "Renames column \"CodCliente\" to \"cod_cliente\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "cod_cliente",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"cod_cliente\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_cliente"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"CodCliente\" to \"cod_cliente\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"CodCliente\" TO \"cod_cliente\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"cod_cliente\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_cliente"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.estado",
+    "label": "Rename column \"Estado\" to \"estado\" on \"CentroCostos\"",
+    "summary": "Renames column \"Estado\" to \"estado\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "estado",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"estado\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "estado"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Estado\" to \"estado\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"Estado\" TO \"estado\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"estado\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "estado"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.oc_file",
+    "label": "Rename column \"OCFile\" to \"oc_file\" on \"CentroCostos\"",
+    "summary": "Renames column \"OCFile\" to \"oc_file\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "oc_file",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"oc_file\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "oc_file"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"OCFile\" to \"oc_file\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"OCFile\" TO \"oc_file\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"oc_file\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "oc_file"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.presupuesto_costo_directo",
+    "label": "Rename column \"PresupuestoCostoDirecto\" to \"presupuesto_costo_directo\" on \"CentroCostos\"",
+    "summary": "Renames column \"PresupuestoCostoDirecto\" to \"presupuesto_costo_directo\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "presupuesto_costo_directo",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"presupuesto_costo_directo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_costo_directo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"PresupuestoCostoDirecto\" to \"presupuesto_costo_directo\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"PresupuestoCostoDirecto\" TO \"presupuesto_costo_directo\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"presupuesto_costo_directo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_costo_directo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.presupuesto_estado",
+    "label": "Rename column \"PresupuestoEstado\" to \"presupuesto_estado\" on \"CentroCostos\"",
+    "summary": "Renames column \"PresupuestoEstado\" to \"presupuesto_estado\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "presupuesto_estado",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"presupuesto_estado\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_estado"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"PresupuestoEstado\" to \"presupuesto_estado\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"PresupuestoEstado\" TO \"presupuesto_estado\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"presupuesto_estado\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_estado"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.presupuesto_gastos_generales",
+    "label": "Rename column \"PresupuestoGastosGenerales\" to \"presupuesto_gastos_generales\" on \"CentroCostos\"",
+    "summary": "Renames column \"PresupuestoGastosGenerales\" to \"presupuesto_gastos_generales\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "presupuesto_gastos_generales",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"presupuesto_gastos_generales\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_gastos_generales"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"PresupuestoGastosGenerales\" to \"presupuesto_gastos_generales\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"PresupuestoGastosGenerales\" TO \"presupuesto_gastos_generales\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"presupuesto_gastos_generales\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_gastos_generales"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.presupuesto_monto",
+    "label": "Rename column \"PresupuestoMonto\" to \"presupuesto_monto\" on \"CentroCostos\"",
+    "summary": "Renames column \"PresupuestoMonto\" to \"presupuesto_monto\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "presupuesto_monto",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"presupuesto_monto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_monto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"PresupuestoMonto\" to \"presupuesto_monto\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"PresupuestoMonto\" TO \"presupuesto_monto\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"presupuesto_monto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_monto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.presupuesto_viaticos",
+    "label": "Rename column \"PresupuestoViaticos\" to \"presupuesto_viaticos\" on \"CentroCostos\"",
+    "summary": "Renames column \"PresupuestoViaticos\" to \"presupuesto_viaticos\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "presupuesto_viaticos",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"presupuesto_viaticos\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_viaticos"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"PresupuestoViaticos\" to \"presupuesto_viaticos\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"PresupuestoViaticos\" TO \"presupuesto_viaticos\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"presupuesto_viaticos\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "presupuesto_viaticos"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.fecha_fin_prog",
+    "label": "Rename column \"FechaFinProg\" to \"fecha_fin_prog\" (date) on \"CentroCostos\"",
+    "summary": "Renames column \"FechaFinProg\" to \"fecha_fin_prog\" and casts to date on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_fin_prog",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_fin_prog\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_fin_prog"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FechaFinProg\" to \"fecha_fin_prog\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"FechaFinProg\" TO \"fecha_fin_prog\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"fecha_fin_prog\" to date",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ALTER COLUMN \"fecha_fin_prog\" TYPE date USING \"fecha_fin_prog\"::date",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_fin_prog\" is date",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"data_type\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_fin_prog",
+          "date"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.fecha_fin_real",
+    "label": "Rename column \"FechaFinReal\" to \"fecha_fin_real\" (date) on \"CentroCostos\"",
+    "summary": "Renames column \"FechaFinReal\" to \"fecha_fin_real\" and casts to date on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_fin_real",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_fin_real\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_fin_real"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FechaFinReal\" to \"fecha_fin_real\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"FechaFinReal\" TO \"fecha_fin_real\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"fecha_fin_real\" to date",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ALTER COLUMN \"fecha_fin_real\" TYPE date USING \"fecha_fin_real\"::date",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_fin_real\" is date",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"data_type\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_fin_real",
+          "date"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.fecha_inicio",
+    "label": "Rename column \"FechaIncio\" to \"fecha_inicio\" (date) on \"CentroCostos\"",
+    "summary": "Renames column \"FechaIncio\" to \"fecha_inicio\" and casts to date on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_inicio",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_inicio\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_inicio"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FechaIncio\" to \"fecha_inicio\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"FechaIncio\" TO \"fecha_inicio\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"fecha_inicio\" to date",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ALTER COLUMN \"fecha_inicio\" TYPE date USING \"fecha_inicio\"::date",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_inicio\" is date",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"data_type\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_inicio",
+          "date"
+        ]
+      }
+    ]
+  }
+]

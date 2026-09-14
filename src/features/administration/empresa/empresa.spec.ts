@@ -1,17 +1,17 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { EmpresaController } from './empresa.controller.js';
 import { EmpresaHandler } from './empresa.handler.js';
 
-function makeRow(CodEmpresa = 'E1') {
+function makeRow(id_empresa = 1) {
   return {
-    CodEmpresa,
-    RUC: '20123456789',
-    RazonSocial: 'GLD SERVICIOS GENERALES EIRL',
-    DomicilioFiscal: 'Av. Lima 100',
-    DireccionEntrega: 'Av. Lima 100',
-    CorreoCompras: 'compras@gld.com',
+    id_empresa,
+    ruc: '20123456789',
+    razon_social: 'GLD SERVICIOS GENERALES EIRL',
+    domicilio_fiscal: 'Av. Lima 100',
+    direccion_entrega: 'Av. Lima 100',
+    correo_compras: 'compras@gld.com',
   };
 }
 
@@ -56,60 +56,50 @@ describe('empresa', () => {
     await expect(controller.list()).resolves.toEqual(rows);
   });
 
-  it('obtiene por código', async () => {
+  it('obtiene por id', async () => {
     const row = makeRow();
     first.mockResolvedValue(row);
-    await expect(controller.getById('E1')).resolves.toEqual(row);
-    expect(first).toHaveBeenCalledWith({ CodEmpresa: 'E1' });
+    await expect(controller.getById('1')).resolves.toEqual(row);
+    expect(first).toHaveBeenCalledWith({ id_empresa: 1 });
   });
 
   it('responde 404 cuando no existe', async () => {
     first.mockResolvedValue(null);
-    await expect(controller.getById('X')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(controller.getById('999')).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('crea una empresa exitosamente cuando no existe', async () => {
+  it('crea una empresa exitosamente', async () => {
     const row = makeRow();
-    first.mockResolvedValue(null);
     create.mockResolvedValue(row);
     await expect(
-      controller.create({ CodEmpresa: 'E1', RazonSocial: 'GLD SERVICIOS GENERALES EIRL' }),
+      controller.create({ ruc: '20123456789', razon_social: 'GLD SERVICIOS GENERALES EIRL' }),
     ).resolves.toEqual(row);
-    expect(create).toHaveBeenCalledWith(expect.objectContaining({ CodEmpresa: 'E1' }));
-  });
-
-  it('responde 409 cuando se intenta crear una empresa con código duplicado', async () => {
-    const row = makeRow();
-    first.mockResolvedValue(row);
-    await expect(
-      controller.create({ CodEmpresa: 'E1', RazonSocial: 'GLD SERVICIOS GENERALES EIRL' }),
-    ).rejects.toBeInstanceOf(ConflictException);
-    expect(create).not.toHaveBeenCalled();
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ razon_social: 'GLD SERVICIOS GENERALES EIRL' }));
   });
 
   it('actualiza solo los campos enviados', async () => {
     const row = makeRow();
-    update.mockResolvedValue({ ...row, CorreoCompras: 'nuevo@gld.com' });
-    await expect(controller.update('E1', { CorreoCompras: 'nuevo@gld.com' })).resolves.toMatchObject(
-      { CorreoCompras: 'nuevo@gld.com' },
+    update.mockResolvedValue({ ...row, correo_compras: 'nuevo@gld.com' });
+    await expect(controller.update('1', { correo_compras: 'nuevo@gld.com' })).resolves.toMatchObject(
+      { correo_compras: 'nuevo@gld.com' },
     );
-    expect(update).toHaveBeenCalledWith({ CorreoCompras: 'nuevo@gld.com' });
+    expect(update).toHaveBeenCalledWith({ correo_compras: 'nuevo@gld.com' });
   });
 
   it('responde 404 al actualizar una empresa inexistente', async () => {
     update.mockResolvedValue(null);
-    await expect(controller.update('X', { CorreoCompras: 'nuevo@gld.com' })).rejects.toBeInstanceOf(
+    await expect(controller.update('999', { correo_compras: 'nuevo@gld.com' })).rejects.toBeInstanceOf(
       NotFoundException,
     );
   });
 
   it('elimina una empresa', async () => {
     remove.mockResolvedValue(makeRow());
-    await expect(controller.remove('E1')).resolves.toBeUndefined();
+    await expect(controller.remove('1')).resolves.toBeUndefined();
   });
 
   it('responde 404 al eliminar una inexistente', async () => {
     remove.mockResolvedValue(null);
-    await expect(controller.remove('X')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(controller.remove('999')).rejects.toBeInstanceOf(NotFoundException);
   });
 });

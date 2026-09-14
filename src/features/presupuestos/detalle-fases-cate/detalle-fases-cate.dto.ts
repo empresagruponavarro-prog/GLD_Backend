@@ -34,17 +34,25 @@ export class CreatePptoDetalleFaseCateDto {
   @MaxLength(255)
   IdpptoFase?: string;
 
-  @ApiPropertyOptional({ example: 'E1' })
+  @ApiPropertyOptional({ example: 1 })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_empresa?: number;
 
   @ApiPropertyOptional({ example: 'a47efc23' })
   @IsOptional()
   @IsString()
   @MaxLength(255)
   CodCentroCto?: string;
+
+  @ApiPropertyOptional({ example: 42, description: 'ID del Centro de Costo asignado (FK)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_centro_costo?: number;
 
   @ApiPropertyOptional({ example: 12500.00, description: 'Costo directo de la categoría' })
   @IsOptional()
@@ -94,6 +102,9 @@ export class PptoDetalleFaseCateResponseDto {
 
   @ApiPropertyOptional({ example: 'CAT-01' })
   IdpptoFaseCategoria: string | null;
+
+  @ApiPropertyOptional({ example: 42 })
+  id_centro_costo: number | null;
 
   @ApiPropertyOptional({ example: '12500.00' })
   CostoDirecto: string | null;

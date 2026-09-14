@@ -1,0 +1,4529 @@
+[
+  {
+    "id": "column.public.empresas.id_empresa",
+    "label": "Rename column \"id\" to \"id_empresa\" on \"empresas\"",
+    "summary": "Renames column \"id\" to \"id_empresa\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"id\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"id\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.empresas.ruc",
+    "label": "Rename column \"RUC\" to \"ruc\" on \"empresas\"",
+    "summary": "Renames column \"RUC\" to \"ruc\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "ruc",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"ruc\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "ruc"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"RUC\" to \"ruc\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"RUC\" TO \"ruc\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"ruc\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "ruc"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.empresas.razon_social",
+    "label": "Rename column \"RazonSocial\" to \"razon_social\" on \"empresas\"",
+    "summary": "Renames column \"RazonSocial\" to \"razon_social\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "razon_social",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"razon_social\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "razon_social"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"RazonSocial\" to \"razon_social\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"RazonSocial\" TO \"razon_social\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"razon_social\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "razon_social"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.empresas.domicilio_fiscal",
+    "label": "Rename column \"DomicilioFiscal\" to \"domicilio_fiscal\" on \"empresas\"",
+    "summary": "Renames column \"DomicilioFiscal\" to \"domicilio_fiscal\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "domicilio_fiscal",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"domicilio_fiscal\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "domicilio_fiscal"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"DomicilioFiscal\" to \"domicilio_fiscal\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"DomicilioFiscal\" TO \"domicilio_fiscal\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"domicilio_fiscal\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "domicilio_fiscal"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.empresas.direccion_entrega",
+    "label": "Rename column \"DireccionEntrega\" to \"direccion_entrega\" on \"empresas\"",
+    "summary": "Renames column \"DireccionEntrega\" to \"direccion_entrega\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "direccion_entrega",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"direccion_entrega\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "direccion_entrega"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"DireccionEntrega\" to \"direccion_entrega\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"DireccionEntrega\" TO \"direccion_entrega\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"direccion_entrega\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "direccion_entrega"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.empresas.correo_compras",
+    "label": "Rename column \"CorreoCompras\" to \"correo_compras\" on \"empresas\"",
+    "summary": "Renames column \"CorreoCompras\" to \"correo_compras\" on \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "correo_compras",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"correo_compras\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "correo_compras"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"CorreoCompras\" to \"correo_compras\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" RENAME COLUMN \"CorreoCompras\" TO \"correo_compras\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"correo_compras\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "correo_compras"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacenMovimientos.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacenes.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"almacenes\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaEgresosRetail.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaIngresos.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones_PPTOMeta.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones_PostVenta.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PostVenta\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cuentasCajaBancos.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"cuentasCajaBancos\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompra.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompraDetalle.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompra_AplicacionAnticipo.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra_AplicacionAnticipo\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVenta.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVentaDetalle.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.egresos_AnticiposOC.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompra.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.planillaPago.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFases.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFasesCate.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Fases.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Fases\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.EmpresaId",
+    "label": "Add column \"EmpresaId\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"EmpresaId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "EmpresaId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"EmpresaId\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"EmpresaId\" integer"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"EmpresaId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "EmpresaId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.public.almacenMovimientos.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"almacenMovimientos\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"almacenMovimientos\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"almacenMovimientos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"almacenMovimientos\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"almacenMovimientos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.almacenes.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"almacenes\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"almacenes\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"almacenes\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"almacenes\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"almacenes\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.cajaEgresosRetail.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"cajaEgresosRetail\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"cajaEgresosRetail\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaEgresosRetail\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"cajaEgresosRetail\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaEgresosRetail\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.cajaIngresos.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"cajaIngresos\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"cajaIngresos\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaIngresos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"cajaIngresos\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaIngresos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.CentroCostos.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"CentroCostos\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"CentroCostos\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"CentroCostos\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.contrataciones.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"contrataciones\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"contrataciones\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"contrataciones\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.contrataciones_PPTOMeta.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"contrataciones_PPTOMeta\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"contrataciones_PPTOMeta\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones_PPTOMeta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"contrataciones_PPTOMeta\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones_PPTOMeta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.contrataciones_PostVenta.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"contrataciones_PostVenta\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"contrataciones_PostVenta\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones_PostVenta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"contrataciones_PostVenta\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones_PostVenta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.cuentasCajaBancos.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"cuentasCajaBancos\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"cuentasCajaBancos\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cuentasCajaBancos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"cuentasCajaBancos\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cuentasCajaBancos\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.docCompra.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"docCompra\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"docCompra\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompra\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"docCompra\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompra\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.docCompraDetalle.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"docCompraDetalle\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"docCompraDetalle\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompraDetalle\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"docCompraDetalle\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompraDetalle\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.docCompra_AplicacionAnticipo.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"docCompra_AplicacionAnticipo\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"docCompra_AplicacionAnticipo\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompra_AplicacionAnticipo\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"docCompra_AplicacionAnticipo\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompra_AplicacionAnticipo\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.docVenta.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"docVenta\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"docVenta\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVenta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"docVenta\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVenta\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.docVentaDetalle.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"docVentaDetalle\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"docVentaDetalle\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVentaDetalle\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"docVentaDetalle\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVentaDetalle\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.egresos_AnticiposOC.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"egresos_AnticiposOC\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"egresos_AnticiposOC\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"egresos_AnticiposOC\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"egresos_AnticiposOC\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"egresos_AnticiposOC\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.ordenCompra.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"ordenCompra\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"ordenCompra\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"ordenCompra\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.planillaPago.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"planillaPago\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"planillaPago\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"planillaPago\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"planillaPago\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"planillaPago\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.ppto_DetalleFases.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"ppto_DetalleFases\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"ppto_DetalleFases\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFases\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"ppto_DetalleFases\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFases\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.ppto_DetalleFasesCate.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"ppto_DetalleFasesCate\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"ppto_DetalleFasesCate\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFasesCate\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"ppto_DetalleFasesCate\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFasesCate\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.ppto_Fases.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"ppto_Fases\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"ppto_Fases\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_Fases\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"ppto_Fases\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_Fases\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.public.ppto_Principal.backfillEmpresaId",
+    "label": "Backfill \"EmpresaId\" on \"ppto_Principal\" from \"empresas\"",
+    "summary": "Backfills \"EmpresaId\" on \"ppto_Principal\" by joining \"CodEmpresa\" against \"empresas\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "EmpresaId",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure there are rows to backfill",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_Principal\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill \"EmpresaId\"",
+        "sql": "UPDATE \"public\".\"ppto_Principal\" AS \"t\" SET \"EmpresaId\" = \"e\".\"id_empresa\" FROM \"public\".\"empresas\" AS \"e\" WHERE (\"e\".\"CodEmpresa\" = \"t\".\"CodEmpresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows remain unmapped",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_Principal\" AS \"t\" WHERE (\"t\".\"CodEmpresa\" IS NOT NULL AND \"t\".\"EmpresaId\" IS NULL)) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacenMovimientos.almacenMovimientos_EmpresaId_fkey",
+    "label": "Add foreign key \"almacenMovimientos_EmpresaId_fkey\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacenMovimientos_EmpresaId_fkey",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacenMovimientos_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenMovimientos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacenMovimientos_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\"\nADD CONSTRAINT \"almacenMovimientos_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacenMovimientos_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenMovimientos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacenes.almacenes_EmpresaId_fkey",
+    "label": "Add foreign key \"almacenes_EmpresaId_fkey\" on \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacenes_EmpresaId_fkey",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacenes_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenes_EmpresaId_fkey",
+          "public",
+          "\"public\".\"almacenes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacenes_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacenes\"\nADD CONSTRAINT \"almacenes_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacenes_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenes_EmpresaId_fkey",
+          "public",
+          "\"public\".\"almacenes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cajaEgresosRetail.cajaEgresosRetail_EmpresaId_fkey",
+    "label": "Add foreign key \"cajaEgresosRetail_EmpresaId_fkey\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cajaEgresosRetail_EmpresaId_fkey",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cajaEgresosRetail_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaEgresosRetail_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cajaEgresosRetail_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\"\nADD CONSTRAINT \"cajaEgresosRetail_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cajaEgresosRetail_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaEgresosRetail_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cajaIngresos.cajaIngresos_EmpresaId_fkey",
+    "label": "Add foreign key \"cajaIngresos_EmpresaId_fkey\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cajaIngresos_EmpresaId_fkey",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cajaIngresos_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaIngresos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cajaIngresos_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\"\nADD CONSTRAINT \"cajaIngresos_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cajaIngresos_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaIngresos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.CentroCostos.CentroCostos_EmpresaId_fkey",
+    "label": "Add foreign key \"CentroCostos_EmpresaId_fkey\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_EmpresaId_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"CentroCostos_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"CentroCostos_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\"\nADD CONSTRAINT \"CentroCostos_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"CentroCostos_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrataciones.contrataciones_EmpresaId_fkey",
+    "label": "Add foreign key \"contrataciones_EmpresaId_fkey\" on \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrataciones_EmpresaId_fkey",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrataciones_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrataciones_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\"\nADD CONSTRAINT \"contrataciones_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrataciones_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrataciones_PPTOMeta.contrataciones_PPTOMeta_EmpresaId_fkey",
+    "label": "Add foreign key \"contrataciones_PPTOMeta_EmpresaId_fkey\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrataciones_PPTOMeta_EmpresaId_fkey",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrataciones_PPTOMeta_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PPTOMeta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrataciones_PPTOMeta_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\"\nADD CONSTRAINT \"contrataciones_PPTOMeta_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrataciones_PPTOMeta_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PPTOMeta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrataciones_PostVenta.contrataciones_PostVenta_EmpresaId_fkey",
+    "label": "Add foreign key \"contrataciones_PostVenta_EmpresaId_fkey\" on \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrataciones_PostVenta_EmpresaId_fkey",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrataciones_PostVenta_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PostVenta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones_PostVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrataciones_PostVenta_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PostVenta\"\nADD CONSTRAINT \"contrataciones_PostVenta_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrataciones_PostVenta_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PostVenta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"contrataciones_PostVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cuentasCajaBancos.cuentasCajaBancos_EmpresaId_fkey",
+    "label": "Add foreign key \"cuentasCajaBancos_EmpresaId_fkey\" on \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cuentasCajaBancos_EmpresaId_fkey",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cuentasCajaBancos_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cuentasCajaBancos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cuentasCajaBancos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cuentasCajaBancos_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cuentasCajaBancos\"\nADD CONSTRAINT \"cuentasCajaBancos_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cuentasCajaBancos_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cuentasCajaBancos_EmpresaId_fkey",
+          "public",
+          "\"public\".\"cuentasCajaBancos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docCompra.docCompra_EmpresaId_fkey",
+    "label": "Add foreign key \"docCompra_EmpresaId_fkey\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docCompra_EmpresaId_fkey",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docCompra_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docCompra_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\"\nADD CONSTRAINT \"docCompra_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docCompra_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docCompraDetalle.docCompraDetalle_EmpresaId_fkey",
+    "label": "Add foreign key \"docCompraDetalle_EmpresaId_fkey\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docCompraDetalle_EmpresaId_fkey",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docCompraDetalle_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompraDetalle_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docCompraDetalle_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\"\nADD CONSTRAINT \"docCompraDetalle_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docCompraDetalle_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompraDetalle_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docCompra_AplicacionAnticipo.docCompra_AplicacionAnticipo_EmpresaId_fkey",
+    "label": "Add foreign key \"docCompra_AplicacionAnticipo_EmpresaId_fkey\" on \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docCompra_AplicacionAnticipo_EmpresaId_fkey",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docCompra_AplicacionAnticipo_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_AplicacionAnticipo_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompra_AplicacionAnticipo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docCompra_AplicacionAnticipo_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra_AplicacionAnticipo\"\nADD CONSTRAINT \"docCompra_AplicacionAnticipo_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docCompra_AplicacionAnticipo_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_AplicacionAnticipo_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docCompra_AplicacionAnticipo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docVenta.docVenta_EmpresaId_fkey",
+    "label": "Add foreign key \"docVenta_EmpresaId_fkey\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docVenta_EmpresaId_fkey",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docVenta_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVenta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docVenta_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\"\nADD CONSTRAINT \"docVenta_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docVenta_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVenta_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docVentaDetalle.docVentaDetalle_EmpresaId_fkey",
+    "label": "Add foreign key \"docVentaDetalle_EmpresaId_fkey\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docVentaDetalle_EmpresaId_fkey",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docVentaDetalle_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVentaDetalle_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docVentaDetalle_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\"\nADD CONSTRAINT \"docVentaDetalle_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docVentaDetalle_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVentaDetalle_EmpresaId_fkey",
+          "public",
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.egresos_AnticiposOC.egresos_AnticiposOC_EmpresaId_fkey",
+    "label": "Add foreign key \"egresos_AnticiposOC_EmpresaId_fkey\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "egresos_AnticiposOC_EmpresaId_fkey",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"egresos_AnticiposOC_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "egresos_AnticiposOC_EmpresaId_fkey",
+          "public",
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"egresos_AnticiposOC_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\"\nADD CONSTRAINT \"egresos_AnticiposOC_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"egresos_AnticiposOC_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "egresos_AnticiposOC_EmpresaId_fkey",
+          "public",
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompra.ordenCompra_EmpresaId_fkey",
+    "label": "Add foreign key \"ordenCompra_EmpresaId_fkey\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_EmpresaId_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompra_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompra_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\"\nADD CONSTRAINT \"ordenCompra_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompra_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.planillaPago.planillaPago_EmpresaId_fkey",
+    "label": "Add foreign key \"planillaPago_EmpresaId_fkey\" on \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "planillaPago_EmpresaId_fkey",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"planillaPago_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "planillaPago_EmpresaId_fkey",
+          "public",
+          "\"public\".\"planillaPago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"planillaPago_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\"\nADD CONSTRAINT \"planillaPago_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"planillaPago_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "planillaPago_EmpresaId_fkey",
+          "public",
+          "\"public\".\"planillaPago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFases.ppto_DetalleFases_EmpresaId_fkey",
+    "label": "Add foreign key \"ppto_DetalleFases_EmpresaId_fkey\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFases_EmpresaId_fkey",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFases_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFases_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\"\nADD CONSTRAINT \"ppto_DetalleFases_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFases_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFasesCate.ppto_DetalleFasesCate_EmpresaId_fkey",
+    "label": "Add foreign key \"ppto_DetalleFasesCate_EmpresaId_fkey\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFasesCate_EmpresaId_fkey",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFasesCate_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFasesCate_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\"\nADD CONSTRAINT \"ppto_DetalleFasesCate_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFasesCate_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Fases.ppto_Fases_EmpresaId_fkey",
+    "label": "Add foreign key \"ppto_Fases_EmpresaId_fkey\" on \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Fases_EmpresaId_fkey",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Fases_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Fases_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Fases_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Fases\"\nADD CONSTRAINT \"ppto_Fases_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Fases_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Fases_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Principal.ppto_Principal_EmpresaId_fkey",
+    "label": "Add foreign key \"ppto_Principal_EmpresaId_fkey\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Principal_EmpresaId_fkey",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Principal_EmpresaId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Principal_EmpresaId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\"\nADD CONSTRAINT \"ppto_Principal_EmpresaId_fkey\"\nFOREIGN KEY (\"EmpresaId\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Principal_EmpresaId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_EmpresaId_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacenMovimientos.almacenMovimientos_EmpresaId_idx_1fa20859",
+    "label": "Create index \"almacenMovimientos_EmpresaId_idx_1fa20859\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacenMovimientos_EmpresaId_idx_1fa20859",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacenMovimientos_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacenMovimientos_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"almacenMovimientos_EmpresaId_idx_1fa20859\" ON \"public\".\"almacenMovimientos\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacenMovimientos_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacenes.almacenes_EmpresaId_idx_1fa20859",
+    "label": "Create index \"almacenes_EmpresaId_idx_1fa20859\" on \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacenes_EmpresaId_idx_1fa20859",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacenes_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenes_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacenes_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"almacenes_EmpresaId_idx_1fa20859\" ON \"public\".\"almacenes\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacenes_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenes_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cajaEgresosRetail.cajaEgresosRetail_EmpresaId_idx_1fa20859",
+    "label": "Create index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaEgresosRetail_EmpresaId_idx_1fa20859",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" ON \"public\".\"cajaEgresosRetail\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cajaIngresos.cajaIngresos_EmpresaId_idx_1fa20859",
+    "label": "Create index \"cajaIngresos_EmpresaId_idx_1fa20859\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaIngresos_EmpresaId_idx_1fa20859",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaIngresos_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cajaIngresos_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"cajaIngresos_EmpresaId_idx_1fa20859\" ON \"public\".\"cajaIngresos\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaIngresos_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.CentroCostos.CentroCostos_EmpresaId_idx_1fa20859",
+    "label": "Create index \"CentroCostos_EmpresaId_idx_1fa20859\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_EmpresaId_idx_1fa20859",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"CentroCostos_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"CentroCostos_EmpresaId_idx_1fa20859\" ON \"public\".\"CentroCostos\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contrataciones.contrataciones_EmpresaId_idx_1fa20859",
+    "label": "Create index \"contrataciones_EmpresaId_idx_1fa20859\" on \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_EmpresaId_idx_1fa20859",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contrataciones_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"contrataciones_EmpresaId_idx_1fa20859\" ON \"public\".\"contrataciones\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contrataciones_PPTOMeta.contrataciones_PPTOMeta_EmpresaId_idx_1fa20859",
+    "label": "Create index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_PPTOMeta_EmpresaId_idx_1fa20859",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" ON \"public\".\"contrataciones_PPTOMeta\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contrataciones_PostVenta.contrataciones_PostVenta_EmpresaId_idx_1fa20859",
+    "label": "Create index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" on \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_PostVenta_EmpresaId_idx_1fa20859",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PostVenta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" ON \"public\".\"contrataciones_PostVenta\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PostVenta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cuentasCajaBancos.cuentasCajaBancos_EmpresaId_idx_1fa20859",
+    "label": "Create index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" on \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cuentasCajaBancos_EmpresaId_idx_1fa20859",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuentasCajaBancos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" ON \"public\".\"cuentasCajaBancos\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuentasCajaBancos_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docCompra.docCompra_EmpresaId_idx_1fa20859",
+    "label": "Create index \"docCompra_EmpresaId_idx_1fa20859\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompra_EmpresaId_idx_1fa20859",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompra_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docCompra_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"docCompra_EmpresaId_idx_1fa20859\" ON \"public\".\"docCompra\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompra_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docCompraDetalle.docCompraDetalle_EmpresaId_idx_1fa20859",
+    "label": "Create index \"docCompraDetalle_EmpresaId_idx_1fa20859\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompraDetalle_EmpresaId_idx_1fa20859",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompraDetalle_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docCompraDetalle_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"docCompraDetalle_EmpresaId_idx_1fa20859\" ON \"public\".\"docCompraDetalle\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompraDetalle_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docCompra_AplicacionAnticipo.docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859",
+    "label": "Create index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" on \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" ON \"public\".\"docCompra_AplicacionAnticipo\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docVenta.docVenta_EmpresaId_idx_1fa20859",
+    "label": "Create index \"docVenta_EmpresaId_idx_1fa20859\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVenta_EmpresaId_idx_1fa20859",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVenta_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docVenta_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"docVenta_EmpresaId_idx_1fa20859\" ON \"public\".\"docVenta\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVenta_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docVentaDetalle.docVentaDetalle_EmpresaId_idx_1fa20859",
+    "label": "Create index \"docVentaDetalle_EmpresaId_idx_1fa20859\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVentaDetalle_EmpresaId_idx_1fa20859",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVentaDetalle_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docVentaDetalle_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"docVentaDetalle_EmpresaId_idx_1fa20859\" ON \"public\".\"docVentaDetalle\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVentaDetalle_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.egresos_AnticiposOC.egresos_AnticiposOC_EmpresaId_idx_1fa20859",
+    "label": "Create index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "egresos_AnticiposOC_EmpresaId_idx_1fa20859",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" ON \"public\".\"egresos_AnticiposOC\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompra.ordenCompra_EmpresaId_idx_1fa20859",
+    "label": "Create index \"ordenCompra_EmpresaId_idx_1fa20859\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_EmpresaId_idx_1fa20859",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompra_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"ordenCompra_EmpresaId_idx_1fa20859\" ON \"public\".\"ordenCompra\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.planillaPago.planillaPago_EmpresaId_idx_1fa20859",
+    "label": "Create index \"planillaPago_EmpresaId_idx_1fa20859\" on \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "planillaPago_EmpresaId_idx_1fa20859",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"planillaPago_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"planillaPago_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"planillaPago_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"planillaPago_EmpresaId_idx_1fa20859\" ON \"public\".\"planillaPago\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"planillaPago_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"planillaPago_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFases.ppto_DetalleFases_EmpresaId_idx_1fa20859",
+    "label": "Create index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_EmpresaId_idx_1fa20859",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" ON \"public\".\"ppto_DetalleFases\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFasesCate.ppto_DetalleFasesCate_EmpresaId_idx_1fa20859",
+    "label": "Create index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_EmpresaId_idx_1fa20859",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" ON \"public\".\"ppto_DetalleFasesCate\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Fases.ppto_Fases_EmpresaId_idx_1fa20859",
+    "label": "Create index \"ppto_Fases_EmpresaId_idx_1fa20859\" on \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Fases_EmpresaId_idx_1fa20859",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Fases_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Fases_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Fases_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"ppto_Fases_EmpresaId_idx_1fa20859\" ON \"public\".\"ppto_Fases\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Fases_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Fases_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Principal.ppto_Principal_EmpresaId_idx_1fa20859",
+    "label": "Create index \"ppto_Principal_EmpresaId_idx_1fa20859\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_EmpresaId_idx_1fa20859",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_EmpresaId_idx_1fa20859\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Principal_EmpresaId_idx_1fa20859\"",
+        "sql": "CREATE INDEX \"ppto_Principal_EmpresaId_idx_1fa20859\" ON \"public\".\"ppto_Principal\" (\"EmpresaId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_EmpresaId_idx_1fa20859\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_EmpresaId_idx_1fa20859\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.almacenMovimientos.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"almacenMovimientos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.almacenes.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"almacenes\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"almacenes\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.cajaEgresosRetail.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"cajaEgresosRetail\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.cajaIngresos.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"cajaIngresos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.CentroCostos.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"CentroCostos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.contrataciones.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"contrataciones\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.contrataciones_PPTOMeta.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"contrataciones_PPTOMeta\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.contrataciones_PostVenta.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"contrataciones_PostVenta\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PostVenta\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.cuentasCajaBancos.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"cuentasCajaBancos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"cuentasCajaBancos\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.docCompra.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"docCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.docCompraDetalle.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"docCompraDetalle\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.docCompra_AplicacionAnticipo.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra_AplicacionAnticipo\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.docVenta.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"docVenta\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.docVentaDetalle.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"docVentaDetalle\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.egresos_AnticiposOC.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"egresos_AnticiposOC\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ordenCompra.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.planillaPago.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"planillaPago\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ppto_DetalleFases.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"ppto_DetalleFases\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ppto_DetalleFasesCate.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"ppto_DetalleFasesCate\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ppto_Fases.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"ppto_Fases\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Fases\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ppto_Principal.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"ppto_Principal\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.empresas.CodEmpresa",
+    "label": "Drop column \"CodEmpresa\" from \"empresas\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodEmpresa",
+        "table": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodEmpresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "CodEmpresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodEmpresa\"",
+        "sql": "ALTER TABLE \"public\".\"empresas\" DROP COLUMN \"CodEmpresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodEmpresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "empresas",
+          "CodEmpresa"
+        ]
+      }
+    ]
+  }
+]

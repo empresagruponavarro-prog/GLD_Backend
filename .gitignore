@@ -32,3 +32,5 @@ lerna-debug.log*
 .claude/
 .cursor/
 .devin/
+
+opencode.json

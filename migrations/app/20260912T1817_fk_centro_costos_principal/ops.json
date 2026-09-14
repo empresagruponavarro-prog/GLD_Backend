@@ -1,0 +1,123 @@
+[
+  {
+    "id": "data.CentroCostos.codigo-principal-huerfano",
+    "label": "Null orphan \"CodCentroCtoPrincipal\" reference",
+    "summary": "Pone a NULL \"CodCentroCtoPrincipal\" = '00321ecc' en \"CentroCostos\" (padre inexistente)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodCentroCtoPrincipal",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure orphan reference exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" WHERE \"CodCentroCtoPrincipal\" = $1 AND \"CodCentroCtoPrincipal\" NOT IN (SELECT \"centro_costo_principal\" FROM \"public\".\"centro_costos_principal\")) AS \"result\"",
+        "params": [
+          "00321ecc"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "set orphan reference to NULL",
+        "sql": "UPDATE \"public\".\"CentroCostos\" SET \"CodCentroCtoPrincipal\" = NULL WHERE \"CodCentroCtoPrincipal\" = $1",
+        "params": [
+          "00321ecc"
+        ]
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no orphan references remain",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" WHERE \"CodCentroCtoPrincipal\" IS NOT NULL AND \"CodCentroCtoPrincipal\" NOT IN (SELECT \"centro_costo_principal\" FROM \"public\".\"centro_costos_principal\")) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "index.CentroCostos.CentroCostos_CodCentroCtoPrincipal_idx_04283025",
+    "label": "Create index \"CentroCostos_CodCentroCtoPrincipal_idx_04283025\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_CodCentroCtoPrincipal_idx_04283025",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_CodCentroCtoPrincipal_idx_04283025\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_CodCentroCtoPrincipal_idx_04283025\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"CentroCostos_CodCentroCtoPrincipal_idx_04283025\"",
+        "sql": "CREATE INDEX \"CentroCostos_CodCentroCtoPrincipal_idx_04283025\" ON \"public\".\"CentroCostos\" (\"CodCentroCtoPrincipal\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_CodCentroCtoPrincipal_idx_04283025\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_CodCentroCtoPrincipal_idx_04283025\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.CentroCostos.CentroCostos_CodCentroCtoPrincipal_fkey",
+    "label": "Add foreign key \"CentroCostos_CodCentroCtoPrincipal_fkey\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_CodCentroCtoPrincipal_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"CentroCostos_CodCentroCtoPrincipal_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_CodCentroCtoPrincipal_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"CentroCostos_CodCentroCtoPrincipal_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\"\nADD CONSTRAINT \"CentroCostos_CodCentroCtoPrincipal_fkey\"\nFOREIGN KEY (\"CodCentroCtoPrincipal\")\nREFERENCES \"public\".\"centro_costos_principal\" (\"centro_costo_principal\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"CentroCostos_CodCentroCtoPrincipal_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_CodCentroCtoPrincipal_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  }
+]

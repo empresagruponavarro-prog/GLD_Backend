@@ -1,42 +1,36 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateEmpresaDto {
-  @ApiProperty({ example: 'E1' })
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(255)
-  CodEmpresa: string;
-
   @ApiPropertyOptional({ example: '20123456789' })
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  RUC?: string;
+  ruc?: string;
 
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL' })
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  RazonSocial?: string;
+  razon_social?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  DomicilioFiscal?: string;
+  domicilio_fiscal?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  DireccionEntrega?: string;
+  direccion_entrega?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  CorreoCompras?: string;
+  correo_compras?: string;
 }
 
 export class UpdateEmpresaDto {
@@ -44,51 +38,51 @@ export class UpdateEmpresaDto {
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  RUC?: string;
+  ruc?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  RazonSocial?: string;
+  razon_social?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  DomicilioFiscal?: string;
+  domicilio_fiscal?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  DireccionEntrega?: string;
+  direccion_entrega?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  CorreoCompras?: string;
+  correo_compras?: string;
 }
 
 export class EmpresaResponseDto {
-  @ApiProperty({ example: 'E1', description: 'Código único de la empresa' })
-  CodEmpresa: string | null;
+  @ApiProperty({ example: 1, description: 'Identificador de la empresa' })
+  id_empresa: number;
 
   @ApiProperty({ example: '20123456789', description: 'RUC de la empresa' })
-  RUC: string | null;
+  ruc: string | null;
 
   @ApiProperty({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social' })
-  RazonSocial: string | null;
+  razon_social: string | null;
 
   @ApiProperty({ example: 'Av. Principal 123', description: 'Domicilio fiscal' })
-  DomicilioFiscal: string | null;
+  domicilio_fiscal: string | null;
 
   @ApiProperty({ example: 'Av. Principal 123', description: 'Dirección de entrega' })
-  DireccionEntrega: string | null;
+  direccion_entrega: string | null;
 
   @ApiProperty({ example: 'compras@empresa.com', description: 'Correo de contacto para compras' })
-  CorreoCompras: string | null;
+  correo_compras: string | null;
 }
 
 export type EmpresaRow = EmpresaResponseDto;

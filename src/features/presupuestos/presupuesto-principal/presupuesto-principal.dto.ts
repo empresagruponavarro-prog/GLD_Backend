@@ -10,17 +10,19 @@ export class CreatePresupuestoPrincipalDto {
   @MaxLength(255)
   IdPresupuesto: string;
 
-  @ApiPropertyOptional({ example: 'E1', description: 'Código de empresa' })
+  @ApiPropertyOptional({ example: 1, description: 'Identificador de empresa' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_empresa?: number;
 
-  @ApiPropertyOptional({ example: '2026', description: 'ID o año del periodo' })
+  @ApiPropertyOptional({ example: 2026, description: 'ID o año del periodo' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  IdPeriodo?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  periodo?: number;
 
   @ApiPropertyOptional({ example: 'V1', description: 'Versión del presupuesto' })
   @IsOptional()
@@ -56,6 +58,13 @@ export class CreatePresupuestoPrincipalDto {
   @IsString()
   @MaxLength(255)
   CodCentroCto?: string;
+
+  @ApiPropertyOptional({ example: 42, description: 'ID del Centro de Costo asignado (FK)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_centro_costo?: number;
 
   @ApiPropertyOptional({ example: '2026-01-15', description: 'Fecha de requerimiento' })
   @IsOptional()
@@ -140,6 +149,12 @@ export class ListPresupuestoPrincipalQueryDto extends PaginationQueryDto {
   @IsString()
   CodCentroCto?: string;
 
+  @ApiPropertyOptional({ description: 'Filtro por ID de Centro de Costo (FK)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  id_centro_costo?: number;
+
   @ApiPropertyOptional({ description: 'Filtro por Estado' })
   @IsOptional()
   @IsString()
@@ -147,13 +162,15 @@ export class ListPresupuestoPrincipalQueryDto extends PaginationQueryDto {
 
   @ApiPropertyOptional({ description: 'Filtro por Empresa' })
   @IsOptional()
-  @IsString()
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  id_empresa?: number;
 
   @ApiPropertyOptional({ description: 'Filtro por Periodo' })
   @IsOptional()
-  @IsString()
-  IdPeriodo?: string;
+  @Type(() => Number)
+  @IsNumber()
+  periodo?: number;
 }
 
 export class PresupuestoPrincipalResponseDto {
@@ -163,11 +180,11 @@ export class PresupuestoPrincipalResponseDto {
   @ApiProperty({ example: 'PPTO-2026-001' })
   IdPresupuesto: string | null;
 
-  @ApiPropertyOptional({ example: 'E1' })
-  CodEmpresa: string | null;
+  @ApiPropertyOptional({ example: 1 })
+  id_empresa: number | null;
 
-  @ApiPropertyOptional({ example: '2026' })
-  IdPeriodo: string | null;
+  @ApiPropertyOptional({ example: 2026 })
+  periodo: number | null;
 
   @ApiPropertyOptional({ example: 'V1' })
   Version: string | null;
@@ -183,6 +200,9 @@ export class PresupuestoPrincipalResponseDto {
 
   @ApiPropertyOptional({ example: 'a47efc23' })
   CodCentroCto: string | null;
+
+  @ApiPropertyOptional({ example: 42 })
+  id_centro_costo: number | null;
 
   @ApiPropertyOptional({ example: '2026-01-15' })
   FechaRequerimiento: string | null;

@@ -26,9 +26,10 @@ export class PresupuestoPrincipalHandler {
               ? [or(p.IdPresupuesto.ilike(`%${query.search}%`), p.Proyecto.ilike(`%${query.search}%`))]
               : []),
             ...(query.CodCentroCto ? [p.CodCentroCto.eq(toVarchar(query.CodCentroCto))] : []),
+            ...(query.id_centro_costo ? [p.id_centro_costo.eq(query.id_centro_costo)] : []),
             ...(query.Estado ? [p.Estado.ilike(`%${query.Estado}%`)] : []),
-            ...(query.CodEmpresa ? [p.CodEmpresa.eq(toVarchar(query.CodEmpresa))] : []),
-            ...(query.IdPeriodo ? [p.IdPeriodo.eq(toVarchar(query.IdPeriodo))] : []),
+            ...(query.id_empresa ? [p.id_empresa.eq(query.id_empresa)] : []),
+            ...(query.periodo ? [p.periodo.eq(query.periodo)] : []),
           ),
         )
       : base;
@@ -61,7 +62,7 @@ export class PresupuestoPrincipalHandler {
     if (!idPresupuesto) return { ...ppto, centroCosto: null, fases: [], historiales: [] };
 
     const [centroCosto, detallesFases, historiales, todasCategorias] = await Promise.all([
-      ppto.CodCentroCto ? this.db.orm.public.CentroCostos.first({ CodCentroCto: toVarchar(ppto.CodCentroCto) }) : null,
+      ppto.id_centro_costo ? this.db.orm.public.CentroCostos.first({ id: ppto.id_centro_costo }) : null,
       this.db.orm.public.ppto_DetalleFases.where((d) => d.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Principal_Historial.where((h) => h.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_DetalleFasesCate.where((c) => c.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
@@ -84,23 +85,22 @@ export class PresupuestoPrincipalHandler {
   }
 
   async create(dto: CreatePresupuestoPrincipalDto): Promise<PresupuestoPrincipalResponseDto> {
-    if (dto.CodCentroCto) {
-      await this.assertCentroCostoExists(dto.CodCentroCto);
-    }
+    const idCentroCosto = await this.resolveCentroCostoId(dto);
 
     const { subTotal, igv, total, gastosGenerales, utilidad } = calculateAmounts(dto);
 
     try {
       const created = await this.db.orm.public.ppto_Principal.create({
         IdPresupuesto: toVarchar(dto.IdPresupuesto),
-        CodEmpresa: toVarchar(dto.CodEmpresa),
-        IdPeriodo: toVarchar(dto.IdPeriodo),
+        id_empresa: dto.id_empresa,
+        periodo: dto.periodo,
         Version: toVarchar(dto.Version ?? 'V1'),
         TipoPpto: toVarchar(dto.TipoPpto),
         Proyecto: toVarchar(dto.Proyecto),
         Concepto: dto.Concepto,
         CodCentroCtoPrincipal: toVarchar(dto.CodCentroCtoPrincipal),
         CodCentroCto: toVarchar(dto.CodCentroCto),
+        id_centro_costo: idCentroCosto,
         FechaRequerimiento: toVarchar(dto.FechaRequerimiento),
         FechaEntrega: toVarchar(dto.FechaEntrega),
         CostoDirecto: toDecimalString(dto.CostoDirecto ?? 0),
@@ -133,9 +133,7 @@ export class PresupuestoPrincipalHandler {
   }
 
   async update(idOrCode: string | number, dto: UpdatePresupuestoPrincipalDto): Promise<PresupuestoPrincipalResponseDto> {
-    if (dto.CodCentroCto) {
-      await this.assertCentroCostoExists(dto.CodCentroCto);
-    }
+    const idCentroCosto = await this.resolveCentroCostoId(dto);
 
     // Always search by IdPresupuesto first, then fallback to numeric id
     let current = await this.db.orm.public.ppto_Principal.first({ IdPresupuesto: toVarchar(String(idOrCode)) });
@@ -163,14 +161,15 @@ export class PresupuestoPrincipalHandler {
 
     const data: {
       IdPresupuesto?: Varchar255;
-      CodEmpresa?: Varchar255;
-      IdPeriodo?: Varchar255;
+      id_empresa?: number;
+      periodo?: number;
       Version?: Varchar255;
       TipoPpto?: Varchar255;
       Proyecto?: Varchar255;
       Concepto?: string;
       CodCentroCtoPrincipal?: Varchar255;
       CodCentroCto?: Varchar255;
+      id_centro_costo?: number;
       FechaRequerimiento?: Varchar255;
       FechaEntrega?: Varchar255;
       CostoDirecto?: string;
@@ -189,14 +188,15 @@ export class PresupuestoPrincipalHandler {
     } = {};
 
     if (dto.IdPresupuesto !== undefined) data.IdPresupuesto = toVarchar(dto.IdPresupuesto);
-    if (dto.CodEmpresa !== undefined) data.CodEmpresa = toVarchar(dto.CodEmpresa);
-    if (dto.IdPeriodo !== undefined) data.IdPeriodo = toVarchar(dto.IdPeriodo);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
+    if (dto.periodo !== undefined) data.periodo = dto.periodo;
     if (dto.Version !== undefined) data.Version = toVarchar(dto.Version);
     if (dto.TipoPpto !== undefined) data.TipoPpto = toVarchar(dto.TipoPpto);
     if (dto.Proyecto !== undefined) data.Proyecto = toVarchar(dto.Proyecto);
     if (dto.Concepto !== undefined) data.Concepto = dto.Concepto;
     if (dto.CodCentroCtoPrincipal !== undefined) data.CodCentroCtoPrincipal = toVarchar(dto.CodCentroCtoPrincipal);
     if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
+    if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.FechaRequerimiento !== undefined) data.FechaRequerimiento = toVarchar(dto.FechaRequerimiento);
     if (dto.FechaEntrega !== undefined) data.FechaEntrega = toVarchar(dto.FechaEntrega);
     if (dto.Estado !== undefined) data.Estado = toVarchar<50>(dto.Estado);
@@ -246,9 +246,13 @@ export class PresupuestoPrincipalHandler {
     return { deleted: true, id: ppto.id, code: ppto.IdPresupuesto };
   }
 
-  private async assertCentroCostoExists(codCentroCto: string): Promise<void> {
-    const cc = await this.db.orm.public.CentroCostos.first({ CodCentroCto: toVarchar(codCentroCto) });
-    if (!cc) throw new BadRequestException(`El Centro de Costo "${codCentroCto}" no existe`);
+  private async resolveCentroCostoId(dto: {
+    id_centro_costo?: number;
+  }): Promise<number | undefined> {
+    if (dto.id_centro_costo === undefined) return undefined;
+    const byId = await this.db.orm.public.CentroCostos.first({ id: dto.id_centro_costo });
+    if (!byId) throw new BadRequestException(`El Centro de Costo id "${dto.id_centro_costo}" no existe`);
+    return byId.id;
   }
 }
 
@@ -256,9 +260,10 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
   return (
     query.search !== undefined ||
     query.CodCentroCto !== undefined ||
+    query.id_centro_costo !== undefined ||
     query.Estado !== undefined ||
-    query.CodEmpresa !== undefined ||
-    query.IdPeriodo !== undefined
+    query.id_empresa !== undefined ||
+    query.periodo !== undefined
   );
 }
 

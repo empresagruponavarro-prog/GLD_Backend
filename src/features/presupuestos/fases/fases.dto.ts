@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 
 export class CreatePptoFaseDto {
@@ -9,11 +10,12 @@ export class CreatePptoFaseDto {
   @MaxLength(255)
   IdpptoFase: string;
 
-  @ApiPropertyOptional({ example: 'E1', description: 'Código de empresa' })
+  @ApiPropertyOptional({ example: 1, description: 'Identificador de empresa' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_empresa?: number;
 
   @ApiPropertyOptional({ example: '617d63d6', description: 'Código de centro de costo principal' })
   @IsOptional()
@@ -43,8 +45,9 @@ export class ListPptoFaseQueryDto extends PaginationQueryDto {
 
   @ApiPropertyOptional({ description: 'Filtro por empresa' })
   @IsOptional()
-  @IsString()
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  id_empresa?: number;
 }
 
 export class PptoFaseResponseDto {
@@ -54,8 +57,8 @@ export class PptoFaseResponseDto {
   @ApiProperty({ example: 'FASE-01' })
   IdpptoFase: string | null;
 
-  @ApiPropertyOptional({ example: 'E1' })
-  CodEmpresa: string | null;
+  @ApiPropertyOptional({ example: 1 })
+  id_empresa: number | null;
 
   @ApiPropertyOptional({ example: '617d63d6' })
   CodCentroCtoPrincipal: string | null;

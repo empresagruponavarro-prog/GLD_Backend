@@ -1,0 +1,86 @@
+[
+  {
+    "id": "dropConstraint.CentroCostos.CentroCostos_cod_centro_cto_key",
+    "label": "Drop constraint \"CentroCostos_cod_centro_cto_key\" on \"CentroCostos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "CentroCostos_cod_centro_cto_key",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"CentroCostos_cod_centro_cto_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_cod_centro_cto_key",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"CentroCostos_cod_centro_cto_key\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" DROP CONSTRAINT \"CentroCostos_cod_centro_cto_key\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"CentroCostos_cod_centro_cto_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_cod_centro_cto_key",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.CentroCostos.cod_centro_cto",
+    "label": "Drop column \"cod_centro_cto\" from \"CentroCostos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "cod_centro_cto",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"cod_centro_cto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_centro_cto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"cod_centro_cto\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" DROP COLUMN \"cod_centro_cto\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"cod_centro_cto\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "cod_centro_cto"
+        ]
+      }
+    ]
+  }
+]

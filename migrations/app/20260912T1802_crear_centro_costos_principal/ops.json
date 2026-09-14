@@ -1,0 +1,202 @@
+[
+  {
+    "id": "table.centro_costos_principal",
+    "label": "Create table \"centro_costos_principal\"",
+    "summary": "Creates table \"centro_costos_principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "centro_costos_principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"centro_costos_principal\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"centro_costos_principal\"",
+        "sql": "CREATE TABLE \"public\".\"centro_costos_principal\" (\n  \"centro_costo_principal\" character varying(255) NOT NULL,\n  \"descripcion\" text NOT NULL,\n  \"estado\" character varying(50) DEFAULT 'ABIERTO' NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_empresa\" int4,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"centro_costos_principal\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.centro_costos_principal.centro_costos_principal_centro_costo_principal_key",
+    "label": "Add unique constraint on \"centro_costos_principal\" (centro_costo_principal)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "centro_costos_principal_centro_costo_principal_key",
+        "table": "centro_costos_principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"centro_costos_principal_centro_costo_principal_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "centro_costos_principal_centro_costo_principal_key",
+          "public",
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"centro_costos_principal_centro_costo_principal_key\"",
+        "sql": "ALTER TABLE \"public\".\"centro_costos_principal\" ADD CONSTRAINT \"centro_costos_principal_centro_costo_principal_key\" UNIQUE (\"centro_costo_principal\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"centro_costos_principal_centro_costo_principal_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "centro_costos_principal_centro_costo_principal_key",
+          "public",
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.centro_costos_principal.centro_costos_principal_id_empresa_idx_328936e2",
+    "label": "Create index \"centro_costos_principal_id_empresa_idx_328936e2\" on \"centro_costos_principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "centro_costos_principal_id_empresa_idx_328936e2",
+        "table": "centro_costos_principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"centro_costos_principal_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"centro_costos_principal_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"centro_costos_principal_id_empresa_idx_328936e2\"",
+        "sql": "CREATE INDEX \"centro_costos_principal_id_empresa_idx_328936e2\" ON \"public\".\"centro_costos_principal\" (\"id_empresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"centro_costos_principal_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"centro_costos_principal_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.centro_costos_principal.centro_costos_principal_id_empresa_fkey",
+    "label": "Add foreign key \"centro_costos_principal_id_empresa_fkey\" on \"centro_costos_principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "centro_costos_principal_id_empresa_fkey",
+        "table": "centro_costos_principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"centro_costos_principal_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "centro_costos_principal_id_empresa_fkey",
+          "public",
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"centro_costos_principal_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"centro_costos_principal\"\nADD CONSTRAINT \"centro_costos_principal_id_empresa_fkey\"\nFOREIGN KEY (\"id_empresa\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"centro_costos_principal_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "centro_costos_principal_id_empresa_fkey",
+          "public",
+          "\"public\".\"centro_costos_principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.centro_costos_principal.backfill",
+    "label": "Backfill centros de costos principales",
+    "summary": "Inserta en \"centro_costos_principal\" los CodCentroCto referenciados como principal en \"CentroCostos\"",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "centro_costos_principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"centro_costos_principal\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"tables\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2)) AS \"result\"",
+        "params": [
+          "public",
+          "centro_costos_principal"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "backfill centros de costos principales",
+        "sql": "INSERT INTO \"public\".\"centro_costos_principal\"   (\"centro_costo_principal\", \"descripcion\", \"estado\", \"id_empresa\") SELECT DISTINCT ON (p.\"CodCentroCto\")   p.\"CodCentroCto\",   COALESCE(NULLIF(p.\"CentroCosto\", ''), p.\"CodCentroCto\"),   COALESCE(NULLIF(p.\"Estado\", ''), 'ABIERTO'),   p.\"id_empresa\" FROM \"public\".\"CentroCostos\" p WHERE p.\"CodCentroCto\" IN (   SELECT DISTINCT cc.\"CodCentroCtoPrincipal\" FROM \"public\".\"CentroCostos\" cc   WHERE cc.\"CodCentroCtoPrincipal\" IS NOT NULL AND cc.\"CodCentroCtoPrincipal\" <> '' ) ORDER BY p.\"CodCentroCto\", p.\"id\" ON CONFLICT (\"centro_costo_principal\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify backfill produced rows",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"centro_costos_principal\") AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

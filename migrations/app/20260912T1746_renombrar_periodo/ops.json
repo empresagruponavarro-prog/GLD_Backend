@@ -1,0 +1,288 @@
+[
+  {
+    "id": "column.public.CentroCostos.periodo",
+    "label": "Rename column \"IdPeriodo\" to \"periodo\" on \"CentroCostos\"",
+    "summary": "Renames column \"IdPeriodo\" to \"periodo\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"periodo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdPeriodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"IdPeriodo\" TO \"periodo\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"periodo\" to int4",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ALTER COLUMN \"periodo\" TYPE int4 USING (\"periodo\"::int4)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones.periodo",
+    "label": "Rename column \"IdPeriodo\" to \"periodo\" on \"contrataciones\"",
+    "summary": "Renames column \"IdPeriodo\" to \"periodo\" on \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"periodo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdPeriodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\" RENAME COLUMN \"IdPeriodo\" TO \"periodo\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"periodo\" to int4",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\" ALTER COLUMN \"periodo\" TYPE int4 USING (\"periodo\"::int4)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.planillaPago.periodo",
+    "label": "Rename column \"IdPeriodo\" to \"periodo\" on \"planillaPago\"",
+    "summary": "Renames column \"IdPeriodo\" to \"periodo\" on \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"periodo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdPeriodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\" RENAME COLUMN \"IdPeriodo\" TO \"periodo\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"periodo\" to int4",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\" ALTER COLUMN \"periodo\" TYPE int4 USING (\"periodo\"::int4)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.periodo",
+    "label": "Rename column \"IdPeriodo\" to \"periodo\" on \"ppto_Principal\"",
+    "summary": "Renames column \"IdPeriodo\" to \"periodo\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"periodo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdPeriodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" RENAME COLUMN \"IdPeriodo\" TO \"periodo\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"periodo\" to int4",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ALTER COLUMN \"periodo\" TYPE int4 USING (\"periodo\"::int4)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.semana.periodo",
+    "label": "Rename column \"IdPeriodo\" to \"periodo\" on \"semana\"",
+    "summary": "Renames column \"IdPeriodo\" to \"periodo\" on \"semana\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"periodo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "semana",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdPeriodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"semana\" RENAME COLUMN \"IdPeriodo\" TO \"periodo\"",
+        "params": []
+      },
+      {
+        "description": "cast column \"periodo\" to int4",
+        "sql": "ALTER TABLE \"public\".\"semana\" ALTER COLUMN \"periodo\" TYPE int4 USING (\"periodo\"::int4)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "semana",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.public.periodos",
+    "label": "Drop table \"periodos\"",
+    "summary": "Drops table \"periodos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "periodos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"periodos\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"tables\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2)) AS \"result\"",
+        "params": [
+          "public",
+          "periodos"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"periodos\"",
+        "sql": "DROP TABLE \"public\".\"periodos\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"periodos\" is gone",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"tables\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2)) AS \"result\"",
+        "params": [
+          "public",
+          "periodos"
+        ]
+      }
+    ]
+  }
+]

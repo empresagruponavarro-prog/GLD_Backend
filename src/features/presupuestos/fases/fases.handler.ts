@@ -23,7 +23,7 @@ export class PptoFasesHandler {
           and(
             ...(query.IdpptoFase ? [f.IdpptoFase.ilike(`%${query.IdpptoFase}%`)] : []),
             ...(query.FaseProyecto ? [f.FaseProyecto.ilike(`%${query.FaseProyecto}%`)] : []),
-            ...(query.CodEmpresa ? [f.CodEmpresa.eq(toVarchar(query.CodEmpresa))] : []),
+            ...(query.id_empresa ? [f.id_empresa.eq(query.id_empresa)] : []),
           ),
         )
       : base;
@@ -50,7 +50,7 @@ export class PptoFasesHandler {
     try {
       const created = await this.db.orm.public.ppto_Fases.create({
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        CodEmpresa: toVarchar(dto.CodEmpresa),
+        id_empresa: dto.id_empresa,
         CodCentroCtoPrincipal: toVarchar(dto.CodCentroCtoPrincipal),
         FaseProyecto: toVarchar(dto.FaseProyecto),
       });
@@ -70,12 +70,12 @@ export class PptoFasesHandler {
     const id = current.id;
     const data: {
       IdpptoFase?: Varchar255;
-      CodEmpresa?: Varchar255;
+      id_empresa?: number;
       CodCentroCtoPrincipal?: Varchar255;
       FaseProyecto?: Varchar255;
     } = {};
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
-    if (dto.CodEmpresa !== undefined) data.CodEmpresa = toVarchar(dto.CodEmpresa);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.CodCentroCtoPrincipal !== undefined) data.CodCentroCtoPrincipal = toVarchar(dto.CodCentroCtoPrincipal);
     if (dto.FaseProyecto !== undefined) data.FaseProyecto = toVarchar(dto.FaseProyecto);
 
@@ -107,5 +107,5 @@ export class PptoFasesHandler {
 }
 
 function hasFilters(query: ListPptoFaseQueryDto): boolean {
-  return query.IdpptoFase !== undefined || query.FaseProyecto !== undefined || query.CodEmpresa !== undefined;
+  return query.IdpptoFase !== undefined || query.FaseProyecto !== undefined || query.id_empresa !== undefined;
 }

@@ -15,6 +15,12 @@ import {
 export class PptoDetalleFasesCateHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
+  private async resolveCentroCostoId(dto: {
+    id_centro_costo?: number;
+  }): Promise<number | undefined> {
+    return dto.id_centro_costo;
+  }
+
   async list(query: ListPptoDetalleFaseCateQueryDto): Promise<Paginated<PptoDetalleFaseCateResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const base = this.db.orm.public.ppto_DetalleFasesCate.orderBy((c) => c.id.asc());
@@ -49,14 +55,16 @@ export class PptoDetalleFasesCateHandler {
 
   async create(dto: CreatePptoDetalleFaseCateDto): Promise<PptoDetalleFaseCateResponseDto> {
     try {
+      const idCentroCosto = await this.resolveCentroCostoId(dto);
       const created = await this.db.orm.public.ppto_DetalleFasesCate.create({
         IdPresupuestoDetalleCategoria: toVarchar(dto.IdPresupuestoDetalleCategoria),
         IdPresupuesto: toVarchar(dto.IdPresupuesto),
         IdPresupuestoDetalle: toVarchar(dto.IdPresupuestoDetalle),
         IdpptoFaseCategoria: toVarchar(dto.IdpptoFaseCategoria),
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        CodEmpresa: toVarchar(dto.CodEmpresa),
+        id_empresa: dto.id_empresa,
         CodCentroCto: toVarchar(dto.CodCentroCto),
+        id_centro_costo: idCentroCosto,
         CostoDirecto: toDecimalString(dto.CostoDirecto ?? 0),
         Usuario: toVarchar(dto.Usuario),
         FechaCreacion: toVarchar(new Date().toISOString()),
@@ -75,14 +83,16 @@ export class PptoDetalleFasesCateHandler {
       : await this.db.orm.public.ppto_DetalleFasesCate.first({ id: numId });
     if (!current) throw new NotFoundException(`Detalle de categoría "${idOrCode}" no encontrado`);
     const id = current.id;
+    const idCentroCosto = await this.resolveCentroCostoId(dto);
     const data: {
       IdPresupuestoDetalleCategoria?: Varchar255;
       IdPresupuesto?: Varchar255;
       IdPresupuestoDetalle?: Varchar255;
       IdpptoFaseCategoria?: Varchar255;
       IdpptoFase?: Varchar255;
-      CodEmpresa?: Varchar255;
+      id_empresa?: number;
       CodCentroCto?: Varchar255;
+      id_centro_costo?: number;
       CostoDirecto?: string;
       Usuario?: Varchar255;
     } = {};
@@ -91,8 +101,9 @@ export class PptoDetalleFasesCateHandler {
     if (dto.IdPresupuestoDetalle !== undefined) data.IdPresupuestoDetalle = toVarchar(dto.IdPresupuestoDetalle);
     if (dto.IdpptoFaseCategoria !== undefined) data.IdpptoFaseCategoria = toVarchar(dto.IdpptoFaseCategoria);
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
-    if (dto.CodEmpresa !== undefined) data.CodEmpresa = toVarchar(dto.CodEmpresa);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
+    if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.CostoDirecto !== undefined) data.CostoDirecto = toDecimalString(dto.CostoDirecto);
     if (dto.Usuario !== undefined) data.Usuario = toVarchar(dto.Usuario);
 

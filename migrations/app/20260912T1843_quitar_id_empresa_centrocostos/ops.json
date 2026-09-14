@@ -1,0 +1,161 @@
+[
+  {
+    "id": "data.CentroCostos.alinear-padre-por-empresa",
+    "label": "Align children padre by empresa",
+    "summary": "Asigna el padre por defecto de la empresa a hijos sin padre y a hijos con empresa distinta a su padre",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costos_principal",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows pending alignment",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" h   LEFT JOIN \"public\".\"centro_costos_principal\" m ON m.id = h.id_centro_costos_principal   WHERE (h.id_centro_costos_principal IS NULL AND h.id_empresa IS NOT NULL)      OR (h.id_centro_costos_principal IS NOT NULL AND h.id_empresa IS NOT NULL AND m.id_empresa <> h.id_empresa))  AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "assign default padre when empresa set (covers both sin padre and mismatched padre)",
+        "sql": "UPDATE \"public\".\"CentroCostos\" h SET id_centro_costos_principal = d.padre_id FROM (VALUES (1, 3), (2, 31), (3, 5), (4, 8)) AS d(id_empresa, padre_id) WHERE h.id_empresa = d.id_empresa   AND (h.id_centro_costos_principal IS NULL       OR h.id_centro_costos_principal IN (         SELECT m.id FROM \"public\".\"centro_costos_principal\" m WHERE m.id_empresa <> h.id_empresa))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no empresa mismatches remain",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" h   LEFT JOIN \"public\".\"centro_costos_principal\" m ON m.id = h.id_centro_costos_principal   WHERE h.id_centro_costos_principal IS NOT NULL AND h.id_empresa IS NOT NULL AND m.id_empresa <> h.id_empresa)  AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.CentroCostos.CentroCostos_id_empresa_fkey",
+    "label": "Drop constraint \"CentroCostos_id_empresa_fkey\" on \"CentroCostos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_id_empresa_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"CentroCostos_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_empresa_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"CentroCostos_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" DROP CONSTRAINT \"CentroCostos_id_empresa_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"CentroCostos_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_empresa_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.CentroCostos.CentroCostos_id_empresa_idx_328936e2",
+    "label": "Drop index \"CentroCostos_id_empresa_idx_328936e2\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_id_empresa_idx_328936e2",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"CentroCostos_id_empresa_idx_328936e2\"",
+        "sql": "DROP INDEX \"public\".\"CentroCostos_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.CentroCostos.id_empresa",
+    "label": "Drop column \"id_empresa\" from \"CentroCostos\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" DROP COLUMN \"id_empresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ]
+  }
+]

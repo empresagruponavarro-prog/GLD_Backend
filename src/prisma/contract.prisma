@@ -27,6 +27,17 @@ model categoria {
   @@map("categoria")
 }
 
+model centro_costos_principal {
+  id                     Int          @id @default(autoincrement())
+  centro_costo_principal VarChar(255) @unique
+  descripcion            String
+  estado                 VarChar(50)  @default("ABIERTO")
+  id_empresa             Int?
+  empresa                Empresas?    @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+
+  @@map("centro_costos_principal")
+}
+
 model unidad_medida {
   id                   Int                          @id @default(autoincrement())
   codigo               String                       @unique
@@ -77,22 +88,25 @@ model AlmacenMovimientoDetalle {
   ProductoCodigo       VarChar(255)?
   Comportamiento       VarChar(255)?
   Cantidad             Decimal?
-  @@map("AlmacenMovimientoDetalle")
+  @@map("almacenMovimientoDetalle")
 }
 
 model AlmacenMovimientos {
   id                    Int             @id @default(autoincrement())
   CodMovimiento         VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoCosto             VarChar(255)?
   CodigoAnexo           VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   CodAlmacen            VarChar(255)?
   CodTipoMov            VarChar(255)?
   Comportamiento        VarChar(255)?
   Fecha                 Timestamptz(3)?
-  @@map("AlmacenMovimientos")
+  @@map("almacenMovimientos")
 }
 
 model AlmacenTipoMovimiento {
@@ -100,15 +114,16 @@ model AlmacenTipoMovimiento {
   CodTipoMov     VarChar(255)?
   TipoMovimiento VarChar(255)?
   Comportamiento VarChar(255)?
-  @@map("AlmacenTipoMovimiento")
+  @@map("almacenTipoMovimiento")
 }
 
 model Almacenes {
   id         Int           @id @default(autoincrement())
   CodAlmacen VarChar(255)?
-  CodEmpresa VarChar(255)?
+  id_empresa  Int?
+  empresa    Empresas? @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   Almacen    VarChar(255)?
-  @@map("Almacenes")
+  @@map("almacenes")
 }
 
 model Anexo_Especialidad {
@@ -116,7 +131,7 @@ model Anexo_Especialidad {
   TipoAnexo          VarChar(255)?
   Anexo_Especialidad VarChar(255)? @map("Anexo Especialidad")
   anexos             Anexos[]
-  @@map("Anexo_Especialidad")
+  @@map("anexo_Especialidad")
 }
 
 model Anexo_TipoDocIDE {
@@ -124,7 +139,7 @@ model Anexo_TipoDocIDE {
   TipoAnexo           VarChar(255)?
   Anexo_Documento_IDE VarChar(255)?
   anexos              Anexos[]
-  @@map("Anexo_TipoDocIDE")
+  @@map("anexo_TipoDocIDE")
 }
 
 enum TipoAnexo {
@@ -149,23 +164,26 @@ model Anexos {
   Telefono            VarChar(255)?
   Correo              VarChar(255)?
   estado              Boolean       @default(true)
-  @@map("Anexos")
+  @@map("anexos")
 }
 
 model Bancos {
   id      Int           @id @default(autoincrement())
   IdBanco VarChar(255)?
   Banco   VarChar(255)?
-  @@map("Bancos")
+  @@map("bancos")
 }
 
 model CajaEgresosRetail {
   id                    Int             @id @default(autoincrement())
   IdMov                 VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoCosto             VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdPresupuesto         VarChar(255)?
   IdpptoFase            VarChar(255)?
   IdpptoFaseCategoria   VarChar(255)?
@@ -187,15 +205,18 @@ model CajaEgresosRetail {
   Monto_Total           Decimal?        @map("Monto Total")
   VoucherDeposito       VarChar(255)?
   Ajuste                VarChar(255)?
-  @@map("CajaEgresosRetail")
+  @@map("cajaEgresosRetail")
 }
 
 model CajaIngresos {
   id                    Int             @id @default(autoincrement())
   IdMov                 VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdPresupuesto         VarChar(255)?
   TipoAnexo             VarChar(255)?
   CodMotivo             VarChar(255)?
@@ -209,7 +230,7 @@ model CajaIngresos {
   TotalPagoDocumentos   Decimal?
   Monto_Total           Decimal?        @map("Monto Total")
   VoucherDeposito       VarChar(255)?
-  @@map("CajaIngresos")
+  @@map("cajaIngresos")
 }
 
 model CajaIngresos_DocVenta {
@@ -221,7 +242,7 @@ model CajaIngresos_DocVenta {
   NumDocumento  VarChar(255)?
   IdDocVenta    VarChar(255)?
   MontoPagado   Decimal?
-  @@map("CajaIngresos_DocVenta")
+  @@map("cajaIngresos_DocVenta")
 }
 
 model CajaMotivos {
@@ -231,7 +252,7 @@ model CajaMotivos {
   Motivo         VarChar(255)?
   Comportamiento VarChar(255)?
   Resultado      VarChar(255)?
-  @@map("CajaMotivos")
+  @@map("cajaMotivos")
 }
 
 model Categorias {
@@ -240,36 +261,51 @@ model Categorias {
   Descripcion     VarChar(255)?
   TIPOCATE        VarChar(255)?
   Estado          VarChar(50)?
-  @@map("Categorias")
+  @@map("categorias")
 }
 
 model CentroCostos {
-  id                         Int              @id @default(autoincrement())
-  CodCentroCto               VarChar(255)?    @unique
-  CodEmpresa                 VarChar(255)?
-  IdPeriodo                  VarChar(255)?
-  CodCliente                 VarChar(255)?
-  CodCentroCtoPrincipal      VarChar(255)?
-  CentroCosto                VarChar(255)?
-  Estado                     VarChar(50)?
-  FechaIncio                 VarChar(255)?
-  FechaFinProg               VarChar(255)?
-  FechaFinReal               VarChar(255)?
-  PresupuestoEstado          VarChar(50)?
-  PresupuestoCostoDirecto    Decimal?
-  PresupuestoGastosGenerales Decimal?
-  PresupuestoViaticos        Decimal?
-  PresupuestoMonto           Decimal?
-  OCFile                     VarChar(255)?
+  id                            Int                     @id @default(autoincrement())
+  periodo                       Int?
+  cod_cliente                   VarChar(255)?
+  id_centro_costos_principal    Int?
+  principal                     centro_costos_principal? @relation(fields: [id_centro_costos_principal], references: [id], onDelete: SetNull)
+  centro_costo                  VarChar(255)?
+  estado                        VarChar(50)?
+  fecha_inicio                  DateString?
+  fecha_fin_prog                DateString?
+  fecha_fin_real                DateString?
+  presupuesto_estado            VarChar(50)?
+  presupuesto_costo_directo     Decimal?
+  presupuesto_gastos_generales  Decimal?
+  presupuesto_viaticos          Decimal?
+  presupuesto_monto             Decimal?
+  oc_file                       VarChar(255)?
 
+  almacenMovimientos     AlmacenMovimientos[]
+  cajaEgresosRetail      CajaEgresosRetail[]
+  cajaIngresos           CajaIngresos[]
+  contratacionesPPTOMeta Contrataciones_PPTOMeta[]
+  docCompras             DocCompra[]
+  docCompraDetalles      DocCompraDetalle[]
+  docVentas              DocVenta[]
+  docVentaDetalles       DocVentaDetalle[]
+  egresosAnticiposOC     Egresos_AnticiposOC[]
+  ordenCompras           OrdenCompra[]
+  pptoDetalleFases       ppto_DetalleFases[]
+  pptoDetalleFasesCates  ppto_DetalleFasesCate[]
+  pptoPrincipales        ppto_Principal[]
+
+  @@index([id_centro_costos_principal])
   @@map("CentroCostos")
 }
 
 model Contrataciones {
   id                    Int           @id @default(autoincrement())
   Codcontratacion       VarChar(255)?
-  CodEmpresa            VarChar(255)?
-  IdPeriodo             VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  periodo               Int?
   CodCliente            VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CentroCosto           VarChar(255)?
@@ -294,29 +330,33 @@ model Contrataciones {
   LiquidacionPDF        VarChar(255)?
   ContratoPDF           VarChar(255)?
   PresupuestoFile       VarChar(255)?
-  @@map("Contrataciones")
+  @@map("contrataciones")
 }
 
 model Contrataciones_PPTOMeta {
   id                      Int             @id @default(autoincrement())
   Codcontratacionpptometa VarChar(255)?
   Codcontratacion         VarChar(255)?
-  CodEmpresa              VarChar(255)?
+  id_empresa               Int?
+  empresa                 Empresas?      @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal   VarChar(255)?
   CodCentroCto            VarChar(255)?
+  id_centro_costo         Int?
+  centroCosto             CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   CodProveedor            VarChar(255)?
   Fecha                   Timestamptz(3)?
   Concepto                String?
   Monto                   Decimal?
   File                    VarChar(255)?
-  @@map("Contrataciones_PPTOMeta")
+  @@map("contrataciones_PPTOMeta")
 }
 
 model Contrataciones_PostVenta {
   id                       Int             @id @default(autoincrement())
   CodcontratacionPostVenta VarChar(255)?
   Codcontratacion          VarChar(255)?
-  CodEmpresa               VarChar(255)?
+  id_empresa                Int?
+  empresa                  Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal    VarChar(255)?
   CentroCosto              VarChar(255)?
   CodProveedor             VarChar(255)?
@@ -325,13 +365,14 @@ model Contrataciones_PostVenta {
   Concepto                 String?
   Monto                    Decimal?
   File                     VarChar(255)?
-  @@map("Contrataciones_PostVenta")
+  @@map("contrataciones_PostVenta")
 }
 
 model CuentasCajaBancos {
   id                Int             @id @default(autoincrement())
   IdCtaCajaBanco    VarChar(255)?
-  CodEmpresa        VarChar(255)?
+  id_empresa         Int?
+  empresa           Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   Tipo              VarChar(255)?
   IdBanco           VarChar(255)?
   NroCuenta         VarChar(255)?
@@ -340,16 +381,19 @@ model CuentasCajaBancos {
   IdMoneda          VarChar(255)?
   FechaSaldoInicial Timestamptz(3)?
   SaldoInicial      Decimal?
-  @@map("CuentasCajaBancos")
+  @@map("cuentasCajaBancos")
 }
 
 model DocCompra {
   id                    Int             @id @default(autoincrement())
   IdDocCompra           VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoCosto             VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   Periodo               VarChar(255)?
   Mes                   VarChar(255)?
   CodigoAnexo           VarChar(255)?
@@ -377,17 +421,20 @@ model DocCompra {
   Usuario               VarChar(255)?
   FechaCrecion          Timestamptz(3)?
   Ajuste                VarChar(255)?
-  @@map("DocCompra")
+  @@map("docCompra")
 }
 
 model DocCompraDetalle {
   id                    Int           @id @default(autoincrement())
   IdDocCompra           VarChar(255)?
   IdDocCompraDetalle    VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoProducto          tipo_item?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   CategoriaCodigo       VarChar(255)?
   CodigoAnexoDscto      VarChar(255)?
   Codcontratacion       VarChar(255)?
@@ -396,31 +443,35 @@ model DocCompraDetalle {
   Cantidad              Decimal?
   Precio                Decimal?
   monto                 Decimal?
-  @@map("DocCompraDetalle")
+  @@map("docCompraDetalle")
 }
 
 model DocCompra_AplicacionAnticipo {
   id                    Int           @id @default(autoincrement())
   IdDocCompra           VarChar(255)?
   IdDocCompraAplicacion VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodigoAnexo           VarChar(255)?
   TipoOC                VarChar(255)?
   IdOC                  VarChar(255)?
   MontoPagado           Decimal?
-  @@map("DocCompra_AplicacionAnticipo")
+  @@map("docCompra_AplicacionAnticipo")
 }
 
 model DocVenta {
   id                    Int             @id @default(autoincrement())
   IdDocVenta            VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoCosto             VarChar(255)?
   Periodo               VarChar(255)?
   Mes                   VarChar(255)?
   CodigoAnexo           VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdPresupuesto         VarChar(255)?
   CodDocSunat           VarChar(255)?
   NumDocumento          VarChar(255)?
@@ -435,33 +486,39 @@ model DocVenta {
   PDF_Documento         VarChar(255)?
   Usuario               VarChar(255)?
   FechaCrecion          Timestamptz(3)?
-  @@map("DocVenta")
+  @@map("docVenta")
 }
 
 model DocVentaDetalle {
   id                    Int           @id @default(autoincrement())
   IdDocVenta            VarChar(255)?
   IdDocVentaDetalle     VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodigoAnexo           VarChar(255)?
   TipoProducto          tipo_item?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   CategoriaCodigo       VarChar(255)?
   IdPresupuesto         VarChar(255)?
   ProductoCodigo        VarChar(255)?
   Cantidad              Decimal?
   Precio                Decimal?
   monto                 Decimal?
-  @@map("DocVentaDetalle")
+  @@map("docVentaDetalle")
 }
 
 model Egresos_AnticiposOC {
   id              Int             @id @default(autoincrement())
   IdMov           VarChar(255)?
   IdMovOC         VarChar(255)?
-  CodEmpresa      VarChar(255)?
+  id_empresa       Int?
+  empresa         Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCto    VarChar(255)?
+  id_centro_costo Int?
+  centroCosto     CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   FechaPago       Timestamptz(3)?
   NumeroOperacion VarChar(255)?
   TipoOC          VarChar(255)?
@@ -469,7 +526,7 @@ model Egresos_AnticiposOC {
   IdOC            VarChar(255)?
   CodigoAnexo     VarChar(255)?
   MontoPagado     Decimal?
-  @@map("Egresos_AnticiposOC")
+  @@map("egresos_AnticiposOC")
 }
 
 model Egresos_DocCompra {
@@ -482,7 +539,7 @@ model Egresos_DocCompra {
   IdDocCompra    VarChar(255)?
   IdOC           VarChar(255)?
   Monto_Pagado   Decimal?      @map("Monto Pagado")
-  @@map("Egresos_DocCompra")
+  @@map("egresos_DocCompra")
 }
 
 model Egresos_Otros {
@@ -496,25 +553,46 @@ model Egresos_Otros {
   MedioPago       VarChar(255)?
   CategoriaCodigo VarChar(255)?
   Monto_Total     Decimal?        @map("Monto Total")
-  @@map("Egresos_Otros")
+  @@map("egresos_Otros")
 }
 
 model Empresas {
-  id               Int           @id @default(autoincrement())
-  CodEmpresa       VarChar(255)?
-  RUC              VarChar(255)?
-  RazonSocial      VarChar(255)?
-  DomicilioFiscal  VarChar(255)?
-  DireccionEntrega VarChar(255)?
-  CorreoCompras    VarChar(255)?
-  @@map("Empresas")
+  id_empresa        Int           @id @default(autoincrement())
+  ruc               VarChar(255)?
+  razon_social      VarChar(255)?
+  domicilio_fiscal  VarChar(255)?
+  direccion_entrega VarChar(255)?
+  correo_compras    VarChar(255)?
+
+  almacenMovimientos      AlmacenMovimientos[]
+  almacenes               Almacenes[]
+  cajaEgresosRetail       CajaEgresosRetail[]
+  cajaIngresos            CajaIngresos[]
+  contrataciones          Contrataciones[]
+  contratacionesPPTOMeta  Contrataciones_PPTOMeta[]
+  contratacionesPostVenta Contrataciones_PostVenta[]
+  cuentasCajaBancos       CuentasCajaBancos[]
+  docCompras              DocCompra[]
+  docCompraDetalles       DocCompraDetalle[]
+  docCompraAplicaciones   DocCompra_AplicacionAnticipo[]
+  docVentas               DocVenta[]
+  docVentaDetalles        DocVentaDetalle[]
+  egresosAnticiposOC      Egresos_AnticiposOC[]
+  ordenCompras            OrdenCompra[]
+  planillaPagos           PlanillaPago[]
+  pptoDetalleFases        ppto_DetalleFases[]
+  pptoDetalleFasesCates   ppto_DetalleFasesCate[]
+  pptoFases               ppto_Fases[]
+  pptoPrincipales         ppto_Principal[]
+
+  @@map("empresas")
 }
 
 model Menu {
   MenuId     VarChar(255)  @id
   MenuNombre VarChar(255)?
   Imagen     VarChar(255)?
-  @@map("Menu")
+  @@map("menu")
 }
 
 model Monedas {
@@ -522,18 +600,21 @@ model Monedas {
   MonedaId VarChar(255)?
   Moneda   VarChar(255)?
   Simbolo  VarChar(255)?
-  @@map("Monedas")
+  @@map("monedas")
 }
 
 model OrdenCompra {
   id                    Int             @id @default(autoincrement())
   IdOC                  VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   TipoCosto             VarChar(255)?
   TipoOC                VarChar(255)?
   NumeroOC              VarChar(255)?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   CategoriaCodigo       VarChar(255)?
   Periodo               VarChar(255)?
   Mes                   VarChar(255)?
@@ -555,7 +636,7 @@ model OrdenCompra {
   FechaCreacion         Timestamptz(3)?
   HoraCreacion          VarChar(10)?
   Cotizacion            VarChar(255)?
-  @@map("OrdenCompra")
+  @@map("ordenCompra")
 }
 
 model OrdenCompraDetalle {
@@ -567,21 +648,16 @@ model OrdenCompraDetalle {
   Cantidad       Decimal?
   Precio         Decimal?
   monto          Decimal?
-  @@map("OrdenCompraDetalle")
-}
-
-model Periodos {
-  id        Int           @id @default(autoincrement())
-  IdPeriodo VarChar(255)?
-  @@map("Periodos")
+  @@map("ordenCompraDetalle")
 }
 
 model PlanillaPago {
   id                     Int             @id @default(autoincrement())
   Codcontratacion        VarChar(255)?
   CodcontratacionDetalle VarChar(255)?
-  CodEmpresa             VarChar(255)?
-  IdPeriodo              VarChar(255)?
+  id_empresa              Int?
+  empresa                Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  periodo                Int?
   CodCliente             VarChar(255)?
   CodCentroCtoPrincipal  VarChar(255)?
   CentroCosto            VarChar(255)?
@@ -606,7 +682,7 @@ model PlanillaPago {
   PlanillaIGV            Decimal?
   PlanillaTotal          Decimal?
   Estado                 VarChar(50)?
-  @@map("PlanillaPago")
+  @@map("planillaPago")
 }
 
 model Productos {
@@ -618,17 +694,17 @@ model Productos {
   Comentarios     String?
   Imagen          VarChar(255)?
   TipoProducto    tipo_item?
-  @@map("Productos")
+  @@map("productos")
 }
 
 model Semana {
   id          Int             @id @default(autoincrement())
   CodSemana   VarChar(255)?
-  IdPeriodo   VarChar(255)?
+  periodo     Int?
   Semana      VarChar(255)?
   FechaInicio Timestamptz(3)?
   FechaFinal  Timestamptz(3)?
-  @@map("Semana")
+  @@map("semana")
 }
 
 model SubMenu {
@@ -638,14 +714,14 @@ model SubMenu {
   SubMenuNombre VarChar(255)?
   SubMenuVista  VarChar(255)?
   Imagen        VarChar(255)?
-  @@map("SubMenu")
+  @@map("subMenu")
 }
 
 model TipoDocumentoSunat {
   id             Int           @id @default(autoincrement())
   CodDocSunat    VarChar(255)?
   DocumentoSunat VarChar(255)?
-  @@map("TipoDocumentoSunat")
+  @@map("tipoDocumentoSunat")
 }
 
 model UnidadMedida {
@@ -653,7 +729,7 @@ model UnidadMedida {
   UniMedCodigo VarChar(255)?
   Descripcion  VarChar(255)?
   Simbolo      VarChar(255)?
-  @@map("UnidadMedida")
+  @@map("unidadMedida")
 }
 
 model Usuarios {
@@ -662,7 +738,7 @@ model Usuarios {
   Usuario   VarChar(255)?
   Clave     VarChar(255)?
   Rol       VarChar(255)?
-  @@map("Usuarios")
+  @@map("usuarios")
 }
 
 model UsuariosMenus {
@@ -670,7 +746,7 @@ model UsuariosMenus {
   IdUsuarioMenu VarChar(255)?
   IdUsuario     VarChar(255)?
   MenuId        VarChar(255)?
-  @@map("UsuariosMenus")
+  @@map("usuariosMenus")
 }
 
 model UsuariosPermisos {
@@ -678,7 +754,7 @@ model UsuariosPermisos {
   IdUsuario        VarChar(255)?
   MenuId           VarChar(255)?
   SubMenuId        VarChar(255)?
-  @@map("UsuariosPermisos")
+  @@map("usuariosPermisos")
 }
 
 model Incidencia {
@@ -723,16 +799,19 @@ model Incidencia {
   fechaInicio          DateTime        @default(now())
   fechaFin             DateTime?
   fechaCreacion        DateTime        @default(now())
-  @@map("Incidencia")
+  @@map("incidencia")
 }
 
 model ppto_DetalleFases {
   id                    Int           @id @default(autoincrement())
   IdPresupuestoDetalle  VarChar(255)? @unique
   IdPresupuesto         VarChar(255)?
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdpptoFase            VarChar(255)?
   CostoDirecto          Decimal?
   Usuario               VarChar(255)?
@@ -745,9 +824,12 @@ model ppto_DetalleFasesCate {
   IdPresupuestoDetalleCategoria VarChar(255)? @unique
   IdPresupuesto                 VarChar(255)?
   IdPresupuestoDetalle          VarChar(255)?
-  CodEmpresa                    VarChar(255)?
+  id_empresa                     Int?
+  empresa                       Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal         VarChar(255)?
   CodCentroCto                  VarChar(255)?
+  id_centro_costo               Int?
+  centroCosto                   CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdpptoFase                    VarChar(255)?
   IdpptoFaseCategoria           VarChar(255)?
   CostoDirecto                  Decimal?
@@ -759,7 +841,8 @@ model ppto_DetalleFasesCate {
 model ppto_Fases {
   id                    Int           @id @default(autoincrement())
   IdpptoFase            VarChar(255)? @unique
-  CodEmpresa            VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal VarChar(255)?
   FaseProyecto          VarChar(255)?
   @@map("ppto_Fases")
@@ -776,8 +859,9 @@ model ppto_FasesCategorias {
 model ppto_Principal {
   id                    Int           @id @default(autoincrement())
   IdPresupuesto         VarChar(255)? @unique
-  CodEmpresa            VarChar(255)?
-  IdPeriodo             VarChar(255)?
+  id_empresa             Int?
+  empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  periodo               Int?
   Version               VarChar(255)?
   CodigoAnexo           VarChar(255)?
   TipoPpto              VarChar(255)?
@@ -785,6 +869,8 @@ model ppto_Principal {
   Concepto              String?
   CodCentroCtoPrincipal VarChar(255)?
   CodCentroCto          VarChar(255)?
+  id_centro_costo       Int?
+  centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   FechaRequerimiento    VarChar(255)?
   FechaEntrega          VarChar(255)?
   CostoDirecto          Decimal?

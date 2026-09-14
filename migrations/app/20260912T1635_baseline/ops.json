@@ -1,0 +1,3115 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.CentroCostos",
+    "label": "Create table \"CentroCostos\"",
+    "summary": "Creates table \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"CentroCostos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"CentroCostos\"",
+        "sql": "CREATE TABLE \"public\".\"CentroCostos\" (\n  \"CentroCosto\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodCliente\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"Estado\" character varying(50),\n  \"FechaFinProg\" character varying(255),\n  \"FechaFinReal\" character varying(255),\n  \"FechaIncio\" character varying(255),\n  \"IdPeriodo\" character varying(255),\n  \"OCFile\" character varying(255),\n  \"PresupuestoCostoDirecto\" numeric,\n  \"PresupuestoEstado\" character varying(50),\n  \"PresupuestoGastosGenerales\" numeric,\n  \"PresupuestoMonto\" numeric,\n  \"PresupuestoViaticos\" numeric,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"CentroCostos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacenMovimientoDetalle",
+    "label": "Create table \"almacenMovimientoDetalle\"",
+    "summary": "Creates table \"almacenMovimientoDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacenMovimientoDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacenMovimientoDetalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientoDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacenMovimientoDetalle\"",
+        "sql": "CREATE TABLE \"public\".\"almacenMovimientoDetalle\" (\n  \"Cantidad\" numeric,\n  \"CodMovimiento\" character varying(255),\n  \"CodMovimientoDetalle\" character varying(255),\n  \"Comportamiento\" character varying(255),\n  \"ProductoCodigo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacenMovimientoDetalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientoDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacenMovimientos",
+    "label": "Create table \"almacenMovimientos\"",
+    "summary": "Creates table \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacenMovimientos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacenMovimientos\"",
+        "sql": "CREATE TABLE \"public\".\"almacenMovimientos\" (\n  \"CodAlmacen\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodMovimiento\" character varying(255),\n  \"CodTipoMov\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Comportamiento\" character varying(255),\n  \"Fecha\" timestamptz(3),\n  \"TipoCosto\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacenMovimientos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacenTipoMovimiento",
+    "label": "Create table \"almacenTipoMovimiento\"",
+    "summary": "Creates table \"almacenTipoMovimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacenTipoMovimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacenTipoMovimiento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenTipoMovimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacenTipoMovimiento\"",
+        "sql": "CREATE TABLE \"public\".\"almacenTipoMovimiento\" (\n  \"CodTipoMov\" character varying(255),\n  \"Comportamiento\" character varying(255),\n  \"TipoMovimiento\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacenTipoMovimiento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenTipoMovimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacenes",
+    "label": "Create table \"almacenes\"",
+    "summary": "Creates table \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacenes\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacenes\"",
+        "sql": "CREATE TABLE \"public\".\"almacenes\" (\n  \"Almacen\" character varying(255),\n  \"CodAlmacen\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacenes\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.anexo_Especialidad",
+    "label": "Create table \"anexo_Especialidad\"",
+    "summary": "Creates table \"anexo_Especialidad\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "anexo_Especialidad"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"anexo_Especialidad\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexo_Especialidad\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"anexo_Especialidad\"",
+        "sql": "CREATE TABLE \"public\".\"anexo_Especialidad\" (\n  \"Anexo Especialidad\" character varying(255),\n  \"TipoAnexo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"anexo_Especialidad\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexo_Especialidad\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.anexo_TipoDocIDE",
+    "label": "Create table \"anexo_TipoDocIDE\"",
+    "summary": "Creates table \"anexo_TipoDocIDE\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "anexo_TipoDocIDE"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"anexo_TipoDocIDE\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexo_TipoDocIDE\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"anexo_TipoDocIDE\"",
+        "sql": "CREATE TABLE \"public\".\"anexo_TipoDocIDE\" (\n  \"Anexo_Documento_IDE\" character varying(255),\n  \"TipoAnexo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"anexo_TipoDocIDE\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexo_TipoDocIDE\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.anexos",
+    "label": "Create table \"anexos\"",
+    "summary": "Creates table \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"anexos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"anexos\"",
+        "sql": "CREATE TABLE \"public\".\"anexos\" (\n  \"Anexo\" character varying(255),\n  \"AnexoEspecialidadId\" int4,\n  \"AnexoTipoDocIdeId\" int4,\n  \"Contacto\" character varying(255),\n  \"Correo\" character varying(255),\n  \"Direccion\" character varying(255),\n  \"NombreComercial\" character varying(255),\n  \"NumeroDocIde\" character varying(255),\n  \"Telefono\" character varying(255),\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"tipoAnexo\" text,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"anexos_tipoAnexo_check_6ec6fe70\" CHECK (\"tipoAnexo\" IN ('Proveedor', 'Cliente', 'Trabajador'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"anexos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.bancos",
+    "label": "Create table \"bancos\"",
+    "summary": "Creates table \"bancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "bancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"bancos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"bancos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"bancos\"",
+        "sql": "CREATE TABLE \"public\".\"bancos\" (\n  \"Banco\" character varying(255),\n  \"IdBanco\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"bancos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"bancos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cajaEgresosRetail",
+    "label": "Create table \"cajaEgresosRetail\"",
+    "summary": "Creates table \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cajaEgresosRetail\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cajaEgresosRetail\"",
+        "sql": "CREATE TABLE \"public\".\"cajaEgresosRetail\" (\n  \"Ajuste\" character varying(255),\n  \"CategoriaCodigo\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodCentroCtoTerminado\" character varying(255),\n  \"CodDocSunat\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodMotivo\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Concepto\" text,\n  \"DocSunat\" character varying(255),\n  \"Fecha\" timestamptz(3),\n  \"IdCtaCajaBanco\" character varying(255),\n  \"IdMov\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"IdpptoFaseCategoria\" character varying(255),\n  \"MedioPago\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"Monto Total\" numeric,\n  \"NumOperacion\" character varying(255),\n  \"TipoAnexo\" character varying(255),\n  \"TipoCosto\" character varying(255),\n  \"TotalPagoDocumentos\" numeric,\n  \"TotalSinDocumento\" numeric,\n  \"VoucherDeposito\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cajaEgresosRetail\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cajaIngresos",
+    "label": "Create table \"cajaIngresos\"",
+    "summary": "Creates table \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cajaIngresos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cajaIngresos\"",
+        "sql": "CREATE TABLE \"public\".\"cajaIngresos\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodMotivo\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Concepto\" text,\n  \"Fecha\" timestamptz(3),\n  \"IdCtaCajaBanco\" character varying(255),\n  \"IdMov\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"MedioPago\" character varying(255),\n  \"Monto Total\" numeric,\n  \"NumOperacion\" character varying(255),\n  \"TipoAnexo\" character varying(255),\n  \"TotalPagoDocumentos\" numeric,\n  \"TotalSinDocumento\" numeric,\n  \"VoucherDeposito\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cajaIngresos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cajaIngresos_DocVenta",
+    "label": "Create table \"cajaIngresos_DocVenta\"",
+    "summary": "Creates table \"cajaIngresos_DocVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cajaIngresos_DocVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cajaIngresos_DocVenta\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_DocVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cajaIngresos_DocVenta\"",
+        "sql": "CREATE TABLE \"public\".\"cajaIngresos_DocVenta\" (\n  \"CodDocSunat\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"IdDocVenta\" character varying(255),\n  \"IdMov\" character varying(255),\n  \"IdMovDocVenta\" character varying(255),\n  \"MontoPagado\" numeric,\n  \"NumDocumento\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cajaIngresos_DocVenta\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_DocVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cajaMotivos",
+    "label": "Create table \"cajaMotivos\"",
+    "summary": "Creates table \"cajaMotivos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cajaMotivos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cajaMotivos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaMotivos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cajaMotivos\"",
+        "sql": "CREATE TABLE \"public\".\"cajaMotivos\" (\n  \"CodMotivo\" character varying(255),\n  \"Comportamiento\" character varying(255),\n  \"Motivo\" character varying(255),\n  \"Resultado\" character varying(255),\n  \"TipoMotivo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cajaMotivos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaMotivos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.categoria",
+    "label": "Create table \"categoria\"",
+    "summary": "Creates table \"categoria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"categoria\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categoria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"categoria\"",
+        "sql": "CREATE TABLE \"public\".\"categoria\" (\n  \"codigo\" text NOT NULL,\n  \"descripcion\" text,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_tipo_categoria\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"categoria\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categoria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.categorias",
+    "label": "Create table \"categorias\"",
+    "summary": "Creates table \"categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"categorias\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"categorias\"",
+        "sql": "CREATE TABLE \"public\".\"categorias\" (\n  \"CategoriaCodigo\" character varying(255),\n  \"Descripcion\" character varying(255),\n  \"Estado\" character varying(50),\n  \"TIPOCATE\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"categorias\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contrataciones",
+    "label": "Create table \"contrataciones\"",
+    "summary": "Creates table \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contrataciones\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contrataciones\"",
+        "sql": "CREATE TABLE \"public\".\"contrataciones\" (\n  \"Categoria\" character varying(255),\n  \"CategoriaCodigo\" character varying(255),\n  \"CentroCosto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodCliente\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodProveedor\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"Concepto\" text,\n  \"ContratoPDF\" character varying(255),\n  \"DsctoFacturacion\" numeric,\n  \"DsctoIntervencion\" numeric,\n  \"DsctoPersonalCasa\" numeric,\n  \"DsctoPostVenta\" numeric,\n  \"EstadoObra\" character varying(50),\n  \"IdPeriodo\" character varying(255),\n  \"LiquidacionPDF\" character varying(255),\n  \"MaterialesManual\" numeric,\n  \"Numero\" character varying(255),\n  \"PptoMetaTotal\" numeric,\n  \"PresupuestoFile\" character varying(255),\n  \"PresupuestoIGV\" numeric,\n  \"PresupuestoMonto\" numeric,\n  \"PresupuestoTotal\" numeric,\n  \"Proveedor\" character varying(255),\n  \"TIPOCATE\" character varying(255),\n  \"TipoContratacion\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contrataciones\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contrataciones_PPTOMeta",
+    "label": "Create table \"contrataciones_PPTOMeta\"",
+    "summary": "Creates table \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contrataciones_PPTOMeta\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contrataciones_PPTOMeta\"",
+        "sql": "CREATE TABLE \"public\".\"contrataciones_PPTOMeta\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodProveedor\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"Codcontratacionpptometa\" character varying(255),\n  \"Concepto\" text,\n  \"Fecha\" timestamptz(3),\n  \"File\" character varying(255),\n  \"Monto\" numeric,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contrataciones_PPTOMeta\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contrataciones_PostVenta",
+    "label": "Create table \"contrataciones_PostVenta\"",
+    "summary": "Creates table \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contrataciones_PostVenta\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PostVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contrataciones_PostVenta\"",
+        "sql": "CREATE TABLE \"public\".\"contrataciones_PostVenta\" (\n  \"CentroCosto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodProveedor\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"CodcontratacionPostVenta\" character varying(255),\n  \"Concepto\" text,\n  \"Fecha\" timestamptz(3),\n  \"File\" character varying(255),\n  \"Monto\" numeric,\n  \"Proveedor\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contrataciones_PostVenta\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PostVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cuentasCajaBancos",
+    "label": "Create table \"cuentasCajaBancos\"",
+    "summary": "Creates table \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cuentasCajaBancos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuentasCajaBancos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cuentasCajaBancos\"",
+        "sql": "CREATE TABLE \"public\".\"cuentasCajaBancos\" (\n  \"CCICuenta\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"Descripcion\" character varying(255),\n  \"FechaSaldoInicial\" timestamptz(3),\n  \"IdBanco\" character varying(255),\n  \"IdCtaCajaBanco\" character varying(255),\n  \"IdMoneda\" character varying(255),\n  \"NroCuenta\" character varying(255),\n  \"SaldoInicial\" numeric,\n  \"Tipo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cuentasCajaBancos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuentasCajaBancos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.docCompra",
+    "label": "Create table \"docCompra\"",
+    "summary": "Creates table \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"docCompra\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"docCompra\"",
+        "sql": "CREATE TABLE \"public\".\"docCompra\" (\n  \"Ajuste\" character varying(255),\n  \"CategoriaCodigo\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodDocSunat\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"CodigoAnexoDscto\" character varying(255),\n  \"Comentarios\" text,\n  \"FechaCrecion\" timestamptz(3),\n  \"FechaEmision\" timestamptz(3),\n  \"FechaVencimiento\" timestamptz(3),\n  \"FormaPago\" character varying(255),\n  \"IGV\" numeric,\n  \"IdDocCompra\" character varying(255),\n  \"IdOC\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdUsuario\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"IdpptoFaseCategoria\" character varying(255),\n  \"Mes\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"Monto\" numeric,\n  \"NumDocumento\" character varying(255),\n  \"PDF_Documento\" character varying(255),\n  \"Periodo\" character varying(255),\n  \"TC\" numeric,\n  \"TipoCosto\" character varying(255),\n  \"TipoOC\" character varying(255),\n  \"Total\" numeric,\n  \"Usuario\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"docCompra\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.docCompraDetalle",
+    "label": "Create table \"docCompraDetalle\"",
+    "summary": "Creates table \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"docCompraDetalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"docCompraDetalle\"",
+        "sql": "CREATE TABLE \"public\".\"docCompraDetalle\" (\n  \"Cantidad\" numeric,\n  \"CategoriaCodigo\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"CodigoAnexoDscto\" character varying(255),\n  \"IdDocCompra\" character varying(255),\n  \"IdDocCompraDetalle\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"Precio\" numeric,\n  \"ProductoCodigo\" character varying(255),\n  \"TipoProducto\" text,\n  \"id\" SERIAL NOT NULL,\n  \"monto\" numeric,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"docCompraDetalle_TipoProducto_check_2fa7d18d\" CHECK (\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"docCompraDetalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.docCompra_AplicacionAnticipo",
+    "label": "Create table \"docCompra_AplicacionAnticipo\"",
+    "summary": "Creates table \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"docCompra_AplicacionAnticipo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_AplicacionAnticipo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"docCompra_AplicacionAnticipo\"",
+        "sql": "CREATE TABLE \"public\".\"docCompra_AplicacionAnticipo\" (\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"IdDocCompra\" character varying(255),\n  \"IdDocCompraAplicacion\" character varying(255),\n  \"IdOC\" character varying(255),\n  \"MontoPagado\" numeric,\n  \"TipoOC\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"docCompra_AplicacionAnticipo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_AplicacionAnticipo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.docVenta",
+    "label": "Create table \"docVenta\"",
+    "summary": "Creates table \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"docVenta\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"docVenta\"",
+        "sql": "CREATE TABLE \"public\".\"docVenta\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodDocSunat\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Comentarios\" text,\n  \"FechaCrecion\" timestamptz(3),\n  \"FechaEmision\" timestamptz(3),\n  \"FechaVencimiento\" timestamptz(3),\n  \"FormaPago\" character varying(255),\n  \"IGV\" numeric,\n  \"IdDocVenta\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"Mes\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"Monto\" numeric,\n  \"NumDocumento\" character varying(255),\n  \"PDF_Documento\" character varying(255),\n  \"Periodo\" character varying(255),\n  \"TipoCosto\" character varying(255),\n  \"Total\" numeric,\n  \"Usuario\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"docVenta\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.docVentaDetalle",
+    "label": "Create table \"docVentaDetalle\"",
+    "summary": "Creates table \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"docVentaDetalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"docVentaDetalle\"",
+        "sql": "CREATE TABLE \"public\".\"docVentaDetalle\" (\n  \"Cantidad\" numeric,\n  \"CategoriaCodigo\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"IdDocVenta\" character varying(255),\n  \"IdDocVentaDetalle\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"Precio\" numeric,\n  \"ProductoCodigo\" character varying(255),\n  \"TipoProducto\" text,\n  \"id\" SERIAL NOT NULL,\n  \"monto\" numeric,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"docVentaDetalle_TipoProducto_check_2fa7d18d\" CHECK (\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"docVentaDetalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.egresos_AnticiposOC",
+    "label": "Create table \"egresos_AnticiposOC\"",
+    "summary": "Creates table \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"egresos_AnticiposOC\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"egresos_AnticiposOC\"",
+        "sql": "CREATE TABLE \"public\".\"egresos_AnticiposOC\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"FechaPago\" timestamptz(3),\n  \"IdMov\" character varying(255),\n  \"IdMovOC\" character varying(255),\n  \"IdOC\" character varying(255),\n  \"MontoPagado\" numeric,\n  \"NumeroOC\" character varying(255),\n  \"NumeroOperacion\" character varying(255),\n  \"TipoOC\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"egresos_AnticiposOC\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.egresos_DocCompra",
+    "label": "Create table \"egresos_DocCompra\"",
+    "summary": "Creates table \"egresos_DocCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "egresos_DocCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"egresos_DocCompra\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_DocCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"egresos_DocCompra\"",
+        "sql": "CREATE TABLE \"public\".\"egresos_DocCompra\" (\n  \"CodDocSunat\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"IdDocCompra\" character varying(255),\n  \"IdMov\" character varying(255),\n  \"IdMovDocCompra\" character varying(255),\n  \"IdOC\" character varying(255),\n  \"Monto Pagado\" numeric,\n  \"NumDocumento\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"egresos_DocCompra\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_DocCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.egresos_Otros",
+    "label": "Create table \"egresos_Otros\"",
+    "summary": "Creates table \"egresos_Otros\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "egresos_Otros"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"egresos_Otros\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_Otros\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"egresos_Otros\"",
+        "sql": "CREATE TABLE \"public\".\"egresos_Otros\" (\n  \"CategoriaCodigo\" character varying(255),\n  \"CodMotivo\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Fecha\" timestamptz(3),\n  \"IdMov\" character varying(255),\n  \"IdMovOtros\" character varying(255),\n  \"MedioPago\" character varying(255),\n  \"Monto Total\" numeric,\n  \"TipoAnexo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"egresos_Otros\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_Otros\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.empresas",
+    "label": "Create table \"empresas\"",
+    "summary": "Creates table \"empresas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "empresas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"empresas\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"empresas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"empresas\"",
+        "sql": "CREATE TABLE \"public\".\"empresas\" (\n  \"CodEmpresa\" character varying(255),\n  \"CorreoCompras\" character varying(255),\n  \"DireccionEntrega\" character varying(255),\n  \"DomicilioFiscal\" character varying(255),\n  \"RUC\" character varying(255),\n  \"RazonSocial\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"empresas\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"empresas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.incidencia",
+    "label": "Create table \"incidencia\"",
+    "summary": "Creates table \"incidencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "incidencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"incidencia\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"incidencia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"incidencia\"",
+        "sql": "CREATE TABLE \"public\".\"incidencia\" (\n  \"accionPrevia\" text,\n  \"accionTomada\" text,\n  \"aprobacion\" character varying(255),\n  \"cargoRegistrador\" character varying(255),\n  \"cuadra\" character varying(255),\n  \"direccionExacta\" character varying(255),\n  \"docRegistrador\" character varying(255),\n  \"docSolicitante\" character varying(255),\n  \"documentoGestrad\" character varying(255),\n  \"domicilioSolicitante\" character varying(255),\n  \"estado\" character varying(50) DEFAULT 'PENDIENTE' NOT NULL,\n  \"fechaCreacion\" timestamptz DEFAULT (now()) NOT NULL,\n  \"fechaFin\" timestamptz,\n  \"fechaIncidencia\" timestamptz(3),\n  \"fechaInicio\" timestamptz DEFAULT (now()) NOT NULL,\n  \"gerenciaAsignada\" character varying(255),\n  \"horaIncidencia\" character varying(10),\n  \"id\" SERIAL NOT NULL,\n  \"incidencia\" text,\n  \"latitud\" character varying(50),\n  \"longitud\" character varying(50),\n  \"origenIncidencia\" character varying(255),\n  \"prioridadCategoria\" character varying(255),\n  \"promotor\" character varying(255),\n  \"representante\" character varying(255),\n  \"sectorVecinal\" character varying(255),\n  \"solicitante\" character varying(255),\n  \"telefonoSolicitante\" character varying(255),\n  \"tipificacion\" character varying(255),\n  \"urbanizacion\" character varying(255),\n  \"viaOrigen\" character varying(255),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"incidencia\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"incidencia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.menu",
+    "label": "Create table \"menu\"",
+    "summary": "Creates table \"menu\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "menu"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"menu\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"menu\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"menu\"",
+        "sql": "CREATE TABLE \"public\".\"menu\" (\n  \"Imagen\" character varying(255),\n  \"MenuId\" character varying(255) NOT NULL,\n  \"MenuNombre\" character varying(255),\n  PRIMARY KEY (\"MenuId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"menu\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"menu\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.monedas",
+    "label": "Create table \"monedas\"",
+    "summary": "Creates table \"monedas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "monedas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"monedas\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"monedas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"monedas\"",
+        "sql": "CREATE TABLE \"public\".\"monedas\" (\n  \"Moneda\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"Simbolo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"monedas\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"monedas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ordenCompra",
+    "label": "Create table \"ordenCompra\"",
+    "summary": "Creates table \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ordenCompra\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ordenCompra\"",
+        "sql": "CREATE TABLE \"public\".\"ordenCompra\" (\n  \"CategoriaCodigo\" character varying(255),\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Comentarios\" text,\n  \"Cotizacion\" character varying(255),\n  \"DsctoCompras\" numeric,\n  \"DsctoIntervencion\" numeric,\n  \"DsctoOtros\" numeric,\n  \"FechaCreacion\" timestamptz(3),\n  \"FechaEmision\" timestamptz(3),\n  \"FormaPago\" character varying(255),\n  \"HoraCreacion\" character varying(10),\n  \"IGV\" numeric,\n  \"IdOC\" character varying(255),\n  \"Mes\" character varying(255),\n  \"MonedaId\" character varying(255),\n  \"MonedaSimbolo\" character varying(255),\n  \"Monto\" numeric,\n  \"NumeroOC\" character varying(255),\n  \"OCPDF\" character varying(255),\n  \"Periodo\" character varying(255),\n  \"Renta4ta\" numeric,\n  \"TipoCosto\" character varying(255),\n  \"TipoOC\" character varying(255),\n  \"Total\" numeric,\n  \"Usuario\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ordenCompra\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ordenCompraDetalle",
+    "label": "Create table \"ordenCompraDetalle\"",
+    "summary": "Creates table \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ordenCompraDetalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ordenCompraDetalle\"",
+        "sql": "CREATE TABLE \"public\".\"ordenCompraDetalle\" (\n  \"Cantidad\" numeric,\n  \"IdOC\" character varying(255),\n  \"IdOCDetalle\" character varying(255),\n  \"Precio\" numeric,\n  \"ProductoCodigo\" character varying(255),\n  \"TipoProducto\" text,\n  \"id\" SERIAL NOT NULL,\n  \"monto\" numeric,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ordenCompraDetalle_TipoProducto_check_2fa7d18d\" CHECK (\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ordenCompraDetalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.periodos",
+    "label": "Create table \"periodos\"",
+    "summary": "Creates table \"periodos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "periodos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"periodos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"periodos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"periodos\"",
+        "sql": "CREATE TABLE \"public\".\"periodos\" (\n  \"IdPeriodo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"periodos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"periodos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.planillaPago",
+    "label": "Create table \"planillaPago\"",
+    "summary": "Creates table \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"planillaPago\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"planillaPago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"planillaPago\"",
+        "sql": "CREATE TABLE \"public\".\"planillaPago\" (\n  \"Categoria\" character varying(255),\n  \"CategoriaCodigo\" character varying(255),\n  \"CentroCosto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodCliente\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodProveedor\" character varying(255),\n  \"CodSemana\" character varying(255),\n  \"Codcontratacion\" character varying(255),\n  \"CodcontratacionDetalle\" character varying(255),\n  \"DsctoCompras\" numeric,\n  \"DsctoIntervencion\" numeric,\n  \"DsctoPostVenta\" numeric,\n  \"Estado\" character varying(50),\n  \"FechaFinal\" timestamptz(3),\n  \"FechaInicio\" timestamptz(3),\n  \"IdPeriodo\" character varying(255),\n  \"MontoSemana\" numeric,\n  \"Numero\" character varying(255),\n  \"PlanillaIGV\" numeric,\n  \"PlanillaMonto\" numeric,\n  \"PlanillaTotal\" numeric,\n  \"PresupuestoSaldoIGV\" numeric,\n  \"PresupuestoSaldoMonto\" numeric,\n  \"PresupuestoSaldoTotal\" numeric,\n  \"Proveedor\" character varying(255),\n  \"Semana\" character varying(255),\n  \"TipoContratacion\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"planillaPago\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"planillaPago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_DetalleFases",
+    "label": "Create table \"ppto_DetalleFases\"",
+    "summary": "Creates table \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_DetalleFases\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_DetalleFases\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_DetalleFases\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CostoDirecto\" numeric,\n  \"FechaCreacion\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdPresupuestoDetalle\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"Usuario\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_DetalleFases\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_DetalleFasesCate",
+    "label": "Create table \"ppto_DetalleFasesCate\"",
+    "summary": "Creates table \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_DetalleFasesCate\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_DetalleFasesCate\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_DetalleFasesCate\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CostoDirecto\" numeric,\n  \"FechaCreacion\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdPresupuestoDetalle\" character varying(255),\n  \"IdPresupuestoDetalleCategoria\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"IdpptoFaseCategoria\" character varying(255),\n  \"Usuario\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_DetalleFasesCate\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Fases",
+    "label": "Create table \"ppto_Fases\"",
+    "summary": "Creates table \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Fases\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Fases\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Fases\" (\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"FaseProyecto\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Fases\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_FasesCategorias",
+    "label": "Create table \"ppto_FasesCategorias\"",
+    "summary": "Creates table \"ppto_FasesCategorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_FasesCategorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_FasesCategorias\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_FasesCategorias\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_FasesCategorias\" (\n  \"Descripcion\" character varying(255),\n  \"IdpptoFase\" character varying(255),\n  \"IdpptoFaseCategoria\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_FasesCategorias\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Principal",
+    "label": "Create table \"ppto_Principal\"",
+    "summary": "Creates table \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Principal\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Principal\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Principal\" (\n  \"CodCentroCto\" character varying(255),\n  \"CodCentroCtoPrincipal\" character varying(255),\n  \"CodEmpresa\" character varying(255),\n  \"CodigoAnexo\" character varying(255),\n  \"Comentarios\" text,\n  \"Concepto\" text,\n  \"CostoDirecto\" numeric,\n  \"DsctoComercial\" numeric,\n  \"Estado\" character varying(50),\n  \"FILE_Presupuesto\" character varying(255),\n  \"FechaCreacion\" character varying(255),\n  \"FechaEntrega\" character varying(255),\n  \"FechaRequerimiento\" character varying(255),\n  \"File\" character varying(255),\n  \"GGPorcentaje\" numeric,\n  \"GastosGenerales\" numeric,\n  \"IGV\" numeric,\n  \"IdPeriodo\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdUsuario\" character varying(255),\n  \"Proyecto\" character varying(255),\n  \"SubTotalSinIGV\" numeric,\n  \"TipoPpto\" character varying(255),\n  \"Total\" numeric,\n  \"Usuario\" character varying(255),\n  \"UtiliPorcentaje\" numeric,\n  \"Utilidad\" numeric,\n  \"Version\" character varying(255),\n  \"Viaticos\" numeric,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Principal\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Principal_Historial",
+    "label": "Create table \"ppto_Principal_Historial\"",
+    "summary": "Creates table \"ppto_Principal_Historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Principal_Historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Principal_Historial\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_Historial\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Principal_Historial\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Principal_Historial\" (\n  \"FileCorreo\" character varying(255),\n  \"FilePpto\" character varying(255),\n  \"IdPresupuesto\" character varying(255),\n  \"IdPresupuestoVersion\" character varying(255),\n  \"NumVersion\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Principal_Historial\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_Historial\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.producto",
+    "label": "Create table \"producto\"",
+    "summary": "Creates table \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"producto\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"producto\"",
+        "sql": "CREATE TABLE \"public\".\"producto\" (\n  \"codigo\" text NOT NULL,\n  \"comentarios\" text,\n  \"descripcion\" text NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_categoria\" int4 NOT NULL,\n  \"id_unidad_medida\" int4 NOT NULL,\n  \"imagen_url\" text,\n  \"stock\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"tipo_producto\" text DEFAULT 'PRODUCTO' NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"producto_tipo_producto_check_45026309\" CHECK (\"tipo_producto\" IN ('PRODUCTO', 'SERVICIO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"producto\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.productos",
+    "label": "Create table \"productos\"",
+    "summary": "Creates table \"productos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "productos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"productos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"productos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"productos\"",
+        "sql": "CREATE TABLE \"public\".\"productos\" (\n  \"CategoriaCodigo\" character varying(255),\n  \"Comentarios\" text,\n  \"Descripcion\" text,\n  \"Imagen\" character varying(255),\n  \"ProductoCodigo\" character varying(255),\n  \"TipoProducto\" text,\n  \"UniMedCodigo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"productos_TipoProducto_check_2fa7d18d\" CHECK (\"TipoProducto\" IN ('PRODUCTO', 'SERVICIO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"productos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"productos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.semana",
+    "label": "Create table \"semana\"",
+    "summary": "Creates table \"semana\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"semana\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"semana\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"semana\"",
+        "sql": "CREATE TABLE \"public\".\"semana\" (\n  \"CodSemana\" character varying(255),\n  \"FechaFinal\" timestamptz(3),\n  \"FechaInicio\" timestamptz(3),\n  \"IdPeriodo\" character varying(255),\n  \"Semana\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"semana\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"semana\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.subMenu",
+    "label": "Create table \"subMenu\"",
+    "summary": "Creates table \"subMenu\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "subMenu"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"subMenu\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"subMenu\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"subMenu\"",
+        "sql": "CREATE TABLE \"public\".\"subMenu\" (\n  \"Imagen\" character varying(255),\n  \"MenuId\" character varying(255),\n  \"SubMenuNombre\" character varying(255),\n  \"SubMenuVista\" character varying(255),\n  \"TipoSubMenu\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"subMenu\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"subMenu\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipoDocumentoSunat",
+    "label": "Create table \"tipoDocumentoSunat\"",
+    "summary": "Creates table \"tipoDocumentoSunat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipoDocumentoSunat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipoDocumentoSunat\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipoDocumentoSunat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipoDocumentoSunat\"",
+        "sql": "CREATE TABLE \"public\".\"tipoDocumentoSunat\" (\n  \"CodDocSunat\" character varying(255),\n  \"DocumentoSunat\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipoDocumentoSunat\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipoDocumentoSunat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipo_categoria",
+    "label": "Create table \"tipo_categoria\"",
+    "summary": "Creates table \"tipo_categoria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipo_categoria\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_categoria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipo_categoria\"",
+        "sql": "CREATE TABLE \"public\".\"tipo_categoria\" (\n  \"codigo\" text NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipo_categoria\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_categoria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.unidadMedida",
+    "label": "Create table \"unidadMedida\"",
+    "summary": "Creates table \"unidadMedida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "unidadMedida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"unidadMedida\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidadMedida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"unidadMedida\"",
+        "sql": "CREATE TABLE \"public\".\"unidadMedida\" (\n  \"Descripcion\" character varying(255),\n  \"Simbolo\" character varying(255),\n  \"UniMedCodigo\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"unidadMedida\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidadMedida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.unidad_medida",
+    "label": "Create table \"unidad_medida\"",
+    "summary": "Creates table \"unidad_medida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "unidad_medida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"unidad_medida\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"unidad_medida\"",
+        "sql": "CREATE TABLE \"public\".\"unidad_medida\" (\n  \"codigo\" text NOT NULL,\n  \"descripcion\" text NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"simbolo\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"unidad_medida\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.unidad_medida_equivalencia",
+    "label": "Create table \"unidad_medida_equivalencia\"",
+    "summary": "Creates table \"unidad_medida_equivalencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"unidad_medida_equivalencia\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"unidad_medida_equivalencia\"",
+        "sql": "CREATE TABLE \"public\".\"unidad_medida_equivalencia\" (\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"factor_conversion\" numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_uni_med_destino\" int4 NOT NULL,\n  \"id_uni_med_origen\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"unidad_medida_equivalencia\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.usuarios",
+    "label": "Create table \"usuarios\"",
+    "summary": "Creates table \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"usuarios\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"usuarios\"",
+        "sql": "CREATE TABLE \"public\".\"usuarios\" (\n  \"Clave\" character varying(255),\n  \"IdUsuario\" character varying(255) NOT NULL,\n  \"Nombres\" character varying(255),\n  \"Rol\" character varying(255),\n  \"Usuario\" character varying(255),\n  PRIMARY KEY (\"IdUsuario\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"usuarios\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.usuariosMenus",
+    "label": "Create table \"usuariosMenus\"",
+    "summary": "Creates table \"usuariosMenus\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuariosMenus"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"usuariosMenus\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuariosMenus\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"usuariosMenus\"",
+        "sql": "CREATE TABLE \"public\".\"usuariosMenus\" (\n  \"IdUsuario\" character varying(255),\n  \"IdUsuarioMenu\" character varying(255),\n  \"MenuId\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"usuariosMenus\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuariosMenus\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.usuariosPermisos",
+    "label": "Create table \"usuariosPermisos\"",
+    "summary": "Creates table \"usuariosPermisos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuariosPermisos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"usuariosPermisos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuariosPermisos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"usuariosPermisos\"",
+        "sql": "CREATE TABLE \"public\".\"usuariosPermisos\" (\n  \"IdUsuario\" character varying(255),\n  \"IdUsuarioPermiso\" character varying(255) NOT NULL,\n  \"MenuId\" character varying(255),\n  \"SubMenuId\" character varying(255),\n  PRIMARY KEY (\"IdUsuarioPermiso\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"usuariosPermisos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuariosPermisos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.CentroCostos.CentroCostos_CodCentroCto_key",
+    "label": "Add unique constraint on \"CentroCostos\" (CodCentroCto)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "CentroCostos_CodCentroCto_key",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"CentroCostos_CodCentroCto_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_CodCentroCto_key",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"CentroCostos_CodCentroCto_key\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD CONSTRAINT \"CentroCostos_CodCentroCto_key\" UNIQUE (\"CodCentroCto\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"CentroCostos_CodCentroCto_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_CodCentroCto_key",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.categoria.categoria_codigo_key",
+    "label": "Add unique constraint on \"categoria\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "categoria_codigo_key",
+        "table": "categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"categoria_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "categoria_codigo_key",
+          "public",
+          "\"public\".\"categoria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"categoria_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"categoria\" ADD CONSTRAINT \"categoria_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"categoria_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "categoria_codigo_key",
+          "public",
+          "\"public\".\"categoria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_DetalleFases.ppto_DetalleFases_IdPresupuestoDetalle_key",
+    "label": "Add unique constraint on \"ppto_DetalleFases\" (IdPresupuestoDetalle)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_DetalleFases_IdPresupuestoDetalle_key",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_DetalleFases_IdPresupuestoDetalle_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdPresupuestoDetalle_key",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_DetalleFases_IdPresupuestoDetalle_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" ADD CONSTRAINT \"ppto_DetalleFases_IdPresupuestoDetalle_key\" UNIQUE (\"IdPresupuestoDetalle\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_DetalleFases_IdPresupuestoDetalle_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdPresupuestoDetalle_key",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_DetalleFasesCate.ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key",
+    "label": "Add unique constraint on \"ppto_DetalleFasesCate\" (IdPresupuestoDetalleCategoria)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" ADD CONSTRAINT \"ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key\" UNIQUE (\"IdPresupuestoDetalleCategoria\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuestoDetalleCategoria_key",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_Fases.ppto_Fases_IdpptoFase_key",
+    "label": "Add unique constraint on \"ppto_Fases\" (IdpptoFase)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_Fases_IdpptoFase_key",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_Fases_IdpptoFase_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Fases_IdpptoFase_key",
+          "public",
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_Fases_IdpptoFase_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Fases\" ADD CONSTRAINT \"ppto_Fases_IdpptoFase_key\" UNIQUE (\"IdpptoFase\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_Fases_IdpptoFase_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Fases_IdpptoFase_key",
+          "public",
+          "\"public\".\"ppto_Fases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_FasesCategorias.ppto_FasesCategorias_IdpptoFaseCategoria_key",
+    "label": "Add unique constraint on \"ppto_FasesCategorias\" (IdpptoFaseCategoria)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_FasesCategorias_IdpptoFaseCategoria_key",
+        "table": "ppto_FasesCategorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_FasesCategorias_IdpptoFaseCategoria_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_FasesCategorias_IdpptoFaseCategoria_key",
+          "public",
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_FasesCategorias_IdpptoFaseCategoria_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_FasesCategorias\" ADD CONSTRAINT \"ppto_FasesCategorias_IdpptoFaseCategoria_key\" UNIQUE (\"IdpptoFaseCategoria\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_FasesCategorias_IdpptoFaseCategoria_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_FasesCategorias_IdpptoFaseCategoria_key",
+          "public",
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_Principal.ppto_Principal_IdPresupuesto_key",
+    "label": "Add unique constraint on \"ppto_Principal\" (IdPresupuesto)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_Principal_IdPresupuesto_key",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_Principal_IdPresupuesto_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_IdPresupuesto_key",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_Principal_IdPresupuesto_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD CONSTRAINT \"ppto_Principal_IdPresupuesto_key\" UNIQUE (\"IdPresupuesto\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_Principal_IdPresupuesto_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_IdPresupuesto_key",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.producto.producto_codigo_key",
+    "label": "Add unique constraint on \"producto\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "producto_codigo_key",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_codigo_key",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"producto_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD CONSTRAINT \"producto_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_codigo_key",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.tipo_categoria.tipo_categoria_codigo_key",
+    "label": "Add unique constraint on \"tipo_categoria\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "tipo_categoria_codigo_key",
+        "table": "tipo_categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"tipo_categoria_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_categoria_codigo_key",
+          "public",
+          "\"public\".\"tipo_categoria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"tipo_categoria_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_categoria\" ADD CONSTRAINT \"tipo_categoria_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"tipo_categoria_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_categoria_codigo_key",
+          "public",
+          "\"public\".\"tipo_categoria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.unidad_medida.unidad_medida_codigo_key",
+    "label": "Add unique constraint on \"unidad_medida\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "unidad_medida_codigo_key",
+        "table": "unidad_medida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"unidad_medida_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_codigo_key",
+          "public",
+          "\"public\".\"unidad_medida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"unidad_medida_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"unidad_medida\" ADD CONSTRAINT \"unidad_medida_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"unidad_medida_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_codigo_key",
+          "public",
+          "\"public\".\"unidad_medida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.unidad_medida_equivalencia.unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key",
+    "label": "Add unique constraint on \"unidad_medida_equivalencia\" (id_uni_med_origen, id_uni_med_destino)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key",
+        "table": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key\"",
+        "sql": "ALTER TABLE \"public\".\"unidad_medida_equivalencia\" ADD CONSTRAINT \"unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key\" UNIQUE (\"id_uni_med_origen\", \"id_uni_med_destino\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_origen_id_uni_med_destino_key",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.anexos.anexos_AnexoEspecialidadId_idx_343e8198",
+    "label": "Create index \"anexos_AnexoEspecialidadId_idx_343e8198\" on \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "anexos_AnexoEspecialidadId_idx_343e8198",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"anexos_AnexoEspecialidadId_idx_343e8198\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos_AnexoEspecialidadId_idx_343e8198\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"anexos_AnexoEspecialidadId_idx_343e8198\"",
+        "sql": "CREATE INDEX \"anexos_AnexoEspecialidadId_idx_343e8198\" ON \"public\".\"anexos\" (\"AnexoEspecialidadId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"anexos_AnexoEspecialidadId_idx_343e8198\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos_AnexoEspecialidadId_idx_343e8198\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.anexos.anexos_AnexoTipoDocIdeId_idx_85b59811",
+    "label": "Create index \"anexos_AnexoTipoDocIdeId_idx_85b59811\" on \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "anexos_AnexoTipoDocIdeId_idx_85b59811",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"anexos_AnexoTipoDocIdeId_idx_85b59811\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos_AnexoTipoDocIdeId_idx_85b59811\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"anexos_AnexoTipoDocIdeId_idx_85b59811\"",
+        "sql": "CREATE INDEX \"anexos_AnexoTipoDocIdeId_idx_85b59811\" ON \"public\".\"anexos\" (\"AnexoTipoDocIdeId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"anexos_AnexoTipoDocIdeId_idx_85b59811\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"anexos_AnexoTipoDocIdeId_idx_85b59811\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.categoria.categoria_id_tipo_categoria_idx_ac61ceef",
+    "label": "Create index \"categoria_id_tipo_categoria_idx_ac61ceef\" on \"categoria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "categoria_id_tipo_categoria_idx_ac61ceef",
+        "table": "categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"categoria_id_tipo_categoria_idx_ac61ceef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categoria_id_tipo_categoria_idx_ac61ceef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"categoria_id_tipo_categoria_idx_ac61ceef\"",
+        "sql": "CREATE INDEX \"categoria_id_tipo_categoria_idx_ac61ceef\" ON \"public\".\"categoria\" (\"id_tipo_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"categoria_id_tipo_categoria_idx_ac61ceef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categoria_id_tipo_categoria_idx_ac61ceef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto.producto_id_categoria_idx_dc879264",
+    "label": "Create index \"producto_id_categoria_idx_dc879264\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_id_categoria_idx_dc879264",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"producto_id_categoria_idx_dc879264\" ON \"public\".\"producto\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto.producto_id_unidad_medida_idx_e475ad90",
+    "label": "Create index \"producto_id_unidad_medida_idx_e475ad90\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_id_unidad_medida_idx_e475ad90",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_id_unidad_medida_idx_e475ad90\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_id_unidad_medida_idx_e475ad90\"",
+        "sql": "CREATE INDEX \"producto_id_unidad_medida_idx_e475ad90\" ON \"public\".\"producto\" (\"id_unidad_medida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_id_unidad_medida_idx_e475ad90\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.unidad_medida_equivalencia.unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc",
+    "label": "Create index \"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\" on \"unidad_medida_equivalencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc",
+        "table": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\"",
+        "sql": "CREATE INDEX \"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\" ON \"public\".\"unidad_medida_equivalencia\" (\"id_uni_med_destino\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia_id_uni_med_destino_idx_2e03e6bc\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.unidad_medida_equivalencia.unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333",
+    "label": "Create index \"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\" on \"unidad_medida_equivalencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333",
+        "table": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\"",
+        "sql": "CREATE INDEX \"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\" ON \"public\".\"unidad_medida_equivalencia\" (\"id_uni_med_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"unidad_medida_equivalencia_id_uni_med_origen_idx_78ff0333\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.anexos.anexos_AnexoEspecialidadId_fkey",
+    "label": "Add foreign key \"anexos_AnexoEspecialidadId_fkey\" on \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "anexos_AnexoEspecialidadId_fkey",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"anexos_AnexoEspecialidadId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "anexos_AnexoEspecialidadId_fkey",
+          "public",
+          "\"public\".\"anexos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"anexos_AnexoEspecialidadId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"anexos\"\nADD CONSTRAINT \"anexos_AnexoEspecialidadId_fkey\"\nFOREIGN KEY (\"AnexoEspecialidadId\")\nREFERENCES \"public\".\"anexo_Especialidad\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"anexos_AnexoEspecialidadId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "anexos_AnexoEspecialidadId_fkey",
+          "public",
+          "\"public\".\"anexos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.anexos.anexos_AnexoTipoDocIdeId_fkey",
+    "label": "Add foreign key \"anexos_AnexoTipoDocIdeId_fkey\" on \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "anexos_AnexoTipoDocIdeId_fkey",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"anexos_AnexoTipoDocIdeId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "anexos_AnexoTipoDocIdeId_fkey",
+          "public",
+          "\"public\".\"anexos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"anexos_AnexoTipoDocIdeId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"anexos\"\nADD CONSTRAINT \"anexos_AnexoTipoDocIdeId_fkey\"\nFOREIGN KEY (\"AnexoTipoDocIdeId\")\nREFERENCES \"public\".\"anexo_TipoDocIDE\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"anexos_AnexoTipoDocIdeId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "anexos_AnexoTipoDocIdeId_fkey",
+          "public",
+          "\"public\".\"anexos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.categoria.categoria_id_tipo_categoria_fkey",
+    "label": "Add foreign key \"categoria_id_tipo_categoria_fkey\" on \"categoria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "categoria_id_tipo_categoria_fkey",
+        "table": "categoria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"categoria_id_tipo_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "categoria_id_tipo_categoria_fkey",
+          "public",
+          "\"public\".\"categoria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"categoria_id_tipo_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"categoria\"\nADD CONSTRAINT \"categoria_id_tipo_categoria_fkey\"\nFOREIGN KEY (\"id_tipo_categoria\")\nREFERENCES \"public\".\"tipo_categoria\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"categoria_id_tipo_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "categoria_id_tipo_categoria_fkey",
+          "public",
+          "\"public\".\"categoria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto.producto_id_categoria_fkey",
+    "label": "Add foreign key \"producto_id_categoria_fkey\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_id_categoria_fkey",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_categoria_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto\"\nADD CONSTRAINT \"producto_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_categoria_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto.producto_id_unidad_medida_fkey",
+    "label": "Add foreign key \"producto_id_unidad_medida_fkey\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_id_unidad_medida_fkey",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_id_unidad_medida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_id_unidad_medida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto\"\nADD CONSTRAINT \"producto_id_unidad_medida_fkey\"\nFOREIGN KEY (\"id_unidad_medida\")\nREFERENCES \"public\".\"unidad_medida\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_id_unidad_medida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.unidad_medida_equivalencia.unidad_medida_equivalencia_id_uni_med_origen_fkey",
+    "label": "Add foreign key \"unidad_medida_equivalencia_id_uni_med_origen_fkey\" on \"unidad_medida_equivalencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "unidad_medida_equivalencia_id_uni_med_origen_fkey",
+        "table": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"unidad_medida_equivalencia_id_uni_med_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_origen_fkey",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"unidad_medida_equivalencia_id_uni_med_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"unidad_medida_equivalencia\"\nADD CONSTRAINT \"unidad_medida_equivalencia_id_uni_med_origen_fkey\"\nFOREIGN KEY (\"id_uni_med_origen\")\nREFERENCES \"public\".\"unidad_medida\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"unidad_medida_equivalencia_id_uni_med_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_origen_fkey",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.unidad_medida_equivalencia.unidad_medida_equivalencia_id_uni_med_destino_fkey",
+    "label": "Add foreign key \"unidad_medida_equivalencia_id_uni_med_destino_fkey\" on \"unidad_medida_equivalencia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "unidad_medida_equivalencia_id_uni_med_destino_fkey",
+        "table": "unidad_medida_equivalencia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"unidad_medida_equivalencia_id_uni_med_destino_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_destino_fkey",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"unidad_medida_equivalencia_id_uni_med_destino_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"unidad_medida_equivalencia\"\nADD CONSTRAINT \"unidad_medida_equivalencia_id_uni_med_destino_fkey\"\nFOREIGN KEY (\"id_uni_med_destino\")\nREFERENCES \"public\".\"unidad_medida\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"unidad_medida_equivalencia_id_uni_med_destino_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "unidad_medida_equivalencia_id_uni_med_destino_fkey",
+          "public",
+          "\"public\".\"unidad_medida_equivalencia\""
+        ]
+      }
+    ]
+  }
+]

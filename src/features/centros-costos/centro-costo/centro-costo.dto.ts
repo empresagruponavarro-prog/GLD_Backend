@@ -3,23 +3,12 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreateCentroCostoDto {
-  @ApiProperty({ example: 'CC-2026-001', description: 'Código único del centro de costo' })
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(255)
-  CodCentroCto: string;
-
-  @ApiPropertyOptional({ example: 'E1', description: 'Código de empresa' })
+  @ApiPropertyOptional({ example: 2026, description: 'Periodo fiscal' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodEmpresa?: string;
-
-  @ApiPropertyOptional({ example: '2026', description: 'Periodo fiscal' })
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  IdPeriodo?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  periodo?: number;
 
   @ApiPropertyOptional({ example: 'CLI-001', description: 'Código del cliente' })
   @IsOptional()
@@ -27,11 +16,12 @@ export class CreateCentroCostoDto {
   @MaxLength(255)
   CodCliente?: string;
 
-  @ApiPropertyOptional({ example: 'CT1', description: 'Código del centro de costo principal' })
+  @ApiPropertyOptional({ example: 1, description: 'ID del centro de costo principal' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodCentroCtoPrincipal?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_centro_costos_principal?: number;
 
   @ApiProperty({ example: 'PROYECTO EDIFICIO MULTIFAMILIAR', description: 'Nombre del centro de costo' })
   @IsString()
@@ -144,13 +134,12 @@ export class CentroCostoResponseDto {
   @ApiPropertyOptional({ example: 1 })
   id?: number;
 
-  @ApiProperty({ example: 'CC-2026-001', description: 'Código único del centro de costos' })
-  CodCentroCto: string | null;
-
-  @ApiPropertyOptional({ example: 'CT1', description: 'Código del centro de costo principal' })
-  CodCentroCtoPrincipal: string | null;
+  @ApiPropertyOptional({ example: 1, description: 'ID del centro de costo principal' })
+  @IsOptional()
+  idCentroCostosPrincipal?: number | null;
 
   @ApiPropertyOptional({ example: 'OFICINA PRINCIPAL GLD', description: 'Nombre del centro de costo principal' })
+  @IsOptional()
   CentroCostoPrincipal?: string | null;
 
   @ApiProperty({ example: 'Proyecto Edificio GLD', description: 'Nombre o descripción del centro de costo' })
@@ -159,14 +148,14 @@ export class CentroCostoResponseDto {
   @ApiProperty({ example: 'ABIERTO', description: 'Estado operativo del centro de costos' })
   Estado: string | null;
 
-  @ApiPropertyOptional({ example: 'E1', description: 'Código de la empresa' })
-  CodEmpresa: string | null;
+  @ApiPropertyOptional({ example: 1, description: 'Identificador de la empresa' })
+  id_empresa: number | null;
 
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
   Empresa?: string | null;
 
-  @ApiPropertyOptional({ example: '2026', description: 'Periodo fiscal' })
-  IdPeriodo: string | null;
+  @ApiPropertyOptional({ example: 2026, description: 'Periodo fiscal' })
+  periodo: number | null;
 
   @ApiPropertyOptional({ example: 'CLI-001', description: 'Código del cliente' })
   CodCliente: string | null;
@@ -206,8 +195,8 @@ export class CentroCostoMetricasResponseDto {
 export type CentroCostoMetricas = CentroCostoMetricasResponseDto;
 
 export class CentroCostoResumenResponseDto {
-  @ApiProperty({ example: 'CC-2026-001', description: 'Código del centro de costos' })
-  codCentroCto: string;
+  @ApiProperty({ example: 1, description: 'ID del centro de costos' })
+  id: number;
 
   @ApiProperty({ example: 1200000, description: 'Presupuesto base calculado' })
   presupuestoBase: number;
@@ -243,8 +232,8 @@ export class CatalogosFiltrosResponseDto {
   @ApiProperty({ type: [String], description: 'Listado de empresas disponibles' })
   empresas: string[];
 
-  @ApiProperty({ type: [String], description: 'Listado de periodos fiscales disponibles' })
-  periodos: string[];
+  @ApiProperty({ type: [Number], description: 'Listado de periodos fiscales disponibles' })
+  periodos: number[];
 
   @ApiProperty({ type: [String], description: 'Listado de clientes disponibles' })
   clientes: string[];

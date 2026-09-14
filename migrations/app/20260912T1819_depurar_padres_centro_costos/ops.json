@@ -1,0 +1,37 @@
+[
+  {
+    "id": "data.CentroCostos.eliminar-filas-padre",
+    "label": "Delete parent-only rows from CentroCostos",
+    "summary": "Elimina de \"CentroCostos\" las filas referenciadas como principal (ya migradas a \"centro_costos_principal\")",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure parent rows exist and every one is backed by centro_costos_principal",
+        "sql": "SELECT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"CentroCostos\" p   WHERE p.\"CodCentroCto\" IS NOT NULL AND p.\"CodCentroCto\" <> ''     AND EXISTS (SELECT 1 FROM \"public\".\"CentroCostos\" cc WHERE cc.\"CodCentroCtoPrincipal\" = p.\"CodCentroCto\")     AND NOT EXISTS (SELECT 1 FROM \"public\".\"centro_costos_principal\" m WHERE m.centro_costo_principal = p.\"CodCentroCto\") ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "delete parent-only rows",
+        "sql": "DELETE FROM \"public\".\"CentroCostos\" p WHERE p.\"CodCentroCto\" IS NOT NULL AND p.\"CodCentroCto\" <> ''   AND EXISTS (SELECT 1 FROM \"public\".\"CentroCostos\" cc WHERE cc.\"CodCentroCtoPrincipal\" = p.\"CodCentroCto\")   AND EXISTS (SELECT 1 FROM \"public\".\"centro_costos_principal\" m WHERE m.centro_costo_principal = p.\"CodCentroCto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows referenced as principal remain",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 FROM \"public\".\"CentroCostos\" p   WHERE EXISTS (SELECT 1 FROM \"public\".\"CentroCostos\" cc WHERE cc.\"CodCentroCtoPrincipal\" = p.\"CodCentroCto\") ) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

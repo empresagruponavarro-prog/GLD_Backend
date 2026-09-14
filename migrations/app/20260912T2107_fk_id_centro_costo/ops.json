@@ -1,0 +1,1817 @@
+[
+  {
+    "id": "column.public.almacenMovimientos.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaEgresosRetail.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaIngresos.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones_PPTOMeta.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompra.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompraDetalle.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVenta.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVentaDetalle.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.egresos_AnticiposOC.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompra.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFases.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFasesCate.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.id_centro_costo",
+    "label": "Add column \"id_centro_costo\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_centro_costo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_centro_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_centro_costo\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"id_centro_costo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_centro_costo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_centro_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.fk-id-centro-costo.backfill",
+    "label": "Backfill id_centro_costo from CodCentroCto",
+    "summary": "Traduce CodCentroCto (codigo) al id de \"CentroCostos\" en las 13 tablas que lo referencian",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_centro_costo",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows still pending backfill in almacenMovimientos",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in cajaEgresosRetail",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in cajaIngresos",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in contrataciones_PPTOMeta",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in docCompra",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in docCompraDetalle",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in docVenta",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in docVentaDetalle",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in egresos_AnticiposOC",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in ordenCompra",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in ppto_DetalleFases",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in ppto_DetalleFasesCate",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ensure rows still pending backfill in ppto_Principal",
+        "sql": "SELECT true AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "copy mapped ids to almacenMovimientos",
+        "sql": "UPDATE \"public\".\"almacenMovimientos\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to cajaEgresosRetail",
+        "sql": "UPDATE \"public\".\"cajaEgresosRetail\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to cajaIngresos",
+        "sql": "UPDATE \"public\".\"cajaIngresos\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to contrataciones_PPTOMeta",
+        "sql": "UPDATE \"public\".\"contrataciones_PPTOMeta\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to docCompra",
+        "sql": "UPDATE \"public\".\"docCompra\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to docCompraDetalle",
+        "sql": "UPDATE \"public\".\"docCompraDetalle\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to docVenta",
+        "sql": "UPDATE \"public\".\"docVenta\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to docVentaDetalle",
+        "sql": "UPDATE \"public\".\"docVentaDetalle\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to egresos_AnticiposOC",
+        "sql": "UPDATE \"public\".\"egresos_AnticiposOC\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to ordenCompra",
+        "sql": "UPDATE \"public\".\"ordenCompra\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to ppto_DetalleFases",
+        "sql": "UPDATE \"public\".\"ppto_DetalleFases\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to ppto_DetalleFasesCate",
+        "sql": "UPDATE \"public\".\"ppto_DetalleFasesCate\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      },
+      {
+        "description": "copy mapped ids to ppto_Principal",
+        "sql": "UPDATE \"public\".\"ppto_Principal\" h SET id_centro_costo = c.id FROM \"public\".\"CentroCostos\" c WHERE h.\"CodCentroCto\" IS NOT NULL AND c.cod_centro_cto = h.\"CodCentroCto\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify every mapped code was backfilled in almacenMovimientos",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"almacenMovimientos\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in cajaEgresosRetail",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaEgresosRetail\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in cajaIngresos",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"cajaIngresos\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in contrataciones_PPTOMeta",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"contrataciones_PPTOMeta\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in docCompra",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompra\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in docCompraDetalle",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docCompraDetalle\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in docVenta",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVenta\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in docVentaDetalle",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"docVentaDetalle\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in egresos_AnticiposOC",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"egresos_AnticiposOC\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in ordenCompra",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in ppto_DetalleFases",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFases\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in ppto_DetalleFasesCate",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_DetalleFasesCate\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "verify every mapped code was backfilled in ppto_Principal",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"ppto_Principal\" h JOIN \"public\".\"CentroCostos\" c ON c.cod_centro_cto = h.\"CodCentroCto\" WHERE h.\"CodCentroCto\" IS NOT NULL AND h.id_centro_costo IS NULL) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "index.almacenMovimientos.almacenMovimientos_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"almacenMovimientos_id_centro_costo_idx_8c84570b\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacenMovimientos_id_centro_costo_idx_8c84570b",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacenMovimientos_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacenMovimientos_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"almacenMovimientos_id_centro_costo_idx_8c84570b\" ON \"public\".\"almacenMovimientos\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacenMovimientos_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacenMovimientos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cajaEgresosRetail.cajaEgresosRetail_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"cajaEgresosRetail_id_centro_costo_idx_8c84570b\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaEgresosRetail_id_centro_costo_idx_8c84570b",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaEgresosRetail_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cajaEgresosRetail_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"cajaEgresosRetail_id_centro_costo_idx_8c84570b\" ON \"public\".\"cajaEgresosRetail\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaEgresosRetail_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaEgresosRetail_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cajaIngresos.cajaIngresos_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"cajaIngresos_id_centro_costo_idx_8c84570b\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaIngresos_id_centro_costo_idx_8c84570b",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaIngresos_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cajaIngresos_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"cajaIngresos_id_centro_costo_idx_8c84570b\" ON \"public\".\"cajaIngresos\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaIngresos_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cajaIngresos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contrataciones_PPTOMeta.contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\" ON \"public\".\"contrataciones_PPTOMeta\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrataciones_PPTOMeta_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docCompra.docCompra_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"docCompra_id_centro_costo_idx_8c84570b\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompra_id_centro_costo_idx_8c84570b",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompra_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docCompra_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"docCompra_id_centro_costo_idx_8c84570b\" ON \"public\".\"docCompra\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompra_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompra_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docCompraDetalle.docCompraDetalle_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"docCompraDetalle_id_centro_costo_idx_8c84570b\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompraDetalle_id_centro_costo_idx_8c84570b",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompraDetalle_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docCompraDetalle_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"docCompraDetalle_id_centro_costo_idx_8c84570b\" ON \"public\".\"docCompraDetalle\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompraDetalle_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docCompraDetalle_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docVenta.docVenta_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"docVenta_id_centro_costo_idx_8c84570b\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVenta_id_centro_costo_idx_8c84570b",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVenta_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docVenta_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"docVenta_id_centro_costo_idx_8c84570b\" ON \"public\".\"docVenta\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVenta_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVenta_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.docVentaDetalle.docVentaDetalle_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"docVentaDetalle_id_centro_costo_idx_8c84570b\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVentaDetalle_id_centro_costo_idx_8c84570b",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVentaDetalle_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"docVentaDetalle_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"docVentaDetalle_id_centro_costo_idx_8c84570b\" ON \"public\".\"docVentaDetalle\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVentaDetalle_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"docVentaDetalle_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.egresos_AnticiposOC.egresos_AnticiposOC_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "egresos_AnticiposOC_id_centro_costo_idx_8c84570b",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\" ON \"public\".\"egresos_AnticiposOC\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"egresos_AnticiposOC_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompra.ordenCompra_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"ordenCompra_id_centro_costo_idx_8c84570b\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_centro_costo_idx_8c84570b",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompra_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"ordenCompra_id_centro_costo_idx_8c84570b\" ON \"public\".\"ordenCompra\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFases.ppto_DetalleFases_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"ppto_DetalleFases_id_centro_costo_idx_8c84570b\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_id_centro_costo_idx_8c84570b",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFases_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFases_id_centro_costo_idx_8c84570b\" ON \"public\".\"ppto_DetalleFases\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFasesCate.ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\" ON \"public\".\"ppto_DetalleFasesCate\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Principal.ppto_Principal_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"ppto_Principal_id_centro_costo_idx_8c84570b\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_id_centro_costo_idx_8c84570b",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Principal_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"ppto_Principal_id_centro_costo_idx_8c84570b\" ON \"public\".\"ppto_Principal\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacenMovimientos.almacenMovimientos_id_centro_costo_fkey",
+    "label": "Add foreign key \"almacenMovimientos_id_centro_costo_fkey\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacenMovimientos_id_centro_costo_fkey",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacenMovimientos_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenMovimientos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacenMovimientos_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\"\nADD CONSTRAINT \"almacenMovimientos_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacenMovimientos_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacenMovimientos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacenMovimientos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cajaEgresosRetail.cajaEgresosRetail_id_centro_costo_fkey",
+    "label": "Add foreign key \"cajaEgresosRetail_id_centro_costo_fkey\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cajaEgresosRetail_id_centro_costo_fkey",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cajaEgresosRetail_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaEgresosRetail_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cajaEgresosRetail_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\"\nADD CONSTRAINT \"cajaEgresosRetail_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cajaEgresosRetail_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaEgresosRetail_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"cajaEgresosRetail\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cajaIngresos.cajaIngresos_id_centro_costo_fkey",
+    "label": "Add foreign key \"cajaIngresos_id_centro_costo_fkey\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cajaIngresos_id_centro_costo_fkey",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cajaIngresos_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaIngresos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cajaIngresos_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\"\nADD CONSTRAINT \"cajaIngresos_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cajaIngresos_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cajaIngresos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"cajaIngresos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrataciones_PPTOMeta.contrataciones_PPTOMeta_id_centro_costo_fkey",
+    "label": "Add foreign key \"contrataciones_PPTOMeta_id_centro_costo_fkey\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrataciones_PPTOMeta_id_centro_costo_fkey",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrataciones_PPTOMeta_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PPTOMeta_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrataciones_PPTOMeta_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\"\nADD CONSTRAINT \"contrataciones_PPTOMeta_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrataciones_PPTOMeta_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrataciones_PPTOMeta_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"contrataciones_PPTOMeta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docCompra.docCompra_id_centro_costo_fkey",
+    "label": "Add foreign key \"docCompra_id_centro_costo_fkey\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docCompra_id_centro_costo_fkey",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docCompra_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docCompra_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\"\nADD CONSTRAINT \"docCompra_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docCompra_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompra_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docCompraDetalle.docCompraDetalle_id_centro_costo_fkey",
+    "label": "Add foreign key \"docCompraDetalle_id_centro_costo_fkey\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docCompraDetalle_id_centro_costo_fkey",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docCompraDetalle_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompraDetalle_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docCompraDetalle_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\"\nADD CONSTRAINT \"docCompraDetalle_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docCompraDetalle_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docCompraDetalle_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docVenta.docVenta_id_centro_costo_fkey",
+    "label": "Add foreign key \"docVenta_id_centro_costo_fkey\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docVenta_id_centro_costo_fkey",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docVenta_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVenta_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docVenta_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\"\nADD CONSTRAINT \"docVenta_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docVenta_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVenta_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docVenta\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.docVentaDetalle.docVentaDetalle_id_centro_costo_fkey",
+    "label": "Add foreign key \"docVentaDetalle_id_centro_costo_fkey\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "docVentaDetalle_id_centro_costo_fkey",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"docVentaDetalle_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVentaDetalle_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"docVentaDetalle_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\"\nADD CONSTRAINT \"docVentaDetalle_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"docVentaDetalle_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "docVentaDetalle_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"docVentaDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.egresos_AnticiposOC.egresos_AnticiposOC_id_centro_costo_fkey",
+    "label": "Add foreign key \"egresos_AnticiposOC_id_centro_costo_fkey\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "egresos_AnticiposOC_id_centro_costo_fkey",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"egresos_AnticiposOC_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "egresos_AnticiposOC_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"egresos_AnticiposOC_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\"\nADD CONSTRAINT \"egresos_AnticiposOC_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"egresos_AnticiposOC_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "egresos_AnticiposOC_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"egresos_AnticiposOC\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompra.ordenCompra_id_centro_costo_fkey",
+    "label": "Add foreign key \"ordenCompra_id_centro_costo_fkey\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_id_centro_costo_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompra_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompra_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\"\nADD CONSTRAINT \"ordenCompra_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompra_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFases.ppto_DetalleFases_id_centro_costo_fkey",
+    "label": "Add foreign key \"ppto_DetalleFases_id_centro_costo_fkey\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFases_id_centro_costo_fkey",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFases_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFases_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\"\nADD CONSTRAINT \"ppto_DetalleFases_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFases_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFasesCate.ppto_DetalleFasesCate_id_centro_costo_fkey",
+    "label": "Add foreign key \"ppto_DetalleFasesCate_id_centro_costo_fkey\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFasesCate_id_centro_costo_fkey",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFasesCate_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFasesCate_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\"\nADD CONSTRAINT \"ppto_DetalleFasesCate_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFasesCate_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Principal.ppto_Principal_id_centro_costo_fkey",
+    "label": "Add foreign key \"ppto_Principal_id_centro_costo_fkey\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Principal_id_centro_costo_fkey",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Principal_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Principal_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\"\nADD CONSTRAINT \"ppto_Principal_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Principal_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,1850 @@
+[
+  {
+    "id": "column.public.almacenMovimientos.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"almacenMovimientos\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"almacenMovimientos\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacenes.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"almacenes\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"almacenes\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaEgresosRetail.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"cajaEgresosRetail\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"cajaEgresosRetail\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cajaIngresos.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"cajaIngresos\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"cajaIngresos\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"CentroCostos\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"contrataciones\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones_PPTOMeta.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"contrataciones_PPTOMeta\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PPTOMeta\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.contrataciones_PostVenta.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"contrataciones_PostVenta\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"contrataciones_PostVenta\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.cuentasCajaBancos.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"cuentasCajaBancos\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"cuentasCajaBancos\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompra.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"docCompra\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompraDetalle.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"docCompraDetalle\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompraDetalle\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docCompra_AplicacionAnticipo.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"docCompra_AplicacionAnticipo\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"docCompra_AplicacionAnticipo\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVenta.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"docVenta\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"docVenta\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.docVentaDetalle.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"docVentaDetalle\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"docVentaDetalle\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.egresos_AnticiposOC.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"egresos_AnticiposOC\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"egresos_AnticiposOC\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompra.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"ordenCompra\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.planillaPago.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"planillaPago\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"planillaPago\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFases.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"ppto_DetalleFases\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFasesCate.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"ppto_DetalleFasesCate\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Fases.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"ppto_Fases\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Fases\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.id_empresa",
+    "label": "Rename column \"EmpresaId\" to \"id_empresa\" on \"ppto_Principal\"",
+    "summary": "Renames column \"EmpresaId\" to \"id_empresa\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"EmpresaId\" to \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" RENAME COLUMN \"EmpresaId\" TO \"id_empresa\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.almacenMovimientos.almacenMovimientos_id_empresa_idx_328936e2",
+    "label": "Rename index \"almacenMovimientos_EmpresaId_idx_1fa20859\" to \"almacenMovimientos_id_empresa_idx_328936e2\" on \"almacenMovimientos\"",
+    "summary": "Renames index \"almacenMovimientos_EmpresaId_idx_1fa20859\" to \"almacenMovimientos_id_empresa_idx_328936e2\" on \"almacenMovimientos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacenMovimientos_id_empresa_idx_328936e2",
+        "table": "almacenMovimientos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacenMovimientos_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "almacenMovimientos_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"almacenMovimientos_EmpresaId_idx_1fa20859\" to \"almacenMovimientos_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"almacenMovimientos_EmpresaId_idx_1fa20859\" RENAME TO \"almacenMovimientos_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacenMovimientos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenMovimientos",
+          "almacenMovimientos_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.almacenes.almacenes_id_empresa_idx_328936e2",
+    "label": "Rename index \"almacenes_EmpresaId_idx_1fa20859\" to \"almacenes_id_empresa_idx_328936e2\" on \"almacenes\"",
+    "summary": "Renames index \"almacenes_EmpresaId_idx_1fa20859\" to \"almacenes_id_empresa_idx_328936e2\" on \"almacenes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacenes_id_empresa_idx_328936e2",
+        "table": "almacenes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacenes_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "almacenes_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"almacenes_EmpresaId_idx_1fa20859\" to \"almacenes_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"almacenes_EmpresaId_idx_1fa20859\" RENAME TO \"almacenes_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacenes_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacenes",
+          "almacenes_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.cajaEgresosRetail.cajaEgresosRetail_id_empresa_idx_328936e2",
+    "label": "Rename index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" to \"cajaEgresosRetail_id_empresa_idx_328936e2\" on \"cajaEgresosRetail\"",
+    "summary": "Renames index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" to \"cajaEgresosRetail_id_empresa_idx_328936e2\" on \"cajaEgresosRetail\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaEgresosRetail_id_empresa_idx_328936e2",
+        "table": "cajaEgresosRetail"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaEgresosRetail_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "cajaEgresosRetail_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"cajaEgresosRetail_EmpresaId_idx_1fa20859\" to \"cajaEgresosRetail_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"cajaEgresosRetail_EmpresaId_idx_1fa20859\" RENAME TO \"cajaEgresosRetail_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaEgresosRetail_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaEgresosRetail",
+          "cajaEgresosRetail_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.cajaIngresos.cajaIngresos_id_empresa_idx_328936e2",
+    "label": "Rename index \"cajaIngresos_EmpresaId_idx_1fa20859\" to \"cajaIngresos_id_empresa_idx_328936e2\" on \"cajaIngresos\"",
+    "summary": "Renames index \"cajaIngresos_EmpresaId_idx_1fa20859\" to \"cajaIngresos_id_empresa_idx_328936e2\" on \"cajaIngresos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cajaIngresos_id_empresa_idx_328936e2",
+        "table": "cajaIngresos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cajaIngresos_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "cajaIngresos_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"cajaIngresos_EmpresaId_idx_1fa20859\" to \"cajaIngresos_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"cajaIngresos_EmpresaId_idx_1fa20859\" RENAME TO \"cajaIngresos_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cajaIngresos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cajaIngresos",
+          "cajaIngresos_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.CentroCostos.CentroCostos_id_empresa_idx_328936e2",
+    "label": "Rename index \"CentroCostos_EmpresaId_idx_1fa20859\" to \"CentroCostos_id_empresa_idx_328936e2\" on \"CentroCostos\"",
+    "summary": "Renames index \"CentroCostos_EmpresaId_idx_1fa20859\" to \"CentroCostos_id_empresa_idx_328936e2\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_id_empresa_idx_328936e2",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "CentroCostos_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"CentroCostos_EmpresaId_idx_1fa20859\" to \"CentroCostos_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"CentroCostos_EmpresaId_idx_1fa20859\" RENAME TO \"CentroCostos_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "CentroCostos_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.contrataciones.contrataciones_id_empresa_idx_328936e2",
+    "label": "Rename index \"contrataciones_EmpresaId_idx_1fa20859\" to \"contrataciones_id_empresa_idx_328936e2\" on \"contrataciones\"",
+    "summary": "Renames index \"contrataciones_EmpresaId_idx_1fa20859\" to \"contrataciones_id_empresa_idx_328936e2\" on \"contrataciones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_id_empresa_idx_328936e2",
+        "table": "contrataciones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "contrataciones_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"contrataciones_EmpresaId_idx_1fa20859\" to \"contrataciones_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"contrataciones_EmpresaId_idx_1fa20859\" RENAME TO \"contrataciones_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones",
+          "contrataciones_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.contrataciones_PPTOMeta.contrataciones_PPTOMeta_id_empresa_idx_328936e2",
+    "label": "Rename index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" to \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\" on \"contrataciones_PPTOMeta\"",
+    "summary": "Renames index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" to \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\" on \"contrataciones_PPTOMeta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_PPTOMeta_id_empresa_idx_328936e2",
+        "table": "contrataciones_PPTOMeta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "contrataciones_PPTOMeta_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" to \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"contrataciones_PPTOMeta_EmpresaId_idx_1fa20859\" RENAME TO \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_PPTOMeta_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PPTOMeta",
+          "contrataciones_PPTOMeta_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.contrataciones_PostVenta.contrataciones_PostVenta_id_empresa_idx_328936e2",
+    "label": "Rename index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" to \"contrataciones_PostVenta_id_empresa_idx_328936e2\" on \"contrataciones_PostVenta\"",
+    "summary": "Renames index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" to \"contrataciones_PostVenta_id_empresa_idx_328936e2\" on \"contrataciones_PostVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrataciones_PostVenta_id_empresa_idx_328936e2",
+        "table": "contrataciones_PostVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrataciones_PostVenta_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "contrataciones_PostVenta_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" to \"contrataciones_PostVenta_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"contrataciones_PostVenta_EmpresaId_idx_1fa20859\" RENAME TO \"contrataciones_PostVenta_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrataciones_PostVenta_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "contrataciones_PostVenta",
+          "contrataciones_PostVenta_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.cuentasCajaBancos.cuentasCajaBancos_id_empresa_idx_328936e2",
+    "label": "Rename index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" to \"cuentasCajaBancos_id_empresa_idx_328936e2\" on \"cuentasCajaBancos\"",
+    "summary": "Renames index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" to \"cuentasCajaBancos_id_empresa_idx_328936e2\" on \"cuentasCajaBancos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cuentasCajaBancos_id_empresa_idx_328936e2",
+        "table": "cuentasCajaBancos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cuentasCajaBancos_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "cuentasCajaBancos_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"cuentasCajaBancos_EmpresaId_idx_1fa20859\" to \"cuentasCajaBancos_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"cuentasCajaBancos_EmpresaId_idx_1fa20859\" RENAME TO \"cuentasCajaBancos_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cuentasCajaBancos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "cuentasCajaBancos",
+          "cuentasCajaBancos_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.docCompra.docCompra_id_empresa_idx_328936e2",
+    "label": "Rename index \"docCompra_EmpresaId_idx_1fa20859\" to \"docCompra_id_empresa_idx_328936e2\" on \"docCompra\"",
+    "summary": "Renames index \"docCompra_EmpresaId_idx_1fa20859\" to \"docCompra_id_empresa_idx_328936e2\" on \"docCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompra_id_empresa_idx_328936e2",
+        "table": "docCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompra_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "docCompra_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"docCompra_EmpresaId_idx_1fa20859\" to \"docCompra_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"docCompra_EmpresaId_idx_1fa20859\" RENAME TO \"docCompra_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompra_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra",
+          "docCompra_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.docCompraDetalle.docCompraDetalle_id_empresa_idx_328936e2",
+    "label": "Rename index \"docCompraDetalle_EmpresaId_idx_1fa20859\" to \"docCompraDetalle_id_empresa_idx_328936e2\" on \"docCompraDetalle\"",
+    "summary": "Renames index \"docCompraDetalle_EmpresaId_idx_1fa20859\" to \"docCompraDetalle_id_empresa_idx_328936e2\" on \"docCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompraDetalle_id_empresa_idx_328936e2",
+        "table": "docCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompraDetalle_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "docCompraDetalle_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"docCompraDetalle_EmpresaId_idx_1fa20859\" to \"docCompraDetalle_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"docCompraDetalle_EmpresaId_idx_1fa20859\" RENAME TO \"docCompraDetalle_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompraDetalle_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompraDetalle",
+          "docCompraDetalle_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.docCompra_AplicacionAnticipo.docCompra_AplicacionAnticipo_id_empresa_idx_328936e2",
+    "label": "Rename index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" to \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\" on \"docCompra_AplicacionAnticipo\"",
+    "summary": "Renames index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" to \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\" on \"docCompra_AplicacionAnticipo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docCompra_AplicacionAnticipo_id_empresa_idx_328936e2",
+        "table": "docCompra_AplicacionAnticipo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "docCompra_AplicacionAnticipo_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" to \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"docCompra_AplicacionAnticipo_EmpresaId_idx_1fa20859\" RENAME TO \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docCompra_AplicacionAnticipo_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docCompra_AplicacionAnticipo",
+          "docCompra_AplicacionAnticipo_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.docVenta.docVenta_id_empresa_idx_328936e2",
+    "label": "Rename index \"docVenta_EmpresaId_idx_1fa20859\" to \"docVenta_id_empresa_idx_328936e2\" on \"docVenta\"",
+    "summary": "Renames index \"docVenta_EmpresaId_idx_1fa20859\" to \"docVenta_id_empresa_idx_328936e2\" on \"docVenta\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVenta_id_empresa_idx_328936e2",
+        "table": "docVenta"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVenta_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "docVenta_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"docVenta_EmpresaId_idx_1fa20859\" to \"docVenta_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"docVenta_EmpresaId_idx_1fa20859\" RENAME TO \"docVenta_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVenta_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVenta",
+          "docVenta_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.docVentaDetalle.docVentaDetalle_id_empresa_idx_328936e2",
+    "label": "Rename index \"docVentaDetalle_EmpresaId_idx_1fa20859\" to \"docVentaDetalle_id_empresa_idx_328936e2\" on \"docVentaDetalle\"",
+    "summary": "Renames index \"docVentaDetalle_EmpresaId_idx_1fa20859\" to \"docVentaDetalle_id_empresa_idx_328936e2\" on \"docVentaDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "docVentaDetalle_id_empresa_idx_328936e2",
+        "table": "docVentaDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"docVentaDetalle_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "docVentaDetalle_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"docVentaDetalle_EmpresaId_idx_1fa20859\" to \"docVentaDetalle_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"docVentaDetalle_EmpresaId_idx_1fa20859\" RENAME TO \"docVentaDetalle_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"docVentaDetalle_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "docVentaDetalle",
+          "docVentaDetalle_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.egresos_AnticiposOC.egresos_AnticiposOC_id_empresa_idx_328936e2",
+    "label": "Rename index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" to \"egresos_AnticiposOC_id_empresa_idx_328936e2\" on \"egresos_AnticiposOC\"",
+    "summary": "Renames index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" to \"egresos_AnticiposOC_id_empresa_idx_328936e2\" on \"egresos_AnticiposOC\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "egresos_AnticiposOC_id_empresa_idx_328936e2",
+        "table": "egresos_AnticiposOC"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"egresos_AnticiposOC_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "egresos_AnticiposOC_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" to \"egresos_AnticiposOC_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"egresos_AnticiposOC_EmpresaId_idx_1fa20859\" RENAME TO \"egresos_AnticiposOC_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"egresos_AnticiposOC_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "egresos_AnticiposOC",
+          "egresos_AnticiposOC_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.ordenCompra.ordenCompra_id_empresa_idx_328936e2",
+    "label": "Rename index \"ordenCompra_EmpresaId_idx_1fa20859\" to \"ordenCompra_id_empresa_idx_328936e2\" on \"ordenCompra\"",
+    "summary": "Renames index \"ordenCompra_EmpresaId_idx_1fa20859\" to \"ordenCompra_id_empresa_idx_328936e2\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_empresa_idx_328936e2",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "ordenCompra_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"ordenCompra_EmpresaId_idx_1fa20859\" to \"ordenCompra_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"ordenCompra_EmpresaId_idx_1fa20859\" RENAME TO \"ordenCompra_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "ordenCompra_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.planillaPago.planillaPago_id_empresa_idx_328936e2",
+    "label": "Rename index \"planillaPago_EmpresaId_idx_1fa20859\" to \"planillaPago_id_empresa_idx_328936e2\" on \"planillaPago\"",
+    "summary": "Renames index \"planillaPago_EmpresaId_idx_1fa20859\" to \"planillaPago_id_empresa_idx_328936e2\" on \"planillaPago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "planillaPago_id_empresa_idx_328936e2",
+        "table": "planillaPago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"planillaPago_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "planillaPago_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"planillaPago_EmpresaId_idx_1fa20859\" to \"planillaPago_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"planillaPago_EmpresaId_idx_1fa20859\" RENAME TO \"planillaPago_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"planillaPago_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "planillaPago",
+          "planillaPago_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.ppto_DetalleFases.ppto_DetalleFases_id_empresa_idx_328936e2",
+    "label": "Rename index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFases_id_empresa_idx_328936e2\" on \"ppto_DetalleFases\"",
+    "summary": "Renames index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFases_id_empresa_idx_328936e2\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_id_empresa_idx_328936e2",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "ppto_DetalleFases_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"ppto_DetalleFases_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFases_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"ppto_DetalleFases_EmpresaId_idx_1fa20859\" RENAME TO \"ppto_DetalleFases_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "ppto_DetalleFases_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.ppto_DetalleFasesCate.ppto_DetalleFasesCate_id_empresa_idx_328936e2",
+    "label": "Rename index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\" on \"ppto_DetalleFasesCate\"",
+    "summary": "Renames index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_id_empresa_idx_328936e2",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "ppto_DetalleFasesCate_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" to \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"ppto_DetalleFasesCate_EmpresaId_idx_1fa20859\" RENAME TO \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "ppto_DetalleFasesCate_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.ppto_Fases.ppto_Fases_id_empresa_idx_328936e2",
+    "label": "Rename index \"ppto_Fases_EmpresaId_idx_1fa20859\" to \"ppto_Fases_id_empresa_idx_328936e2\" on \"ppto_Fases\"",
+    "summary": "Renames index \"ppto_Fases_EmpresaId_idx_1fa20859\" to \"ppto_Fases_id_empresa_idx_328936e2\" on \"ppto_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Fases_id_empresa_idx_328936e2",
+        "table": "ppto_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Fases_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "ppto_Fases_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"ppto_Fases_EmpresaId_idx_1fa20859\" to \"ppto_Fases_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"ppto_Fases_EmpresaId_idx_1fa20859\" RENAME TO \"ppto_Fases_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Fases_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Fases",
+          "ppto_Fases_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.public.ppto_Principal.ppto_Principal_id_empresa_idx_328936e2",
+    "label": "Rename index \"ppto_Principal_EmpresaId_idx_1fa20859\" to \"ppto_Principal_id_empresa_idx_328936e2\" on \"ppto_Principal\"",
+    "summary": "Renames index \"ppto_Principal_EmpresaId_idx_1fa20859\" to \"ppto_Principal_id_empresa_idx_328936e2\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_id_empresa_idx_328936e2",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_id_empresa_idx_328936e2\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "ppto_Principal_id_empresa_idx_328936e2"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename index \"ppto_Principal_EmpresaId_idx_1fa20859\" to \"ppto_Principal_id_empresa_idx_328936e2\"",
+        "sql": "ALTER INDEX \"public\".\"ppto_Principal_EmpresaId_idx_1fa20859\" RENAME TO \"ppto_Principal_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_indexes\" WHERE (\"schemaname\" = $1 AND \"tablename\" = $2 AND \"indexname\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "ppto_Principal_id_empresa_idx_328936e2"
+        ]
+      }
+    ]
+  }
+]

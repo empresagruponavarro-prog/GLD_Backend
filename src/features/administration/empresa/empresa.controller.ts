@@ -33,13 +33,13 @@ export class EmpresaController {
     return this.handler.list();
   }
 
-  @Get(':cod')
-  @ApiOperation({ summary: 'Obtener una empresa por código' })
-  @ApiParam({ name: 'cod', description: 'Código único de la empresa', example: 'E1' })
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener una empresa por id' })
+  @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
   @ApiOkResponse({ type: EmpresaResponseDto, description: 'Empresa encontrada' })
   @ApiNotFoundResponse({ description: 'Empresa no encontrada' })
-  getById(@Param('cod') cod: string): Promise<EmpresaResponseDto> {
-    return this.handler.getById(cod);
+  getById(@Param('id') id: string): Promise<EmpresaResponseDto> {
+    return this.handler.getById(Number(id));
   }
 
   @Post()
@@ -49,25 +49,25 @@ export class EmpresaController {
     return this.handler.create(dto);
   }
 
-  @Patch(':cod')
+  @Patch(':id')
   @ApiOperation({ summary: 'Actualizar una empresa' })
-  @ApiParam({ name: 'cod', description: 'Código único de la empresa', example: 'E1' })
+  @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
   @ApiOkResponse({ type: EmpresaResponseDto, description: 'Empresa actualizada exitosamente' })
   @ApiNotFoundResponse({ description: 'Empresa no encontrada' })
   update(
-    @Param('cod') cod: string,
+    @Param('id') id: string,
     @Body() dto: UpdateEmpresaDto,
   ): Promise<EmpresaResponseDto> {
-    return this.handler.update(cod, dto);
+    return this.handler.update(Number(id), dto);
   }
 
-  @Delete(':cod')
+  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar una empresa' })
-  @ApiParam({ name: 'cod', description: 'Código único de la empresa', example: 'E1' })
+  @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
   @ApiNoContentResponse({ description: 'Empresa eliminada exitosamente' })
   @ApiNotFoundResponse({ description: 'Empresa no encontrada' })
-  remove(@Param('cod') cod: string): Promise<void> {
-    return this.handler.remove(cod);
+  remove(@Param('id') id: string): Promise<void> {
+    return this.handler.remove(Number(id));
   }
 }

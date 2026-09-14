@@ -6,22 +6,20 @@ import { CentroCostoHandler } from './centro-costo.handler.js';
 function ccRow(overrides: Partial<Record<string, unknown>> = {}) {
   return {
     id: 1,
-    CodCentroCto: 'CC-2026-001',
-    CodEmpresa: 'E1',
-    IdPeriodo: '2026',
-    CodCliente: 'A1',
-    CodCentroCtoPrincipal: null,
-    CentroCosto: 'Proyecto Edificio',
-    Estado: 'ABIERTO',
-    FechaIncio: null,
-    FechaFinProg: null,
-    FechaFinReal: null,
-    PresupuestoEstado: 'Aprobado',
-    PresupuestoCostoDirecto: null,
-    PresupuestoGastosGenerales: null,
-    PresupuestoViaticos: null,
-    PresupuestoMonto: '1450000.00',
-    OCFile: null,
+    periodo: 2026,
+    cod_cliente: 'A1',
+    id_centro_costos_principal: null,
+    centro_costo: 'Proyecto Edificio',
+    estado: 'ABIERTO',
+    fecha_inicio: null,
+    fecha_fin_prog: null,
+    fecha_fin_real: null,
+    presupuesto_estado: 'Aprobado',
+    presupuesto_costo_directo: null,
+    presupuesto_gastos_generales: null,
+    presupuesto_viaticos: null,
+    presupuesto_monto: '1450000.00',
+    oc_file: null,
     ...overrides,
   };
 }
@@ -31,6 +29,7 @@ describe('centro-costo', () => {
   const centroAll = vi.fn();
   const centroFirst = vi.fn();
   const empresasAll = vi.fn();
+  const principalesAll = vi.fn();
   const anexosAll = vi.fn();
   const pptoAggregate = vi.fn();
   const docCompraAggregate = vi.fn();
@@ -51,6 +50,7 @@ describe('centro-costo', () => {
             all: centroAll,
           },
           Empresas: { all: empresasAll },
+          centro_costos_principal: { all: principalesAll },
           Anexos: { all: anexosAll },
           ppto_Principal: { where: vi.fn(() => ({ aggregate: pptoAggregate })) },
           DocCompra: {
@@ -75,15 +75,17 @@ describe('centro-costo', () => {
   });
 
   it('lista centros de costos componiendo empresa y cliente', async () => {
-    centroAll.mockResolvedValue([ccRow()]);
+    centroAll.mockResolvedValue([ccRow({ id_centro_costos_principal: 1 })]);
     empresasAll.mockResolvedValue([
-      { id: 1, CodEmpresa: 'E1', RazonSocial: 'GLD SERVICIOS GENERALES EIRL' },
+      { id_empresa: 1, razon_social: 'GLD SERVICIOS GENERALES EIRL' },
+    ]);
+    principalesAll.mockResolvedValue([
+      { id: 1, centro_costo_principal: 'afa1e4fc', descripcion: 'TIENDA 3A', estado: 'ABIERTO', id_empresa: 1 },
     ]);
     anexosAll.mockResolvedValue([]);
 
     const result = await controller.findAll({});
     expect(result[0]).toMatchObject({
-      CodCentroCto: 'CC-2026-001',
       Empresa: 'GLD SERVICIOS GENERALES EIRL',
       Cliente: 'A1',
       PresupuestoMonto: '1450000.00',
@@ -93,21 +95,22 @@ describe('centro-costo', () => {
   it('aplica el filtro de estado', async () => {
     centroAll.mockResolvedValue([
       ccRow(),
-      ccRow({ CodCentroCto: 'CC-2026-002', Estado: 'CERRADO' }),
+      ccRow({ id: 2, estado: 'CERRADO' }),
     ]);
     empresasAll.mockResolvedValue([]);
+    principalesAll.mockResolvedValue([]);
     anexosAll.mockResolvedValue([]);
 
     const result = await controller.findAll({ estado: 'CERRADO' });
     expect(result).toHaveLength(1);
-    expect(result[0].CodCentroCto).toBe('CC-2026-002');
+    expect(result[0].id).toBe(2);
   });
 
   it('devuelve el conteo de estados', async () => {
     centroAll.mockResolvedValue([
       ccRow(),
-      ccRow({ CodCentroCto: 'CC-2026-002', Estado: 'CERRADO' }),
-      ccRow({ CodCentroCto: 'CC-2026-003', Estado: 'ABIERTO' }),
+      ccRow({ id: 2, estado: 'CERRADO' }),
+      ccRow({ id: 3, estado: 'ABIERTO' }),
     ]);
     await expect(controller.getConteoEstados()).resolves.toEqual({
       total: 3,
@@ -118,15 +121,18 @@ describe('centro-costo', () => {
 
   it('devuelve los catálogos de filtros', async () => {
     centroAll.mockResolvedValue([
-      ccRow(),
-      ccRow({ CodCentroCto: 'CC-2026-002', IdPeriodo: '2025', PresupuestoEstado: 'Pendiente' }),
+      ccRow({ id_centro_costos_principal: 1 }),
+      ccRow({ id: 2, periodo: 2025, presupuesto_estado: 'Pendiente', id_centro_costos_principal: 1 }),
     ]);
-    empresasAll.mockResolvedValue([{ id: 1, CodEmpresa: 'E1', RazonSocial: 'GLD EIRL' }]);
+    empresasAll.mockResolvedValue([{ id_empresa: 1, razon_social: 'GLD EIRL' }]);
+    principalesAll.mockResolvedValue([
+      { id: 1, centro_costo_principal: 'afa1e4fc', descripcion: 'TIENDA 3A', estado: 'ABIERTO', id_empresa: 1 },
+    ]);
     anexosAll.mockResolvedValue([]);
 
     const result = await controller.getCatalogosFiltros();
     expect(result.empresas).toContain('GLD EIRL');
-    expect(result.periodos).toEqual(['2026', '2025']);
+    expect(result.periodos).toEqual([2026, 2025]);
     expect(result.estados).toEqual(['ABIERTO']);
     expect(result.pptoEstados).toEqual(['Aprobado', 'Pendiente']);
   });
@@ -145,9 +151,9 @@ describe('centro-costo', () => {
     planillaAggregate.mockResolvedValue({ totalPlanilla: '10' });
     centroFirst.mockResolvedValue(ccRow());
 
-    const result = await controller.getResumenFinanciero('CC-2026-001');
+    const result = await controller.getResumenFinanciero(1);
     expect(result).toMatchObject({
-      codCentroCto: 'CC-2026-001',
+      id: 1,
       presupuestoBase: 115,
       presupuestoComercial: 200,
       gastosAcumulados: 80,

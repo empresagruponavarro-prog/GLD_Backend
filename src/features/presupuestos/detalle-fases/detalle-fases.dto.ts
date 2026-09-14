@@ -22,11 +22,12 @@ export class CreatePptoDetalleFaseDto {
   @MaxLength(255)
   IdpptoFase: string;
 
-  @ApiPropertyOptional({ example: 'E1' })
+  @ApiPropertyOptional({ example: 1 })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodEmpresa?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_empresa?: number;
 
   @ApiPropertyOptional({ example: '617d63d6' })
   @IsOptional()
@@ -39,6 +40,13 @@ export class CreatePptoDetalleFaseDto {
   @IsString()
   @MaxLength(255)
   CodCentroCto?: string;
+
+  @ApiPropertyOptional({ example: 42, description: 'ID del Centro de Costo asignado (FK)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_centro_costo?: number;
 
   @ApiPropertyOptional({ example: 45000.00, description: 'Costo directo de la fase' })
   @IsOptional()
@@ -81,11 +89,14 @@ export class PptoDetalleFaseResponseDto {
   @ApiPropertyOptional({ example: 'FASE-01' })
   IdpptoFase: string | null;
 
-  @ApiPropertyOptional({ example: 'E1' })
-  CodEmpresa: string | null;
+  @ApiPropertyOptional({ example: 1 })
+  id_empresa: number | null;
 
   @ApiPropertyOptional({ example: 'a47efc23' })
   CodCentroCto: string | null;
+
+  @ApiPropertyOptional({ example: 42 })
+  id_centro_costo: number | null;
 
   @ApiPropertyOptional({ example: '45000.00' })
   CostoDirecto: string | null;

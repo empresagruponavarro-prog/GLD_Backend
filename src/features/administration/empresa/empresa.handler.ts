@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -26,76 +25,61 @@ export class EmpresaHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
   async list(): Promise<EmpresaResponseDto[]> {
-    return this.db.orm.public.Empresas.orderBy((e) => e.CodEmpresa.asc())
-      .where((e) => e.CodEmpresa.isNotNull())
-      .all();
+    return this.db.orm.public.Empresas.orderBy((e) => e.id_empresa.asc()).all();
   }
 
-  async getById(cod: string): Promise<EmpresaResponseDto> {
-    const row = await this.db.orm.public.Empresas.first({
-      CodEmpresa: toVarchar(cod),
-    });
+  async getById(id: number): Promise<EmpresaResponseDto> {
+    if (!Number.isInteger(id)) {
+      throw new NotFoundException(`Empresa con id ${id} no encontrada`);
+    }
+    const row = await this.db.orm.public.Empresas.first({ id_empresa: id });
     if (!row) {
-      throw new NotFoundException(`Empresa con código ${cod} no encontrada`);
+      throw new NotFoundException(`Empresa con id ${id} no encontrada`);
     }
     return row;
   }
 
   async create(dto: CreateEmpresaDto): Promise<EmpresaResponseDto> {
-    const existing = await this.db.orm.public.Empresas.first({
-      CodEmpresa: toVarchar(dto.CodEmpresa),
-    });
-    if (existing) {
-      throw new ConflictException(
-        `Ya existe una empresa con el código ${dto.CodEmpresa}`,
-      );
-    }
-
     return this.db.orm.public.Empresas.create({
-      CodEmpresa: toVarchar(dto.CodEmpresa),
-      RUC: toVarchar(dto.RUC),
-      RazonSocial: toVarchar(dto.RazonSocial),
-      DomicilioFiscal: toVarchar(dto.DomicilioFiscal),
-      DireccionEntrega: toVarchar(dto.DireccionEntrega),
-      CorreoCompras: toVarchar(dto.CorreoCompras),
+      ruc: toVarchar(dto.ruc),
+      razon_social: toVarchar(dto.razon_social),
+      domicilio_fiscal: toVarchar(dto.domicilio_fiscal),
+      direccion_entrega: toVarchar(dto.direccion_entrega),
+      correo_compras: toVarchar(dto.correo_compras),
     });
   }
 
-  async update(cod: string, dto: UpdateEmpresaDto): Promise<EmpresaResponseDto> {
+  async update(id: number, dto: UpdateEmpresaDto): Promise<EmpresaResponseDto> {
     const updateData: {
-      RUC?: Varchar255;
-      RazonSocial?: Varchar255;
-      DomicilioFiscal?: Varchar255;
-      DireccionEntrega?: Varchar255;
-      CorreoCompras?: Varchar255;
+      ruc?: Varchar255;
+      razon_social?: Varchar255;
+      domicilio_fiscal?: Varchar255;
+      direccion_entrega?: Varchar255;
+      correo_compras?: Varchar255;
     } = {};
 
-    if (dto.RUC !== undefined) updateData.RUC = toVarchar(dto.RUC);
-    if (dto.RazonSocial !== undefined) updateData.RazonSocial = toVarchar(dto.RazonSocial);
-    if (dto.DomicilioFiscal !== undefined)
-      updateData.DomicilioFiscal = toVarchar(dto.DomicilioFiscal);
-    if (dto.DireccionEntrega !== undefined)
-      updateData.DireccionEntrega = toVarchar(dto.DireccionEntrega);
-    if (dto.CorreoCompras !== undefined)
-      updateData.CorreoCompras = toVarchar(dto.CorreoCompras);
+    if (dto.ruc !== undefined) updateData.ruc = toVarchar(dto.ruc);
+    if (dto.razon_social !== undefined) updateData.razon_social = toVarchar(dto.razon_social);
+    if (dto.domicilio_fiscal !== undefined)
+      updateData.domicilio_fiscal = toVarchar(dto.domicilio_fiscal);
+    if (dto.direccion_entrega !== undefined)
+      updateData.direccion_entrega = toVarchar(dto.direccion_entrega);
+    if (dto.correo_compras !== undefined)
+      updateData.correo_compras = toVarchar(dto.correo_compras);
 
-    const row = await this.db.orm.public.Empresas.where({
-      CodEmpresa: toVarchar(cod),
-    }).update(updateData);
+    const row = await this.db.orm.public.Empresas.where({ id_empresa: id }).update(updateData);
 
     if (!row) {
-      throw new NotFoundException(`Empresa con código ${cod} no encontrada`);
+      throw new NotFoundException(`Empresa con id ${id} no encontrada`);
     }
     return row;
   }
 
-  async remove(cod: string): Promise<void> {
-    const row = await this.db.orm.public.Empresas.where({
-      CodEmpresa: toVarchar(cod),
-    }).delete();
+  async remove(id: number): Promise<void> {
+    const row = await this.db.orm.public.Empresas.where({ id_empresa: id }).delete();
 
     if (!row) {
-      throw new NotFoundException(`Empresa con código ${cod} no encontrada`);
+      throw new NotFoundException(`Empresa con id ${id} no encontrada`);
     }
   }
 }

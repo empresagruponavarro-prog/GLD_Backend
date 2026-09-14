@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CatalogosFiltrosResponseDto,
@@ -47,29 +47,29 @@ export class CentroCostoController {
     return this.handler.getCatalogosFiltros();
   }
 
-  @Get(':idOrCode')
-  @ApiOperation({ summary: 'Obtener un centro de costo por ID o CodCentroCto' })
-  @ApiParam({ name: 'idOrCode', description: 'ID numérico o código (ej. CC-2026-001)' })
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener un centro de costo por ID' })
+  @ApiParam({ name: 'id', description: 'ID numérico del centro de costo' })
   @ApiOkResponse({ type: CentroCostoResponseDto })
-  findOne(@Param('idOrCode') idOrCode: string): Promise<CentroCostoResponseDto> {
-    return this.handler.getById(idOrCode);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<CentroCostoResponseDto> {
+    return this.handler.getById(id);
   }
 
-  @Get(':idOrCode/presupuestos')
+  @Get(':id/presupuestos')
   @ApiOperation({ summary: 'Listar todos los presupuestos asignados a este Centro de Costos' })
-  @ApiParam({ name: 'idOrCode', description: 'Código CodCentroCto' })
-  getPresupuestos(@Param('idOrCode') idOrCode: string) {
-    return this.handler.getPresupuestos(idOrCode);
+  @ApiParam({ name: 'id', description: 'ID del centro de costo' })
+  getPresupuestos(@Param('id', ParseIntPipe) id: number) {
+    return this.handler.getPresupuestos(id);
   }
 
   @Get(':id/resumen-financiero')
   @ApiOperation({ summary: 'Resumen financiero de un centro de costos' })
-  @ApiParam({ name: 'id', description: 'Código único del centro de costo', example: 'CC-2026-001' })
+  @ApiParam({ name: 'id', description: 'ID del centro de costo', example: 1 })
   @ApiOkResponse({
     type: CentroCostoResumenResponseDto,
     description: 'Resumen financiero con ejecución y saldos del centro de costos',
   })
-  getResumenFinanciero(@Param('id') id: string): Promise<CentroCostoResumenResponseDto> {
+  getResumenFinanciero(@Param('id', ParseIntPipe) id: number): Promise<CentroCostoResumenResponseDto> {
     return this.handler.getResumenFinanciero(id);
   }
 
@@ -80,18 +80,18 @@ export class CentroCostoController {
     return this.handler.create(dto);
   }
 
-  @Patch(':idOrCode')
-  @ApiOperation({ summary: 'Actualizar centro de costos por ID o CodCentroCto' })
-  @ApiParam({ name: 'idOrCode', description: 'ID numérico o CodCentroCto (ej. CC-2026-001)' })
+  @Patch(':id')
+  @ApiOperation({ summary: 'Actualizar centro de costos por ID' })
+  @ApiParam({ name: 'id', description: 'ID numérico del centro de costo' })
   @ApiOkResponse({ type: CentroCostoResponseDto })
-  update(@Param('idOrCode') idOrCode: string, @Body() dto: UpdateCentroCostoDto): Promise<CentroCostoResponseDto> {
-    return this.handler.update(idOrCode, dto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCentroCostoDto): Promise<CentroCostoResponseDto> {
+    return this.handler.update(id, dto);
   }
 
-  @Delete(':idOrCode')
-  @ApiOperation({ summary: 'Eliminar centro de costos por ID o CodCentroCto' })
-  @ApiParam({ name: 'idOrCode', description: 'ID numérico o CodCentroCto' })
-  remove(@Param('idOrCode') idOrCode: string) {
-    return this.handler.remove(idOrCode);
+  @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar centro de costos por ID' })
+  @ApiParam({ name: 'id', description: 'ID numérico del centro de costo' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.handler.remove(id);
   }
 }

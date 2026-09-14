@@ -15,6 +15,12 @@ import {
 export class PptoDetalleFasesHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
+  private async resolveCentroCostoId(dto: {
+    id_centro_costo?: number;
+  }): Promise<number | undefined> {
+    return dto.id_centro_costo;
+  }
+
   async list(query: ListPptoDetalleFaseQueryDto): Promise<Paginated<PptoDetalleFaseResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     const base = this.db.orm.public.ppto_DetalleFases.orderBy((d) => d.id.asc());
@@ -48,13 +54,15 @@ export class PptoDetalleFasesHandler {
 
   async create(dto: CreatePptoDetalleFaseDto): Promise<PptoDetalleFaseResponseDto> {
     try {
+      const idCentroCosto = await this.resolveCentroCostoId(dto);
       const created = await this.db.orm.public.ppto_DetalleFases.create({
         IdPresupuestoDetalle: toVarchar(dto.IdPresupuestoDetalle),
         IdPresupuesto: toVarchar(dto.IdPresupuesto),
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        CodEmpresa: toVarchar(dto.CodEmpresa),
+        id_empresa: dto.id_empresa,
         CodCentroCtoPrincipal: toVarchar(dto.CodCentroCtoPrincipal),
         CodCentroCto: toVarchar(dto.CodCentroCto),
+        id_centro_costo: idCentroCosto,
         CostoDirecto: toDecimalString(dto.CostoDirecto ?? 0),
         Usuario: toVarchar(dto.Usuario),
         FechaCreacion: toVarchar(new Date().toISOString()),
@@ -73,22 +81,25 @@ export class PptoDetalleFasesHandler {
       : await this.db.orm.public.ppto_DetalleFases.first({ id: numId });
     if (!current) throw new NotFoundException(`Detalle de fase "${idOrCode}" no encontrado`);
     const id = current.id;
+    const idCentroCosto = await this.resolveCentroCostoId(dto);
     const data: {
       IdPresupuestoDetalle?: Varchar255;
       IdPresupuesto?: Varchar255;
       IdpptoFase?: Varchar255;
-      CodEmpresa?: Varchar255;
+      id_empresa?: number;
       CodCentroCtoPrincipal?: Varchar255;
       CodCentroCto?: Varchar255;
+      id_centro_costo?: number;
       CostoDirecto?: string;
       Usuario?: Varchar255;
     } = {};
     if (dto.IdPresupuestoDetalle !== undefined) data.IdPresupuestoDetalle = toVarchar(dto.IdPresupuestoDetalle);
     if (dto.IdPresupuesto !== undefined) data.IdPresupuesto = toVarchar(dto.IdPresupuesto);
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
-    if (dto.CodEmpresa !== undefined) data.CodEmpresa = toVarchar(dto.CodEmpresa);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.CodCentroCtoPrincipal !== undefined) data.CodCentroCtoPrincipal = toVarchar(dto.CodCentroCtoPrincipal);
     if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
+    if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.CostoDirecto !== undefined) data.CostoDirecto = toDecimalString(dto.CostoDirecto);
     if (dto.Usuario !== undefined) data.Usuario = toVarchar(dto.Usuario);
 
