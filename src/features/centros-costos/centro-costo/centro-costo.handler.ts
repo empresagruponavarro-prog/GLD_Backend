@@ -182,6 +182,24 @@ export class CentroCostoHandler {
       .all();
   }
 
+  async getPrincipales() {
+    const [principales, empresas] = await Promise.all([
+      this.db.orm.public.centro_costos_principal.orderBy((p) => p.descripcion.asc()).all(),
+      this.db.orm.public.Empresas.all(),
+    ]);
+
+    const empresasById = new Map(empresas.map((e) => [e.id_empresa, e.razon_social]));
+
+    return principales.map((p) => ({
+      id: p.id,
+      centro_costo_principal: p.centro_costo_principal,
+      descripcion: p.descripcion,
+      estado: p.estado ?? 'ABIERTO',
+      id_empresa: p.id_empresa,
+      Empresa: p.id_empresa != null ? empresasById.get(p.id_empresa) ?? null : null,
+    }));
+  }
+
   async getCatalogosFiltros(): Promise<CatalogosFiltrosResponseDto> {
     const [rows, empresas, principales] = await Promise.all([
       this.db.orm.public.CentroCostos.all(),

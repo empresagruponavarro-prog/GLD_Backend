@@ -244,3 +244,23 @@ export class CatalogosFiltrosResponseDto {
   @ApiProperty({ type: [String], description: 'Listado de estados de presupuesto' })
   pptoEstados: string[];
 }
+
+export class CentroCostoPrincipalResponseDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: '00ff6945' })
+  centro_costo_principal: string;
+
+  @ApiProperty({ example: 'TIENDAS ARUMA GLD' })
+  descripcion: string;
+
+  @ApiProperty({ example: 'ABIERTO' })
+  estado: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  id_empresa?: number | null;
+
+  @ApiPropertyOptional({ example: 'GLD' })
+  Empresa?: string | null;
+}

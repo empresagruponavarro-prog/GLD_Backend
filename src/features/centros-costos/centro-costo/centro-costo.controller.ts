@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query 
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CatalogosFiltrosResponseDto,
+  CentroCostoPrincipalResponseDto,
   CentroCostoMetricasResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
@@ -47,7 +48,18 @@ export class CentroCostoController {
     return this.handler.getCatalogosFiltros();
   }
 
-  @Get(':id')
+  @Get('principales')
+  @ApiOperation({ summary: 'Listar todos los centros de costos principales' })
+  @ApiOkResponse({
+    type: CentroCostoPrincipalResponseDto,
+    isArray: true,
+    description: 'Lista de centros de costos principales',
+  })
+  getPrincipales() {
+    return this.handler.getPrincipales();
+  }
+
+    @Get(':id')
   @ApiOperation({ summary: 'Obtener un centro de costo por ID' })
   @ApiParam({ name: 'id', description: 'ID numérico del centro de costo' })
   @ApiOkResponse({ type: CentroCostoResponseDto })
