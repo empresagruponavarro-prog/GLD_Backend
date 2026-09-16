@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Paginated } from '../../../platform/db/pagination.js';
 import {
   CatalogosFiltrosResponseDto,
   CentroCostoMetricasResponseDto,
+  CentroCostoPrincipalResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
   CreateCentroCostoDto,
@@ -23,7 +25,7 @@ export class CentroCostoController {
     isArray: true,
     description: 'Lista de centros de costos filtrada',
   })
-  findAll(@Query() query: ListCentroCostoQueryDto): Promise<CentroCostoResponseDto[]> {
+  findAll(@Query() query: ListCentroCostoQueryDto): Promise<Paginated<CentroCostoResponseDto>> {
     return this.handler.findAll(query);
   }
 
@@ -45,6 +47,17 @@ export class CentroCostoController {
   })
   getCatalogosFiltros(): Promise<CatalogosFiltrosResponseDto> {
     return this.handler.getCatalogosFiltros();
+  }
+
+  @Get('principales')
+  @ApiOperation({ summary: 'Listar centros de costos principales' })
+  @ApiOkResponse({
+    type: CentroCostoPrincipalResponseDto,
+    isArray: true,
+    description: 'Lista de centros de costos principales',
+  })
+  getCentrosCostoPrincipal(): Promise<CentroCostoPrincipalResponseDto[]> {
+    return this.handler.getCentrosCostoPrincipal();
   }
 
   @Get(':id')

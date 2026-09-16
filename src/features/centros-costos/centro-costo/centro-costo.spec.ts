@@ -50,7 +50,7 @@ describe('centro-costo', () => {
             all: centroAll,
           },
           Empresas: { all: empresasAll },
-          centro_costos_principal: { all: principalesAll },
+          centro_costos_principal: { orderBy: vi.fn(() => ({ all: principalesAll })), all: principalesAll },
           Anexos: { all: anexosAll },
           ppto_Principal: { where: vi.fn(() => ({ aggregate: pptoAggregate })) },
           DocCompra: {
@@ -85,11 +85,12 @@ describe('centro-costo', () => {
     anexosAll.mockResolvedValue([]);
 
     const result = await controller.findAll({});
-    expect(result[0]).toMatchObject({
+    expect(result.data[0]).toMatchObject({
       Empresa: 'GLD SERVICIOS GENERALES EIRL',
       Cliente: 'A1',
       PresupuestoMonto: '1450000.00',
     });
+    expect(result.total).toBe(1);
   });
 
   it('aplica el filtro de estado', async () => {
@@ -102,8 +103,26 @@ describe('centro-costo', () => {
     anexosAll.mockResolvedValue([]);
 
     const result = await controller.findAll({ estado: 'CERRADO' });
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe(2);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0].id).toBe(2);
+  });
+
+  it('pagina los resultados', async () => {
+    centroAll.mockResolvedValue([
+      ccRow({ id: 3, estado: 'ABIERTO' }),
+      ccRow({ id: 2, estado: 'CERRADO' }),
+      ccRow({ id: 1, estado: 'ABIERTO' }),
+    ]);
+    empresasAll.mockResolvedValue([]);
+    principalesAll.mockResolvedValue([]);
+    anexosAll.mockResolvedValue([]);
+
+    const result = await controller.findAll({ page: 2, pageSize: 2 });
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0].id).toBe(1);
+    expect(result.total).toBe(3);
+    expect(result.page).toBe(2);
+    expect(result.totalPages).toBe(2);
   });
 
   it('devuelve el conteo de estados', async () => {
@@ -135,6 +154,25 @@ describe('centro-costo', () => {
     expect(result.periodos).toEqual([2026, 2025]);
     expect(result.estados).toEqual(['ABIERTO']);
     expect(result.pptoEstados).toEqual(['Aprobado', 'Pendiente']);
+  });
+
+  it('lista centros de costos principales con la empresa', async () => {
+    principalesAll.mockResolvedValue([
+      { id: 1, centro_costo_principal: 'afa1e4fc', descripcion: 'TIENDA 3A', estado: 'ABIERTO', id_empresa: 1 },
+      { id: 2, centro_costo_principal: 'x9f0a2b1', descripcion: 'OFICINA PRINCIPAL', estado: 'ABIERTO', id_empresa: null },
+    ]);
+    empresasAll.mockResolvedValue([
+      { id_empresa: 1, razon_social: 'GLD SERVICIOS GENERALES EIRL' },
+    ]);
+
+    const result = await controller.getCentrosCostoPrincipal();
+    expect(result).toHaveLength(2);
+    expect(result[0]).toMatchObject({
+      id: 1,
+      centro_costo_principal: 'afa1e4fc',
+      Empresa: 'GLD SERVICIOS GENERALES EIRL',
+    });
+    expect(result[1].Empresa).toBeNull();
   });
 
   it('calcula el resumen financiero', async () => {

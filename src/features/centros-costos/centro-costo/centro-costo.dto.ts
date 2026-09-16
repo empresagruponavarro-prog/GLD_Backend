@@ -1,27 +1,28 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 
 export class CreateCentroCostoDto {
-  @ApiPropertyOptional({ example: 2026, description: 'Periodo fiscal' })
-  @IsOptional()
+  @ApiProperty({ example: 2026, description: 'Periodo fiscal' })
   @Type(() => Number)
+  @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  periodo?: number;
+  periodo: number;
 
-  @ApiPropertyOptional({ example: 'CLI-001', description: 'Código del cliente' })
-  @IsOptional()
+  @ApiProperty({ example: 'CLI-001', description: 'Código del cliente' })
+  @IsNotEmpty()
   @IsString()
   @MaxLength(255)
-  CodCliente?: string;
+  CodCliente: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'ID del centro de costo principal' })
-  @IsOptional()
+  @ApiProperty({ example: 1, description: 'ID del centro de costo principal' })
   @Type(() => Number)
+  @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  id_centro_costos_principal?: number;
+  id_centro_costos_principal: number;
 
   @ApiProperty({ example: 'PROYECTO EDIFICIO MULTIFAMILIAR', description: 'Nombre del centro de costo' })
   @IsString()
@@ -35,10 +36,10 @@ export class CreateCentroCostoDto {
   @MaxLength(50)
   Estado?: string;
 
-  @ApiPropertyOptional({ example: '2026-01-01', description: 'Fecha de inicio' })
-  @IsOptional()
+  @ApiProperty({ example: '2026-01-01', description: 'Fecha de inicio' })
+  @IsNotEmpty()
   @IsString()
-  FechaIncio?: string;
+  FechaIncio: string;
 
   @ApiPropertyOptional({ example: '2026-12-31', description: 'Fecha de fin programada' })
   @IsOptional()
@@ -93,7 +94,7 @@ export class CreateCentroCostoDto {
 
 export class UpdateCentroCostoDto extends PartialType(CreateCentroCostoDto) {}
 
-export class ListCentroCostoQueryDto {
+export class ListCentroCostoQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ description: 'Búsqueda general por texto libre' })
   @IsOptional()
   @IsString()
@@ -177,6 +178,26 @@ export class CentroCostoResponseDto {
 
   @ApiPropertyOptional({ example: '2026-12-31' })
   FechaFinReal?: string | null;
+}
+
+export class CentroCostoPrincipalResponseDto {
+  @ApiPropertyOptional({ example: 1 })
+  id: number;
+
+  @ApiPropertyOptional({ example: 'afa1e4fc', description: 'Código único del centro de costo principal' })
+  centro_costo_principal: string;
+
+  @ApiPropertyOptional({ example: 'TIENDA 3A', description: 'Descripción o nombre del centro de costo principal' })
+  descripcion: string;
+
+  @ApiPropertyOptional({ example: 'ABIERTO', description: 'Estado operativo' })
+  estado: string;
+
+  @ApiPropertyOptional({ example: 1, description: 'Identificador de la empresa' })
+  id_empresa: number | null;
+
+  @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
+  Empresa?: string | null;
 }
 
 export type CentroCostoRow = CentroCostoResponseDto;

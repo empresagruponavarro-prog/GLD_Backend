@@ -1,9 +1,11 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../presupuestos/presupuestos.helpers.js';
 import {
   CatalogosFiltrosResponseDto,
   CentroCostoMetricasResponseDto,
+  CentroCostoPrincipalResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
   CreateCentroCostoDto,
@@ -17,10 +19,11 @@ export class CentroCostoHandler {
 
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async findAll(query: ListCentroCostoQueryDto): Promise<CentroCostoResponseDto[]> {
+  async findAll(query: ListCentroCostoQueryDto): Promise<Paginated<CentroCostoResponseDto>> {
+    const { page, pageSize, offset } = pageParams(query);
     try {
       const [rows, empresas, principales] = await Promise.all([
-        this.db.orm.public.CentroCostos.orderBy((c) => c.id.asc()).all(),
+        this.db.orm.public.CentroCostos.orderBy((c) => c.id.desc()).all(),
         this.db.orm.public.Empresas.all(),
         this.db.orm.public.centro_costos_principal.all(),
       ]);
@@ -33,7 +36,7 @@ export class CentroCostoHandler {
         return principal?.id_empresa ?? null;
       };
 
-      return rows
+      const filtered = rows
         .map((r) => {
           const idEmpresa = empresaDelHijo(r);
           const codCliente = r.cod_cliente;
@@ -59,10 +62,30 @@ export class CentroCostoHandler {
           };
         })
         .filter((r) => matchesFilters(r, query));
+
+      return toPaginated(filtered.slice(offset, offset + pageSize), filtered.length, page, pageSize);
     } catch (error) {
       this.logger.error('Error listando centros de costos', error);
       throw error;
     }
+  }
+
+  async getCentrosCostoPrincipal(): Promise<CentroCostoPrincipalResponseDto[]> {
+    const [rows, empresas] = await Promise.all([
+      this.db.orm.public.centro_costos_principal.orderBy((p) => p.id.asc()).all(),
+      this.db.orm.public.Empresas.all(),
+    ]);
+
+    const empresasById = new Map(empresas.map((e) => [e.id_empresa, e.razon_social]));
+
+    return rows.map((p) => ({
+      id: p.id,
+      centro_costo_principal: p.centro_costo_principal,
+      descripcion: p.descripcion,
+      estado: p.estado,
+      id_empresa: p.id_empresa,
+      Empresa: p.id_empresa != null ? empresasById.get(p.id_empresa) ?? null : null,
+    }));
   }
 
   async getById(id: number): Promise<CentroCostoResponseDto> {
@@ -308,7 +331,9 @@ function matchesFilters(row: CentroCostoResponseDto, query: ListCentroCostoQuery
   }
   if (empresa && empresa.trim() && empresa.toUpperCase() !== 'TODOS') {
     const emp = empresa.trim();
-    const empMatches = row.Empresa === emp || (row.id_empresa != null && String(row.id_empresa) === emp);
+    const empMatches =
+      (row.Empresa ?? '').toLowerCase().includes(emp.toLowerCase()) ||
+      (row.id_empresa != null && String(row.id_empresa) === emp);
     if (!empMatches) return false;
   }
   if (periodo && periodo.trim() && periodo.toUpperCase() !== 'TODOS') {
