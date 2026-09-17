@@ -16,12 +16,12 @@ import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto
 @Module({
   imports: [PrismaModule],
   controllers: [
-    PresupuestoPrincipalController,
     PptoFasesController,
     PptoFasesCategoriasController,
     PptoDetalleFasesController,
     PptoDetalleFasesCateController,
     PresupuestoHistorialController,
+    PresupuestoPrincipalController,
   ],
   providers: [
     PresupuestoPrincipalHandler,
