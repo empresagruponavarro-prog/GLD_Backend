@@ -48,6 +48,23 @@ export class ListPptoFaseQueryDto extends PaginationQueryDto {
   @Type(() => Number)
   @IsNumber()
   id_empresa?: number;
+
+  @ApiPropertyOptional({ description: 'Filtro por ID de centro de costo (tienda u obra)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  id_centro_costo?: number;
+
+  @ApiPropertyOptional({ description: 'Filtro por ID de centro de costo principal (cadena)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  id_centro_costos_principal?: number;
+
+  @ApiPropertyOptional({ description: 'Filtro por código de centro de costo principal' })
+  @IsOptional()
+  @IsString()
+  CodCentroCtoPrincipal?: string;
 }
 
 export class PptoFaseResponseDto {
