@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+﻿import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../presupuestos/presupuestos.helpers.js';
 import {
@@ -92,9 +92,9 @@ export class CentroCostoHandler {
       id_centro_costos_principal: dto.id_centro_costos_principal,
       centro_costo: toVarchar(dto.CentroCosto),
       estado: toVarchar<50>(dto.Estado ?? 'ABIERTO'),
-      fecha_inicio: dto.FechaIncio,
-      fecha_fin_prog: dto.FechaFinProg,
-      fecha_fin_real: dto.FechaFinReal,
+      fecha_inicio: toDateString(dto.FechaIncio),
+      fecha_fin_prog: toDateString(dto.FechaFinProg),
+      fecha_fin_real: toDateString(dto.FechaFinReal),
       presupuesto_estado: toVarchar<50>(dto.PresupuestoEstado),
       presupuesto_costo_directo: toDecimalString(dto.PresupuestoCostoDirecto ?? 0),
       presupuesto_gastos_generales: toDecimalString(dto.PresupuestoGastosGenerales ?? 0),
@@ -142,9 +142,9 @@ export class CentroCostoHandler {
       data.id_centro_costos_principal = dto.id_centro_costos_principal;
     if (dto.CentroCosto !== undefined) data.centro_costo = toVarchar(dto.CentroCosto);
     if (dto.Estado !== undefined) data.estado = toVarchar<50>(dto.Estado);
-    if (dto.FechaIncio !== undefined) data.fecha_inicio = dto.FechaIncio;
-    if (dto.FechaFinProg !== undefined) data.fecha_fin_prog = dto.FechaFinProg;
-    if (dto.FechaFinReal !== undefined) data.fecha_fin_real = dto.FechaFinReal;
+    if (dto.FechaIncio !== undefined) data.fecha_inicio = toDateString(dto.FechaIncio);
+    if (dto.FechaFinProg !== undefined) data.fecha_fin_prog = toDateString(dto.FechaFinProg);
+    if (dto.FechaFinReal !== undefined) data.fecha_fin_real = toDateString(dto.FechaFinReal);
     if (dto.PresupuestoEstado !== undefined) data.presupuesto_estado = toVarchar<50>(dto.PresupuestoEstado);
     if (dto.PresupuestoCostoDirecto !== undefined) data.presupuesto_costo_directo = toDecimalString(dto.PresupuestoCostoDirecto);
     if (dto.PresupuestoGastosGenerales !== undefined) data.presupuesto_gastos_generales = toDecimalString(dto.PresupuestoGastosGenerales);
@@ -382,3 +382,9 @@ function normalizePptoEstado(val: string | null | undefined): string {
   if (!val) return '';
   return val.trim().toLowerCase().replace(/[\s_\-]+/g, '');
 }
+// Convierte string vacío o null/undefined a undefined para campos date de PostgreSQL
+function toDateString(val: string | null | undefined): string | undefined {
+  if (!val || val.trim() === '') return undefined;
+  return val.trim();
+}
+

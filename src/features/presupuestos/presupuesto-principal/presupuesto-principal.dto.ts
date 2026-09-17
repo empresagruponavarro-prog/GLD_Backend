@@ -1,14 +1,14 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+﻿import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 
 export class CreatePresupuestoPrincipalDto {
-  @ApiProperty({ example: 'PPTO-2026-001', description: 'Código único del presupuesto' })
+  @ApiPropertyOptional({ example: 'PPTO-2026-001', description: 'Código único. Si no se envía, se autogenera.' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(255)
-  IdPresupuesto: string;
+  IdPresupuesto?: string;
 
   @ApiPropertyOptional({ example: 1, description: 'Identificador de empresa' })
   @IsOptional()
@@ -17,14 +17,14 @@ export class CreatePresupuestoPrincipalDto {
   @Min(1)
   id_empresa?: number;
 
-  @ApiPropertyOptional({ example: 2026, description: 'ID o año del periodo' })
+  @ApiPropertyOptional({ example: 2026, description: 'ID o aÃ±o del periodo' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
   periodo?: number;
 
-  @ApiPropertyOptional({ example: 'V1', description: 'Versión del presupuesto' })
+  @ApiPropertyOptional({ example: 'V1', description: 'VersiÃ³n del presupuesto' })
   @IsOptional()
   @IsString()
   @MaxLength(255)
@@ -53,7 +53,7 @@ export class CreatePresupuestoPrincipalDto {
   @MaxLength(255)
   CodCentroCtoPrincipal?: string;
 
-  @ApiPropertyOptional({ example: 'a47efc23', description: 'Código de Centro de Costo asignado' })
+  @ApiPropertyOptional({ example: 'a47efc23', description: 'CÃ³digo de Centro de Costo asignado' })
   @IsOptional()
   @IsString()
   @MaxLength(255)
@@ -107,7 +107,7 @@ export class CreatePresupuestoPrincipalDto {
   @IsNumber()
   Utilidad?: number;
 
-  @ApiPropertyOptional({ example: 5000.00, description: 'Viáticos' })
+  @ApiPropertyOptional({ example: 5000.00, description: 'ViÃ¡ticos' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -139,7 +139,7 @@ export class CreatePresupuestoPrincipalDto {
 export class UpdatePresupuestoPrincipalDto extends PartialType(CreatePresupuestoPrincipalDto) {}
 
 export class ListPresupuestoPrincipalQueryDto extends PaginationQueryDto {
-  @ApiPropertyOptional({ description: 'Búsqueda por texto (código o proyecto)' })
+  @ApiPropertyOptional({ description: 'BÃºsqueda por texto (cÃ³digo o proyecto)' })
   @IsOptional()
   @IsString()
   search?: string;
@@ -252,3 +252,5 @@ export class PresupuestoPrincipalResponseDto {
   @ApiPropertyOptional()
   FechaCreacion: string | null;
 }
+
+

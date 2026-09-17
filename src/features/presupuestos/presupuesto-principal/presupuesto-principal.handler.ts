@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+﻿import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
@@ -96,11 +96,14 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
   async create(dto: CreatePresupuestoPrincipalDto): Promise<PresupuestoPrincipalResponseDto> {
     const idCentroCosto = await this.resolveCentroCostoId(dto);
 
+    // Autogenerar IdPresupuesto si no viene del frontend
+    const idPresupuesto = ((dto.IdPresupuesto ?? '').trim()) || (await generateIdPresupuesto(this.db));
+
     const { subTotal, igv, total, gastosGenerales, utilidad } = calculateAmounts(dto);
 
     try {
       const created = await this.db.orm.public.ppto_Principal.create({
-        IdPresupuesto: toVarchar(dto.IdPresupuesto),
+        IdPresupuesto: toVarchar(idPresupuesto),
         id_empresa: dto.id_empresa,
         periodo: dto.periodo,
         Version: toVarchar(dto.Version ?? 'V1'),
@@ -129,14 +132,14 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       });
 
       await this.db.orm.public.ppto_Principal_Historial.create({
-        IdPresupuesto: toVarchar(dto.IdPresupuesto),
-        IdPresupuestoVersion: toVarchar(`${dto.IdPresupuesto}-V1`),
+        IdPresupuesto: toVarchar(idPresupuesto),
+        IdPresupuestoVersion: toVarchar(`${idPresupuesto}-V1`),
         NumVersion: toVarchar('1'),
       }).catch(() => null);
 
       return created as unknown as PresupuestoPrincipalResponseDto;
     } catch (error) {
-      throwIfUniqueViolation(error, `El IdPresupuesto "${dto.IdPresupuesto}" ya existe`);
+      throwIfUniqueViolation(error, `El IdPresupuesto "${idPresupuesto}" ya existe`);
       throw error;
     }
   }
@@ -304,4 +307,22 @@ function calculateAmounts(dto: {
     gastosGenerales: Number(gg.toFixed(2)),
     utilidad: Number(ut.toFixed(2)),
   };
+}
+// Genera un ID único para el presupuesto: PPTO-{año}-{correlativo 3 dígitos}
+async function generateIdPresupuesto(db: Database): Promise<string> {
+  const year = new Date().getFullYear();
+  const prefix = `PPTO-${year}-`;
+  const rows = await db.orm.public.ppto_Principal
+    .where((p) => p.IdPresupuesto.ilike(`${prefix}%`))
+    .all();
+  let maxNum = 0;
+  for (const row of rows) {
+    const last = row.IdPresupuesto ?? '';
+    const parts = last.split('-');
+    const num = parseInt(parts[parts.length - 1], 10);
+    if (!isNaN(num) && num > maxNum) {
+      maxNum = num;
+    }
+  }
+  return `${prefix}${String(maxNum + 1).padStart(3, '0')}`;
 }
