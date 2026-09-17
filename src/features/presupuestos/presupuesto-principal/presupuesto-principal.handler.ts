@@ -137,6 +137,9 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         NumVersion: toVarchar('1'),
       }).catch(() => null);
 
+      if (idCentroCosto) {
+        await this.syncCentroCostoPresupuesto(idCentroCosto).catch(() => null);
+      }
       return created as unknown as PresupuestoPrincipalResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuesto "${idPresupuesto}" ya existe`);
@@ -229,6 +232,10 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     try {
       const updated = await this.db.orm.public.ppto_Principal.where({ id }).update(data);
       if (!updated) throw new NotFoundException(`Presupuesto ${id} no encontrado`);
+      const targetCCId = idCentroCosto ?? current.id_centro_costo;
+      if (targetCCId) {
+        await this.syncCentroCostoPresupuesto(targetCCId).catch(() => null);
+      }
       return updated as unknown as PresupuestoPrincipalResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuesto ya existe`);
@@ -258,6 +265,30 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     return { deleted: true, id: ppto.id, code: ppto.IdPresupuesto };
   }
 
+  
+  async syncCentroCostoPresupuesto(idCentroCosto: number): Promise<void> {
+    try {
+      const [pptos, fases] = await Promise.all([
+        this.db.orm.public.ppto_Principal.where((p) => p.id_centro_costo.eq(idCentroCosto)).all(),
+        this.db.orm.public.ppto_DetalleFases.where((f) => f.id_centro_costo.eq(idCentroCosto)).all(),
+      ]);
+      const cdPpto = pptos.reduce((acc, p) => acc + (Number(p.CostoDirecto) || 0), 0);
+      const cdFases = fases.reduce((acc, f) => acc + (Number(f.CostoDirecto) || 0), 0);
+      const totalCD = Math.max(cdPpto, cdFases);
+      const lastEstado = pptos.find((p) => p.Estado)?.Estado ?? 'ABIERTO';
+
+      await this.db.orm.public.CentroCostos
+        .where((c) => c.id.eq(idCentroCosto))
+        .update({
+          presupuesto_monto: toDecimalString(totalCD),
+          presupuesto_costo_directo: toDecimalString(totalCD),
+          presupuesto_estado: toVarchar<50>(lastEstado),
+        });
+    } catch {
+      // Non-blocking sync
+    }
+  }
+
   private async resolveCentroCostoId(dto: {
     id_centro_costo?: number;
   }): Promise<number | undefined> {
@@ -279,7 +310,8 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
   );
 }
 
-function calculateAmounts(dto: {
+
+  function calculateAmounts(dto: {
   CostoDirecto?: number;
   GGPorcentaje?: number;
   GastosGenerales?: number;
