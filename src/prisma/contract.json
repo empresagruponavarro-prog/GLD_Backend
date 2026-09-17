@@ -7644,6 +7644,21 @@
               }
             },
             "relations": {
+              "categorias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "targetFields": [
+                    "IdPresupuestoDetalle"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
               "centroCosto": {
                 "cardinality": "N:1",
                 "on": {
@@ -7671,6 +7686,36 @@
                 },
                 "to": {
                   "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
+              "fase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Fases",
+                  "namespace": "public"
+                }
+              },
+              "presupuesto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
                   "namespace": "public"
                 }
               }
@@ -7852,6 +7897,21 @@
                   "namespace": "public"
                 }
               },
+              "detalleFase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "targetFields": [
+                    "IdPresupuestoDetalle"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
               "empresa": {
                 "cardinality": "N:1",
                 "on": {
@@ -7864,6 +7924,21 @@
                 },
                 "to": {
                   "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
+              "presupuesto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
                   "namespace": "public"
                 }
               }
@@ -7962,6 +8037,36 @@
               }
             },
             "relations": {
+              "categorias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_FasesCategorias",
+                  "namespace": "public"
+                }
+              },
+              "detalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
               "empresa": {
                 "cardinality": "N:1",
                 "on": {
@@ -8040,7 +8145,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "fase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdpptoFase"
+                  ],
+                  "targetFields": [
+                    "IdpptoFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Fases",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "Descripcion": {
@@ -8341,6 +8462,36 @@
                   "namespace": "public"
                 }
               },
+              "detallesFases": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
+              "detallesFasesCate": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
               "empresa": {
                 "cardinality": "N:1",
                 "on": {
@@ -8353,6 +8504,21 @@
                 },
                 "to": {
                   "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
+              "historial": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal_Historial",
                   "namespace": "public"
                 }
               }
@@ -8517,7 +8683,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "presupuesto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPresupuesto"
+                  ],
+                  "targetFields": [
+                    "IdPresupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "FileCorreo": {
@@ -13589,9 +13771,59 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Fases"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_DetalleFases_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_DetalleFases_IdPresupuesto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "IdpptoFase"
+                  ],
+                  "name": "ppto_DetalleFases_IdpptoFase_idx_3132f24e",
+                  "prefix": "ppto_DetalleFases_IdpptoFase_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_centro_costo"
@@ -13755,9 +13987,59 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "IdPresupuestoDetalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuestoDetalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuestoDetalle"
+                  ],
+                  "name": "ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6",
+                  "prefix": "ppto_DetalleFasesCate_IdPresupuestoDetalle_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_DetalleFasesCate_IdPresupuesto_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_centro_costo"
@@ -13907,8 +14189,35 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_FasesCategorias"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdpptoFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Fases"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdpptoFase"
+                  ],
+                  "name": "ppto_FasesCategorias_IdpptoFase_idx_3132f24e",
+                  "prefix": "ppto_FasesCategorias_IdpptoFase_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -14248,8 +14557,35 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal_Historial"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPresupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_Principal_Historial_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_Principal_Historial_IdPresupuesto_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -15049,7 +15385,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "61fb51a924e52f6ea2cddb424bb22ae2373832d5a73a086f1d0d291ab6d3940a"
+    "storageHash": "b8157094014a418a94b6e6e8ab9d5fae548264060fa88216978a0d875f1b462f"
   },
   "capabilities": {
     "postgres": {

@@ -33,4 +33,9 @@ lerna-debug.log*
 .cursor/
 .devin/
 
-opencode.json
+opencode.json 
+# Temporary and test files
+*.sql
+*.mjs
+*.tsbuildinfo
+

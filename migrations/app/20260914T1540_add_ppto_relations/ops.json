@@ -1,0 +1,488 @@
+[
+  {
+    "id": "index.ppto_DetalleFases.ppto_DetalleFases_IdPresupuesto_idx_610007fd",
+    "label": "Create index \"ppto_DetalleFases_IdPresupuesto_idx_610007fd\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_IdPresupuesto_idx_610007fd",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_IdPresupuesto_idx_610007fd\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFases_IdPresupuesto_idx_610007fd\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFases_IdPresupuesto_idx_610007fd\" ON \"public\".\"ppto_DetalleFases\" (\"IdPresupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_IdPresupuesto_idx_610007fd\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFases.ppto_DetalleFases_IdpptoFase_idx_3132f24e",
+    "label": "Create index \"ppto_DetalleFases_IdpptoFase_idx_3132f24e\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_IdpptoFase_idx_3132f24e",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_IdpptoFase_idx_3132f24e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_IdpptoFase_idx_3132f24e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFases_IdpptoFase_idx_3132f24e\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFases_IdpptoFase_idx_3132f24e\" ON \"public\".\"ppto_DetalleFases\" (\"IdpptoFase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_IdpptoFase_idx_3132f24e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_IdpptoFase_idx_3132f24e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFasesCate.ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6",
+    "label": "Create index \"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\" ON \"public\".\"ppto_DetalleFasesCate\" (\"IdPresupuestoDetalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_IdPresupuestoDetalle_idx_03ca64c6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFasesCate.ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd",
+    "label": "Create index \"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\" ON \"public\".\"ppto_DetalleFasesCate\" (\"IdPresupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_FasesCategorias.ppto_FasesCategorias_IdpptoFase_idx_3132f24e",
+    "label": "Create index \"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\" on \"ppto_FasesCategorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_FasesCategorias_IdpptoFase_idx_3132f24e",
+        "table": "ppto_FasesCategorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\"",
+        "sql": "CREATE INDEX \"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\" ON \"public\".\"ppto_FasesCategorias\" (\"IdpptoFase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_FasesCategorias_IdpptoFase_idx_3132f24e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Principal_Historial.ppto_Principal_Historial_IdPresupuesto_idx_610007fd",
+    "label": "Create index \"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\" on \"ppto_Principal_Historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_Historial_IdPresupuesto_idx_610007fd",
+        "table": "ppto_Principal_Historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\"",
+        "sql": "CREATE INDEX \"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\" ON \"public\".\"ppto_Principal_Historial\" (\"IdPresupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_Historial_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFases.ppto_DetalleFases_IdPresupuesto_fkey",
+    "label": "Add foreign key \"ppto_DetalleFases_IdPresupuesto_fkey\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFases_IdPresupuesto_fkey",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFases_IdPresupuesto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFases_IdPresupuesto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\"\nADD CONSTRAINT \"ppto_DetalleFases_IdPresupuesto_fkey\"\nFOREIGN KEY (\"IdPresupuesto\")\nREFERENCES \"public\".\"ppto_Principal\" (\"IdPresupuesto\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFases_IdPresupuesto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFases.ppto_DetalleFases_IdpptoFase_fkey",
+    "label": "Add foreign key \"ppto_DetalleFases_IdpptoFase_fkey\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFases_IdpptoFase_fkey",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFases_IdpptoFase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdpptoFase_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFases_IdpptoFase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\"\nADD CONSTRAINT \"ppto_DetalleFases_IdpptoFase_fkey\"\nFOREIGN KEY (\"IdpptoFase\")\nREFERENCES \"public\".\"ppto_Fases\" (\"IdpptoFase\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFases_IdpptoFase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_IdpptoFase_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFasesCate.ppto_DetalleFasesCate_IdPresupuesto_fkey",
+    "label": "Add foreign key \"ppto_DetalleFasesCate_IdPresupuesto_fkey\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFasesCate_IdPresupuesto_fkey",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFasesCate_IdPresupuesto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFasesCate_IdPresupuesto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\"\nADD CONSTRAINT \"ppto_DetalleFasesCate_IdPresupuesto_fkey\"\nFOREIGN KEY (\"IdPresupuesto\")\nREFERENCES \"public\".\"ppto_Principal\" (\"IdPresupuesto\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFasesCate_IdPresupuesto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFasesCate.ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey",
+    "label": "Add foreign key \"ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\"\nADD CONSTRAINT \"ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey\"\nFOREIGN KEY (\"IdPresupuestoDetalle\")\nREFERENCES \"public\".\"ppto_DetalleFases\" (\"IdPresupuestoDetalle\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_IdPresupuestoDetalle_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_FasesCategorias.ppto_FasesCategorias_IdpptoFase_fkey",
+    "label": "Add foreign key \"ppto_FasesCategorias_IdpptoFase_fkey\" on \"ppto_FasesCategorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_FasesCategorias_IdpptoFase_fkey",
+        "table": "ppto_FasesCategorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_FasesCategorias_IdpptoFase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_FasesCategorias_IdpptoFase_fkey",
+          "public",
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_FasesCategorias_IdpptoFase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_FasesCategorias\"\nADD CONSTRAINT \"ppto_FasesCategorias_IdpptoFase_fkey\"\nFOREIGN KEY (\"IdpptoFase\")\nREFERENCES \"public\".\"ppto_Fases\" (\"IdpptoFase\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_FasesCategorias_IdpptoFase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_FasesCategorias_IdpptoFase_fkey",
+          "public",
+          "\"public\".\"ppto_FasesCategorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Principal_Historial.ppto_Principal_Historial_IdPresupuesto_fkey",
+    "label": "Add foreign key \"ppto_Principal_Historial_IdPresupuesto_fkey\" on \"ppto_Principal_Historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Principal_Historial_IdPresupuesto_fkey",
+        "table": "ppto_Principal_Historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Principal_Historial_IdPresupuesto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_Historial_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_Principal_Historial\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Principal_Historial_IdPresupuesto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal_Historial\"\nADD CONSTRAINT \"ppto_Principal_Historial_IdPresupuesto_fkey\"\nFOREIGN KEY (\"IdPresupuesto\")\nREFERENCES \"public\".\"ppto_Principal\" (\"IdPresupuesto\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Principal_Historial_IdPresupuesto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_Historial_IdPresupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_Principal_Historial\""
+        ]
+      }
+    ]
+  }
+]

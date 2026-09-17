@@ -816,6 +816,9 @@ model ppto_DetalleFases {
   CostoDirecto          Decimal?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
+  fase                  ppto_Fases?           @relation(fields: [IdpptoFase], references: [IdpptoFase], onDelete: SetNull)
+  presupuesto           ppto_Principal?       @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
+  categorias            ppto_DetalleFasesCate[]
   @@map("ppto_DetalleFases")
 }
 
@@ -835,6 +838,8 @@ model ppto_DetalleFasesCate {
   CostoDirecto                  Decimal?
   Usuario                       VarChar(255)?
   FechaCreacion                 VarChar(255)?
+  detalleFase                   ppto_DetalleFases?  @relation(fields: [IdPresupuestoDetalle], references: [IdPresupuestoDetalle], onDelete: Cascade)
+  presupuesto                   ppto_Principal?     @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
   @@map("ppto_DetalleFasesCate")
 }
 
@@ -845,6 +850,8 @@ model ppto_Fases {
   empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   CodCentroCtoPrincipal VarChar(255)?
   FaseProyecto          VarChar(255)?
+  categorias            ppto_FasesCategorias[]
+  detalles              ppto_DetalleFases[]
   @@map("ppto_Fases")
 }
 
@@ -853,6 +860,7 @@ model ppto_FasesCategorias {
   IdpptoFaseCategoria VarChar(255)? @unique
   IdpptoFase          VarChar(255)?
   Descripcion         VarChar(255)?
+  fase                ppto_Fases?            @relation(fields: [IdpptoFase], references: [IdpptoFase], onDelete: Cascade)
   @@map("ppto_FasesCategorias")
 }
 
@@ -890,6 +898,9 @@ model ppto_Principal {
   IdUsuario             VarChar(255)?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
+  detallesFases         ppto_DetalleFases[]
+  detallesFasesCate     ppto_DetalleFasesCate[]
+  historial             ppto_Principal_Historial[]
   @@map("ppto_Principal")
 }
 
@@ -900,5 +911,6 @@ model ppto_Principal_Historial {
   NumVersion           VarChar(255)?
   FilePpto             VarChar(255)?
   FileCorreo           VarChar(255)?
+  presupuesto          ppto_Principal?        @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
   @@map("ppto_Principal_Historial")
 }
