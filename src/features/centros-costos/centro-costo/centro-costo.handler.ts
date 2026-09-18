@@ -20,7 +20,7 @@ export class CentroCostoHandler {
   async findAll(query: ListCentroCostoQueryDto): Promise<CentroCostoResponseDto[]> {
     try {
       const [rows, empresas, principales, pptos, detalleFases] = await Promise.all([
-        this.db.orm.public.CentroCostos.orderBy((c) => c.id.asc()).all(),
+        this.db.orm.public.CentroCostos.orderBy((c) => c.id.desc()).all(),
         this.db.orm.public.Empresas.all(),
         this.db.orm.public.centro_costos_principal.all(),
         this.db.orm.public.ppto_Principal.all(),
