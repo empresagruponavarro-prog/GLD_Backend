@@ -16,14 +16,53 @@ export class PptoFasesHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
   async list(query: ListPptoFaseQueryDto): Promise<Paginated<PptoFaseResponseDto>> {
-    const { page, pageSize, offset } = pageParams(query);
-    const base = this.db.orm.public.ppto_Fases.orderBy((f) => f.id.asc());
-    const collection = hasFilters(query)
+    let resolvedCodPrincipal = query.CodCentroCtoPrincipal;
+    let resolvedIdEmpresa = query.id_empresa;
+
+    const wantsRelationalFilter = Boolean(query.id_centro_costo || query.id_centro_costos_principal);
+
+    if (!resolvedCodPrincipal && query.id_centro_costo) {
+      const cc = await this.db.orm.public.CentroCostos.first({ id: query.id_centro_costo });
+      if (cc?.id_centro_costos_principal) {
+        const ccp = await this.db.orm.public.centro_costos_principal.first({ id: cc.id_centro_costos_principal });
+        if (ccp) {
+          resolvedCodPrincipal = ccp.centro_costo_principal;
+          if (!resolvedIdEmpresa && ccp.id_empresa) {
+            resolvedIdEmpresa = ccp.id_empresa;
+          }
+        }
+      }
+    } else if (!resolvedCodPrincipal && query.id_centro_costos_principal) {
+      const ccp = await this.db.orm.public.centro_costos_principal.first({ id: query.id_centro_costos_principal });
+      if (ccp) {
+        resolvedCodPrincipal = ccp.centro_costo_principal;
+        if (!resolvedIdEmpresa && ccp.id_empresa) {
+          resolvedIdEmpresa = ccp.id_empresa;
+        }
+      }
+    }
+
+    // Si el usuario solicitó filtrar por Centro de Costo pero no tiene cadena asociada, retornar vacío
+    if (wantsRelationalFilter && !resolvedCodPrincipal) {
+      return toPaginated([], 0, 1, query.pageSize ?? 20);
+    }
+
+    const effectiveQuery = {
+      ...query,
+      pageSize: query.pageSize ?? (resolvedCodPrincipal || wantsRelationalFilter ? 100 : 20),
+    };
+    const { page, pageSize, offset } = pageParams(effectiveQuery);
+
+    const base = this.db.orm.public.ppto_Fases.orderBy((f) => f.FaseProyecto.asc());
+    const filtering = hasFilters(query) || Boolean(resolvedCodPrincipal);
+
+    const collection = filtering
       ? base.where((f) =>
           and(
             ...(query.IdpptoFase ? [f.IdpptoFase.ilike(`%${query.IdpptoFase}%`)] : []),
             ...(query.FaseProyecto ? [f.FaseProyecto.ilike(`%${query.FaseProyecto}%`)] : []),
-            ...(query.id_empresa ? [f.id_empresa.eq(query.id_empresa)] : []),
+            ...(resolvedIdEmpresa ? [f.id_empresa.eq(resolvedIdEmpresa)] : []),
+            ...(resolvedCodPrincipal ? [f.CodCentroCtoPrincipal.eq(toVarchar(resolvedCodPrincipal))] : []),
           ),
         )
       : base;
@@ -102,10 +141,18 @@ export class PptoFasesHandler {
   async getCategoriasDeFase(idpptoFase: string) {
     return this.db.orm.public.ppto_FasesCategorias
       .where((fc) => fc.IdpptoFase.eq(toVarchar(idpptoFase)))
+      .orderBy((fc) => fc.Descripcion.asc())
       .all();
   }
 }
 
 function hasFilters(query: ListPptoFaseQueryDto): boolean {
-  return query.IdpptoFase !== undefined || query.FaseProyecto !== undefined || query.id_empresa !== undefined;
+  return (
+    query.IdpptoFase !== undefined ||
+    query.FaseProyecto !== undefined ||
+    query.id_empresa !== undefined ||
+    query.id_centro_costo !== undefined ||
+    query.id_centro_costos_principal !== undefined ||
+    query.CodCentroCtoPrincipal !== undefined
+  );
 }

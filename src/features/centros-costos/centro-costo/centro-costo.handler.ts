@@ -22,14 +22,55 @@ export class CentroCostoHandler {
   async findAll(query: ListCentroCostoQueryDto): Promise<Paginated<CentroCostoResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     try {
-      const [rows, empresas, principales] = await Promise.all([
+      const [rows, empresas, principales, pptos, detalleFases] = await Promise.all([
         this.db.orm.public.CentroCostos.orderBy((c) => c.id.desc()).all(),
         this.db.orm.public.Empresas.all(),
         this.db.orm.public.centro_costos_principal.all(),
+        this.db.orm.public.ppto_Principal.all(),
+        this.db.orm.public.ppto_DetalleFases.all(),
       ]);
 
       const empresasById = new Map(empresas.map((e) => [e.id_empresa, e.razon_social]));
       const principalesByRowId = new Map(principales.map((p) => [p.id, p]));
+
+      // Map CostoDirecto from ppto_DetalleFases
+      const fasesByPpto = new Map<string, number>();
+      const fasesByCC = new Map<number, number>();
+      for (const f of detalleFases) {
+        const monto = Number(f.CostoDirecto) || 0;
+        if (f.IdPresupuesto) {
+          const prev = fasesByPpto.get(String(f.IdPresupuesto)) ?? 0;
+          fasesByPpto.set(String(f.IdPresupuesto), prev + monto);
+        }
+        if (f.id_centro_costo != null) {
+          const prev = fasesByCC.get(f.id_centro_costo) ?? 0;
+          fasesByCC.set(f.id_centro_costo, prev + monto);
+        }
+      }
+
+      // Map CostoDirecto and Estado by CC
+      const pptoMontoByCC = new Map<number, number>();
+      const pptoEstadoByCC = new Map<number, string>();
+
+      for (const p of pptos) {
+        const pptoCode = p.IdPresupuesto ? String(p.IdPresupuesto) : '';
+        const cdPrincipal = Number(p.CostoDirecto) || 0;
+        const cdFases = pptoCode ? (fasesByPpto.get(pptoCode) ?? 0) : 0;
+        const cdReal = Math.max(cdPrincipal, cdFases);
+
+        if (p.id_centro_costo != null) {
+          const prev = pptoMontoByCC.get(p.id_centro_costo) ?? 0;
+          pptoMontoByCC.set(p.id_centro_costo, prev + cdReal);
+          if (p.Estado) pptoEstadoByCC.set(p.id_centro_costo, p.Estado);
+        }
+      }
+
+      for (const [ccId, fasesMonto] of fasesByCC.entries()) {
+        const current = pptoMontoByCC.get(ccId) ?? 0;
+        if (fasesMonto > current) {
+          pptoMontoByCC.set(ccId, fasesMonto);
+        }
+      }
 
       const empresaDelHijo = (r: { id_centro_costos_principal: number | null }): number | null => {
         const principal = r.id_centro_costos_principal != null ? principalesByRowId.get(r.id_centro_costos_principal) : null;
@@ -43,6 +84,15 @@ export class CentroCostoHandler {
           const idPrincipal = r.id_centro_costos_principal;
           const principalName = idPrincipal != null ? principalesByRowId.get(idPrincipal)?.descripcion ?? null : null;
 
+          const pptoCalculado = pptoMontoByCC.get(r.id);
+          const pptoMonto = pptoCalculado !== undefined && pptoCalculado > 0
+            ? String(pptoCalculado)
+            : (r.presupuesto_costo_directo != null && Number(r.presupuesto_costo_directo) > 0
+                ? String(r.presupuesto_costo_directo)
+                : (r.presupuesto_monto != null ? String(r.presupuesto_monto) : '0.00'));
+
+          const pptoEstado = pptoEstadoByCC.get(r.id) || r.presupuesto_estado || 'ABIERTO';
+
           return {
             id: r.id,
             idCentroCostosPrincipal: idPrincipal,
@@ -54,8 +104,8 @@ export class CentroCostoHandler {
             periodo: r.periodo,
             CodCliente: r.cod_cliente,
             Cliente: codCliente,
-            PresupuestoEstado: r.presupuesto_estado,
-            PresupuestoMonto: r.presupuesto_monto != null ? String(r.presupuesto_monto) : null,
+            PresupuestoEstado: pptoEstado,
+            PresupuestoMonto: pptoMonto,
             FechaIncio: r.fecha_inicio,
             FechaFinProg: r.fecha_fin_prog,
             FechaFinReal: r.fecha_fin_real,
@@ -89,9 +139,24 @@ export class CentroCostoHandler {
   }
 
   async getById(id: number): Promise<CentroCostoResponseDto> {
-    const row = await this.db.orm.public.CentroCostos.first({ id });
+    const [row, pptos, fases] = await Promise.all([
+      this.db.orm.public.CentroCostos.first({ id }),
+      this.db.orm.public.ppto_Principal.where((p) => p.id_centro_costo.eq(id)).all(),
+      this.db.orm.public.ppto_DetalleFases.where((f) => f.id_centro_costo.eq(id)).all(),
+    ]);
 
     if (!row) throw new NotFoundException(`Centro de costo ${id} no encontrado`);
+    const totalPptoCd = pptos.reduce((acc, p) => acc + (Number(p.CostoDirecto) || 0), 0);
+    const totalFasesCd = fases.reduce((acc, f) => acc + (Number(f.CostoDirecto) || 0), 0);
+    const totalCd = Math.max(totalPptoCd, totalFasesCd);
+
+    const pptoMonto = totalCd > 0
+      ? String(totalCd)
+      : (row.presupuesto_costo_directo != null && Number(row.presupuesto_costo_directo) > 0
+          ? String(row.presupuesto_costo_directo)
+          : (row.presupuesto_monto != null ? String(row.presupuesto_monto) : '0.00'));
+    const pptoEstado = pptos.find((p) => p.Estado)?.Estado || row.presupuesto_estado || 'ABIERTO';
+
     return {
       id: row.id,
       idCentroCostosPrincipal: row.id_centro_costos_principal,
@@ -100,8 +165,8 @@ export class CentroCostoHandler {
       id_empresa: null,
       periodo: row.periodo,
       CodCliente: row.cod_cliente,
-      PresupuestoEstado: row.presupuesto_estado,
-      PresupuestoMonto: row.presupuesto_monto != null ? String(row.presupuesto_monto) : null,
+      PresupuestoEstado: pptoEstado,
+      PresupuestoMonto: pptoMonto,
       FechaIncio: row.fecha_inicio,
       FechaFinProg: row.fecha_fin_prog,
       FechaFinReal: row.fecha_fin_real,
@@ -115,9 +180,9 @@ export class CentroCostoHandler {
       id_centro_costos_principal: dto.id_centro_costos_principal,
       centro_costo: toVarchar(dto.CentroCosto),
       estado: toVarchar<50>(dto.Estado ?? 'ABIERTO'),
-      fecha_inicio: dto.FechaIncio,
-      fecha_fin_prog: dto.FechaFinProg,
-      fecha_fin_real: dto.FechaFinReal,
+      fecha_inicio: toDateString(dto.FechaIncio),
+      fecha_fin_prog: toDateString(dto.FechaFinProg),
+      fecha_fin_real: toDateString(dto.FechaFinReal),
       presupuesto_estado: toVarchar<50>(dto.PresupuestoEstado),
       presupuesto_costo_directo: toDecimalString(dto.PresupuestoCostoDirecto ?? 0),
       presupuesto_gastos_generales: toDecimalString(dto.PresupuestoGastosGenerales ?? 0),
@@ -165,9 +230,9 @@ export class CentroCostoHandler {
       data.id_centro_costos_principal = dto.id_centro_costos_principal;
     if (dto.CentroCosto !== undefined) data.centro_costo = toVarchar(dto.CentroCosto);
     if (dto.Estado !== undefined) data.estado = toVarchar<50>(dto.Estado);
-    if (dto.FechaIncio !== undefined) data.fecha_inicio = dto.FechaIncio;
-    if (dto.FechaFinProg !== undefined) data.fecha_fin_prog = dto.FechaFinProg;
-    if (dto.FechaFinReal !== undefined) data.fecha_fin_real = dto.FechaFinReal;
+    if (dto.FechaIncio !== undefined) data.fecha_inicio = toDateString(dto.FechaIncio);
+    if (dto.FechaFinProg !== undefined) data.fecha_fin_prog = toDateString(dto.FechaFinProg);
+    if (dto.FechaFinReal !== undefined) data.fecha_fin_real = toDateString(dto.FechaFinReal);
     if (dto.PresupuestoEstado !== undefined) data.presupuesto_estado = toVarchar<50>(dto.PresupuestoEstado);
     if (dto.PresupuestoCostoDirecto !== undefined) data.presupuesto_costo_directo = toDecimalString(dto.PresupuestoCostoDirecto);
     if (dto.PresupuestoGastosGenerales !== undefined) data.presupuesto_gastos_generales = toDecimalString(dto.PresupuestoGastosGenerales);
@@ -389,3 +454,9 @@ function normalizePptoEstado(val: string | null | undefined): string {
   if (!val) return '';
   return val.trim().toLowerCase().replace(/[\s_\-]+/g, '');
 }
+// Convierte string vacío o null/undefined a undefined para campos date de PostgreSQL
+function toDateString(val: string | null | undefined): string | undefined {
+  if (!val || val.trim() === '') return undefined;
+  return val.trim();
+}
+
