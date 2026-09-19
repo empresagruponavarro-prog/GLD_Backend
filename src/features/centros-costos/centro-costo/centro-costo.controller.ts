@@ -3,8 +3,8 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } fr
 import { Paginated } from '../../../platform/db/pagination.js';
 import {
   CatalogosFiltrosResponseDto,
-  CentroCostoMetricasResponseDto,
   CentroCostoPrincipalResponseDto,
+  CentroCostoMetricasResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
   CreateCentroCostoDto,
