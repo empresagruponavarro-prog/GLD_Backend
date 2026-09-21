@@ -1,0 +1,161 @@
+[
+  {
+    "id": "data.ordenCompra.alinear-empresa-con-centro-costo",
+    "label": "Align ordenCompra empresa with centro de costo",
+    "summary": "Corrige ordenCompra.id_empresa para que coincida con centro_costos_principal.id_empresa del centro de costo asociado",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows pending empresa alignment",
+        "sql": "SELECT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"CentroCostos\" cc ON cc.id = oc.id_centro_costo   JOIN \"public\".\"centro_costos_principal\" ccp ON ccp.id = cc.id_centro_costos_principal   WHERE oc.id_empresa IS DISTINCT FROM ccp.id_empresa ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "align ordenCompra.id_empresa with the empresa of its centro de costo",
+        "sql": "UPDATE \"public\".\"ordenCompra\" oc SET id_empresa = ccp.id_empresa FROM \"public\".\"CentroCostos\" cc JOIN \"public\".\"centro_costos_principal\" ccp ON ccp.id = cc.id_centro_costos_principal WHERE cc.id = oc.id_centro_costo   AND oc.id_empresa IS DISTINCT FROM ccp.id_empresa",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no empresa mismatches remain",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"CentroCostos\" cc ON cc.id = oc.id_centro_costo   JOIN \"public\".\"centro_costos_principal\" ccp ON ccp.id = cc.id_centro_costos_principal   WHERE oc.id_empresa IS DISTINCT FROM ccp.id_empresa ) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.ordenCompra.ordenCompra_id_empresa_fkey",
+    "label": "Drop constraint \"ordenCompra_id_empresa_fkey\" on \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_id_empresa_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ordenCompra_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_empresa_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"ordenCompra_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP CONSTRAINT \"ordenCompra_id_empresa_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ordenCompra_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_empresa_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.ordenCompra.ordenCompra_id_empresa_idx_328936e2",
+    "label": "Drop index \"ordenCompra_id_empresa_idx_328936e2\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_empresa_idx_328936e2",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"ordenCompra_id_empresa_idx_328936e2\"",
+        "sql": "DROP INDEX \"public\".\"ordenCompra_id_empresa_idx_328936e2\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ordenCompra.id_empresa",
+    "label": "Drop column \"id_empresa\" from \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP COLUMN \"id_empresa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_empresa"
+        ]
+      }
+    ]
+  }
+]

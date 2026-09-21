@@ -1,0 +1,125 @@
+[
+  {
+    "id": "column.public.documentosOrigen.id_fase",
+    "label": "Add column \"id_fase\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_fase",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_fase\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_fase"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_fase\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"id_fase\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_fase\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_fase"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.documentosOrigen.documentosOrigen_id_fase_idx_f598027b",
+    "label": "Create index \"documentosOrigen_id_fase_idx_f598027b\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "documentosOrigen_id_fase_idx_f598027b",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"documentosOrigen_id_fase_idx_f598027b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_fase_idx_f598027b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"documentosOrigen_id_fase_idx_f598027b\"",
+        "sql": "CREATE INDEX \"documentosOrigen_id_fase_idx_f598027b\" ON \"public\".\"documentosOrigen\" (\"id_fase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"documentosOrigen_id_fase_idx_f598027b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_fase_idx_f598027b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.documentosOrigen.documentosOrigen_id_fase_fkey",
+    "label": "Add foreign key \"documentosOrigen_id_fase_fkey\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "documentosOrigen_id_fase_fkey",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"documentosOrigen_id_fase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_fase_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"documentosOrigen_id_fase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\"\nADD CONSTRAINT \"documentosOrigen_id_fase_fkey\"\nFOREIGN KEY (\"id_fase\")\nREFERENCES \"public\".\"ppto_Fases\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"documentosOrigen_id_fase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_fase_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  }
+]

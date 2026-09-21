@@ -1,0 +1,39 @@
+[
+  {
+    "id": "dropTable.categorias",
+    "label": "Drop table \"categorias\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"categorias\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop table \"categorias\"",
+        "sql": "DROP TABLE \"public\".\"categorias\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"categorias\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"categorias\""
+        ]
+      }
+    ]
+  }
+]

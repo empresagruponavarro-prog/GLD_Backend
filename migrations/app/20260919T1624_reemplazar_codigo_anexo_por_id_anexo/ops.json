@@ -1,0 +1,203 @@
+[
+  {
+    "id": "column.public.ordenCompra.id_anexo",
+    "label": "Add column \"id_anexo\" to \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_anexo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_anexo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_anexo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_anexo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" ADD COLUMN \"id_anexo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_anexo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_anexo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.ordenCompra.backfill-id-anexo",
+    "label": "Backfill ordenCompra.id_anexo",
+    "summary": "Copia ordenCompra.id_anexo desde anexos.id usando CodigoAnexo = anexos.Anexo",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_anexo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows pending id_anexo backfill",
+        "sql": "SELECT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"anexos\" a ON a.\"Anexo\" = oc.\"CodigoAnexo\"   WHERE oc.id_anexo IS DISTINCT FROM a.id ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "copy anexo id into ordenCompra.id_anexo",
+        "sql": "UPDATE \"public\".\"ordenCompra\" oc SET id_anexo = a.id FROM \"public\".\"anexos\" a WHERE a.\"Anexo\" = oc.\"CodigoAnexo\"   AND oc.id_anexo IS DISTINCT FROM a.id",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows pending id_anexo backfill",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"anexos\" a ON a.\"Anexo\" = oc.\"CodigoAnexo\"   WHERE oc.id_anexo IS DISTINCT FROM a.id ) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ordenCompra.CodigoAnexo",
+    "label": "Drop column \"CodigoAnexo\" from \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CodigoAnexo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CodigoAnexo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CodigoAnexo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CodigoAnexo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP COLUMN \"CodigoAnexo\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CodigoAnexo\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CodigoAnexo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompra.ordenCompra_id_anexo_idx_726d2e48",
+    "label": "Create index \"ordenCompra_id_anexo_idx_726d2e48\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_anexo_idx_726d2e48",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_anexo_idx_726d2e48\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompra_id_anexo_idx_726d2e48\"",
+        "sql": "CREATE INDEX \"ordenCompra_id_anexo_idx_726d2e48\" ON \"public\".\"ordenCompra\" (\"id_anexo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_anexo_idx_726d2e48\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompra.ordenCompra_id_anexo_fkey",
+    "label": "Add foreign key \"ordenCompra_id_anexo_fkey\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_id_anexo_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompra_id_anexo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_anexo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompra_id_anexo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\"\nADD CONSTRAINT \"ordenCompra_id_anexo_fkey\"\nFOREIGN KEY (\"id_anexo\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompra_id_anexo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_anexo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  }
+]

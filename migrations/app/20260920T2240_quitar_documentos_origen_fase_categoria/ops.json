@@ -1,0 +1,125 @@
+[
+  {
+    "id": "dropConstraint.documentosOrigen.documentosOrigen_id_detalle_fase_categoria_fkey",
+    "label": "Drop constraint \"documentosOrigen_id_detalle_fase_categoria_fkey\" on \"documentosOrigen\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "documentosOrigen_id_detalle_fase_categoria_fkey",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_id_detalle_fase_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_detalle_fase_categoria_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"documentosOrigen_id_detalle_fase_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" DROP CONSTRAINT \"documentosOrigen_id_detalle_fase_categoria_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_id_detalle_fase_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_detalle_fase_categoria_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.documentosOrigen.documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce",
+    "label": "Drop index \"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\"",
+        "sql": "DROP INDEX \"public\".\"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_detalle_fase_categoria_idx_c1fc72ce\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.documentosOrigen.id_detalle_fase_categoria",
+    "label": "Drop column \"id_detalle_fase_categoria\" from \"documentosOrigen\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_detalle_fase_categoria",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_detalle_fase_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_detalle_fase_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"id_detalle_fase_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" DROP COLUMN \"id_detalle_fase_categoria\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_detalle_fase_categoria\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_detalle_fase_categoria"
+        ]
+      }
+    ]
+  }
+]

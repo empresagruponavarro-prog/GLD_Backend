@@ -17,11 +17,12 @@ export class CreatePptoFaseDto {
   @Min(1)
   id_empresa?: number;
 
-  @ApiPropertyOptional({ example: '617d63d6', description: 'Código de centro de costo principal' })
+  @ApiPropertyOptional({ example: 25, description: 'ID del centro de costo principal (cadena)' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  CodCentroCtoPrincipal?: string;
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_centro_costos_principal?: number;
 
   @ApiPropertyOptional({ example: 'ESTRUCTURAS Y ALBAÑILERIA', description: 'Nombre o descripción de la fase' })
   @IsOptional()
@@ -60,11 +61,6 @@ export class ListPptoFaseQueryDto extends PaginationQueryDto {
   @Type(() => Number)
   @IsNumber()
   id_centro_costos_principal?: number;
-
-  @ApiPropertyOptional({ description: 'Filtro por código de centro de costo principal' })
-  @IsOptional()
-  @IsString()
-  CodCentroCtoPrincipal?: string;
 }
 
 export class PptoFaseResponseDto {
@@ -77,8 +73,8 @@ export class PptoFaseResponseDto {
   @ApiPropertyOptional({ example: 1 })
   id_empresa: number | null;
 
-  @ApiPropertyOptional({ example: '617d63d6' })
-  CodCentroCtoPrincipal: string | null;
+  @ApiPropertyOptional({ example: 25 })
+  id_centro_costos_principal: number | null;
 
   @ApiPropertyOptional({ example: 'ESTRUCTURAS Y ALBAÑILERIA' })
   FaseProyecto: string | null;

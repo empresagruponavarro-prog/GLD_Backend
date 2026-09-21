@@ -16,45 +16,39 @@ export class PptoFasesHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
   async list(query: ListPptoFaseQueryDto): Promise<Paginated<PptoFaseResponseDto>> {
-    let resolvedCodPrincipal = query.CodCentroCtoPrincipal;
+    let resolvedIdPrincipal = query.id_centro_costos_principal;
     let resolvedIdEmpresa = query.id_empresa;
 
     const wantsRelationalFilter = Boolean(query.id_centro_costo || query.id_centro_costos_principal);
 
-    if (!resolvedCodPrincipal && query.id_centro_costo) {
+    // Un Centro de Costo (tienda/obra) hereda las fases de su centro de costo principal.
+    if (!resolvedIdPrincipal && query.id_centro_costo) {
       const cc = await this.db.orm.public.CentroCostos.first({ id: query.id_centro_costo });
       if (cc?.id_centro_costos_principal) {
-        const ccp = await this.db.orm.public.centro_costos_principal.first({ id: cc.id_centro_costos_principal });
-        if (ccp) {
-          resolvedCodPrincipal = ccp.centro_costo_principal;
-          if (!resolvedIdEmpresa && ccp.id_empresa) {
-            resolvedIdEmpresa = ccp.id_empresa;
-          }
-        }
+        resolvedIdPrincipal = cc.id_centro_costos_principal;
       }
-    } else if (!resolvedCodPrincipal && query.id_centro_costos_principal) {
-      const ccp = await this.db.orm.public.centro_costos_principal.first({ id: query.id_centro_costos_principal });
-      if (ccp) {
-        resolvedCodPrincipal = ccp.centro_costo_principal;
-        if (!resolvedIdEmpresa && ccp.id_empresa) {
-          resolvedIdEmpresa = ccp.id_empresa;
-        }
+    }
+
+    if (resolvedIdPrincipal && !resolvedIdEmpresa) {
+      const ccp = await this.db.orm.public.centro_costos_principal.first({ id: resolvedIdPrincipal });
+      if (ccp?.id_empresa) {
+        resolvedIdEmpresa = ccp.id_empresa;
       }
     }
 
     // Si el usuario solicitó filtrar por Centro de Costo pero no tiene cadena asociada, retornar vacío
-    if (wantsRelationalFilter && !resolvedCodPrincipal) {
+    if (wantsRelationalFilter && !resolvedIdPrincipal) {
       return toPaginated([], 0, 1, query.pageSize ?? 20);
     }
 
     const effectiveQuery = {
       ...query,
-      pageSize: query.pageSize ?? (resolvedCodPrincipal || wantsRelationalFilter ? 100 : 20),
+      pageSize: query.pageSize ?? (resolvedIdPrincipal || wantsRelationalFilter ? 100 : 20),
     };
     const { page, pageSize, offset } = pageParams(effectiveQuery);
 
     const base = this.db.orm.public.ppto_Fases.orderBy((f) => f.FaseProyecto.asc());
-    const filtering = hasFilters(query) || Boolean(resolvedCodPrincipal);
+    const filtering = hasFilters(query) || Boolean(resolvedIdPrincipal);
 
     const collection = filtering
       ? base.where((f) =>
@@ -62,7 +56,7 @@ export class PptoFasesHandler {
             ...(query.IdpptoFase ? [f.IdpptoFase.ilike(`%${query.IdpptoFase}%`)] : []),
             ...(query.FaseProyecto ? [f.FaseProyecto.ilike(`%${query.FaseProyecto}%`)] : []),
             ...(resolvedIdEmpresa ? [f.id_empresa.eq(resolvedIdEmpresa)] : []),
-            ...(resolvedCodPrincipal ? [f.CodCentroCtoPrincipal.eq(toVarchar(resolvedCodPrincipal))] : []),
+            ...(resolvedIdPrincipal ? [f.id_centro_costos_principal.eq(resolvedIdPrincipal)] : []),
           ),
         )
       : base;
@@ -90,7 +84,7 @@ export class PptoFasesHandler {
       const created = await this.db.orm.public.ppto_Fases.create({
         IdpptoFase: toVarchar(dto.IdpptoFase),
         id_empresa: dto.id_empresa,
-        CodCentroCtoPrincipal: toVarchar(dto.CodCentroCtoPrincipal),
+        id_centro_costos_principal: dto.id_centro_costos_principal,
         FaseProyecto: toVarchar(dto.FaseProyecto),
       });
       return created as PptoFaseResponseDto;
@@ -110,12 +104,12 @@ export class PptoFasesHandler {
     const data: {
       IdpptoFase?: Varchar255;
       id_empresa?: number;
-      CodCentroCtoPrincipal?: Varchar255;
+      id_centro_costos_principal?: number;
       FaseProyecto?: Varchar255;
     } = {};
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
     if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
-    if (dto.CodCentroCtoPrincipal !== undefined) data.CodCentroCtoPrincipal = toVarchar(dto.CodCentroCtoPrincipal);
+    if (dto.id_centro_costos_principal !== undefined) data.id_centro_costos_principal = dto.id_centro_costos_principal;
     if (dto.FaseProyecto !== undefined) data.FaseProyecto = toVarchar(dto.FaseProyecto);
 
     try {
@@ -152,7 +146,6 @@ function hasFilters(query: ListPptoFaseQueryDto): boolean {
     query.FaseProyecto !== undefined ||
     query.id_empresa !== undefined ||
     query.id_centro_costo !== undefined ||
-    query.id_centro_costos_principal !== undefined ||
-    query.CodCentroCtoPrincipal !== undefined
+    query.id_centro_costos_principal !== undefined
   );
 }

@@ -1,0 +1,1037 @@
+[
+  {
+    "id": "rename.ordenCompra.Comentarios.comentarios",
+    "label": "Rename column \"Comentarios\" to \"comentarios\"",
+    "summary": "Renombra ordenCompra.\"Comentarios\" a \"comentarios\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "comentarios",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Comentarios\" exists and \"comentarios\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Comentarios",
+          "comentarios"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Comentarios\" to \"comentarios\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Comentarios\" TO \"comentarios\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"comentarios\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "comentarios"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Cotizacion.cotizacion",
+    "label": "Rename column \"Cotizacion\" to \"cotizacion\"",
+    "summary": "Renombra ordenCompra.\"Cotizacion\" a \"cotizacion\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "cotizacion",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Cotizacion\" exists and \"cotizacion\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Cotizacion",
+          "cotizacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Cotizacion\" to \"cotizacion\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Cotizacion\" TO \"cotizacion\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"cotizacion\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "cotizacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.DsctoCompras.dscto_compras",
+    "label": "Rename column \"DsctoCompras\" to \"dscto_compras\"",
+    "summary": "Renombra ordenCompra.\"DsctoCompras\" a \"dscto_compras\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dscto_compras",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"DsctoCompras\" exists and \"dscto_compras\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "DsctoCompras",
+          "dscto_compras"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"DsctoCompras\" to \"dscto_compras\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"DsctoCompras\" TO \"dscto_compras\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dscto_compras\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "dscto_compras"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.DsctoIntervencion.dscto_intervencion",
+    "label": "Rename column \"DsctoIntervencion\" to \"dscto_intervencion\"",
+    "summary": "Renombra ordenCompra.\"DsctoIntervencion\" a \"dscto_intervencion\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dscto_intervencion",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"DsctoIntervencion\" exists and \"dscto_intervencion\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "DsctoIntervencion",
+          "dscto_intervencion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"DsctoIntervencion\" to \"dscto_intervencion\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"DsctoIntervencion\" TO \"dscto_intervencion\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dscto_intervencion\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "dscto_intervencion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.DsctoOtros.dscto_otros",
+    "label": "Rename column \"DsctoOtros\" to \"dscto_otros\"",
+    "summary": "Renombra ordenCompra.\"DsctoOtros\" a \"dscto_otros\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dscto_otros",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"DsctoOtros\" exists and \"dscto_otros\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "DsctoOtros",
+          "dscto_otros"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"DsctoOtros\" to \"dscto_otros\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"DsctoOtros\" TO \"dscto_otros\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dscto_otros\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "dscto_otros"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.FechaCreacion.fecha_creacion",
+    "label": "Rename column \"FechaCreacion\" to \"fecha_creacion\"",
+    "summary": "Renombra ordenCompra.\"FechaCreacion\" a \"fecha_creacion\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_creacion",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"FechaCreacion\" exists and \"fecha_creacion\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "FechaCreacion",
+          "fecha_creacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FechaCreacion\" to \"fecha_creacion\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"FechaCreacion\" TO \"fecha_creacion\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_creacion\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "fecha_creacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.FechaEmision.fecha_emision",
+    "label": "Rename column \"FechaEmision\" to \"fecha_emision\"",
+    "summary": "Renombra ordenCompra.\"FechaEmision\" a \"fecha_emision\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_emision",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"FechaEmision\" exists and \"fecha_emision\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "FechaEmision",
+          "fecha_emision"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FechaEmision\" to \"fecha_emision\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"FechaEmision\" TO \"fecha_emision\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_emision\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "fecha_emision"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.FormaPago.forma_pago",
+    "label": "Rename column \"FormaPago\" to \"forma_pago\"",
+    "summary": "Renombra ordenCompra.\"FormaPago\" a \"forma_pago\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "forma_pago",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"FormaPago\" exists and \"forma_pago\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "FormaPago",
+          "forma_pago"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"FormaPago\" to \"forma_pago\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"FormaPago\" TO \"forma_pago\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"forma_pago\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "forma_pago"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.HoraCreacion.hora_creacion",
+    "label": "Rename column \"HoraCreacion\" to \"hora_creacion\"",
+    "summary": "Renombra ordenCompra.\"HoraCreacion\" a \"hora_creacion\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "hora_creacion",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"HoraCreacion\" exists and \"hora_creacion\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "HoraCreacion",
+          "hora_creacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"HoraCreacion\" to \"hora_creacion\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"HoraCreacion\" TO \"hora_creacion\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"hora_creacion\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "hora_creacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.IGV.igv",
+    "label": "Rename column \"IGV\" to \"igv\"",
+    "summary": "Renombra ordenCompra.\"IGV\" a \"igv\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "igv",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"IGV\" exists and \"igv\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "IGV",
+          "igv"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IGV\" to \"igv\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"IGV\" TO \"igv\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"igv\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "igv"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.IdOC.id_oc",
+    "label": "Rename column \"IdOC\" to \"id_oc\"",
+    "summary": "Renombra ordenCompra.\"IdOC\" a \"id_oc\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_oc",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"IdOC\" exists and \"id_oc\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "IdOC",
+          "id_oc"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"IdOC\" to \"id_oc\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"IdOC\" TO \"id_oc\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_oc\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_oc"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Mes.mes",
+    "label": "Rename column \"Mes\" to \"mes\"",
+    "summary": "Renombra ordenCompra.\"Mes\" a \"mes\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "mes",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Mes\" exists and \"mes\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Mes",
+          "mes"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Mes\" to \"mes\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Mes\" TO \"mes\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"mes\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "mes"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.MonedaId.moneda_id",
+    "label": "Rename column \"MonedaId\" to \"moneda_id\"",
+    "summary": "Renombra ordenCompra.\"MonedaId\" a \"moneda_id\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "moneda_id",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"MonedaId\" exists and \"moneda_id\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "MonedaId",
+          "moneda_id"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"MonedaId\" to \"moneda_id\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"MonedaId\" TO \"moneda_id\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"moneda_id\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "moneda_id"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.MonedaSimbolo.moneda_simbolo",
+    "label": "Rename column \"MonedaSimbolo\" to \"moneda_simbolo\"",
+    "summary": "Renombra ordenCompra.\"MonedaSimbolo\" a \"moneda_simbolo\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "moneda_simbolo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"MonedaSimbolo\" exists and \"moneda_simbolo\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "MonedaSimbolo",
+          "moneda_simbolo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"MonedaSimbolo\" to \"moneda_simbolo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"MonedaSimbolo\" TO \"moneda_simbolo\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"moneda_simbolo\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "moneda_simbolo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Monto.monto",
+    "label": "Rename column \"Monto\" to \"monto\"",
+    "summary": "Renombra ordenCompra.\"Monto\" a \"monto\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "monto",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Monto\" exists and \"monto\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Monto",
+          "monto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Monto\" to \"monto\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Monto\" TO \"monto\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"monto\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "monto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.NumeroOC.numero_oc",
+    "label": "Rename column \"NumeroOC\" to \"numero_oc\"",
+    "summary": "Renombra ordenCompra.\"NumeroOC\" a \"numero_oc\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "numero_oc",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"NumeroOC\" exists and \"numero_oc\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "NumeroOC",
+          "numero_oc"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"NumeroOC\" to \"numero_oc\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"NumeroOC\" TO \"numero_oc\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"numero_oc\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "numero_oc"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.OCPDF.oc_pdf",
+    "label": "Rename column \"OCPDF\" to \"oc_pdf\"",
+    "summary": "Renombra ordenCompra.\"OCPDF\" a \"oc_pdf\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "oc_pdf",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"OCPDF\" exists and \"oc_pdf\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "OCPDF",
+          "oc_pdf"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"OCPDF\" to \"oc_pdf\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"OCPDF\" TO \"oc_pdf\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"oc_pdf\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "oc_pdf"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Periodo.periodo",
+    "label": "Rename column \"Periodo\" to \"periodo\"",
+    "summary": "Renombra ordenCompra.\"Periodo\" a \"periodo\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "periodo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Periodo\" exists and \"periodo\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Periodo",
+          "periodo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Periodo\" to \"periodo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Periodo\" TO \"periodo\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"periodo\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "periodo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Renta4ta.renta_4ta",
+    "label": "Rename column \"Renta4ta\" to \"renta_4ta\"",
+    "summary": "Renombra ordenCompra.\"Renta4ta\" a \"renta_4ta\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "renta_4ta",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Renta4ta\" exists and \"renta_4ta\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Renta4ta",
+          "renta_4ta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Renta4ta\" to \"renta_4ta\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Renta4ta\" TO \"renta_4ta\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"renta_4ta\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "renta_4ta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.TipoCosto.tipo_costo",
+    "label": "Rename column \"TipoCosto\" to \"tipo_costo\"",
+    "summary": "Renombra ordenCompra.\"TipoCosto\" a \"tipo_costo\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "tipo_costo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"TipoCosto\" exists and \"tipo_costo\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "TipoCosto",
+          "tipo_costo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"TipoCosto\" to \"tipo_costo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"TipoCosto\" TO \"tipo_costo\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"tipo_costo\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "tipo_costo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.TipoOC.tipo_oc",
+    "label": "Rename column \"TipoOC\" to \"tipo_oc\"",
+    "summary": "Renombra ordenCompra.\"TipoOC\" a \"tipo_oc\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "tipo_oc",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"TipoOC\" exists and \"tipo_oc\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "TipoOC",
+          "tipo_oc"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"TipoOC\" to \"tipo_oc\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"TipoOC\" TO \"tipo_oc\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"tipo_oc\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "tipo_oc"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Total.total",
+    "label": "Rename column \"Total\" to \"total\"",
+    "summary": "Renombra ordenCompra.\"Total\" a \"total\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "total",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Total\" exists and \"total\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Total",
+          "total"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Total\" to \"total\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Total\" TO \"total\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"total\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "total"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rename.ordenCompra.Usuario.usuario",
+    "label": "Rename column \"Usuario\" to \"usuario\"",
+    "summary": "Renombra ordenCompra.\"Usuario\" a \"usuario\" conservando los datos",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "usuario",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure \"Usuario\" exists and \"usuario\" does not",
+        "sql": "SELECT (EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AND NOT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $4\n  )) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "Usuario",
+          "usuario"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "rename column \"Usuario\" to \"usuario\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" RENAME COLUMN \"Usuario\" TO \"usuario\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"usuario\" exists",
+        "sql": "SELECT EXISTS (\n    SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\"\n    WHERE \"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3\n  ) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "usuario"
+        ]
+      }
+    ]
+  }
+]

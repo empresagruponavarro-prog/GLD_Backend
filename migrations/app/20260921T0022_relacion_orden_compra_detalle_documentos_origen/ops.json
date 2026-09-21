@@ -1,0 +1,161 @@
+[
+  {
+    "id": "column.public.ordenCompraDetalle.id_orden_compra",
+    "label": "Add column \"id_orden_compra\" to \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_orden_compra",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_orden_compra\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_orden_compra"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_orden_compra\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\" ADD COLUMN \"id_orden_compra\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_orden_compra\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_orden_compra"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.ordenCompraDetalle.backfill-id-orden-compra",
+    "label": "Backfill ordenCompraDetalle.id_orden_compra",
+    "summary": "Copia documentosOrigen.id en ordenCompraDetalle.id_orden_compra usando IdOC = documentosOrigen.id_oc",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_orden_compra",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows pending id_orden_compra backfill",
+        "sql": "SELECT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompraDetalle\" d   WHERE d.\"IdOC\" IS NOT NULL AND btrim(d.\"IdOC\") <> ''     AND EXISTS (SELECT 1 FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\")     AND d.id_orden_compra IS DISTINCT FROM (       SELECT min(oc.id) FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\"     ) ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "copy documentosOrigen id into ordenCompraDetalle.id_orden_compra",
+        "sql": "UPDATE \"public\".\"ordenCompraDetalle\" d SET id_orden_compra = (   SELECT min(oc.id) FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\" ) WHERE d.\"IdOC\" IS NOT NULL AND btrim(d.\"IdOC\") <> ''   AND EXISTS (SELECT 1 FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\")   AND d.id_orden_compra IS DISTINCT FROM (     SELECT min(oc.id) FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\"   )",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows pending id_orden_compra backfill",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompraDetalle\" d   WHERE d.\"IdOC\" IS NOT NULL AND btrim(d.\"IdOC\") <> ''     AND EXISTS (SELECT 1 FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\")     AND d.id_orden_compra IS DISTINCT FROM (       SELECT min(oc.id) FROM \"public\".\"documentosOrigen\" oc WHERE oc.id_oc = d.\"IdOC\"     ) ) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompraDetalle.ordenCompraDetalle_id_orden_compra_idx_ceb1e2df",
+    "label": "Create index \"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompraDetalle_id_orden_compra_idx_ceb1e2df",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\"",
+        "sql": "CREATE INDEX \"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\" ON \"public\".\"ordenCompraDetalle\" (\"id_orden_compra\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_orden_compra_idx_ceb1e2df\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompraDetalle.ordenCompraDetalle_id_orden_compra_fkey",
+    "label": "Add foreign key \"ordenCompraDetalle_id_orden_compra_fkey\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompraDetalle_id_orden_compra_fkey",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompraDetalle_id_orden_compra_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_orden_compra_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompraDetalle_id_orden_compra_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\"\nADD CONSTRAINT \"ordenCompraDetalle_id_orden_compra_fkey\"\nFOREIGN KEY (\"id_orden_compra\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompraDetalle_id_orden_compra_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_orden_compra_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ]
+  }
+]

@@ -108,6 +108,21 @@ export class ListProductoQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
+export class ProductoSelectQueryDto {
+  @ApiPropertyOptional({ enum: TIPO_PRODUCTO_VALUES, description: 'Filtro por tipo de producto' })
+  @IsOptional()
+  @IsIn(TIPO_PRODUCTO_VALUES)
+  tipo_producto?: TipoProducto;
+}
+
+export class ProductoSelectResponseDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'CEMENTO PORTLAND TIPO I' })
+  descripcion: string;
+}
+
 export class ProductoResponseDto {
   @ApiProperty({ example: 1, description: 'Identificador único del producto' })
   id: number;

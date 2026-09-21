@@ -202,6 +202,14 @@ export class CentroCostoPrincipalResponseDto {
 
 export type CentroCostoRow = CentroCostoResponseDto;
 
+export class CentroCostoSelectResponseDto {
+  @ApiProperty({ example: 892 })
+  id: number;
+
+  @ApiPropertyOptional({ example: 'TAMBO DINTILHAC C1 SAN MIGUEL' })
+  nombre: string | null;
+}
+
 export class CentroCostoMetricasResponseDto {
   @ApiProperty({ example: 934, description: 'Total de centros de costos' })
   total: number;

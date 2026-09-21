@@ -22,7 +22,14 @@ import {
 } from '@nestjs/swagger';
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { AnexoHandler } from './anexo.handler.js';
-import { AnexoResponseDto, CreateAnexoDto, ListAnexoQueryDto, UpdateAnexoDto } from './anexo.dto.js';
+import {
+  AnexoResponseDto,
+  AnexoSelectQueryDto,
+  AnexoSelectResponseDto,
+  CreateAnexoDto,
+  ListAnexoQueryDto,
+  UpdateAnexoDto,
+} from './anexo.dto.js';
 
 @ApiTags('maestros/anexo')
 @Controller('maestros/anexo')
@@ -34,6 +41,17 @@ export class AnexoController {
   @ApiOkResponse({ description: 'Lista paginada de anexos' })
   list(@Query() query: ListAnexoQueryDto): Promise<Paginated<AnexoResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar anexos para selector (id y nombre), filtrable por tipoAnexo' })
+  @ApiOkResponse({
+    type: AnexoSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de anexos',
+  })
+  select(@Query() query: AnexoSelectQueryDto): Promise<AnexoSelectResponseDto[]> {
+    return this.handler.select(query);
   }
 
   @Get(':id')

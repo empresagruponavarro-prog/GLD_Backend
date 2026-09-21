@@ -8,6 +8,7 @@ import {
   CentroCostoPrincipalResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
+  CentroCostoSelectResponseDto,
   CreateCentroCostoDto,
   ListCentroCostoQueryDto,
   UpdateCentroCostoDto,
@@ -136,6 +137,11 @@ export class CentroCostoHandler {
       id_empresa: p.id_empresa,
       Empresa: p.id_empresa != null ? empresasById.get(p.id_empresa) ?? null : null,
     }));
+  }
+
+  async select(): Promise<CentroCostoSelectResponseDto[]> {
+    const rows = await this.db.orm.public.CentroCostos.orderBy((c) => c.centro_costo.asc()).all();
+    return rows.map((row) => ({ id: row.id, nombre: row.centro_costo ?? null }));
   }
 
   async getById(id: number): Promise<CentroCostoResponseDto> {

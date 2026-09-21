@@ -107,3 +107,11 @@ export class PptoDetalleFaseResponseDto {
   @ApiPropertyOptional()
   FechaCreacion: string | null;
 }
+
+export class FasePorCentroCostoResponseDto {
+  @ApiProperty({ example: 37 })
+  id: number;
+
+  @ApiPropertyOptional({ example: 'TIENDAS' })
+  descripcion: string | null;
+}

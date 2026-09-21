@@ -28,6 +28,8 @@ import {
   CreateProductoDto,
   ListProductoQueryDto,
   ProductoResponseDto,
+  ProductoSelectQueryDto,
+  ProductoSelectResponseDto,
   UpdateProductoDto,
 } from './producto.dto.js';
 
@@ -43,6 +45,17 @@ export class ProductoController {
   })
   list(@Query() query: ListProductoQueryDto): Promise<Paginated<ProductoResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar productos para selector (id y descripcion), filtrable por tipo_producto' })
+  @ApiOkResponse({
+    type: ProductoSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y descripcion) de productos',
+  })
+  select(@Query() query: ProductoSelectQueryDto): Promise<ProductoSelectResponseDto[]> {
+    return this.handler.select(query);
   }
 
   @Get(':id')

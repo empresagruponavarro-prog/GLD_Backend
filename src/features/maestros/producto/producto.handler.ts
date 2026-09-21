@@ -12,6 +12,8 @@ import {
   CreateProductoDto,
   ListProductoQueryDto,
   ProductoResponseDto,
+  ProductoSelectQueryDto,
+  ProductoSelectResponseDto,
   UpdateProductoDto,
 } from './producto.dto.js';
 
@@ -35,6 +37,15 @@ export class ProductoHandler {
     query: ListProductoQueryDto,
   ): Promise<Paginated<ProductoResponseDto>> {
     return this.listWithFilters({ id_unidad_medida: unidadMedidaId }, query);
+  }
+
+  async select(query: ProductoSelectQueryDto): Promise<ProductoSelectResponseDto[]> {
+    const base = this.db.orm.public.producto.orderBy((p) => p.descripcion.asc());
+    const collection = query.tipo_producto
+      ? base.where((p) => p.tipo_producto.eq(query.tipo_producto!))
+      : base;
+    const rows = await collection.all();
+    return rows.map((row) => ({ id: row.id, descripcion: row.descripcion }));
   }
 
   async getById(id: number): Promise<ProductoResponseDto> {

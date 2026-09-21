@@ -116,6 +116,21 @@ export class ListAnexoQueryDto extends PaginationQueryDto {
   estado?: boolean;
 }
 
+export class AnexoSelectQueryDto {
+  @ApiPropertyOptional({ enum: TipoAnexo, description: 'Filtro por tipo de anexo' })
+  @IsOptional()
+  @IsEnum(TipoAnexo)
+  tipoAnexo?: TipoAnexo;
+}
+
+export class AnexoSelectResponseDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'J & J INVERSIONES CONSTRUCTIVAS S.A.C.', nullable: true })
+  nombre: string | null;
+}
+
 export class AnexoResponseDto {
   @ApiProperty({ example: 1 })
   id: number;

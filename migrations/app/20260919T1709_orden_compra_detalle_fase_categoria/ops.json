@@ -1,0 +1,125 @@
+[
+  {
+    "id": "column.public.ordenCompra.id_detalle_fase_categoria",
+    "label": "Add column \"id_detalle_fase_categoria\" to \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_detalle_fase_categoria",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_detalle_fase_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_detalle_fase_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_detalle_fase_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" ADD COLUMN \"id_detalle_fase_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_detalle_fase_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_detalle_fase_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompra.ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce",
+    "label": "Create index \"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\"",
+        "sql": "CREATE INDEX \"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\" ON \"public\".\"ordenCompra\" (\"id_detalle_fase_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_detalle_fase_categoria_idx_c1fc72ce\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompra.ordenCompra_id_detalle_fase_categoria_fkey",
+    "label": "Add foreign key \"ordenCompra_id_detalle_fase_categoria_fkey\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_id_detalle_fase_categoria_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompra_id_detalle_fase_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_detalle_fase_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompra_id_detalle_fase_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\"\nADD CONSTRAINT \"ordenCompra_id_detalle_fase_categoria_fkey\"\nFOREIGN KEY (\"id_detalle_fase_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompra_id_detalle_fase_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_detalle_fase_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  }
+]

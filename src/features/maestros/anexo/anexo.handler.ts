@@ -5,6 +5,8 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
 import {
   AnexoResponseDto,
+  AnexoSelectQueryDto,
+  AnexoSelectResponseDto,
   CreateAnexoDto,
   ListAnexoQueryDto,
   TipoAnexo,
@@ -70,6 +72,15 @@ export class AnexoHandler {
       collection.limit(pageSize).offset(offset).all(),
     ]);
     return toPaginated(data.map(toResponse), total.total, page, pageSize);
+  }
+
+  async select(query: AnexoSelectQueryDto): Promise<AnexoSelectResponseDto[]> {
+    const base = this.db.orm.public.Anexos.orderBy((a) => a.Anexo.asc());
+    const collection = query.tipoAnexo
+      ? base.where((a) => a.tipoAnexo.eq(query.tipoAnexo!))
+      : base;
+    const rows = await collection.all();
+    return rows.map((row) => ({ id: row.id, nombre: row.Anexo ?? row.NombreComercial ?? null }));
   }
 
   async getById(id: number): Promise<AnexoResponseDto> {

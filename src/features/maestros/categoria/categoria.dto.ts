@@ -67,3 +67,11 @@ export class CategoriaResponseDto {
 }
 
 export type CategoriaRow = CategoriaResponseDto;
+
+export class CategoriaSelectResponseDto {
+  @ApiProperty({ example: 1, description: 'Identificador único de la categoría' })
+  id: number;
+
+  @ApiProperty({ example: 'Materiales de construcción', description: 'Nombre de la categoría (descripcion)' })
+  nombre: string;
+}

@@ -6,6 +6,7 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../presupuestos.helpers.js';
 import {
   CreatePptoDetalleFaseDto,
+  FasePorCentroCostoResponseDto,
   ListPptoDetalleFaseQueryDto,
   PptoDetalleFaseResponseDto,
   UpdatePptoDetalleFaseDto,
@@ -40,6 +41,21 @@ export class PptoDetalleFasesHandler {
     ]);
 
     return toPaginated(data as unknown as PptoDetalleFaseResponseDto[], total.total, page, pageSize);
+  }
+
+  async listFasesPorCentroCosto(idCentroCosto: number): Promise<FasePorCentroCostoResponseDto[]> {
+    const centroCosto = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
+    if (!centroCosto) throw new NotFoundException(`Centro de Costo ${idCentroCosto} no encontrado`);
+
+    const idCentroCostosPrincipal = centroCosto.id_centro_costos_principal;
+    if (!idCentroCostosPrincipal) return [];
+
+    const fases = await this.db.orm.public.ppto_Fases
+      .where((f) => f.id_centro_costos_principal.eq(idCentroCostosPrincipal))
+      .orderBy((f) => f.FaseProyecto.asc())
+      .all();
+
+    return fases.map((fase) => ({ id: fase.id, descripcion: fase.FaseProyecto ?? null }));
   }
 
   async getById(idOrCode: string | number): Promise<PptoDetalleFaseResponseDto> {

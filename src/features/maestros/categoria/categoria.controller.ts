@@ -26,6 +26,7 @@ import { type Paginated } from '../../../platform/db/pagination.js';
 import { CategoriaHandler } from './categoria.handler.js';
 import {
   CategoriaResponseDto,
+  CategoriaSelectResponseDto,
   CreateCategoriaDto,
   ListCategoriaQueryDto,
   UpdateCategoriaDto,
@@ -43,6 +44,17 @@ export class CategoriaController {
   })
   list(@Query() query: ListCategoriaQueryDto): Promise<Paginated<CategoriaResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar categorías para selector (id y nombre)' })
+  @ApiOkResponse({
+    type: CategoriaSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de categorías',
+  })
+  select(): Promise<CategoriaSelectResponseDto[]> {
+    return this.handler.select();
   }
 
   @Get(':id')

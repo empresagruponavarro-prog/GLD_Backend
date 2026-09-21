@@ -10,6 +10,7 @@ import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
   CategoriaResponseDto,
+  CategoriaSelectResponseDto,
   CreateCategoriaDto,
   ListCategoriaQueryDto,
   UpdateCategoriaDto,
@@ -36,6 +37,11 @@ export class CategoriaHandler {
       collection.limit(pageSize).offset(offset).all(),
     ]);
     return toPaginated(data, total.total, page, pageSize);
+  }
+
+  async select(): Promise<CategoriaSelectResponseDto[]> {
+    const rows = await this.db.orm.public.categoria.orderBy((c) => c.descripcion.asc()).all();
+    return rows.map((row) => ({ id: row.id, nombre: row.descripcion ?? row.codigo }));
   }
 
   async getById(id: number): Promise<CategoriaResponseDto> {

@@ -1,0 +1,284 @@
+[
+  {
+    "id": "column.public.ordenCompra.id_categoria",
+    "label": "Add column \"id_categoria\" to \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" ADD COLUMN \"id_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "id_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.ordenCompra.backfill-id-categoria",
+    "label": "Backfill ordenCompra.id_categoria",
+    "summary": "Copia ordenCompra.id_categoria desde categoria.id usando CategoriaCodigo = categoria.codigo",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure rows pending id_categoria backfill",
+        "sql": "SELECT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"categoria\" c ON c.codigo = oc.\"CategoriaCodigo\"   WHERE oc.id_categoria IS DISTINCT FROM c.id ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "copy categoria id into ordenCompra.id_categoria",
+        "sql": "UPDATE \"public\".\"ordenCompra\" oc SET id_categoria = c.id FROM \"public\".\"categoria\" c WHERE c.codigo = oc.\"CategoriaCodigo\"   AND oc.id_categoria IS DISTINCT FROM c.id",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no rows pending id_categoria backfill",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 AS \"one\" FROM \"public\".\"ordenCompra\" oc   JOIN \"public\".\"categoria\" c ON c.codigo = oc.\"CategoriaCodigo\"   WHERE oc.id_categoria IS DISTINCT FROM c.id ) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.ordenCompra.ordenCompra_CategoriaCodigo_fkey",
+    "label": "Drop constraint \"ordenCompra_CategoriaCodigo_fkey\" on \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_CategoriaCodigo_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ordenCompra_CategoriaCodigo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_CategoriaCodigo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"ordenCompra_CategoriaCodigo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP CONSTRAINT \"ordenCompra_CategoriaCodigo_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ordenCompra_CategoriaCodigo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_CategoriaCodigo_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.ordenCompra.ordenCompra_CategoriaCodigo_idx_2b1c916f",
+    "label": "Drop index \"ordenCompra_CategoriaCodigo_idx_2b1c916f\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_CategoriaCodigo_idx_2b1c916f",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_CategoriaCodigo_idx_2b1c916f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_CategoriaCodigo_idx_2b1c916f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"ordenCompra_CategoriaCodigo_idx_2b1c916f\"",
+        "sql": "DROP INDEX \"public\".\"ordenCompra_CategoriaCodigo_idx_2b1c916f\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_CategoriaCodigo_idx_2b1c916f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_CategoriaCodigo_idx_2b1c916f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.ordenCompra.CategoriaCodigo",
+    "label": "Drop column \"CategoriaCodigo\" from \"ordenCompra\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CategoriaCodigo",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CategoriaCodigo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CategoriaCodigo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"CategoriaCodigo\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\" DROP COLUMN \"CategoriaCodigo\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CategoriaCodigo\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompra",
+          "CategoriaCodigo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompra.ordenCompra_id_categoria_idx_dc879264",
+    "label": "Create index \"ordenCompra_id_categoria_idx_dc879264\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompra_id_categoria_idx_dc879264",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompra_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompra_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"ordenCompra_id_categoria_idx_dc879264\" ON \"public\".\"ordenCompra\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompra_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompra_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompra.ordenCompra_id_categoria_fkey",
+    "label": "Add foreign key \"ordenCompra_id_categoria_fkey\" on \"ordenCompra\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompra_id_categoria_fkey",
+        "table": "ordenCompra"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompra_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompra_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompra\"\nADD CONSTRAINT \"ordenCompra_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompra_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompra_id_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompra\""
+        ]
+      }
+    ]
+  }
+]

@@ -7,6 +7,7 @@ import {
   CentroCostoMetricasResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
+  CentroCostoSelectResponseDto,
   CreateCentroCostoDto,
   ListCentroCostoQueryDto,
   UpdateCentroCostoDto,
@@ -58,6 +59,17 @@ export class CentroCostoController {
   })
   getCentrosCostoPrincipal(): Promise<CentroCostoPrincipalResponseDto[]> {
     return this.handler.getCentrosCostoPrincipal();
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar centros de costos para selector (id y nombre)' })
+  @ApiOkResponse({
+    type: CentroCostoSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de centros de costos',
+  })
+  select(): Promise<CentroCostoSelectResponseDto[]> {
+    return this.handler.select();
   }
 
   @Get(':id')

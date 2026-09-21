@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreatePptoDetalleFaseDto,
+  FasePorCentroCostoResponseDto,
   ListPptoDetalleFaseQueryDto,
   PptoDetalleFaseResponseDto,
   UpdatePptoDetalleFaseDto,
@@ -18,6 +19,14 @@ export class PptoDetalleFasesController {
   @ApiOkResponse({ type: PptoDetalleFaseResponseDto, isArray: true })
   findAll(@Query() query: ListPptoDetalleFaseQueryDto) {
     return this.handler.list(query);
+  }
+
+  @Get('centro-costo/:idCentroCosto')
+  @ApiOperation({ summary: 'Listar fases del centro de costo principal asociado a un Centro de Costo' })
+  @ApiParam({ name: 'idCentroCosto', type: Number, description: 'ID del Centro de Costo' })
+  @ApiOkResponse({ type: FasePorCentroCostoResponseDto, isArray: true })
+  findFasesPorCentroCosto(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
+    return this.handler.listFasesPorCentroCosto(idCentroCosto);
   }
 
   @Get(':idOrCode')

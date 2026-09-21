@@ -24,6 +24,7 @@ model categoria {
   estado            Boolean        @default(true)
   tipo_categoria    tipo_categoria @relation(fields:[id_tipo_categoria], references:[id])
   productos         producto[]
+  ordenCompras      OrdenCompra[]
   @@map("categoria")
 }
 
@@ -34,6 +35,7 @@ model centro_costos_principal {
   estado                 VarChar(50)  @default("ABIERTO")
   id_empresa             Int?
   empresa                Empresas?    @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  pptoFases              ppto_Fases[]
 
   @@map("centro_costos_principal")
 }
@@ -164,6 +166,7 @@ model Anexos {
   Telefono            VarChar(255)?
   Correo              VarChar(255)?
   estado              Boolean       @default(true)
+  ordenCompras        OrdenCompra[]
   @@map("anexos")
 }
 
@@ -253,15 +256,6 @@ model CajaMotivos {
   Comportamiento VarChar(255)?
   Resultado      VarChar(255)?
   @@map("cajaMotivos")
-}
-
-model Categorias {
-  id              Int           @id @default(autoincrement())
-  CategoriaCodigo VarChar(255)?
-  Descripcion     VarChar(255)?
-  TIPOCATE        VarChar(255)?
-  Estado          VarChar(50)?
-  @@map("categorias")
 }
 
 model CentroCostos {
@@ -578,7 +572,6 @@ model Empresas {
   docVentas               DocVenta[]
   docVentaDetalles        DocVentaDetalle[]
   egresosAnticiposOC      Egresos_AnticiposOC[]
-  ordenCompras            OrdenCompra[]
   planillaPagos           PlanillaPago[]
   pptoDetalleFases        ppto_DetalleFases[]
   pptoDetalleFasesCates   ppto_DetalleFasesCate[]
@@ -605,49 +598,53 @@ model Monedas {
 
 model OrdenCompra {
   id                    Int             @id @default(autoincrement())
-  IdOC                  VarChar(255)?
-  id_empresa             Int?
-  empresa               Empresas?       @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
-  TipoCosto             VarChar(255)?
-  TipoOC                VarChar(255)?
-  NumeroOC              VarChar(255)?
-  CodCentroCtoPrincipal VarChar(255)?
-  CodCentroCto          VarChar(255)?
+  id_oc                 VarChar(255)?
+  tipo_costo            VarChar(255)?
+  tipo_oc               VarChar(255)?
+  numero_oc             VarChar(255)?
   id_centro_costo       Int?
   centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
-  CategoriaCodigo       VarChar(255)?
-  Periodo               VarChar(255)?
-  Mes                   VarChar(255)?
-  CodigoAnexo           VarChar(255)?
-  FechaEmision          Timestamptz(3)?
-  FormaPago             VarChar(255)?
-  MonedaId              VarChar(255)?
-  MonedaSimbolo         VarChar(255)?
-  Monto                 Decimal?
-  IGV                   Decimal?
-  Renta4ta              Decimal?
-  DsctoCompras          Decimal?
-  DsctoIntervencion     Decimal?
-  DsctoOtros            Decimal?
-  Total                 Decimal?
-  Comentarios           String?
-  OCPDF                 VarChar(255)?
-  Usuario               VarChar(255)?
-  FechaCreacion         Timestamptz(3)?
-  HoraCreacion          VarChar(10)?
-  Cotizacion            VarChar(255)?
-  @@map("ordenCompra")
+  id_categoria          Int?
+  categoria             categoria?    @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
+  id_fase               Int?
+  fase                  ppto_Fases?   @relation(fields: [id_fase], references: [id], onDelete: SetNull)
+  periodo               VarChar(255)?
+  mes                   VarChar(255)?
+  id_anexo              Int?
+  anexo                 Anexos?         @relation(fields: [id_anexo], references: [id], onDelete: SetNull)
+  fecha_emision         Timestamptz(3)?
+  forma_pago            VarChar(255)?
+  moneda_id             VarChar(255)?
+  moneda_simbolo        VarChar(255)?
+  monto                 Decimal?
+  igv                   Decimal?
+  renta_4ta             Decimal?
+  dscto_compras         Decimal?
+  dscto_intervencion    Decimal?
+  dscto_otros           Decimal?
+  total                 Decimal?
+  comentarios           String?
+  oc_pdf                VarChar(255)?
+  usuario               VarChar(255)?
+  fecha_creacion        Timestamptz(3)?
+  hora_creacion         VarChar(10)?
+  cotizacion            VarChar(255)?
+  detalles              OrdenCompraDetalle[]
+  @@map("documentosOrigen")
 }
 
 model OrdenCompraDetalle {
-  id             Int           @id @default(autoincrement())
-  IdOC           VarChar(255)?
-  IdOCDetalle    VarChar(255)?
-  TipoProducto   tipo_item?
-  ProductoCodigo VarChar(255)?
-  Cantidad       Decimal?
-  Precio         Decimal?
-  monto          Decimal?
+  id              Int           @id @default(autoincrement())
+  IdOC            VarChar(255)?
+  IdOCDetalle     VarChar(255)?
+  TipoProducto    tipo_item?
+  ProductoCodigo  VarChar(255)?
+  Cantidad        Decimal?
+  Precio          Decimal?
+  monto           Decimal?
+  id_orden_compra Int?
+  ordenCompra     OrdenCompra?  @relation(fields: [id_orden_compra], references: [id], onDelete: SetNull)
+  @@index([id_orden_compra])
   @@map("ordenCompraDetalle")
 }
 
@@ -848,10 +845,12 @@ model ppto_Fases {
   IdpptoFase            VarChar(255)? @unique
   id_empresa             Int?
   empresa               Empresas?     @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
-  CodCentroCtoPrincipal VarChar(255)?
+  id_centro_costos_principal Int?
+  centroCostoPrincipal  centro_costos_principal? @relation(fields: [id_centro_costos_principal], references: [id], onDelete: SetNull)
   FaseProyecto          VarChar(255)?
   categorias            ppto_FasesCategorias[]
   detalles              ppto_DetalleFases[]
+  ordenCompras          OrdenCompra[]
   @@map("ppto_Fases")
 }
 
