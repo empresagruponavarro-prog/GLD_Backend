@@ -1,3 +1,4 @@
+import '../../../platform/db/temporal.js';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import type { CodecTypes, Varchar } from '@prisma/orm-postgres/target/codec-types';
@@ -591,10 +592,11 @@ function toIsoString(value: { toString(): string } | null): string | null {
 }
 
 function toInstant(value: string | undefined): InstantInput | undefined {
-  if (value === undefined) return undefined;
+  if (value === undefined || value === null || value === '') return undefined;
+  const iso = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00.000Z` : value;
   const Temporal = (globalThis as { Temporal?: { Instant: { from(iso: string): unknown } } }).Temporal;
   if (!Temporal) throw new Error('Temporal no está disponible en este runtime');
-  return Temporal.Instant.from(value) as InstantInput;
+  return Temporal.Instant.from(iso) as InstantInput;
 }
 
 function hasFilters(query: ListDocumentosOrigenQueryDto): boolean {
