@@ -30,6 +30,12 @@ export class CreatePresupuestoPrincipalDto {
   @MaxLength(255)
   Version?: string;
 
+  @ApiPropertyOptional({ example: 'TIENDAS TAMBO S.A.C.', description: 'Código o nombre del anexo/cliente' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  CodigoAnexo?: string;
+
   @ApiPropertyOptional({ example: 'OBRA', description: 'Tipo de presupuesto' })
   @IsOptional()
   @IsString()
@@ -188,6 +194,12 @@ export class PresupuestoPrincipalResponseDto {
 
   @ApiPropertyOptional({ example: 'V1' })
   Version: string | null;
+
+  @ApiPropertyOptional({ example: 'TIENDAS TAMBO S.A.C.' })
+  CodigoAnexo: string | null;
+
+  @ApiPropertyOptional({ example: 'TIENDAS TAMBO S.A.C.' })
+  Cliente?: string | null;
 
   @ApiPropertyOptional({ example: 'OBRA' })
   TipoPpto: string | null;

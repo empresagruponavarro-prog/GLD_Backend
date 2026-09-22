@@ -96,6 +96,13 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
   async create(dto: CreatePresupuestoPrincipalDto): Promise<PresupuestoPrincipalResponseDto> {
     const idCentroCosto = await this.resolveCentroCostoId(dto);
 
+    // Obtener el cliente (CodigoAnexo) desde CentroCostos si no viene en el DTO
+    let ccRow: any = null;
+    if (idCentroCosto) {
+      ccRow = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
+    }
+    const codigoAnexo = (dto.CodigoAnexo || ccRow?.cod_cliente || null);
+
     // Autogenerar IdPresupuesto si no viene del frontend
     const idPresupuesto = ((dto.IdPresupuesto ?? '').trim()) || (await generateIdPresupuesto(this.db));
 
@@ -107,6 +114,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         id_empresa: dto.id_empresa,
         periodo: dto.periodo,
         Version: toVarchar(dto.Version ?? 'V1'),
+        CodigoAnexo: toVarchar(codigoAnexo),
         TipoPpto: toVarchar(dto.TipoPpto),
         Proyecto: toVarchar(dto.Proyecto),
         Concepto: dto.Concepto,
@@ -179,6 +187,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       id_empresa?: number;
       periodo?: number;
       Version?: Varchar255;
+      CodigoAnexo?: Varchar255;
       TipoPpto?: Varchar255;
       Proyecto?: Varchar255;
       Concepto?: string;
@@ -206,6 +215,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.periodo !== undefined) data.periodo = dto.periodo;
     if (dto.Version !== undefined) data.Version = toVarchar(dto.Version);
+    if (dto.CodigoAnexo !== undefined) data.CodigoAnexo = toVarchar(dto.CodigoAnexo);
     if (dto.TipoPpto !== undefined) data.TipoPpto = toVarchar(dto.TipoPpto);
     if (dto.Proyecto !== undefined) data.Proyecto = toVarchar(dto.Proyecto);
     if (dto.Concepto !== undefined) data.Concepto = dto.Concepto;
