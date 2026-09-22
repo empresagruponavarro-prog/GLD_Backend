@@ -70,7 +70,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       this.db.orm.public.ppto_FasesCategorias.all(),
     ]);
 
-    const fasesMap = new Map(pptoFases.map(f => [f.IdpptoFase, f.FaseProyecto]));
+    const fasesMap = new Map(pptoFases.map(f => [f.IdpptoFase, f]));
+    const fasesByNameMap = new Map(pptoFases.map(f => [f.FaseProyecto?.trim().toUpperCase(), f]));
     const catMap = new Map(pptoFasesCat.map(c => [c.IdpptoFaseCategoria, c.Descripcion]));
 
     const fasesConCategorias = detallesFases.map((fase) => {
@@ -78,9 +79,12 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         ...cat,
         CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null
       }));
+      const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
+        ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
       return {
         ...fase,
-        NombreFase: fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) || fase.IdpptoFase : null,
+        id_fase: faseMaestra?.id ?? null,
+        NombreFase: faseMaestra?.FaseProyecto || fase.IdpptoFase || null,
         categorias,
       };
     });

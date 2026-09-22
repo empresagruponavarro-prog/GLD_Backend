@@ -150,6 +150,21 @@ export class DocumentosOrigenHandler {
     return categoria?.descripcion ?? categoria?.codigo ?? null;
   }
 
+  private async getNombresAnexo(rows: DocumentoOrigenRow[]): Promise<Map<number, string>> {
+    const ids = [
+      ...new Set(rows.map((row) => row.id_anexo).filter((id): id is number => id !== null)),
+    ];
+    if (ids.length === 0) return new Map();
+
+    const anexos = await this.db.orm.public.Anexos.where((a) => a.id.in(ids)).all();
+    const result = new Map<number, string>();
+    for (const anexo of anexos) {
+      const name = anexo.NombreComercial ?? anexo.Anexo;
+      if (name) result.set(anexo.id, name);
+    }
+    return result;
+  }
+
   private async getNombreAnexo(idAnexo: number | null): Promise<string | null> {
     if (idAnexo === null) return null;
     const anexo = await this.db.orm.public.Anexos.first({ id: idAnexo });
@@ -174,13 +189,14 @@ export class DocumentosOrigenHandler {
     if (ocs.length === 0) return [];
 
     const ocIds = ocs.map((o) => o.id);
-    const [detalles, centrosPorId, fasesPorId] = await Promise.all([
+    const [detalles, centrosPorId, fasesPorId, anexosPorId] = await Promise.all([
       this.db.orm.public.OrdenCompraDetalle
         .where((d) => d.id_orden_compra.in(ocIds))
         .orderBy((d) => d.id.asc())
         .all(),
       this.getNombresCentroCosto(ocs),
       this.getNombresFase(ocs),
+      this.getNombresAnexo(ocs),
     ]);
 
     const codigos = [
@@ -196,6 +212,19 @@ export class DocumentosOrigenHandler {
         ? await this.db.orm.public.producto.where((p) => p.codigo.in(codigos)).all()
         : [];
     const productoPorCodigo = new Map(productos.map((p) => [p.codigo, p]));
+
+    const umIds = [
+      ...new Set(
+        productos
+          .map((p) => p.id_unidad_medida)
+          .filter((id): id is number => id !== null),
+      ),
+    ];
+    const unidades =
+      umIds.length > 0
+        ? await this.db.orm.public.unidad_medida.where((u) => u.id.in(umIds)).all()
+        : [];
+    const unidadPorId = new Map(unidades.map((u) => [u.id, u.simbolo ?? u.descripcion ?? "UND"]));
     const ocPorId = new Map(ocs.map((o) => [o.id, o]));
 
     return detalles.map((detalle) => {
@@ -203,6 +232,11 @@ export class DocumentosOrigenHandler {
       const producto = detalle.ProductoCodigo
         ? productoPorCodigo.get(detalle.ProductoCodigo)
         : undefined;
+      const unidadMedida = producto?.id_unidad_medida
+        ? (unidadPorId.get(producto.id_unidad_medida) ?? "UND")
+        : "UND";
+      const nombreAnexo = oc?.id_anexo != null ? (anexosPorId.get(oc.id_anexo) ?? null) : null;
+
       return {
         id_documento: detalle.id_orden_compra ?? 0,
         id_oc: oc?.id_oc ?? null,
@@ -213,6 +247,8 @@ export class DocumentosOrigenHandler {
         id_fase: oc?.id_fase ?? null,
         nombre_fase: oc?.id_fase != null ? (fasesPorId.get(oc.id_fase) ?? null) : null,
         id_anexo: oc?.id_anexo ?? null,
+        nombre_anexo: nombreAnexo,
+        unidad_medida: unidadMedida,
         fecha_emision: oc ? toIsoString(oc.fecha_emision) : null,
         id_detalle: detalle.id,
         id_producto: producto?.id ?? null,
