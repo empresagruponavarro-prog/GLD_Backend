@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -66,4 +66,13 @@ export class DocumentosOrigenController {
   ): Promise<DocumentoOrigenResponseDto> {
     return this.handler.update(id, dto);
   }
+  @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar un documento de origen' })
+  @ApiParam({ name: 'id', type: Number, description: 'ID del documento de origen' })
+  @ApiOkResponse({ description: 'Documento eliminado' })
+  @ApiNotFoundResponse({ description: 'Documento de origen no encontrado' })
+  delete(@Param('id', ParseIntPipe) id: number): Promise<{ deleted: boolean; id: number }> {
+    return this.handler.delete(id);
+  }
+
 }

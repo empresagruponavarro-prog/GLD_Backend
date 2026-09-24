@@ -504,6 +504,18 @@ export class DocumentosOrigenHandler {
     });
   }
 
+  
+  async delete(id: number): Promise<{ deleted: boolean; id: number }> {
+    const current = await this.db.orm.public.OrdenCompra.first({ id });
+    if (!current) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
+    // Primero eliminar el detalle (FK)
+    await this.db.orm.public.OrdenCompraDetalle
+      .where((d) => d.id_orden_compra.eq(id))
+      .delete();
+    await this.db.orm.public.OrdenCompra.where({ id }).delete();
+    return { deleted: true, id };
+  }
+
   private async getDetalles(idOrdenCompra: number): Promise<DocumentoOrigenDetalleResponseDto[]> {
     const rows = await this.db.orm.public.OrdenCompraDetalle
       .where((d) => d.id_orden_compra.eq(idOrdenCompra))
