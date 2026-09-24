@@ -69,6 +69,7 @@ export class PptoDetalleFasesCateHandler {
         Usuario: toVarchar(dto.Usuario),
         FechaCreacion: toVarchar(new Date().toISOString()),
       });
+      await this.syncFaseCostoDirecto(dto.IdPresupuestoDetalle);
       return created as unknown as PptoDetalleFaseCateResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalleCategoria "${dto.IdPresupuestoDetalleCategoria}" ya existe`);
@@ -110,6 +111,7 @@ export class PptoDetalleFasesCateHandler {
     try {
       const row = await this.db.orm.public.ppto_DetalleFasesCate.where({ id }).update(data);
       if (!row) throw new NotFoundException(`Detalle de categoría ${id} no encontrado`);
+      await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle ?? dto.IdPresupuestoDetalle);
       return row as unknown as PptoDetalleFaseCateResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalleCategoria ya existe`);
@@ -124,7 +126,24 @@ export class PptoDetalleFasesCateHandler {
       : await this.db.orm.public.ppto_DetalleFasesCate.first({ id: numId });
     if (!current) throw new NotFoundException(`Detalle de categoría "${idOrCode}" no encontrado`);
     await this.db.orm.public.ppto_DetalleFasesCate.where({ id: current.id }).delete();
+    await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle);
     return { deleted: true, id: current.id, code: current.IdPresupuestoDetalleCategoria };
+  }
+  private async syncFaseCostoDirecto(idPresupuestoDetalle?: string | null): Promise<void> {
+    if (!idPresupuestoDetalle) return;
+    try {
+      const cates = await this.db.orm.public.ppto_DetalleFasesCate
+        .where((c) => c.IdPresupuestoDetalle.eq(toVarchar(idPresupuestoDetalle)))
+        .all();
+      const sum = cates.reduce((acc, c) => acc + (Number(c.CostoDirecto) || 0), 0);
+      await this.db.orm.public.ppto_DetalleFases
+        .where((f) => f.IdPresupuestoDetalle.eq(toVarchar(idPresupuestoDetalle)))
+        .update({
+          CostoDirecto: toDecimalString(sum),
+        });
+    } catch {
+      // Non-blocking sync
+    }
   }
 }
 

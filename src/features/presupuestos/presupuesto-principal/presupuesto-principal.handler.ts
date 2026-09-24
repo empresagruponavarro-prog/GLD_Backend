@@ -81,8 +81,11 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       }));
       const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
+            const sumCategorias = categorias.reduce((acc, c) => acc + (Number(c.CostoDirecto) || 0), 0);
+      const costoDirectoCalculado = categorias.length > 0 ? toDecimalString(sumCategorias) : (fase.CostoDirecto || '0.00');
       return {
         ...fase,
+        CostoDirecto: costoDirectoCalculado,
         id_fase: faseMaestra?.id ?? null,
         NombreFase: faseMaestra?.FaseProyecto || fase.IdpptoFase || null,
         categorias,
