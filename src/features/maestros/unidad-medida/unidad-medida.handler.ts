@@ -7,6 +7,7 @@ import {
   CreateUnidadMedidaDto,
   ListUnidadMedidaQueryDto,
   UnidadMedidaResponseDto,
+  UnidadMedidaSelectResponseDto,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
 
@@ -31,6 +32,16 @@ export class UnidadMedidaHandler {
       collection.limit(pageSize).offset(offset).all(),
     ]);
     return toPaginated(data, total.total, page, pageSize);
+  }
+
+  async select(): Promise<UnidadMedidaSelectResponseDto[]> {
+    const rows = await this.db.orm.public.unidad_medida
+      .orderBy((u) => u.descripcion.asc())
+      .all();
+    return rows.map((row) => ({
+      id: row.id,
+      nombre: row.simbolo ? `${row.descripcion} (${row.simbolo})` : row.descripcion,
+    }));
   }
 
   async getById(id: number): Promise<UnidadMedidaResponseDto> {

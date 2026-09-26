@@ -68,3 +68,14 @@ export class UnidadMedidaResponseDto {
 }
 
 export type UnidadMedidaRow = UnidadMedidaResponseDto;
+
+export class UnidadMedidaSelectResponseDto {
+  @ApiProperty({ example: 1, description: 'Identificador único de la unidad de medida' })
+  id: number;
+
+  @ApiProperty({
+    example: 'CIENTO (100)',
+    description: 'Nombre de la unidad (descripción y, si existe, símbolo)',
+  })
+  nombre: string;
+}

@@ -22,6 +22,7 @@ describe('unidad-medida', () => {
         public: {
           unidad_medida: {
             orderBy: vi.fn(() => ({
+              all,
               aggregate,
               where: vi.fn(() => ({
                 aggregate,
@@ -67,6 +68,16 @@ describe('unidad-medida', () => {
       total: 1,
       totalPages: 1,
     });
+  });
+
+  it('lista las unidades de medida para selector', async () => {
+    all.mockResolvedValue([row]);
+    await expect(controller.select()).resolves.toEqual([{ id: 1, nombre: 'CIENTO (100)' }]);
+  });
+
+  it('lista el selector sin símbolo', async () => {
+    all.mockResolvedValue([{ ...row, simbolo: null }]);
+    await expect(controller.select()).resolves.toEqual([{ id: 1, nombre: 'CIENTO' }]);
   });
 
   it('obtiene por id', async () => {

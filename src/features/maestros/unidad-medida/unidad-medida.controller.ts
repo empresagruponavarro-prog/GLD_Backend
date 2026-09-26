@@ -27,6 +27,7 @@ import {
   CreateUnidadMedidaDto,
   ListUnidadMedidaQueryDto,
   UnidadMedidaResponseDto,
+  UnidadMedidaSelectResponseDto,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
 
@@ -42,6 +43,17 @@ export class UnidadMedidaController {
   })
   list(@Query() query: ListUnidadMedidaQueryDto): Promise<Paginated<UnidadMedidaResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar unidades de medida para selector (id y nombre)' })
+  @ApiOkResponse({
+    type: UnidadMedidaSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de unidades de medida',
+  })
+  select(): Promise<UnidadMedidaSelectResponseDto[]> {
+    return this.handler.select();
   }
 
   @Get(':id')
