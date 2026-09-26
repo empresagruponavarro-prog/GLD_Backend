@@ -6,6 +6,8 @@ import { toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.help
 import {
   CreateEspecialidadDto,
   EspecialidadResponseDto,
+  EspecialidadSelectQueryDto,
+  EspecialidadSelectResponseDto,
   ListEspecialidadQueryDto,
   TipoAnexo,
   UpdateEspecialidadDto,
@@ -42,6 +44,15 @@ export class EspecialidadHandler {
       collection.limit(pageSize).offset(offset).all(),
     ]);
     return toPaginated(data.map(toResponse), total.total, page, pageSize);
+  }
+
+  async select(query: EspecialidadSelectQueryDto): Promise<EspecialidadSelectResponseDto[]> {
+    const base = this.db.orm.public.Anexo_Especialidad.orderBy((t) => t.Anexo_Especialidad.asc());
+    const collection = query.tipoAnexo
+      ? base.where((t) => t.TipoAnexo.eq(toVarchar(query.tipoAnexo!)))
+      : base;
+    const rows = await collection.all();
+    return rows.map((row) => ({ id: row.id, nombre: row.Anexo_Especialidad }));
   }
 
   async getById(id: number): Promise<EspecialidadResponseDto> {

@@ -46,3 +46,18 @@ export class TipoDocIdentidadResponseDto {
   @ApiProperty({ example: 'DNI', nullable: true })
   descripcion: string | null;
 }
+
+export class TipoDocIdentidadSelectQueryDto {
+  @ApiPropertyOptional({ enum: TipoAnexo, description: 'Filtro por tipo de anexo' })
+  @IsOptional()
+  @IsEnum(TipoAnexo)
+  tipoAnexo?: TipoAnexo;
+}
+
+export class TipoDocIdentidadSelectResponseDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'DNI', nullable: true })
+  nombre: string | null;
+}

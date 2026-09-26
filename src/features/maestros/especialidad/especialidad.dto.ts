@@ -46,3 +46,18 @@ export class EspecialidadResponseDto {
   @ApiProperty({ example: 'ESPECIALIDAD DE ANEXO', nullable: true })
   descripcion: string | null;
 }
+
+export class EspecialidadSelectQueryDto {
+  @ApiPropertyOptional({ enum: TipoAnexo, description: 'Filtro por tipo de anexo' })
+  @IsOptional()
+  @IsEnum(TipoAnexo)
+  tipoAnexo?: TipoAnexo;
+}
+
+export class EspecialidadSelectResponseDto {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'ESPECIALIDAD DE ANEXO', nullable: true })
+  nombre: string | null;
+}

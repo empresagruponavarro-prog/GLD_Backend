@@ -34,8 +34,10 @@ describe('especialidad', () => {
         public: {
           Anexo_Especialidad: {
             orderBy: vi.fn(() => ({
+              all,
               aggregate,
               where: vi.fn(() => ({
+                all,
                 aggregate,
                 limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
               })),
@@ -79,6 +81,20 @@ describe('especialidad', () => {
       total: 1,
       totalPages: 1,
     });
+  });
+
+  it('lista las especialidades para selector', async () => {
+    all.mockResolvedValue([row]);
+    await expect(controller.select({})).resolves.toEqual([
+      { id: 1, nombre: 'ESPECIALIDAD DE ANEXO' },
+    ]);
+  });
+
+  it('filtra el selector por tipo de anexo', async () => {
+    all.mockResolvedValue([row]);
+    await expect(controller.select({ tipoAnexo: TipoAnexo.Proveedor })).resolves.toEqual([
+      { id: 1, nombre: 'ESPECIALIDAD DE ANEXO' },
+    ]);
   });
 
   it('obtiene por id', async () => {

@@ -8,6 +8,8 @@ import {
   ListTipoDocIdentidadQueryDto,
   TipoAnexo,
   TipoDocIdentidadResponseDto,
+  TipoDocIdentidadSelectQueryDto,
+  TipoDocIdentidadSelectResponseDto,
   UpdateTipoDocIdentidadDto,
 } from './tipo-doc-identidad.dto.js';
 
@@ -46,6 +48,17 @@ export class TipoDocIdentidadHandler {
       collection.limit(pageSize).offset(offset).all(),
     ]);
     return toPaginated(data.map(toResponse), total.total, page, pageSize);
+  }
+
+  async select(
+    query: TipoDocIdentidadSelectQueryDto,
+  ): Promise<TipoDocIdentidadSelectResponseDto[]> {
+    const base = this.db.orm.public.Anexo_TipoDocIDE.orderBy((t) => t.Anexo_Documento_IDE.asc());
+    const collection = query.tipoAnexo
+      ? base.where((t) => t.TipoAnexo.eq(toVarchar(query.tipoAnexo!)))
+      : base;
+    const rows = await collection.all();
+    return rows.map((row) => ({ id: row.id, nombre: row.Anexo_Documento_IDE }));
   }
 
   async getById(id: number): Promise<TipoDocIdentidadResponseDto> {

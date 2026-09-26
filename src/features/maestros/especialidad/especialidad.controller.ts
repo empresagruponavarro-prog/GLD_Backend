@@ -24,6 +24,8 @@ import { type Paginated } from '../../../platform/db/pagination.js';
 import {
   CreateEspecialidadDto,
   EspecialidadResponseDto,
+  EspecialidadSelectQueryDto,
+  EspecialidadSelectResponseDto,
   ListEspecialidadQueryDto,
   UpdateEspecialidadDto,
 } from './especialidad.dto.js';
@@ -41,6 +43,17 @@ export class EspecialidadController {
   })
   list(@Query() query: ListEspecialidadQueryDto): Promise<Paginated<EspecialidadResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar especialidades para selector (id y nombre), filtrable por tipoAnexo' })
+  @ApiOkResponse({
+    type: EspecialidadSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de especialidades',
+  })
+  select(@Query() query: EspecialidadSelectQueryDto): Promise<EspecialidadSelectResponseDto[]> {
+    return this.handler.select(query);
   }
 
   @Get(':id')

@@ -34,8 +34,10 @@ describe('tipo-doc-identidad', () => {
         public: {
           Anexo_TipoDocIDE: {
             orderBy: vi.fn(() => ({
+              all,
               aggregate,
               where: vi.fn(() => ({
+                all,
                 aggregate,
                 limit: vi.fn(() => ({ offset: vi.fn(() => ({ all })) })),
               })),
@@ -79,6 +81,18 @@ describe('tipo-doc-identidad', () => {
       total: 1,
       totalPages: 1,
     });
+  });
+
+  it('lista los tipos de documento para selector', async () => {
+    all.mockResolvedValue([row]);
+    await expect(controller.select({})).resolves.toEqual([{ id: 1, nombre: 'DNI' }]);
+  });
+
+  it('filtra el selector por tipo de anexo', async () => {
+    all.mockResolvedValue([row]);
+    await expect(controller.select({ tipoAnexo: TipoAnexo.Proveedor })).resolves.toEqual([
+      { id: 1, nombre: 'DNI' },
+    ]);
   });
 
   it('obtiene por id', async () => {

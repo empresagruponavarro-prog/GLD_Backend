@@ -25,6 +25,8 @@ import {
   CreateTipoDocIdentidadDto,
   ListTipoDocIdentidadQueryDto,
   TipoDocIdentidadResponseDto,
+  TipoDocIdentidadSelectQueryDto,
+  TipoDocIdentidadSelectResponseDto,
   UpdateTipoDocIdentidadDto,
 } from './tipo-doc-identidad.dto.js';
 import { TipoDocIdentidadHandler } from './tipo-doc-identidad.handler.js';
@@ -43,6 +45,19 @@ export class TipoDocIdentidadController {
     @Query() query: ListTipoDocIdentidadQueryDto,
   ): Promise<Paginated<TipoDocIdentidadResponseDto>> {
     return this.handler.list(query);
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Listar tipos de documento para selector (id y nombre), filtrable por tipoAnexo' })
+  @ApiOkResponse({
+    type: TipoDocIdentidadSelectResponseDto,
+    isArray: true,
+    description: 'Listado mínimo (id y nombre) de tipos de documento de identidad',
+  })
+  select(
+    @Query() query: TipoDocIdentidadSelectQueryDto,
+  ): Promise<TipoDocIdentidadSelectResponseDto[]> {
+    return this.handler.select(query);
   }
 
   @Get(':id')

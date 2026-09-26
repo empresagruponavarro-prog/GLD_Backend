@@ -48,7 +48,7 @@ export class AnexoHandler {
 
   async list(query: ListAnexoQueryDto): Promise<Paginated<AnexoResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
-    const base = this.db.orm.public.Anexos.orderBy((t) => t.id.asc());
+    const base = this.db.orm.public.Anexos.orderBy((t) => t.id.desc());
     const collection = hasFilters(query)
       ? base.where((t) =>
           and(
