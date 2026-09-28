@@ -5,6 +5,7 @@ import { AdministrationModule } from './features/administration/administration.m
 import { CentrosCostosModule } from './features/centros-costos/centros-costos.module.js';
 import { DocumentosModule } from './features/documentos/documentos.module.js';
 import { MaestrosModule } from './features/maestros/maestros.module.js';
+import { IncidenciasModule } from './features/incidencias/incidencias.module.js';
 import { PresupuestosModule } from './features/presupuestos/presupuestos.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 
@@ -16,6 +17,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     DocumentosModule,
     MaestrosModule,
     PresupuestosModule,
+    IncidenciasModule,
   ],
   controllers: [AppController],
   providers: [AppService],

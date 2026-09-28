@@ -52,7 +52,8 @@ describe('centro-costo', () => {
           Empresas: { all: empresasAll },
           centro_costos_principal: { orderBy: vi.fn(() => ({ all: principalesAll })), all: principalesAll },
           Anexos: { all: anexosAll },
-          ppto_Principal: { where: vi.fn(() => ({ aggregate: pptoAggregate })) },
+          ppto_Principal: { where: vi.fn(() => ({ aggregate: pptoAggregate })), all: vi.fn().mockResolvedValue([]) },
+          ppto_DetalleFases: { all: vi.fn().mockResolvedValue([]) },
           DocCompra: {
             where: vi.fn(() => ({
               aggregate: docCompraAggregate,

@@ -119,7 +119,9 @@ describe('documentos-origen', () => {
           },
           Anexos: {
             first: anexoFirst,
+            where: vi.fn(() => ({ all: vi.fn().mockResolvedValue([]) })),
           },
+          unidad_medida: { where: vi.fn(() => ({ all: vi.fn().mockResolvedValue([]) })) },
           ppto_Fases: {
             where: vi.fn(() => ({ all: faseAll })),
             first: faseFirst,
