@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'5fc1b590cac19c142654917944bd45645187947d0375edbb66e1ed420c0e1e68'>;
+  StorageHashBase<'552c220753f69a52071e06cfa82d1cbaeda4a20c1514f6ead61da62e97839d18'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -670,6 +670,100 @@ export type FieldOutputTypes = {
       readonly MonedaId: Varchar<255> | null;
       readonly Moneda: Varchar<255> | null;
       readonly Simbolo: Varchar<255> | null;
+    };
+    readonly obra_datos_generales: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly expediente_codigo: Varchar<100> | null;
+      readonly direccion: Varchar<1000> | null;
+      readonly departamento: Varchar<100> | null;
+      readonly provincia: Varchar<100> | null;
+      readonly distrito: Varchar<100> | null;
+      readonly ubigeo_cod: Varchar<10> | null;
+      readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly semanas_totales: CodecTypes['pg/int4@1']['output'] | null;
+      readonly personal_activo_promedio: CodecTypes['pg/int4@1']['output'] | null;
+      readonly turno_trabajo: Varchar<50> | null;
+      readonly contacto_cliente_nombre: Varchar<150> | null;
+      readonly contacto_cliente_telefono: Varchar<50> | null;
+      readonly contacto_cliente_correo: Varchar<150> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_documentos_actas: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly titulo: Varchar<255>;
+      readonly subtitulo: Varchar<1000> | null;
+      readonly categoria: Varchar<100>;
+      readonly nro_registro: Varchar<100> | null;
+      readonly fecha_emision: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly vigencia_texto: Varchar<100> | null;
+      readonly estado: Varchar<50> | null;
+      readonly archivo_url: Varchar<1000> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_incidencias_rfi: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly codigo_incidencia: Varchar<50>;
+      readonly titulo: Varchar<255>;
+      readonly descripcion: Varchar<1000>;
+      readonly prioridad: Varchar<50> | null;
+      readonly responsable: Varchar<150> | null;
+      readonly accion_solicitada_o_ejecutada: Varchar<1000> | null;
+      readonly plazo_resolucion: Varchar<100> | null;
+      readonly estado: Varchar<50> | null;
+      readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_planos: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly codigo_plano: Varchar<50>;
+      readonly nombre_plano: Varchar<255>;
+      readonly disciplina: Varchar<50>;
+      readonly version: Varchar<20> | null;
+      readonly es_vigente: CodecTypes['pg/bool@1']['output'] | null;
+      readonly id_plano_anterior: CodecTypes['pg/int4@1']['output'] | null;
+      readonly estado_aprobacion: Varchar<50> | null;
+      readonly fecha_vobo: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly formato_peso: Varchar<50> | null;
+      readonly archivo_url: Varchar<1000> | null;
+      readonly emitido_por: Varchar<150> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_residentes: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
+      readonly nombre_completo: Varchar<200>;
+      readonly rol_obra: Varchar<100>;
+      readonly cip_cap: Varchar<50> | null;
+      readonly especialidad: Varchar<150> | null;
+      readonly telefono: Varchar<50> | null;
+      readonly correo: Varchar<150> | null;
+      readonly turno: Varchar<100> | null;
+      readonly estado_planta: Varchar<50> | null;
+      readonly foto_url: Varchar<1000> | null;
+      readonly orden: CodecTypes['pg/int4@1']['output'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_semanas_cronograma: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['output'];
+      readonly etiqueta_semana: Varchar<50>;
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['output'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['output'];
+      readonly fase_principal: Varchar<255>;
+      readonly descripcion_actividades: Varchar<1000> | null;
+      readonly responsable_nombre: Varchar<150> | null;
+      readonly porcentaje_meta: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly porcentaje_real: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly estado: Varchar<50> | null;
+      readonly orden: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly OrdenCompra: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1347,6 +1441,100 @@ export type FieldInputTypes = {
       readonly MonedaId: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Moneda: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Simbolo: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_datos_generales: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly expediente_codigo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly direccion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly departamento: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly provincia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly distrito: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly ubigeo_cod: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly semanas_totales: CodecTypes['pg/int4@1']['input'] | null;
+      readonly personal_activo_promedio: CodecTypes['pg/int4@1']['input'] | null;
+      readonly turno_trabajo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly contacto_cliente_nombre: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly contacto_cliente_telefono: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly contacto_cliente_correo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_documentos_actas: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+      readonly subtitulo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly categoria: CodecTypes['sql/varchar@1']['input'];
+      readonly nro_registro: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_emision: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly vigencia_texto: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_incidencias_rfi: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly codigo_incidencia: CodecTypes['sql/varchar@1']['input'];
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'];
+      readonly prioridad: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly responsable: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly accion_solicitada_o_ejecutada: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly plazo_resolucion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_planos: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly codigo_plano: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre_plano: CodecTypes['sql/varchar@1']['input'];
+      readonly disciplina: CodecTypes['sql/varchar@1']['input'];
+      readonly version: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly es_vigente: CodecTypes['pg/bool@1']['input'] | null;
+      readonly id_plano_anterior: CodecTypes['pg/int4@1']['input'] | null;
+      readonly estado_aprobacion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_vobo: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly formato_peso: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly emitido_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_residentes: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
+      readonly nombre_completo: CodecTypes['sql/varchar@1']['input'];
+      readonly rol_obra: CodecTypes['sql/varchar@1']['input'];
+      readonly cip_cap: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly especialidad: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly telefono: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly correo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly turno: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado_planta: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly foto_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly orden: CodecTypes['pg/int4@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_semanas_cronograma: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['input'];
+      readonly etiqueta_semana: CodecTypes['sql/varchar@1']['input'];
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['input'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['input'];
+      readonly fase_principal: CodecTypes['sql/varchar@1']['input'];
+      readonly descripcion_actividades: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly responsable_nombre: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly porcentaje_meta: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly porcentaje_real: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly orden: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly OrdenCompra: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2055,6 +2243,100 @@ export type StorageColumnTypes = {
       readonly MonedaId: Varchar<255> | null;
       readonly Simbolo: Varchar<255> | null;
     };
+    readonly obra_datos_generales: {
+      readonly contacto_cliente_correo: Varchar<150> | null;
+      readonly contacto_cliente_nombre: Varchar<150> | null;
+      readonly contacto_cliente_telefono: Varchar<50> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly departamento: Varchar<100> | null;
+      readonly direccion: Varchar<1000> | null;
+      readonly distrito: Varchar<100> | null;
+      readonly expediente_codigo: Varchar<100> | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly personal_activo_promedio: CodecTypes['pg/int4@1']['output'] | null;
+      readonly provincia: Varchar<100> | null;
+      readonly semanas_totales: CodecTypes['pg/int4@1']['output'] | null;
+      readonly turno_trabajo: Varchar<50> | null;
+      readonly ubigeo_cod: Varchar<10> | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_documentos_actas: {
+      readonly archivo_url: Varchar<1000> | null;
+      readonly categoria: Varchar<100>;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly estado: Varchar<50> | null;
+      readonly fecha_emision: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly nro_registro: Varchar<100> | null;
+      readonly subtitulo: Varchar<1000> | null;
+      readonly titulo: Varchar<255>;
+      readonly vigencia_texto: Varchar<100> | null;
+    };
+    readonly obra_incidencias_rfi: {
+      readonly accion_solicitada_o_ejecutada: Varchar<1000> | null;
+      readonly codigo_incidencia: Varchar<50>;
+      readonly descripcion: Varchar<1000>;
+      readonly estado: Varchar<50> | null;
+      readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly plazo_resolucion: Varchar<100> | null;
+      readonly prioridad: Varchar<50> | null;
+      readonly responsable: Varchar<150> | null;
+      readonly titulo: Varchar<255>;
+    };
+    readonly obra_planos: {
+      readonly archivo_url: Varchar<1000> | null;
+      readonly codigo_plano: Varchar<50>;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly disciplina: Varchar<50>;
+      readonly emitido_por: Varchar<150> | null;
+      readonly es_vigente: CodecTypes['pg/bool@1']['output'] | null;
+      readonly estado_aprobacion: Varchar<50> | null;
+      readonly fecha_vobo: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly formato_peso: Varchar<50> | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_plano_anterior: CodecTypes['pg/int4@1']['output'] | null;
+      readonly nombre_plano: Varchar<255>;
+      readonly version: Varchar<20> | null;
+    };
+    readonly obra_residentes: {
+      readonly cip_cap: Varchar<50> | null;
+      readonly correo: Varchar<150> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly especialidad: Varchar<150> | null;
+      readonly estado_planta: Varchar<50> | null;
+      readonly foto_url: Varchar<1000> | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly nombre_completo: Varchar<200>;
+      readonly orden: CodecTypes['pg/int4@1']['output'] | null;
+      readonly rol_obra: Varchar<100>;
+      readonly telefono: Varchar<50> | null;
+      readonly turno: Varchar<100> | null;
+    };
+    readonly obra_semanas_cronograma: {
+      readonly descripcion_actividades: Varchar<1000> | null;
+      readonly estado: Varchar<50> | null;
+      readonly etiqueta_semana: Varchar<50>;
+      readonly fase_principal: Varchar<255>;
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['output'];
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['output'];
+      readonly orden: CodecTypes['pg/int4@1']['output'] | null;
+      readonly porcentaje_meta: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly porcentaje_real: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly responsable_nombre: Varchar<150> | null;
+    };
     readonly ordenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2731,6 +3013,100 @@ export type StorageColumnInputTypes = {
       readonly Moneda: CodecTypes['sql/varchar@1']['input'] | null;
       readonly MonedaId: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Simbolo: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_datos_generales: {
+      readonly contacto_cliente_correo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly contacto_cliente_nombre: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly contacto_cliente_telefono: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly departamento: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly direccion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly distrito: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly expediente_codigo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly personal_activo_promedio: CodecTypes['pg/int4@1']['input'] | null;
+      readonly provincia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly semanas_totales: CodecTypes['pg/int4@1']['input'] | null;
+      readonly turno_trabajo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly ubigeo_cod: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_documentos_actas: {
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly categoria: CodecTypes['sql/varchar@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_emision: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly nro_registro: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly subtitulo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+      readonly vigencia_texto: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_incidencias_rfi: {
+      readonly accion_solicitada_o_ejecutada: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly codigo_incidencia: CodecTypes['sql/varchar@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'];
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly plazo_resolucion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly prioridad: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly responsable: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly obra_planos: {
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly codigo_plano: CodecTypes['sql/varchar@1']['input'];
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly disciplina: CodecTypes['sql/varchar@1']['input'];
+      readonly emitido_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly es_vigente: CodecTypes['pg/bool@1']['input'] | null;
+      readonly estado_aprobacion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_vobo: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly formato_peso: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_plano_anterior: CodecTypes['pg/int4@1']['input'] | null;
+      readonly nombre_plano: CodecTypes['sql/varchar@1']['input'];
+      readonly version: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_residentes: {
+      readonly cip_cap: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly correo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly especialidad: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado_planta: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly foto_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly nombre_completo: CodecTypes['sql/varchar@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'] | null;
+      readonly rol_obra: CodecTypes['sql/varchar@1']['input'];
+      readonly telefono: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly turno: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_semanas_cronograma: {
+      readonly descripcion_actividades: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly etiqueta_semana: CodecTypes['sql/varchar@1']['input'];
+      readonly fase_principal: CodecTypes['sql/varchar@1']['input'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['input'];
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'] | null;
+      readonly porcentaje_meta: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly porcentaje_real: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly responsable_nombre: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly ordenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
@@ -6220,6 +6596,732 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly obra_datos_generales: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly expediente_codigo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly direccion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly departamento: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
+                  };
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly provincia: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
+                  };
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly distrito: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
+                  };
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly ubigeo_cod: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 10 };
+                };
+                readonly latitud: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly longitud: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly semanas_totales: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 6>;
+                  };
+                };
+                readonly personal_activo_promedio: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly turno_trabajo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Diurno'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly contacto_cliente_nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly contacto_cliente_telefono: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly contacto_cliente_correo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updated_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['id_centro_costo'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_documentos_actas: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly titulo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly subtitulo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly categoria: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly nro_registro: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly fecha_emision: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: true;
+                };
+                readonly vigencia_texto: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly estado: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Validado'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly archivo_url: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_documentos_actas_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_documentos_actas_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_documentos_actas';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_incidencias_rfi: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly codigo_incidencia: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly titulo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly descripcion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly prioridad: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'MEDIA'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly responsable: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly accion_solicitada_o_ejecutada: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly plazo_resolucion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly estado: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'PENDIENTE'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly fecha_reporte: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly fecha_resolucion: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_incidencias_rfi_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_incidencias_rfi_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_incidencias_rfi';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_planos: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly codigo_plano: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly nombre_plano: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly disciplina: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly version: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'v1.0'>;
+                  };
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly es_vigente: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly id_plano_anterior: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly estado_aprobacion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Aprobado Obra'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly fecha_vobo: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: true;
+                };
+                readonly formato_peso: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly archivo_url: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly emitido_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_planos_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_planos_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_planos';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_residentes: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_anexo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly nombre_completo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly rol_obra: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly cip_cap: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly especialidad: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly telefono: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly correo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly turno: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lun - Sáb 07:00 - 18:00'>;
+                  };
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly estado_planta: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'En Planta'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly foto_url: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_residentes_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_residentes_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_residentes';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_semanas_cronograma: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly numero_semana: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly etiqueta_semana: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly fecha_inicio: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly fecha_fin: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly fase_principal: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly descripcion_actividades: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly responsable_nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly porcentaje_meta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', 0>;
+                  };
+                };
+                readonly porcentaje_real: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', 0>;
+                  };
+                };
+                readonly estado: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Programado'>;
+                  };
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [
+                { readonly columns: readonly ['id_centro_costo', 'numero_semana'] },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_semanas_cronograma_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_semanas_cronograma_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_semanas_cronograma';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly ordenCompraDetalle: {
               columns: {
                 readonly id: {
@@ -7994,6 +9096,30 @@ type ContractBase = Omit<
     readonly ppto_Principal_Historial: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ppto_Principal_Historial';
+    };
+    readonly obra_datos_generales: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_datos_generales';
+    };
+    readonly obra_residentes: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_residentes';
+    };
+    readonly obra_semanas_cronograma: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_semanas_cronograma';
+    };
+    readonly obra_planos: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_planos';
+    };
+    readonly obra_documentos_actas: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_documentos_actas';
+    };
+    readonly obra_incidencias_rfi: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_incidencias_rfi';
     };
   };
   readonly domain: {
@@ -11921,6 +13047,767 @@ type ContractBase = Omit<
                 readonly MonedaId: { readonly column: 'MonedaId' };
                 readonly Moneda: { readonly column: 'Moneda' };
                 readonly Simbolo: { readonly column: 'Simbolo' };
+              };
+            };
+          };
+          readonly obra_datos_generales: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly expediente_codigo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly direccion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly departamento: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly provincia: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly distrito: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly ubigeo_cod: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 10 };
+                };
+              };
+              readonly latitud: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly longitud: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly semanas_totales: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly personal_activo_promedio: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly turno_trabajo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly contacto_cliente_nombre: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly contacto_cliente_telefono: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly contacto_cliente_correo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly updated_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_datos_generales';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly expediente_codigo: { readonly column: 'expediente_codigo' };
+                readonly direccion: { readonly column: 'direccion' };
+                readonly departamento: { readonly column: 'departamento' };
+                readonly provincia: { readonly column: 'provincia' };
+                readonly distrito: { readonly column: 'distrito' };
+                readonly ubigeo_cod: { readonly column: 'ubigeo_cod' };
+                readonly latitud: { readonly column: 'latitud' };
+                readonly longitud: { readonly column: 'longitud' };
+                readonly semanas_totales: { readonly column: 'semanas_totales' };
+                readonly personal_activo_promedio: { readonly column: 'personal_activo_promedio' };
+                readonly turno_trabajo: { readonly column: 'turno_trabajo' };
+                readonly contacto_cliente_nombre: { readonly column: 'contacto_cliente_nombre' };
+                readonly contacto_cliente_telefono: {
+                  readonly column: 'contacto_cliente_telefono';
+                };
+                readonly contacto_cliente_correo: { readonly column: 'contacto_cliente_correo' };
+                readonly created_at: { readonly column: 'created_at' };
+                readonly updated_at: { readonly column: 'updated_at' };
+              };
+            };
+          };
+          readonly obra_documentos_actas: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly titulo: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly subtitulo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly categoria: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly nro_registro: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly fecha_emision: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly vigencia_texto: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly estado: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly archivo_url: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_documentos_actas';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly titulo: { readonly column: 'titulo' };
+                readonly subtitulo: { readonly column: 'subtitulo' };
+                readonly categoria: { readonly column: 'categoria' };
+                readonly nro_registro: { readonly column: 'nro_registro' };
+                readonly fecha_emision: { readonly column: 'fecha_emision' };
+                readonly vigencia_texto: { readonly column: 'vigencia_texto' };
+                readonly estado: { readonly column: 'estado' };
+                readonly archivo_url: { readonly column: 'archivo_url' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly obra_incidencias_rfi: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly codigo_incidencia: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly titulo: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly descripcion: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly prioridad: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly responsable: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly accion_solicitada_o_ejecutada: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly plazo_resolucion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly estado: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly fecha_reporte: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly fecha_resolucion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_incidencias_rfi';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly codigo_incidencia: { readonly column: 'codigo_incidencia' };
+                readonly titulo: { readonly column: 'titulo' };
+                readonly descripcion: { readonly column: 'descripcion' };
+                readonly prioridad: { readonly column: 'prioridad' };
+                readonly responsable: { readonly column: 'responsable' };
+                readonly accion_solicitada_o_ejecutada: {
+                  readonly column: 'accion_solicitada_o_ejecutada';
+                };
+                readonly plazo_resolucion: { readonly column: 'plazo_resolucion' };
+                readonly estado: { readonly column: 'estado' };
+                readonly fecha_reporte: { readonly column: 'fecha_reporte' };
+                readonly fecha_resolucion: { readonly column: 'fecha_resolucion' };
+              };
+            };
+          };
+          readonly obra_planos: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly codigo_plano: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly nombre_plano: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly disciplina: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly version: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly es_vigente: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly id_plano_anterior: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly estado_aprobacion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly fecha_vobo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly formato_peso: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly archivo_url: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly emitido_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_planos';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly codigo_plano: { readonly column: 'codigo_plano' };
+                readonly nombre_plano: { readonly column: 'nombre_plano' };
+                readonly disciplina: { readonly column: 'disciplina' };
+                readonly version: { readonly column: 'version' };
+                readonly es_vigente: { readonly column: 'es_vigente' };
+                readonly id_plano_anterior: { readonly column: 'id_plano_anterior' };
+                readonly estado_aprobacion: { readonly column: 'estado_aprobacion' };
+                readonly fecha_vobo: { readonly column: 'fecha_vobo' };
+                readonly formato_peso: { readonly column: 'formato_peso' };
+                readonly archivo_url: { readonly column: 'archivo_url' };
+                readonly emitido_por: { readonly column: 'emitido_por' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly obra_residentes: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_anexo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly nombre_completo: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly rol_obra: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly cip_cap: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly especialidad: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly telefono: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly correo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly turno: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly estado_planta: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly foto_url: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly orden: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly created_at: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_residentes';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly id_anexo: { readonly column: 'id_anexo' };
+                readonly nombre_completo: { readonly column: 'nombre_completo' };
+                readonly rol_obra: { readonly column: 'rol_obra' };
+                readonly cip_cap: { readonly column: 'cip_cap' };
+                readonly especialidad: { readonly column: 'especialidad' };
+                readonly telefono: { readonly column: 'telefono' };
+                readonly correo: { readonly column: 'correo' };
+                readonly turno: { readonly column: 'turno' };
+                readonly estado_planta: { readonly column: 'estado_planta' };
+                readonly foto_url: { readonly column: 'foto_url' };
+                readonly orden: { readonly column: 'orden' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly obra_semanas_cronograma: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly numero_semana: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly etiqueta_semana: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly fecha_inicio: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly fecha_fin: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly fase_principal: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly descripcion_actividades: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly responsable_nombre: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly porcentaje_meta: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly porcentaje_real: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly estado: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly orden: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_semanas_cronograma';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly numero_semana: { readonly column: 'numero_semana' };
+                readonly etiqueta_semana: { readonly column: 'etiqueta_semana' };
+                readonly fecha_inicio: { readonly column: 'fecha_inicio' };
+                readonly fecha_fin: { readonly column: 'fecha_fin' };
+                readonly fase_principal: { readonly column: 'fase_principal' };
+                readonly descripcion_actividades: { readonly column: 'descripcion_actividades' };
+                readonly responsable_nombre: { readonly column: 'responsable_nombre' };
+                readonly porcentaje_meta: { readonly column: 'porcentaje_meta' };
+                readonly porcentaje_real: { readonly column: 'porcentaje_real' };
+                readonly estado: { readonly column: 'estado' };
+                readonly orden: { readonly column: 'orden' };
               };
             };
           };

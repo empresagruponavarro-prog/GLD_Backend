@@ -7,6 +7,7 @@ import { DocumentosModule } from './features/documentos/documentos.module.js';
 import { MaestrosModule } from './features/maestros/maestros.module.js';
 import { IncidenciasModule } from './features/incidencias/incidencias.module.js';
 import { PresupuestosModule } from './features/presupuestos/presupuestos.module.js';
+import { OperacionesObraModule } from './features/operaciones-obra/operaciones-obra.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 
 @Module({
@@ -18,9 +19,9 @@ import { PrismaModule } from './prisma/prisma.module.js';
     MaestrosModule,
     PresupuestosModule,
     IncidenciasModule,
+    OperacionesObraModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-

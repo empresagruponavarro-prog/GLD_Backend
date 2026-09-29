@@ -913,3 +913,116 @@ model ppto_Principal_Historial {
   presupuesto          ppto_Principal?        @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
   @@map("ppto_Principal_Historial")
 }
+
+model obra_datos_generales {
+  id                        Int       @id @default(autoincrement())
+  id_centro_costo           Int       @unique
+  centroCosto               CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  expediente_codigo         VarChar(100)?
+  direccion                 VarChar(1000)?
+  departamento              VarChar(100)? @default("Lima")
+  provincia                 VarChar(100)? @default("Lima")
+  distrito                  VarChar(100)? @default("Lima")
+  ubigeo_cod                VarChar(10)?
+  latitud                   Decimal?
+  longitud                  Decimal?
+  semanas_totales           Int? @default(6)
+  personal_activo_promedio  Int? @default(0)
+  turno_trabajo             VarChar(50)? @default("Diurno")
+  contacto_cliente_nombre   VarChar(150)?
+  contacto_cliente_telefono VarChar(50)?
+  contacto_cliente_correo   VarChar(150)?
+  created_at                DateTime? @default(now())
+  updated_at                DateTime? @default(now())
+  @@map("obra_datos_generales")
+}
+
+model obra_residentes {
+  id              Int     @id @default(autoincrement())
+  id_centro_costo Int
+  centroCosto     CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  id_anexo        Int?
+  nombre_completo VarChar(200)
+  rol_obra        VarChar(100)
+  cip_cap         VarChar(50)?
+  especialidad    VarChar(150)?
+  telefono        VarChar(50)?
+  correo          VarChar(150)?
+  turno           VarChar(100)? @default("Lun - Sáb 07:00 - 18:00")
+  estado_planta   VarChar(50)?  @default("En Planta")
+  foto_url        VarChar(1000)?
+  orden           Int? @default(0)
+  created_at      DateTime? @default(now())
+  @@map("obra_residentes")
+}
+
+model obra_semanas_cronograma {
+  id                      Int     @id @default(autoincrement())
+  id_centro_costo         Int
+  centroCosto             CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  numero_semana           Int
+  etiqueta_semana         VarChar(50)
+  fecha_inicio            DateString
+  fecha_fin               DateString
+  fase_principal          VarChar(255)
+  descripcion_actividades VarChar(1000)?
+  responsable_nombre      VarChar(150)?
+  porcentaje_meta         Decimal? @default(0)
+  porcentaje_real         Decimal? @default(0)
+  estado                  VarChar(50)? @default("Programado")
+  orden                   Int? @default(0)
+  @@unique([id_centro_costo, numero_semana])
+  @@map("obra_semanas_cronograma")
+}
+
+model obra_planos {
+  id                Int    @id @default(autoincrement())
+  id_centro_costo   Int
+  centroCosto       CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  codigo_plano      VarChar(50)
+  nombre_plano      VarChar(255)
+  disciplina        VarChar(50)
+  version           VarChar(20)? @default("v1.0")
+  es_vigente        Boolean? @default(true)
+  id_plano_anterior Int?
+  estado_aprobacion VarChar(50)? @default("Aprobado Obra")
+  fecha_vobo        DateString?
+  formato_peso      VarChar(50)?
+  archivo_url       VarChar(1000)?
+  emitido_por       VarChar(150)?
+  created_at        DateTime? @default(now())
+  @@map("obra_planos")
+}
+
+model obra_documentos_actas {
+  id              Int    @id @default(autoincrement())
+  id_centro_costo Int
+  centroCosto     CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  titulo          VarChar(255)
+  subtitulo       VarChar(1000)?
+  categoria       VarChar(100)
+  nro_registro    VarChar(100)?
+  fecha_emision   DateString?
+  vigencia_texto  VarChar(100)?
+  estado          VarChar(50)? @default("Validado")
+  archivo_url     VarChar(1000)?
+  created_at      DateTime? @default(now())
+  @@map("obra_documentos_actas")
+}
+
+model obra_incidencias_rfi {
+  id                            Int    @id @default(autoincrement())
+  id_centro_costo               Int
+  centroCosto                   CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  codigo_incidencia             VarChar(50)
+  titulo                        VarChar(255)
+  descripcion                   VarChar(1000)
+  prioridad                     VarChar(50)? @default("MEDIA")
+  responsable                   VarChar(150)?
+  accion_solicitada_o_ejecutada VarChar(1000)?
+  plazo_resolucion              VarChar(100)?
+  estado                        VarChar(50)? @default("PENDIENTE")
+  fecha_reporte                 DateTime? @default(now())
+  fecha_resolucion              DateTime?
+  @@map("obra_incidencias_rfi")
+}
