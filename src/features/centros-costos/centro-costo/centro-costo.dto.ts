@@ -180,6 +180,7 @@ export class CentroCostoResponseDto {
   FechaFinReal?: string | null;
 }
 
+
 export class CentroCostoPrincipalResponseDto {
   @ApiPropertyOptional({ example: 1 })
   id: number;
