@@ -17,12 +17,12 @@ export class CreateCentroCostoDto {
   @MaxLength(255)
   CodCliente: string;
 
-  @ApiProperty({ example: 1, description: 'ID del centro de costo principal' })
+  @ApiPropertyOptional({ example: 1, description: 'ID del centro de costo principal (ya no requerido)' })
+  @IsOptional()
   @Type(() => Number)
-  @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  id_centro_costos_principal: number;
+  id_centro_costos_principal?: number;
 
   @ApiProperty({ example: 'PROYECTO EDIFICIO MULTIFAMILIAR', description: 'Nombre del centro de costo' })
   @IsString()

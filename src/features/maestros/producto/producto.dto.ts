@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsIn,
@@ -86,12 +87,14 @@ export class ListProductoQueryDto extends PaginationQueryDto {
 
   @ApiPropertyOptional({ description: 'Filtro por categoría' })
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @IsPositive()
   id_categoria?: number;
 
   @ApiPropertyOptional({ description: 'Filtro por unidad de medida' })
   @IsOptional()
+  @Type(() => Number)
   @IsInt()
   @IsPositive()
   id_unidad_medida?: number;
