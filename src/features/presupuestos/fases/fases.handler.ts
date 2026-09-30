@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and } from '@prisma/orm-postgres/orm-client';
+import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
@@ -19,12 +19,14 @@ export class PptoFasesHandler {
     let resolvedIdPrincipal = query.id_centro_costos_principal;
     let resolvedIdEmpresa = query.id_empresa;
 
-    const wantsRelationalFilter = Boolean(query.id_centro_costo || query.id_centro_costos_principal);
+    const wantsRelationalFilter = Boolean(query.id_centro_costo || query.id_centro_costos_principal || query.id_empresa);
 
-    // Un Centro de Costo (tienda/obra) hereda las fases de su centro de costo principal.
-    if (!resolvedIdPrincipal && query.id_centro_costo) {
+    if (!resolvedIdEmpresa && query.id_centro_costo) {
       const cc = await this.db.orm.public.CentroCostos.first({ id: query.id_centro_costo });
-      if (cc?.id_centro_costos_principal) {
+      if (cc?.id_empresa) {
+        resolvedIdEmpresa = cc.id_empresa;
+      }
+      if (!resolvedIdPrincipal && cc?.id_centro_costos_principal) {
         resolvedIdPrincipal = cc.id_centro_costos_principal;
       }
     }
@@ -36,17 +38,14 @@ export class PptoFasesHandler {
       }
     }
 
-    // Si el usuario solicitó filtrar por Centro de Costo pero no tiene cadena asociada, retornar vacío
-    if (wantsRelationalFilter && !resolvedIdPrincipal) {
-      return toPaginated([], 0, 1, query.pageSize ?? 20);
+    // Si pide filtrar relacionalmente pero no hay ni principal ni empresa, retornar vacio
+    if (wantsRelationalFilter && !resolvedIdPrincipal && !resolvedIdEmpresa) {
+      return toPaginated([], 0, query.page ?? 1, query.pageSize ?? 1000);
     }
 
-    const effectiveQuery = {
-      ...query,
-      pageSize: query.pageSize ?? (resolvedIdPrincipal || wantsRelationalFilter ? 100 : 20),
-    };
-    const { page, pageSize, offset } = pageParams(effectiveQuery);
-
+    const page = query.page ?? 1;
+    const pageSize = query.pageSize ?? 1000;
+    const offset = (page - 1) * pageSize;
     const base = this.db.orm.public.ppto_Fases.orderBy((f) => f.FaseProyecto.asc());
     const filtering = hasFilters(query) || Boolean(resolvedIdPrincipal);
 
@@ -55,7 +54,7 @@ export class PptoFasesHandler {
           and(
             ...(query.IdpptoFase ? [f.IdpptoFase.ilike(`%${query.IdpptoFase}%`)] : []),
             ...(query.FaseProyecto ? [f.FaseProyecto.ilike(`%${query.FaseProyecto}%`)] : []),
-            ...(resolvedIdEmpresa ? [f.id_empresa.eq(resolvedIdEmpresa)] : []),
+            ...(resolvedIdEmpresa ? [or(f.id_empresa.eq(resolvedIdEmpresa), f.id_empresa.isNull())] : []),
             ...(resolvedIdPrincipal ? [f.id_centro_costos_principal.eq(resolvedIdPrincipal)] : []),
           ),
         )
