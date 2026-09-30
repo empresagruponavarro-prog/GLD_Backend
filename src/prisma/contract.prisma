@@ -275,6 +275,10 @@ model CentroCostos {
   presupuesto_viaticos          Decimal?
   presupuesto_monto             Decimal?
   oc_file                       VarChar(255)?
+  id_empresa                    Int?
+  empresa                       Empresas?               @relation("CentroCostosEmpresa", fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  id_anexo                      Int?
+  anexo                         Anexos?                 @relation("CentroCostosAnexo", fields: [id_anexo], references: [id], onDelete: SetNull)
 
   almacenMovimientos     AlmacenMovimientos[]
   cajaEgresosRetail      CajaEgresosRetail[]

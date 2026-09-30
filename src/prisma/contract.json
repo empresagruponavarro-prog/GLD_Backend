@@ -1963,7 +1963,21 @@
                   "kind": "scalar"
                 }
               },
+              "id_anexo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_centro_costos_principal": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_empresa": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
@@ -2039,6 +2053,21 @@
                 },
                 "to": {
                   "model": "AlmacenMovimientos",
+                  "namespace": "public"
+                }
+              },
+              "anexo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_anexo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
                   "namespace": "public"
                 }
               },
@@ -2162,6 +2191,21 @@
                   "namespace": "public"
                 }
               },
+              "empresa": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_empresa"
+                  ],
+                  "targetFields": [
+                    "id_empresa"
+                  ]
+                },
+                "to": {
+                  "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
               "ordenCompras": {
                 "cardinality": "1:N",
                 "on": {
@@ -2261,8 +2305,14 @@
                 "id": {
                   "column": "id"
                 },
+                "id_anexo": {
+                  "column": "id_anexo"
+                },
                 "id_centro_costos_principal": {
                   "column": "id_centro_costos_principal"
+                },
+                "id_empresa": {
+                  "column": "id_empresa"
                 },
                 "oc_file": {
                   "column": "oc_file"
@@ -10349,7 +10399,17 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_anexo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_centro_costos_principal": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_empresa": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
@@ -10413,15 +10473,65 @@
                     "namespaceId": "public",
                     "tableName": "centro_costos_principal"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "empresas"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_anexo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_anexo"
+                  ],
+                  "name": "CentroCostos_id_anexo_idx_726d2e48",
+                  "prefix": "CentroCostos_id_anexo_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_centro_costos_principal"
                   ],
                   "name": "CentroCostos_id_centro_costos_principal_idx_33100da8",
                   "prefix": "CentroCostos_id_centro_costos_principal_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_empresa"
+                  ],
+                  "name": "CentroCostos_id_empresa_idx_328936e2",
+                  "prefix": "CentroCostos_id_empresa_idx",
                   "unique": false
                 }
               ],
@@ -17493,7 +17603,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "552c220753f69a52071e06cfa82d1cbaeda4a20c1514f6ead61da62e97839d18"
+    "storageHash": "03aabef289cdbff33d2aee4a337efb6aa6a01dc261e355830c59ca16486a1ea2"
   },
   "capabilities": {
     "postgres": {

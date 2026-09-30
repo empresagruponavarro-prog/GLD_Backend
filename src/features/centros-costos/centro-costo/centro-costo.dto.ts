@@ -90,6 +90,20 @@ export class CreateCentroCostoDto {
   @IsString()
   @MaxLength(255)
   OCFile?: string;
+
+  @ApiPropertyOptional({ example: 1, description: 'ID de la empresa' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_empresa?: number;
+
+  @ApiPropertyOptional({ example: 5, description: 'ID del anexo (colaborador)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_anexo?: number;
 }
 
 export class UpdateCentroCostoDto extends PartialType(CreateCentroCostoDto) {}
@@ -152,6 +166,9 @@ export class CentroCostoResponseDto {
   @ApiPropertyOptional({ example: 1, description: 'Identificador de la empresa' })
   id_empresa: number | null;
 
+  @ApiPropertyOptional({ example: 5, description: 'ID del anexo (colaborador asignado)' })
+  id_anexo?: number | null;
+
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
   Empresa?: string | null;
 
@@ -196,6 +213,9 @@ export class CentroCostoPrincipalResponseDto {
 
   @ApiPropertyOptional({ example: 1, description: 'Identificador de la empresa' })
   id_empresa: number | null;
+
+  @ApiPropertyOptional({ example: 5, description: 'ID del anexo (colaborador asignado)' })
+  id_anexo?: number | null;
 
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
   Empresa?: string | null;

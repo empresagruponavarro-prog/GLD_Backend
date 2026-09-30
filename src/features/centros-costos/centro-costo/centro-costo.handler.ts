@@ -73,14 +73,14 @@ export class CentroCostoHandler {
         }
       }
 
-      const empresaDelHijo = (r: { id_centro_costos_principal: number | null }): number | null => {
-        const principal = r.id_centro_costos_principal != null ? principalesByRowId.get(r.id_centro_costos_principal) : null;
-        return principal?.id_empresa ?? null;
-      };
-
       const filtered = rows
         .map((r) => {
-          const idEmpresa = empresaDelHijo(r);
+          // Use id_empresa directly from the row (new column), fallback to deriving from principal
+          const idEmpresa: number | null = r.id_empresa != null
+            ? r.id_empresa
+            : (r.id_centro_costos_principal != null
+                ? (principalesByRowId.get(r.id_centro_costos_principal)?.id_empresa ?? null)
+                : null);
           const codCliente = r.cod_cliente;
           const idPrincipal = r.id_centro_costos_principal;
           const principalName = idPrincipal != null ? principalesByRowId.get(idPrincipal)?.descripcion ?? null : null;
@@ -101,6 +101,7 @@ export class CentroCostoHandler {
             CentroCosto: r.centro_costo,
             Estado: r.estado ?? 'ABIERTO',
             id_empresa: idEmpresa,
+            id_anexo: (r as any).id_anexo ?? null,
             Empresa: idEmpresa != null ? empresasById.get(idEmpresa) ?? null : null,
             periodo: r.periodo,
             CodCliente: r.cod_cliente,
@@ -168,7 +169,8 @@ export class CentroCostoHandler {
       idCentroCostosPrincipal: row.id_centro_costos_principal,
       CentroCosto: row.centro_costo,
       Estado: row.estado,
-      id_empresa: null,
+      id_empresa: (row as any).id_empresa ?? null,
+      id_anexo: (row as any).id_anexo ?? null,
       periodo: row.periodo,
       CodCliente: row.cod_cliente,
       PresupuestoEstado: pptoEstado,
@@ -195,6 +197,8 @@ export class CentroCostoHandler {
       presupuesto_viaticos: toDecimalString(dto.PresupuestoViaticos ?? 0),
       presupuesto_monto: toDecimalString(dto.PresupuestoMonto ?? 0),
       oc_file: toVarchar(dto.OCFile),
+      ...(dto.id_empresa != null ? { id_empresa: dto.id_empresa } : {}),
+      ...(dto.id_anexo != null ? { id_anexo: dto.id_anexo } : {}),
     });
 
     return {
@@ -202,7 +206,8 @@ export class CentroCostoHandler {
       idCentroCostosPrincipal: created.id_centro_costos_principal,
       CentroCosto: created.centro_costo,
       Estado: created.estado,
-      id_empresa: null,
+      id_empresa: (created as any).id_empresa ?? null,
+      id_anexo: (created as any).id_anexo ?? null,
       periodo: created.periodo,
       CodCliente: created.cod_cliente,
       PresupuestoEstado: created.presupuesto_estado,
@@ -228,6 +233,8 @@ export class CentroCostoHandler {
       presupuesto_viaticos?: string;
       presupuesto_monto?: string;
       oc_file?: Varchar255;
+      id_empresa?: number;
+      id_anexo?: number;
     } = {};
 
     if (dto.periodo !== undefined) data.periodo = dto.periodo;
@@ -245,6 +252,8 @@ export class CentroCostoHandler {
     if (dto.PresupuestoViaticos !== undefined) data.presupuesto_viaticos = toDecimalString(dto.PresupuestoViaticos);
     if (dto.PresupuestoMonto !== undefined) data.presupuesto_monto = toDecimalString(dto.PresupuestoMonto);
     if (dto.OCFile !== undefined) data.oc_file = toVarchar(dto.OCFile);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
+    if (dto.id_anexo !== undefined) data.id_anexo = dto.id_anexo;
 
     const row = await this.db.orm.public.CentroCostos.where({ id }).update(data);
     if (!row) throw new NotFoundException(`Centro de costo ${id} no encontrado`);
@@ -253,7 +262,8 @@ export class CentroCostoHandler {
       idCentroCostosPrincipal: row.id_centro_costos_principal,
       CentroCosto: row.centro_costo,
       Estado: row.estado,
-      id_empresa: null,
+      id_empresa: (row as any).id_empresa ?? null,
+      id_anexo: (row as any).id_anexo ?? null,
       periodo: row.periodo,
       CodCliente: row.cod_cliente,
       PresupuestoEstado: row.presupuesto_estado,

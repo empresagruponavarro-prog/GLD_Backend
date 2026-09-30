@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'552c220753f69a52071e06cfa82d1cbaeda4a20c1514f6ead61da62e97839d18'>;
+  StorageHashBase<'03aabef289cdbff33d2aee4a337efb6aa6a01dc261e355830c59ca16486a1ea2'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -402,6 +402,8 @@ export type FieldOutputTypes = {
       readonly presupuesto_viaticos: CodecTypes['pg/numeric@1']['output'] | null;
       readonly presupuesto_monto: CodecTypes['pg/numeric@1']['output'] | null;
       readonly oc_file: Varchar<255> | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly Contrataciones: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1173,6 +1175,8 @@ export type FieldInputTypes = {
       readonly presupuesto_viaticos: CodecTypes['pg/numeric@1']['input'] | null;
       readonly presupuesto_monto: CodecTypes['pg/numeric@1']['input'] | null;
       readonly oc_file: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly Contrataciones: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -1936,7 +1940,9 @@ export type StorageColumnTypes = {
       readonly fecha_fin_real: CodecTypes['pg/date-string@1']['output'] | null;
       readonly fecha_inicio: CodecTypes['pg/date-string@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_centro_costos_principal: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['output'] | null;
       readonly oc_file: Varchar<255> | null;
       readonly periodo: CodecTypes['pg/int4@1']['output'] | null;
       readonly presupuesto_costo_directo: CodecTypes['pg/numeric@1']['output'] | null;
@@ -2707,7 +2713,9 @@ export type StorageColumnInputTypes = {
       readonly fecha_fin_real: CodecTypes['pg/date-string@1']['input'] | null;
       readonly fecha_inicio: CodecTypes['pg/date-string@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_centro_costos_principal: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['input'] | null;
       readonly oc_file: CodecTypes['sql/varchar@1']['input'] | null;
       readonly periodo: CodecTypes['pg/int4@1']['input'] | null;
       readonly presupuesto_costo_directo: CodecTypes['pg/numeric@1']['input'] | null;
@@ -4485,6 +4493,16 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly typeParams: { readonly length: 255 };
                 };
+                readonly id_empresa: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_anexo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -4493,6 +4511,18 @@ type ContractBase = Omit<
                   readonly name: 'CentroCostos_id_centro_costos_principal_idx_33100da8';
                   readonly prefix: 'CentroCostos_id_centro_costos_principal_idx';
                   readonly columns: readonly ['id_centro_costos_principal'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'CentroCostos_id_empresa_idx_328936e2';
+                  readonly prefix: 'CentroCostos_id_empresa_idx';
+                  readonly columns: readonly ['id_empresa'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'CentroCostos_id_anexo_idx_726d2e48';
+                  readonly prefix: 'CentroCostos_id_anexo_idx';
+                  readonly columns: readonly ['id_anexo'];
                   readonly unique: false;
                 },
               ];
@@ -4506,6 +4536,30 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'centro_costos_principal';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id_empresa'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'empresas';
+                    readonly columns: readonly ['id_empresa'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id_anexo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -10456,6 +10510,14 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
               };
+              readonly id_empresa: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_anexo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly almacenMovimientos: {
@@ -10467,6 +10529,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
+              readonly anexo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_anexo'];
+                  readonly targetFields: readonly ['id'];
                 };
               };
               readonly cajaEgresosRetail: {
@@ -10557,6 +10630,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id_centro_costo'];
                 };
               };
+              readonly empresa: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Empresas';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_empresa'];
+                  readonly targetFields: readonly ['id_empresa'];
+                };
+              };
               readonly ordenCompras: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -10638,6 +10722,8 @@ type ContractBase = Omit<
                 readonly presupuesto_viaticos: { readonly column: 'presupuesto_viaticos' };
                 readonly presupuesto_monto: { readonly column: 'presupuesto_monto' };
                 readonly oc_file: { readonly column: 'oc_file' };
+                readonly id_empresa: { readonly column: 'id_empresa' };
+                readonly id_anexo: { readonly column: 'id_anexo' };
               };
             };
           };
