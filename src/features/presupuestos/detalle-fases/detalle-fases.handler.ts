@@ -19,6 +19,13 @@ export class PptoDetalleFasesHandler {
   private async resolveCentroCostoId(dto: {
     id_centro_costo?: number;
   }): Promise<number | undefined> {
+    if (dto.id_centro_costo == null) return undefined;
+    // Validate FK: check that id_centro_costo exists in CentroCostos table
+    const cc = await this.db.orm.public.CentroCostos.first({ id: dto.id_centro_costo });
+    if (!cc) {
+      // CC not found in CentroCostos - skip to avoid FK violation
+      return undefined;
+    }
     return dto.id_centro_costo;
   }
 
