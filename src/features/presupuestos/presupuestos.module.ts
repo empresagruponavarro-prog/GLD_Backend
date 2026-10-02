@@ -13,6 +13,9 @@ import { PresupuestoHistorialHandler } from './presupuesto-historial/presupuesto
 import { PresupuestoPrincipalController } from './presupuesto-principal/presupuesto-principal.controller.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto-principal.handler.js';
 
+import { PlantillasController } from './plantillas/plantillas.controller.js';
+import { PlantillasHandler } from './plantillas/plantillas.handler.js';
+
 @Module({
   imports: [PrismaModule],
   controllers: [
@@ -22,6 +25,7 @@ import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto
     PptoDetalleFasesCateController,
     PresupuestoHistorialController,
     PresupuestoPrincipalController,
+    PlantillasController,
   ],
   providers: [
     PresupuestoPrincipalHandler,
@@ -30,6 +34,7 @@ import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto
     PptoDetalleFasesHandler,
     PptoDetalleFasesCateHandler,
     PresupuestoHistorialHandler,
+    PlantillasHandler,
   ],
   exports: [
     PresupuestoPrincipalHandler,

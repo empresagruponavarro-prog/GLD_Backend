@@ -180,6 +180,18 @@
       "model": "ppto_FasesCategorias",
       "namespace": "public"
     },
+    "ppto_Plantillas": {
+      "model": "ppto_Plantillas",
+      "namespace": "public"
+    },
+    "ppto_Plantillas_Categorias": {
+      "model": "ppto_Plantillas_Categorias",
+      "namespace": "public"
+    },
+    "ppto_Plantillas_Fases": {
+      "model": "ppto_Plantillas_Fases",
+      "namespace": "public"
+    },
     "ppto_Principal": {
       "model": "ppto_Principal",
       "namespace": "public"
@@ -9397,6 +9409,276 @@
               "table": "ppto_FasesCategorias"
             }
           },
+          "ppto_Plantillas": {
+            "fields": {
+              "Activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "Descripcion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 500
+                  }
+                }
+              },
+              "FechaCreacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "IdPlantilla": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "Nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "fases": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPlantilla"
+                  ],
+                  "targetFields": [
+                    "IdPlantilla"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas_Fases",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "Activo": {
+                  "column": "Activo"
+                },
+                "Descripcion": {
+                  "column": "Descripcion"
+                },
+                "FechaCreacion": {
+                  "column": "FechaCreacion"
+                },
+                "IdPlantilla": {
+                  "column": "IdPlantilla"
+                },
+                "Nombre": {
+                  "column": "Nombre"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ppto_Plantillas"
+            }
+          },
+          "ppto_Plantillas_Categorias": {
+            "fields": {
+              "CostoReferencial": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "IdPlantillaFase": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "IdpptoFaseCategoria": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "fasePlantilla": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPlantillaFase"
+                  ],
+                  "targetFields": [
+                    "IdPlantillaFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas_Fases",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "CostoReferencial": {
+                  "column": "CostoReferencial"
+                },
+                "IdPlantillaFase": {
+                  "column": "IdPlantillaFase"
+                },
+                "IdpptoFaseCategoria": {
+                  "column": "IdpptoFaseCategoria"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ppto_Plantillas_Categorias"
+            }
+          },
+          "ppto_Plantillas_Fases": {
+            "fields": {
+              "IdPlantilla": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "IdPlantillaFase": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "IdpptoFase": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "Orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "categorias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdPlantillaFase"
+                  ],
+                  "targetFields": [
+                    "IdPlantillaFase"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas_Categorias",
+                  "namespace": "public"
+                }
+              },
+              "plantilla": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "IdPlantilla"
+                  ],
+                  "targetFields": [
+                    "IdPlantilla"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "IdPlantilla": {
+                  "column": "IdPlantilla"
+                },
+                "IdPlantillaFase": {
+                  "column": "IdPlantillaFase"
+                },
+                "IdpptoFase": {
+                  "column": "IdpptoFase"
+                },
+                "Orden": {
+                  "column": "Orden"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ppto_Plantillas_Fases"
+            }
+          },
           "ppto_Principal": {
             "fields": {
               "CodCentroCto": {
@@ -16449,6 +16731,229 @@
                 }
               ]
             },
+            "ppto_Plantillas": {
+              "columns": {
+                "Activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "Descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 500
+                  }
+                },
+                "FechaCreacion": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "IdPlantilla": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "IdPlantilla"
+                  ]
+                }
+              ]
+            },
+            "ppto_Plantillas_Categorias": {
+              "columns": {
+                "CostoReferencial": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "IdPlantillaFase": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdpptoFaseCategoria": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdPlantillaFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Categorias"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPlantillaFase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Fases"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPlantillaFase"
+                  ],
+                  "name": "ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696",
+                  "prefix": "ppto_Plantillas_Categorias_IdPlantillaFase_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "ppto_Plantillas_Fases": {
+              "columns": {
+                "IdPlantilla": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdPlantillaFase": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "IdpptoFase": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "IdPlantilla"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Fases"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdPlantilla"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPlantilla"
+                  ],
+                  "name": "ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac",
+                  "prefix": "ppto_Plantillas_Fases_IdPlantilla_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "IdPlantillaFase"
+                  ]
+                }
+              ]
+            },
             "ppto_Principal": {
               "columns": {
                 "CodCentroCto": {
@@ -17603,7 +18108,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "03aabef289cdbff33d2aee4a337efb6aa6a01dc261e355830c59ca16486a1ea2"
+    "storageHash": "148542882fae05884558b4cfd1e239a338add6289539d9ff65679bf634309644"
   },
   "capabilities": {
     "postgres": {

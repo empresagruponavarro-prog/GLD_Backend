@@ -1030,3 +1030,37 @@ model obra_incidencias_rfi {
   fecha_resolucion              DateTime?
   @@map("obra_incidencias_rfi")
 }
+
+model ppto_Plantillas {
+  id              Int      @id @default(autoincrement())
+  IdPlantilla     VarChar(255)? @unique
+  Nombre          VarChar(255)
+  Descripcion     VarChar(500)?
+  Activo          Boolean  @default(true)
+  FechaCreacion   DateTime @default(now())
+  
+  fases           ppto_Plantillas_Fases[]
+  @@map("ppto_Plantillas")
+}
+
+model ppto_Plantillas_Fases {
+  id              Int      @id @default(autoincrement())
+  IdPlantillaFase VarChar(255)? @unique
+  IdPlantilla     VarChar(255)
+  IdpptoFase      VarChar(255)
+  Orden           Int      @default(0)
+  
+  plantilla       ppto_Plantillas @relation(fields: [IdPlantilla], references: [IdPlantilla])
+  categorias      ppto_Plantillas_Categorias[]
+  @@map("ppto_Plantillas_Fases")
+}
+
+model ppto_Plantillas_Categorias {
+  id                      Int      @id @default(autoincrement())
+  IdPlantillaFase         VarChar(255)
+  IdpptoFaseCategoria     VarChar(255)
+  CostoReferencial        Decimal?
+  
+  fasePlantilla           ppto_Plantillas_Fases @relation(fields: [IdPlantillaFase], references: [IdPlantillaFase])
+  @@map("ppto_Plantillas_Categorias")
+}

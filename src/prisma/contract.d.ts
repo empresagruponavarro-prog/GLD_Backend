@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'03aabef289cdbff33d2aee4a337efb6aa6a01dc261e355830c59ca16486a1ea2'>;
+  StorageHashBase<'148542882fae05884558b4cfd1e239a338add6289539d9ff65679bf634309644'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -880,6 +880,27 @@ export type FieldOutputTypes = {
       readonly IdpptoFase: Varchar<255> | null;
       readonly Descripcion: Varchar<255> | null;
     };
+    readonly ppto_Plantillas: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantilla: Varchar<255> | null;
+      readonly Nombre: Varchar<255>;
+      readonly Descripcion: Varchar<500> | null;
+      readonly Activo: CodecTypes['pg/bool@1']['output'];
+      readonly FechaCreacion: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
+    readonly ppto_Plantillas_Categorias: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantillaFase: Varchar<255>;
+      readonly IdpptoFaseCategoria: Varchar<255>;
+      readonly CostoReferencial: CodecTypes['pg/numeric@1']['output'] | null;
+    };
+    readonly ppto_Plantillas_Fases: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantillaFase: Varchar<255> | null;
+      readonly IdPlantilla: Varchar<255>;
+      readonly IdpptoFase: Varchar<255>;
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+    };
     readonly ppto_Principal: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdPresupuesto: Varchar<255> | null;
@@ -1652,6 +1673,27 @@ export type FieldInputTypes = {
       readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly ppto_Plantillas: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantilla: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Activo: CodecTypes['pg/bool@1']['input'];
+      readonly FechaCreacion: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
+    readonly ppto_Plantillas_Categorias: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'];
+      readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'];
+      readonly CostoReferencial: CodecTypes['pg/numeric@1']['input'] | null;
+    };
+    readonly ppto_Plantillas_Fases: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly IdPlantilla: CodecTypes['sql/varchar@1']['input'];
+      readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'];
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
     };
     readonly ppto_Principal: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2426,6 +2468,27 @@ export type StorageColumnTypes = {
       readonly IdpptoFase: Varchar<255> | null;
       readonly IdpptoFaseCategoria: Varchar<255> | null;
     };
+    readonly ppto_Plantillas: {
+      readonly Activo: CodecTypes['pg/bool@1']['output'];
+      readonly Descripcion: Varchar<500> | null;
+      readonly FechaCreacion: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantilla: Varchar<255> | null;
+      readonly Nombre: Varchar<255>;
+    };
+    readonly ppto_Plantillas_Categorias: {
+      readonly CostoReferencial: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantillaFase: Varchar<255>;
+      readonly IdpptoFaseCategoria: Varchar<255>;
+    };
+    readonly ppto_Plantillas_Fases: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly IdPlantilla: Varchar<255>;
+      readonly IdPlantillaFase: Varchar<255> | null;
+      readonly IdpptoFase: Varchar<255>;
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+    };
     readonly ppto_Principal: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
@@ -3198,6 +3261,27 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly ppto_Plantillas: {
+      readonly Activo: CodecTypes['pg/bool@1']['input'];
+      readonly Descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly FechaCreacion: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantilla: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Nombre: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly ppto_Plantillas_Categorias: {
+      readonly CostoReferencial: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'];
+      readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly ppto_Plantillas_Fases: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly IdPlantilla: CodecTypes['sql/varchar@1']['input'];
+      readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'];
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
     };
     readonly ppto_Principal: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -8089,6 +8173,174 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly ppto_Plantillas: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly IdPlantilla: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly Nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly Descripcion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 500 };
+                };
+                readonly Activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly FechaCreacion: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['IdPlantilla'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly ppto_Plantillas_Categorias: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly IdPlantillaFase: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly IdpptoFaseCategoria: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly CostoReferencial: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696';
+                  readonly prefix: 'ppto_Plantillas_Categorias_IdPlantillaFase_idx';
+                  readonly columns: readonly ['IdPlantillaFase'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Categorias';
+                    readonly columns: readonly ['IdPlantillaFase'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Fases';
+                    readonly columns: readonly ['IdPlantillaFase'];
+                  };
+                },
+              ];
+            };
+            readonly ppto_Plantillas_Fases: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly IdPlantillaFase: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly IdPlantilla: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly IdpptoFase: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly Orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['IdPlantillaFase'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac';
+                  readonly prefix: 'ppto_Plantillas_Fases_IdPlantilla_idx';
+                  readonly columns: readonly ['IdPlantilla'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Fases';
+                    readonly columns: readonly ['IdPlantilla'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas';
+                    readonly columns: readonly ['IdPlantilla'];
+                  };
+                },
+              ];
+            };
             readonly ppto_Principal: {
               columns: {
                 readonly id: {
@@ -9174,6 +9426,18 @@ type ContractBase = Omit<
     readonly obra_incidencias_rfi: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'obra_incidencias_rfi';
+    };
+    readonly ppto_Plantillas: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_Plantillas';
+    };
+    readonly ppto_Plantillas_Fases: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_Plantillas_Fases';
+    };
+    readonly ppto_Plantillas_Categorias: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_Plantillas_Categorias';
     };
   };
   readonly domain: {
@@ -14939,6 +15203,196 @@ type ContractBase = Omit<
                 readonly IdpptoFaseCategoria: { readonly column: 'IdpptoFaseCategoria' };
                 readonly IdpptoFase: { readonly column: 'IdpptoFase' };
                 readonly Descripcion: { readonly column: 'Descripcion' };
+              };
+            };
+          };
+          readonly ppto_Plantillas: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly IdPlantilla: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly Nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly Descripcion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 500 };
+                };
+              };
+              readonly Activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly FechaCreacion: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly fases: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas_Fases';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['IdPlantilla'];
+                  readonly targetFields: readonly ['IdPlantilla'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_Plantillas';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly IdPlantilla: { readonly column: 'IdPlantilla' };
+                readonly Nombre: { readonly column: 'Nombre' };
+                readonly Descripcion: { readonly column: 'Descripcion' };
+                readonly Activo: { readonly column: 'Activo' };
+                readonly FechaCreacion: { readonly column: 'FechaCreacion' };
+              };
+            };
+          };
+          readonly ppto_Plantillas_Categorias: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly IdPlantillaFase: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly IdpptoFaseCategoria: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly CostoReferencial: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+            };
+            readonly relations: {
+              readonly fasePlantilla: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas_Fases';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['IdPlantillaFase'];
+                  readonly targetFields: readonly ['IdPlantillaFase'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_Plantillas_Categorias';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly IdPlantillaFase: { readonly column: 'IdPlantillaFase' };
+                readonly IdpptoFaseCategoria: { readonly column: 'IdpptoFaseCategoria' };
+                readonly CostoReferencial: { readonly column: 'CostoReferencial' };
+              };
+            };
+          };
+          readonly ppto_Plantillas_Fases: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly IdPlantillaFase: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly IdPlantilla: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly IdpptoFase: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly Orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly categorias: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas_Categorias';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['IdPlantillaFase'];
+                  readonly targetFields: readonly ['IdPlantillaFase'];
+                };
+              };
+              readonly plantilla: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['IdPlantilla'];
+                  readonly targetFields: readonly ['IdPlantilla'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_Plantillas_Fases';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly IdPlantillaFase: { readonly column: 'IdPlantillaFase' };
+                readonly IdPlantilla: { readonly column: 'IdPlantilla' };
+                readonly IdpptoFase: { readonly column: 'IdpptoFase' };
+                readonly Orden: { readonly column: 'Orden' };
               };
             };
           };
