@@ -172,6 +172,12 @@ export class PlantillasHandler {
   async updateFases(idPlantilla: string, fases: any[]): Promise<{ success: boolean }> {
     // Para simplificar, en un mantenedor real podríamos borrar y recrear o hacer un sync completo
     
+    // Primero, obtenemos las fases actuales para borrarlas
+    const currentFases = await this.db.orm.public.ppto_Plantillas_Fases.where({ IdPlantilla: toVarchar(idPlantilla) }).all();
+    for (const cf of currentFases) {
+      await this.db.orm.public.ppto_Plantillas_Categorias.where({ IdPlantillaFase: cf.IdPlantillaFase }).delete();
+    }
+    await this.db.orm.public.ppto_Plantillas_Fases.where({ IdPlantilla: toVarchar(idPlantilla) }).delete();
     
     for (let i = 0; i < fases.length; i++) {
       const f = fases[i];
