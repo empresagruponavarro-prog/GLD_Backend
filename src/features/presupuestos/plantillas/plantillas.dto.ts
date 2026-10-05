@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
 
 // ─── Response DTOs ────────────────────────────────────────────────────────────
 
@@ -146,25 +146,48 @@ export class AplicarPlantillaDto {
   @IsNotEmpty()
   IdPlantilla: string;
 
-  @ApiProperty({ example: 'a47efc23' })
-  @IsString()
-  @IsNotEmpty()
-  CodCentroCto: string;
+  @ApiPropertyOptional({ enum: ['agregar', 'reemplazar'], default: 'agregar', description: 'agregar: conserva lo existente y no duplica. reemplazar: borra las fases/categorías actuales del presupuesto.' })
+  @IsOptional()
+  @IsIn(['agregar', 'reemplazar'])
+  Modo?: 'agregar' | 'reemplazar';
 
-  @ApiProperty({ example: '617d63d6' })
+  @ApiPropertyOptional({ example: 'jperez' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  CodCentroCtoPrincipal: string;
+  @MaxLength(255)
+  Usuario?: string;
 
-  @ApiProperty({ example: 1 })
+  // Opcionales: por defecto se toman del propio presupuesto.
+  @ApiPropertyOptional({ example: 'a47efc23' })
+  @IsOptional()
+  @IsString()
+  CodCentroCto?: string;
+
+  @ApiPropertyOptional({ example: '617d63d6' })
+  @IsOptional()
+  @IsString()
+  CodCentroCtoPrincipal?: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
-  id_empresa: number;
+  id_empresa?: number;
 
-  @ApiProperty({ example: 42 })
+  @ApiPropertyOptional({ example: 42 })
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
-  id_centro_costo: number;
+  id_centro_costo?: number;
+}
+
+export class AplicarPlantillaResultDto {
+  @ApiProperty() success: boolean;
+  @ApiProperty({ enum: ['agregar', 'reemplazar'] }) modo: 'agregar' | 'reemplazar';
+  @ApiProperty() fasesAgregadas: number;
+  @ApiProperty() categoriasAgregadas: number;
+  @ApiProperty({ description: 'Fases de la plantilla que el presupuesto ya tenía' }) fasesOmitidas: number;
+  @ApiProperty({ description: 'Categorías de la plantilla que el presupuesto ya tenía' }) categoriasOmitidas: number;
 }

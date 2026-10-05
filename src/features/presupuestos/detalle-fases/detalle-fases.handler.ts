@@ -146,7 +146,7 @@ export class PptoDetalleFasesHandler {
     if (row.IdPresupuestoDetalle) {
       await this.db.orm.public.ppto_DetalleFasesCate
         .where((c) => c.IdPresupuestoDetalle.eq(toVarchar(row.IdPresupuestoDetalle!)))
-        .delete();
+        .deleteAndCount();
     }
 
     await this.db.orm.public.ppto_DetalleFases.where({ id: row.id }).delete();
