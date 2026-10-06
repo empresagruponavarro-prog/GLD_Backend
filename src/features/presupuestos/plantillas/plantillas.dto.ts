@@ -22,6 +22,12 @@ export class PlantillaResponseDto {
 
   @ApiProperty({ example: '2026-10-02T14:00:00Z' })
   FechaCreacion: string;
+
+  @ApiPropertyOptional({ example: 3 })
+  totalFases?: number;
+
+  @ApiPropertyOptional({ example: 5 })
+  totalCategorias?: number;
 }
 
 export class PlantillaCategoriaDto {

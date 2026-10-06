@@ -13,19 +13,36 @@ import { toVarchar, toDecimalString } from '../presupuestos.helpers.js';
 export class PlantillasHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  async listActivas(): Promise<PlantillaResponseDto[]> {
+  async listActivas(): Promise<any[]> {
     const plantillas = await this.db.orm.public.ppto_Plantillas
       .where((p: any) => p.Activo.eq(true))
       .orderBy((p: any) => p.id.desc())
       .all();
 
-    return plantillas.map((p: any) => ({
-      id: p.id,
-      IdPlantilla: p.IdPlantilla as string,
-      Nombre: p.Nombre as string,
-      Descripcion: p.Descripcion as string | undefined,
-      Activo: p.Activo,
-      FechaCreacion: p.FechaCreacion?.toString() as string,
+    return Promise.all(plantillas.map(async (p: any) => {
+      const idVarchar = toVarchar(p.IdPlantilla);
+      const fases = await this.db.orm.public.ppto_Plantillas_Fases
+        .where((f: any) => f.IdPlantilla.eq(idVarchar))
+        .all();
+      
+      let catCount = 0;
+      for (const f of fases) {
+        const cats = await this.db.orm.public.ppto_Plantillas_Categorias
+          .where((c: any) => c.IdPlantillaFase.eq(f.IdPlantillaFase))
+          .all();
+        catCount += cats.length;
+      }
+
+      return {
+        id: p.id,
+        IdPlantilla: p.IdPlantilla as string,
+        Nombre: p.Nombre as string,
+        Descripcion: p.Descripcion as string | undefined,
+        Activo: p.Activo,
+        FechaCreacion: p.FechaCreacion?.toString() as string,
+        totalFases: fases.length,
+        totalCategorias: catCount
+      };
     }));
   }
 
