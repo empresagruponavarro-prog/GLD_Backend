@@ -54,6 +54,13 @@ export class CreatePptoDetalleFaseCateDto {
   @Min(1)
   id_centro_costo?: number;
 
+  @ApiPropertyOptional({ example: 10, description: 'ID de la categoría general (public.categoria)' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_categoria?: number;
+
   @ApiPropertyOptional({ example: 12500.00, description: 'Costo directo de la categoría' })
   @IsOptional()
   @Type(() => Number)

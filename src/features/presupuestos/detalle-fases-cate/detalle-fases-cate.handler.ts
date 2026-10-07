@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+﻿import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
@@ -49,7 +49,7 @@ export class PptoDetalleFasesCateHandler {
       ? await this.db.orm.public.ppto_DetalleFasesCate.first({ IdPresupuestoDetalleCategoria: toVarchar(String(idOrCode)) })
       : await this.db.orm.public.ppto_DetalleFasesCate.first({ id: numId });
 
-    if (!row) throw new NotFoundException(`Detalle de categoría "${idOrCode}" no encontrado`);
+    if (!row) throw new NotFoundException(`Detalle de categoria "${idOrCode}" no encontrado`);
     return row as unknown as PptoDetalleFaseCateResponseDto;
   }
 
@@ -62,7 +62,7 @@ export class PptoDetalleFasesCateHandler {
         IdPresupuestoDetalle: toVarchar(dto.IdPresupuestoDetalle),
         IdpptoFaseCategoria: toVarchar(dto.IdpptoFaseCategoria),
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        id_empresa: dto.id_empresa,
+        id_empresa: dto.id_empresa, id_categoria: dto.id_categoria,
         CodCentroCto: toVarchar(dto.CodCentroCto),
         id_centro_costo: idCentroCosto,
         CostoDirecto: toDecimalString(dto.CostoDirecto ?? 0),
@@ -82,7 +82,7 @@ export class PptoDetalleFasesCateHandler {
     const current = isNaN(numId)
       ? await this.db.orm.public.ppto_DetalleFasesCate.first({ IdPresupuestoDetalleCategoria: toVarchar(String(idOrCode)) })
       : await this.db.orm.public.ppto_DetalleFasesCate.first({ id: numId });
-    if (!current) throw new NotFoundException(`Detalle de categoría "${idOrCode}" no encontrado`);
+    if (!current) throw new NotFoundException(`Detalle de categoria "${idOrCode}" no encontrado`);
     const id = current.id;
     const idCentroCosto = await this.resolveCentroCostoId(dto);
     const data: {
@@ -91,7 +91,7 @@ export class PptoDetalleFasesCateHandler {
       IdPresupuestoDetalle?: Varchar255;
       IdpptoFaseCategoria?: Varchar255;
       IdpptoFase?: Varchar255;
-      id_empresa?: number;
+      id_empresa?: number; id_categoria?: number;
       CodCentroCto?: Varchar255;
       id_centro_costo?: number;
       CostoDirecto?: string;
@@ -102,7 +102,7 @@ export class PptoDetalleFasesCateHandler {
     if (dto.IdPresupuestoDetalle !== undefined) data.IdPresupuestoDetalle = toVarchar(dto.IdPresupuestoDetalle);
     if (dto.IdpptoFaseCategoria !== undefined) data.IdpptoFaseCategoria = toVarchar(dto.IdpptoFaseCategoria);
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
-    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa; if (dto.id_categoria !== undefined) data.id_categoria = dto.id_categoria;
     if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
     if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.CostoDirecto !== undefined) data.CostoDirecto = toDecimalString(dto.CostoDirecto);
@@ -110,7 +110,7 @@ export class PptoDetalleFasesCateHandler {
 
     try {
       const row = await this.db.orm.public.ppto_DetalleFasesCate.where({ id }).update(data);
-      if (!row) throw new NotFoundException(`Detalle de categoría ${id} no encontrado`);
+      if (!row) throw new NotFoundException(`Detalle de categoria ${id} no encontrado`);
       await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle ?? dto.IdPresupuestoDetalle);
       return row as unknown as PptoDetalleFaseCateResponseDto;
     } catch (error) {
@@ -124,7 +124,7 @@ export class PptoDetalleFasesCateHandler {
     const current = isNaN(numId)
       ? await this.db.orm.public.ppto_DetalleFasesCate.first({ IdPresupuestoDetalleCategoria: toVarchar(String(idOrCode)) })
       : await this.db.orm.public.ppto_DetalleFasesCate.first({ id: numId });
-    if (!current) throw new NotFoundException(`Detalle de categoría "${idOrCode}" no encontrado`);
+    if (!current) throw new NotFoundException(`Detalle de categoria "${idOrCode}" no encontrado`);
     await this.db.orm.public.ppto_DetalleFasesCate.where({ id: current.id }).delete();
     await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle);
     return { deleted: true, id: current.id, code: current.IdPresupuestoDetalleCategoria };

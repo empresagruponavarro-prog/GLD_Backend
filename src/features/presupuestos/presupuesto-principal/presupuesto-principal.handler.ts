@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+ï»¿import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
@@ -61,24 +61,24 @@ export class PresupuestoPrincipalHandler {
     const idPresupuesto = ppto.IdPresupuesto;
     if (!idPresupuesto) return { ...ppto, centroCosto: null, fases: [], historiales: [] };
 
-const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, pptoFasesCat] = await Promise.all([
+const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, pptoFasesCat, dbCategorias] = await Promise.all([
       ppto.id_centro_costo ? this.db.orm.public.CentroCostos.first({ id: ppto.id_centro_costo }) : null,
       this.db.orm.public.ppto_DetalleFases.where((d) => d.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Principal_Historial.where((h) => h.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_DetalleFasesCate.where((c) => c.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Fases.all(),
-      this.db.orm.public.ppto_FasesCategorias.all(),
+      this.db.orm.public.ppto_FasesCategorias.all(), this.db.orm.public.categoria.all(),
     ]);
 
     const fasesMap = new Map(pptoFases.map(f => [f.IdpptoFase, f]));
     const fasesByNameMap = new Map(pptoFases.map(f => [f.FaseProyecto?.trim().toUpperCase(), f]));
-    const catMap = new Map(pptoFasesCat.map(c => [c.IdpptoFaseCategoria, c.Descripcion]));
+    const catMap = new Map(pptoFasesCat.map(c => [c.IdpptoFaseCategoria, c.Descripcion])); const catRealMap = new Map(dbCategorias.map(c => [c.id, c]));
 
     const fasesConCategorias = detallesFases.map((fase) => {
       const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).map(cat => ({
         ...cat,
         CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null,
-          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)'
+          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)', categoriaRealDescripcion: cat.id_categoria ? catRealMap.get(cat.id_categoria)?.descripcion : null, categoria: cat.id_categoria ? catRealMap.get(cat.id_categoria) : null
       }));
       const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
@@ -358,7 +358,7 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
     utilidad: Number(ut.toFixed(2)),
   };
 }
-// Genera un ID único para el presupuesto: PPTO-{año}-{correlativo 3 dígitos}
+// Genera un ID Ãºnico para el presupuesto: PPTO-{aÃ±o}-{correlativo 3 dÃ­gitos}
 async function generateIdPresupuesto(db: Database): Promise<string> {
   const year = new Date().getFullYear();
   const prefix = `PPTO-${year}-`;
