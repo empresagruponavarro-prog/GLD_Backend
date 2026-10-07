@@ -18933,7 +18933,7 @@
                   "codecId": "sql/varchar@1",
                   "default": {
                     "kind": "literal",
-                    "value": "Lun - Sáb 07:00 - 18:00"
+                    "value": "Lun - SÃƒÂ¡b 07:00 - 18:00"
                   },
                   "nativeType": "character varying",
                   "nullable": true,
@@ -21865,7 +21865,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f55820469a372da13106b3f628335d7097abb066e6fee335d5786f3fdfb3b90e"
+    "storageHash": "42088e47d7c4dcf33667660267a8219f8b8a60ef7618cd9dd92f150ae5af41b7"
   },
   "capabilities": {
     "postgres": {

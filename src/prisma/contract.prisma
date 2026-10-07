@@ -1201,7 +1201,7 @@ model obra_residentes {
   especialidad    VarChar(150)?
   telefono        VarChar(50)?
   correo          VarChar(150)?
-  turno           VarChar(100)? @default("Lun - Sáb 07:00 - 18:00")
+  turno           VarChar(100)? @default("Lun - SÃƒÂ¡b 07:00 - 18:00")
   estado_planta   VarChar(50)?  @default("En Planta")
   foto_url        VarChar(1000)?
   orden           Int? @default(0)

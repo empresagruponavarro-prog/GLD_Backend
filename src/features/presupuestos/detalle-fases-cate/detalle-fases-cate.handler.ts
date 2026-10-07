@@ -91,8 +91,7 @@ export class PptoDetalleFasesCateHandler {
       IdPresupuestoDetalle?: Varchar255;
       IdpptoFaseCategoria?: Varchar255;
       IdpptoFase?: Varchar255;
-      id_empresa?: number; id_categoria?: number;
-      CodCentroCto?: Varchar255;
+      id_empresa?: number; CodCentroCto?: Varchar255;
       id_centro_costo?: number;
       CostoDirecto?: string;
       Usuario?: Varchar255;
@@ -102,8 +101,7 @@ export class PptoDetalleFasesCateHandler {
     if (dto.IdPresupuestoDetalle !== undefined) data.IdPresupuestoDetalle = toVarchar(dto.IdPresupuestoDetalle);
     if (dto.IdpptoFaseCategoria !== undefined) data.IdpptoFaseCategoria = toVarchar(dto.IdpptoFaseCategoria);
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
-    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa; if (dto.id_categoria !== undefined) data.id_categoria = dto.id_categoria;
-    if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
+    if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa; if (dto.CodCentroCto !== undefined) data.CodCentroCto = toVarchar(dto.CodCentroCto);
     if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.CostoDirecto !== undefined) data.CostoDirecto = toDecimalString(dto.CostoDirecto);
     if (dto.Usuario !== undefined) data.Usuario = toVarchar(dto.Usuario);
