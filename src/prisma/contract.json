@@ -10538,6 +10538,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_centro_costo": {
                 "nullable": true,
                 "type": {
@@ -10554,6 +10561,21 @@
               }
             },
             "relations": {
+              "categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              },
               "categorias": {
                 "cardinality": "1:N",
                 "on": {
@@ -10658,6 +10680,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "id_categoria": {
+                  "column": "id_categoria"
                 },
                 "id_centro_costo": {
                   "column": "id_centro_costo"
@@ -10776,6 +10801,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_centro_costo": {
                 "nullable": true,
                 "type": {
@@ -10792,6 +10824,21 @@
               }
             },
             "relations": {
+              "categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              },
               "centroCosto": {
                 "cardinality": "N:1",
                 "on": {
@@ -10887,6 +10934,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "id_categoria": {
+                  "column": "id_categoria"
                 },
                 "id_centro_costo": {
                   "column": "id_centro_costo"
@@ -11631,6 +11681,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_centro_costo": {
                 "nullable": true,
                 "type": {
@@ -11654,6 +11711,21 @@
               }
             },
             "relations": {
+              "categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              },
               "centroCosto": {
                 "cardinality": "N:1",
                 "on": {
@@ -11815,6 +11887,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "id_categoria": {
+                  "column": "id_categoria"
                 },
                 "id_centro_costo": {
                   "column": "id_centro_costo"
@@ -19542,6 +19617,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_centro_costo": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -19621,6 +19701,23 @@
                     "namespaceId": "public",
                     "tableName": "ppto_Principal"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  }
                 }
               ],
               "indexes": [
@@ -19638,6 +19735,14 @@
                   ],
                   "name": "ppto_DetalleFases_IdpptoFase_idx_3132f24e",
                   "prefix": "ppto_DetalleFases_IdpptoFase_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_categoria"
+                  ],
+                  "name": "ppto_DetalleFases_id_categoria_idx_dc879264",
+                  "prefix": "ppto_DetalleFases_id_categoria_idx",
                   "unique": false
                 },
                 {
@@ -19758,6 +19863,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_centro_costo": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -19837,6 +19947,23 @@
                     "namespaceId": "public",
                     "tableName": "ppto_Principal"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  }
                 }
               ],
               "indexes": [
@@ -19854,6 +19981,14 @@
                   ],
                   "name": "ppto_DetalleFasesCate_IdPresupuesto_idx_610007fd",
                   "prefix": "ppto_DetalleFasesCate_IdPresupuesto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_categoria"
+                  ],
+                  "name": "ppto_DetalleFasesCate_id_categoria_idx_dc879264",
+                  "prefix": "ppto_DetalleFasesCate_id_categoria_idx",
                   "unique": false
                 },
                 {
@@ -20483,6 +20618,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_centro_costo": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -20533,9 +20673,34 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_categoria"
+                  ],
+                  "name": "ppto_Principal_id_categoria_idx_dc879264",
+                  "prefix": "ppto_Principal_id_categoria_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_centro_costo"
@@ -21865,7 +22030,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "42088e47d7c4dcf33667660267a8219f8b8a60ef7618cd9dd92f150ae5af41b7"
+    "storageHash": "43596483fc81c2b7167231ac1b6db2f9652248039a33481dd17528d83212965b"
   },
   "capabilities": {
     "postgres": {

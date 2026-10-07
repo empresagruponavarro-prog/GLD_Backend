@@ -1069,6 +1069,8 @@ model ppto_DetalleFases {
   fase                  ppto_Fases?           @relation(fields: [IdpptoFase], references: [IdpptoFase], onDelete: SetNull)
   presupuesto           ppto_Principal?       @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
   categorias            ppto_DetalleFasesCate[]
+  id_categoria Int?
+  categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_DetalleFases")
 }
 
@@ -1090,6 +1092,8 @@ model ppto_DetalleFasesCate {
   FechaCreacion                 VarChar(255)?
   detalleFase                   ppto_DetalleFases?  @relation(fields: [IdPresupuestoDetalle], references: [IdPresupuestoDetalle], onDelete: Cascade)
   presupuesto                   ppto_Principal?     @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
+  id_categoria Int?
+  categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_DetalleFasesCate")
 }
 
@@ -1153,6 +1157,8 @@ model ppto_Principal {
   detallesFases         ppto_DetalleFases[]
   detallesFasesCate     ppto_DetalleFasesCate[]
   historial             ppto_Principal_Historial[]
+  id_categoria Int?
+  categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_Principal")
 }
 

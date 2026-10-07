@@ -1,4 +1,4 @@
-ï»¿import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
@@ -78,7 +78,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).map(cat => ({
         ...cat,
         CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null,
-          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)'
+          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)', categoria: cat.id_categoria ? catRealMap.get(cat.id_categoria) : null
       }));
       const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
@@ -358,7 +358,7 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
     utilidad: Number(ut.toFixed(2)),
   };
 }
-// Genera un ID Ãºnico para el presupuesto: PPTO-{aÃ±o}-{correlativo 3 dÃ­gitos}
+// Genera un ID único para el presupuesto: PPTO-{año}-{correlativo 3 dígitos}
 async function generateIdPresupuesto(db: Database): Promise<string> {
   const year = new Date().getFullYear();
   const prefix = `PPTO-${year}-`;
