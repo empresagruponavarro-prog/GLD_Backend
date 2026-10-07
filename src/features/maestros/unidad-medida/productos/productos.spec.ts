@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
+import { AlmacenSql } from '../../../almacen/shared/almacen-sql.js';
 import { ProductoHandler } from '../../producto/producto.handler.js';
 import { UnidadMedidaProductosController } from './productos.controller.js';
 import { UnidadMedidaProductosHandler } from './productos.handler.js';
@@ -44,6 +45,7 @@ describe('unidad-medida/productos', () => {
         UnidadMedidaProductosHandler,
         ProductoHandler,
         { provide: DB, useValue: dbMock },
+        { provide: AlmacenSql, useValue: {} },
       ],
     }).compile();
 

@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -25,7 +26,9 @@ import {
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { ProductoHandler } from './producto.handler.js';
 import {
+  AlternativaResponseDto,
   CreateProductoDto,
+  ReplaceAlternativasDto,
   ListProductoQueryDto,
   ProductoResponseDto,
   ProductoSelectQueryDto,
@@ -65,6 +68,28 @@ export class ProductoController {
   @ApiNotFoundResponse({ description: 'Producto no encontrado' })
   getById(@Param('id', ParseIntPipe) id: number): Promise<ProductoResponseDto> {
     return this.handler.getById(id);
+  }
+
+  @Get(':id/alternativas')
+  @ApiOperation({ summary: 'Listar las alternativas (hasta 3) de un producto' })
+  @ApiParam({ name: 'id', description: 'ID numérico del producto', type: Number })
+  @ApiOkResponse({ type: AlternativaResponseDto, isArray: true })
+  @ApiNotFoundResponse({ description: 'Producto no encontrado' })
+  getAlternativas(@Param('id', ParseIntPipe) id: number): Promise<AlternativaResponseDto[]> {
+    return this.handler.getAlternativas(id);
+  }
+
+  @Put(':id/alternativas')
+  @ApiOperation({ summary: 'Reemplazar las alternativas de un producto (máx. 3)' })
+  @ApiParam({ name: 'id', description: 'ID numérico del producto', type: Number })
+  @ApiOkResponse({ type: AlternativaResponseDto, isArray: true })
+  @ApiBadRequestResponse({ description: 'Alternativas repetidas, autoreferencia o inexistentes' })
+  @ApiNotFoundResponse({ description: 'Producto no encontrado' })
+  replaceAlternativas(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ReplaceAlternativasDto,
+  ): Promise<AlternativaResponseDto[]> {
+    return this.handler.replaceAlternativas(id, dto);
   }
 
   @Post()

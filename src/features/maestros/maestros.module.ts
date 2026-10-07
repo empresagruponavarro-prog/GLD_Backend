@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../prisma/prisma.module.js';
+import { AlmacenModule } from '../almacen/almacen.module.js';
 import { CategoriaController } from './categoria/categoria.controller.js';
 import { CategoriaHandler } from './categoria/categoria.handler.js';
 import { CategoriaProductosController } from './categoria/productos/productos.controller.js';
 import { CategoriaProductosHandler } from './categoria/productos/productos.handler.js';
 import { AnexoController } from './anexo/anexo.controller.js';
 import { AnexoHandler } from './anexo/anexo.handler.js';
+import { FamiliaAlmacenController } from './familia-almacen/familia-almacen.controller.js';
+import { FamiliaAlmacenHandler } from './familia-almacen/familia-almacen.handler.js';
 import { EspecialidadController } from './especialidad/especialidad.controller.js';
 import { EspecialidadHandler } from './especialidad/especialidad.handler.js';
 import { ProductoController } from './producto/producto.controller.js';
@@ -22,7 +25,7 @@ import { UnidadMedidaProductosController } from './unidad-medida/productos/produ
 import { UnidadMedidaProductosHandler } from './unidad-medida/productos/productos.handler.js';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AlmacenModule],
   controllers: [
     TipoCategoriaController,
     CategoriaController,
@@ -34,8 +37,10 @@ import { UnidadMedidaProductosHandler } from './unidad-medida/productos/producto
     EspecialidadController,
     TipoDocIdentidadController,
     AnexoController,
+    FamiliaAlmacenController,
   ],
   providers: [
+    FamiliaAlmacenHandler,
     TipoCategoriaHandler,
     CategoriaHandler,
     UnidadMedidaHandler,

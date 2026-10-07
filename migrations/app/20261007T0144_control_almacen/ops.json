@@ -1,0 +1,3368 @@
+[
+  {
+    "id": "table.almacen",
+    "label": "Create table \"almacen\"",
+    "summary": "Creates table \"almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen\"",
+        "sql": "CREATE TABLE \"public\".\"almacen\" (\n  \"codigo\" character varying(20) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_empresa\" int4,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_correlativo",
+    "label": "Create table \"almacen_correlativo\"",
+    "summary": "Creates table \"almacen_correlativo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_correlativo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_correlativo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_correlativo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_correlativo\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_correlativo\" (\n  \"serie\" character varying(10) NOT NULL,\n  \"ultimo\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"serie\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_correlativo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_correlativo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_documento",
+    "label": "Create table \"almacen_documento\"",
+    "summary": "Creates table \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_documento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_documento\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_documento\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"documento_referencia\" character varying(50),\n  \"estado\" text DEFAULT 'REGISTRADO' NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_almacen\" int4 NOT NULL,\n  \"id_almacen_destino\" int4,\n  \"id_centro_costo\" int4,\n  \"id_documento_anula\" int4,\n  \"id_entregado_a\" int4,\n  \"id_proveedor\" int4,\n  \"id_recibido_por\" int4,\n  \"id_solicitado_por\" int4,\n  \"motivo\" text NOT NULL,\n  \"motivo_trabajo\" text,\n  \"naturaleza\" text NOT NULL,\n  \"numero\" character varying(20) NOT NULL,\n  \"observaciones\" text,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"almacen_documento_estado_check_22231c7b\" CHECK (\"estado\" IN ('REGISTRADO', 'ANULADO')),\n  CONSTRAINT \"almacen_documento_motivo_check_1ec488df\" CHECK (\"motivo\" IN ('INVENTARIO_INICIAL', 'COMPRA', 'DEVOLUCION', 'INGRESO_CLIENTE', 'AJUSTE_POSITIVO', 'CONSUMO', 'VENTA', 'BAJA', 'AJUSTE_NEGATIVO', 'TRANSFERENCIA')),\n  CONSTRAINT \"almacen_documento_naturaleza_check_a33d6d12\" CHECK (\"naturaleza\" IN ('INGRESO', 'SALIDA', 'TRANSFERENCIA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_documento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_documento_detalle",
+    "label": "Create table \"almacen_documento_detalle\"",
+    "summary": "Creates table \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_documento_detalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_documento_detalle\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_documento_detalle\" (\n  \"cantidad\" numeric NOT NULL,\n  \"costo_unitario\" numeric,\n  \"id\" SERIAL NOT NULL,\n  \"id_documento\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"observaciones\" text,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_documento_detalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_kardex",
+    "label": "Create table \"almacen_kardex\"",
+    "summary": "Creates table \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_kardex\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_kardex\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_kardex\" (\n  \"cantidad_entrada\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"cantidad_salida\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"costo_promedio\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"costo_total\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"costo_unitario\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_almacen\" int4 NOT NULL,\n  \"id_documento\" int4 NOT NULL,\n  \"id_documento_detalle\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"motivo\" text NOT NULL,\n  \"saldo_almacen\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"saldo_total\" numeric DEFAULT '0'::numeric NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"almacen_kardex_motivo_check_1ec488df\" CHECK (\"motivo\" IN ('INVENTARIO_INICIAL', 'COMPRA', 'DEVOLUCION', 'INGRESO_CLIENTE', 'AJUSTE_POSITIVO', 'CONSUMO', 'VENTA', 'BAJA', 'AJUSTE_NEGATIVO', 'TRANSFERENCIA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_kardex\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_prestamo",
+    "label": "Create table \"almacen_prestamo\"",
+    "summary": "Creates table \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_prestamo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_prestamo\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_prestamo\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"dias_autorizados\" int4 NOT NULL,\n  \"documento_referencia\" character varying(50),\n  \"estado\" text DEFAULT 'ABIERTO' NOT NULL,\n  \"fecha_prestamo\" date NOT NULL,\n  \"fecha_prevista_retorno\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_almacen\" int4 NOT NULL,\n  \"id_centro_costo\" int4,\n  \"id_responsable\" int4 NOT NULL,\n  \"numero\" character varying(20) NOT NULL,\n  \"observaciones\" text,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"almacen_prestamo_estado_check_b5cb890d\" CHECK (\"estado\" IN ('ABIERTO', 'PARCIAL', 'CERRADO', 'ANULADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_prestamo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_prestamo_detalle",
+    "label": "Create table \"almacen_prestamo_detalle\"",
+    "summary": "Creates table \"almacen_prestamo_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_prestamo_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_prestamo_detalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_prestamo_detalle\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_prestamo_detalle\" (\n  \"cantidad\" numeric NOT NULL,\n  \"cantidad_devuelta\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_prestamo\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_prestamo_detalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.almacen_prestamo_retorno",
+    "label": "Create table \"almacen_prestamo_retorno\"",
+    "summary": "Creates table \"almacen_prestamo_retorno\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_prestamo_retorno"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"almacen_prestamo_retorno\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_retorno\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"almacen_prestamo_retorno\"",
+        "sql": "CREATE TABLE \"public\".\"almacen_prestamo_retorno\" (\n  \"cantidad\" numeric NOT NULL,\n  \"condicion\" text NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"fecha_retorno\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_prestamo_detalle\" int4 NOT NULL,\n  \"observaciones\" text,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"almacen_prestamo_retorno_condicion_check_2386ef64\" CHECK (\"condicion\" IN ('OPERATIVO', 'NO_OPERATIVO', 'CON_FALTANTES', 'DANADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"almacen_prestamo_retorno\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_retorno\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.familia_almacen",
+    "label": "Create table \"familia_almacen\"",
+    "summary": "Creates table \"familia_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "familia_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"familia_almacen\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"familia_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"familia_almacen\"",
+        "sql": "CREATE TABLE \"public\".\"familia_almacen\" (\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  \"prefijo\" character varying(3) NOT NULL,\n  \"ultimo_correlativo\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"familia_almacen\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"familia_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.producto_alternativa",
+    "label": "Create table \"producto_alternativa\"",
+    "summary": "Creates table \"producto_alternativa\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"producto_alternativa\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"producto_alternativa\"",
+        "sql": "CREATE TABLE \"public\".\"producto_alternativa\" (\n  \"id\" SERIAL NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"id_producto_alternativo\" int4 NOT NULL,\n  \"prioridad\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"producto_alternativa\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.stock_almacen",
+    "label": "Create table \"stock_almacen\"",
+    "summary": "Creates table \"stock_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"stock_almacen\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"stock_almacen\"",
+        "sql": "CREATE TABLE \"public\".\"stock_almacen\" (\n  \"cantidad\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"cantidad_no_operativa\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"cantidad_prestada\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_almacen\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"stock_almacen\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.clase_inventario",
+    "label": "Add column \"clase_inventario\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "clase_inventario",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"clase_inventario\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "clase_inventario"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"clase_inventario\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"clase_inventario\" text DEFAULT 'CONSUMIBLE' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"clase_inventario\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "clase_inventario"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.costo_promedio",
+    "label": "Add column \"costo_promedio\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "costo_promedio",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"costo_promedio\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "costo_promedio"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"costo_promedio\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"costo_promedio\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"costo_promedio\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "costo_promedio"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.estado_operativo",
+    "label": "Add column \"estado_operativo\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "estado_operativo",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"estado_operativo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "estado_operativo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"estado_operativo\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"estado_operativo\" text DEFAULT 'NORMAL' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"estado_operativo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "estado_operativo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.id_almacen_default",
+    "label": "Add column \"id_almacen_default\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_almacen_default",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_almacen_default\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "id_almacen_default"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_almacen_default\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"id_almacen_default\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_almacen_default\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "id_almacen_default"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.id_familia",
+    "label": "Add column \"id_familia\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_familia",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_familia\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "id_familia"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_familia\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"id_familia\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_familia\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "id_familia"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.stock_minimo",
+    "label": "Add column \"stock_minimo\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "stock_minimo",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"stock_minimo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "stock_minimo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"stock_minimo\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"stock_minimo\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"stock_minimo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "stock_minimo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.stock_objetivo",
+    "label": "Add column \"stock_objetivo\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "stock_objetivo",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"stock_objetivo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "stock_objetivo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"stock_objetivo\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"stock_objetivo\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"stock_objetivo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "stock_objetivo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.producto.uso_principal",
+    "label": "Add column \"uso_principal\" to \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "uso_principal",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"uso_principal\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "uso_principal"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"uso_principal\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD COLUMN \"uso_principal\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"uso_principal\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "producto",
+          "uso_principal"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.almacen.almacen_codigo_key",
+    "label": "Add unique constraint on \"almacen\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "almacen_codigo_key",
+        "table": "almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"almacen_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_codigo_key",
+          "public",
+          "\"public\".\"almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"almacen_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"almacen\" ADD CONSTRAINT \"almacen_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"almacen_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_codigo_key",
+          "public",
+          "\"public\".\"almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.almacen_documento.almacen_documento_numero_key",
+    "label": "Add unique constraint on \"almacen_documento\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "almacen_documento_numero_key",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"almacen_documento_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_numero_key",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"almacen_documento_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\" ADD CONSTRAINT \"almacen_documento_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"almacen_documento_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_numero_key",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.almacen_prestamo.almacen_prestamo_numero_key",
+    "label": "Add unique constraint on \"almacen_prestamo\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "almacen_prestamo_numero_key",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"almacen_prestamo_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_numero_key",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"almacen_prestamo_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo\" ADD CONSTRAINT \"almacen_prestamo_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"almacen_prestamo_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_numero_key",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.familia_almacen.familia_almacen_prefijo_key",
+    "label": "Add unique constraint on \"familia_almacen\" (prefijo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "familia_almacen_prefijo_key",
+        "table": "familia_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"familia_almacen_prefijo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "familia_almacen_prefijo_key",
+          "public",
+          "\"public\".\"familia_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"familia_almacen_prefijo_key\"",
+        "sql": "ALTER TABLE \"public\".\"familia_almacen\" ADD CONSTRAINT \"familia_almacen_prefijo_key\" UNIQUE (\"prefijo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"familia_almacen_prefijo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "familia_almacen_prefijo_key",
+          "public",
+          "\"public\".\"familia_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.producto.producto_clase_inventario_check_77c65b6c",
+    "label": "Add check constraint \"producto_clase_inventario_check_77c65b6c\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "producto_clase_inventario_check_77c65b6c",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_clase_inventario_check_77c65b6c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_77c65b6c",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"producto_clase_inventario_check_77c65b6c\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD CONSTRAINT \"producto_clase_inventario_check_77c65b6c\" CHECK (\"clase_inventario\" IN ('CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_clase_inventario_check_77c65b6c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_77c65b6c",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.producto.producto_estado_operativo_check_60deedde",
+    "label": "Add check constraint \"producto_estado_operativo_check_60deedde\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "producto_estado_operativo_check_60deedde",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_estado_operativo_check_60deedde\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_estado_operativo_check_60deedde",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"producto_estado_operativo_check_60deedde\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD CONSTRAINT \"producto_estado_operativo_check_60deedde\" CHECK (\"estado_operativo\" IN ('NORMAL', 'NO_OPERATIVO', 'DESCONTINUADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_estado_operativo_check_60deedde\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_estado_operativo_check_60deedde",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.producto_alternativa.producto_alternativa_id_producto_id_producto_alternativo_key",
+    "label": "Add unique constraint on \"producto_alternativa\" (id_producto, id_producto_alternativo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "producto_alternativa_id_producto_id_producto_alternativo_key",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_alternativa_id_producto_id_producto_alternativo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_id_producto_alternativo_key",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"producto_alternativa_id_producto_id_producto_alternativo_key\"",
+        "sql": "ALTER TABLE \"public\".\"producto_alternativa\" ADD CONSTRAINT \"producto_alternativa_id_producto_id_producto_alternativo_key\" UNIQUE (\"id_producto\", \"id_producto_alternativo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_alternativa_id_producto_id_producto_alternativo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_id_producto_alternativo_key",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.producto_alternativa.producto_alternativa_id_producto_prioridad_key",
+    "label": "Add unique constraint on \"producto_alternativa\" (id_producto, prioridad)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "producto_alternativa_id_producto_prioridad_key",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_alternativa_id_producto_prioridad_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_prioridad_key",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"producto_alternativa_id_producto_prioridad_key\"",
+        "sql": "ALTER TABLE \"public\".\"producto_alternativa\" ADD CONSTRAINT \"producto_alternativa_id_producto_prioridad_key\" UNIQUE (\"id_producto\", \"prioridad\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_alternativa_id_producto_prioridad_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_prioridad_key",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.stock_almacen.stock_almacen_id_producto_id_almacen_key",
+    "label": "Add unique constraint on \"stock_almacen\" (id_producto, id_almacen)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "stock_almacen_id_producto_id_almacen_key",
+        "table": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"stock_almacen_id_producto_id_almacen_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_producto_id_almacen_key",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"stock_almacen_id_producto_id_almacen_key\"",
+        "sql": "ALTER TABLE \"public\".\"stock_almacen\" ADD CONSTRAINT \"stock_almacen_id_producto_id_almacen_key\" UNIQUE (\"id_producto\", \"id_almacen\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"stock_almacen_id_producto_id_almacen_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_producto_id_almacen_key",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen.almacen_id_empresa_idx_328936e2",
+    "label": "Create index \"almacen_id_empresa_idx_328936e2\" on \"almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_id_empresa_idx_328936e2",
+        "table": "almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_id_empresa_idx_328936e2\"",
+        "sql": "CREATE INDEX \"almacen_id_empresa_idx_328936e2\" ON \"public\".\"almacen\" (\"id_empresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_almacen_destino_idx_1d546f15",
+    "label": "Create index \"almacen_documento_id_almacen_destino_idx_1d546f15\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_almacen_destino_idx_1d546f15",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_almacen_destino_idx_1d546f15\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_almacen_destino_idx_1d546f15\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_almacen_destino_idx_1d546f15\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_almacen_destino_idx_1d546f15\" ON \"public\".\"almacen_documento\" (\"id_almacen_destino\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_almacen_destino_idx_1d546f15\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_almacen_destino_idx_1d546f15\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_almacen_idx_b58d5eda",
+    "label": "Create index \"almacen_documento_id_almacen_idx_b58d5eda\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_almacen_idx_b58d5eda",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_almacen_idx_b58d5eda\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_almacen_idx_b58d5eda\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_almacen_idx_b58d5eda\" ON \"public\".\"almacen_documento\" (\"id_almacen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_almacen_idx_b58d5eda\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"almacen_documento_id_centro_costo_idx_8c84570b\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_centro_costo_idx_8c84570b",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_centro_costo_idx_8c84570b\" ON \"public\".\"almacen_documento\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_entregado_a_idx_216d3850",
+    "label": "Create index \"almacen_documento_id_entregado_a_idx_216d3850\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_entregado_a_idx_216d3850",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_entregado_a_idx_216d3850\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_entregado_a_idx_216d3850\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_entregado_a_idx_216d3850\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_entregado_a_idx_216d3850\" ON \"public\".\"almacen_documento\" (\"id_entregado_a\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_entregado_a_idx_216d3850\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_entregado_a_idx_216d3850\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_proveedor_idx_4edef4d1",
+    "label": "Create index \"almacen_documento_id_proveedor_idx_4edef4d1\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_proveedor_idx_4edef4d1",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_proveedor_idx_4edef4d1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_proveedor_idx_4edef4d1\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_proveedor_idx_4edef4d1\" ON \"public\".\"almacen_documento\" (\"id_proveedor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_proveedor_idx_4edef4d1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_recibido_por_idx_d3be1fd2",
+    "label": "Create index \"almacen_documento_id_recibido_por_idx_d3be1fd2\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_recibido_por_idx_d3be1fd2",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_recibido_por_idx_d3be1fd2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_recibido_por_idx_d3be1fd2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_recibido_por_idx_d3be1fd2\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_recibido_por_idx_d3be1fd2\" ON \"public\".\"almacen_documento\" (\"id_recibido_por\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_recibido_por_idx_d3be1fd2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_recibido_por_idx_d3be1fd2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_solicitado_por_idx_aebe6017",
+    "label": "Create index \"almacen_documento_id_solicitado_por_idx_aebe6017\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_solicitado_por_idx_aebe6017",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_solicitado_por_idx_aebe6017\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_solicitado_por_idx_aebe6017\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_solicitado_por_idx_aebe6017\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_solicitado_por_idx_aebe6017\" ON \"public\".\"almacen_documento\" (\"id_solicitado_por\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_solicitado_por_idx_aebe6017\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_solicitado_por_idx_aebe6017\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_naturaleza_fecha_idx_2cf64896",
+    "label": "Create index \"almacen_documento_naturaleza_fecha_idx_2cf64896\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_naturaleza_fecha_idx_2cf64896",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_naturaleza_fecha_idx_2cf64896\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_naturaleza_fecha_idx_2cf64896\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_naturaleza_fecha_idx_2cf64896\"",
+        "sql": "CREATE INDEX \"almacen_documento_naturaleza_fecha_idx_2cf64896\" ON \"public\".\"almacen_documento\" (\"naturaleza\", \"fecha\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_naturaleza_fecha_idx_2cf64896\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_naturaleza_fecha_idx_2cf64896\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento_detalle.almacen_documento_detalle_id_documento_idx_d2ce5840",
+    "label": "Create index \"almacen_documento_detalle_id_documento_idx_d2ce5840\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_detalle_id_documento_idx_d2ce5840",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_detalle_id_documento_idx_d2ce5840\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_documento_idx_d2ce5840\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_detalle_id_documento_idx_d2ce5840\"",
+        "sql": "CREATE INDEX \"almacen_documento_detalle_id_documento_idx_d2ce5840\" ON \"public\".\"almacen_documento_detalle\" (\"id_documento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_detalle_id_documento_idx_d2ce5840\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_documento_idx_d2ce5840\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento_detalle.almacen_documento_detalle_id_producto_idx_f4d96d2e",
+    "label": "Create index \"almacen_documento_detalle_id_producto_idx_f4d96d2e\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_detalle_id_producto_idx_f4d96d2e",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_detalle_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_detalle_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"almacen_documento_detalle_id_producto_idx_f4d96d2e\" ON \"public\".\"almacen_documento_detalle\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_detalle_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_kardex.almacen_kardex_id_almacen_idx_b58d5eda",
+    "label": "Create index \"almacen_kardex_id_almacen_idx_b58d5eda\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_kardex_id_almacen_idx_b58d5eda",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_kardex_id_almacen_idx_b58d5eda\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_kardex_id_almacen_idx_b58d5eda\"",
+        "sql": "CREATE INDEX \"almacen_kardex_id_almacen_idx_b58d5eda\" ON \"public\".\"almacen_kardex\" (\"id_almacen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_kardex_id_almacen_idx_b58d5eda\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_kardex.almacen_kardex_id_documento_detalle_idx_85ded109",
+    "label": "Create index \"almacen_kardex_id_documento_detalle_idx_85ded109\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_kardex_id_documento_detalle_idx_85ded109",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_kardex_id_documento_detalle_idx_85ded109\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_documento_detalle_idx_85ded109\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_kardex_id_documento_detalle_idx_85ded109\"",
+        "sql": "CREATE INDEX \"almacen_kardex_id_documento_detalle_idx_85ded109\" ON \"public\".\"almacen_kardex\" (\"id_documento_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_kardex_id_documento_detalle_idx_85ded109\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_documento_detalle_idx_85ded109\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_kardex.almacen_kardex_id_documento_idx_d2ce5840",
+    "label": "Create index \"almacen_kardex_id_documento_idx_d2ce5840\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_kardex_id_documento_idx_d2ce5840",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_kardex_id_documento_idx_d2ce5840\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_documento_idx_d2ce5840\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_kardex_id_documento_idx_d2ce5840\"",
+        "sql": "CREATE INDEX \"almacen_kardex_id_documento_idx_d2ce5840\" ON \"public\".\"almacen_kardex\" (\"id_documento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_kardex_id_documento_idx_d2ce5840\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_documento_idx_d2ce5840\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_kardex.almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb",
+    "label": "Create index \"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\"",
+        "sql": "CREATE INDEX \"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\" ON \"public\".\"almacen_kardex\" (\"id_producto\", \"id_almacen\", \"fecha\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_producto_id_almacen_fecha_idx_052d09cb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_kardex.almacen_kardex_id_producto_idx_f4d96d2e",
+    "label": "Create index \"almacen_kardex_id_producto_idx_f4d96d2e\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_kardex_id_producto_idx_f4d96d2e",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_kardex_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_kardex_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"almacen_kardex_id_producto_idx_f4d96d2e\" ON \"public\".\"almacen_kardex\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_kardex_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_kardex_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo.almacen_prestamo_id_almacen_idx_b58d5eda",
+    "label": "Create index \"almacen_prestamo_id_almacen_idx_b58d5eda\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_id_almacen_idx_b58d5eda",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_id_almacen_idx_b58d5eda\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_id_almacen_idx_b58d5eda\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_id_almacen_idx_b58d5eda\" ON \"public\".\"almacen_prestamo\" (\"id_almacen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_id_almacen_idx_b58d5eda\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo.almacen_prestamo_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"almacen_prestamo_id_centro_costo_idx_8c84570b\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_id_centro_costo_idx_8c84570b",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_id_centro_costo_idx_8c84570b\" ON \"public\".\"almacen_prestamo\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo.almacen_prestamo_id_responsable_idx_f28b2d33",
+    "label": "Create index \"almacen_prestamo_id_responsable_idx_f28b2d33\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_id_responsable_idx_f28b2d33",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_id_responsable_idx_f28b2d33\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_responsable_idx_f28b2d33\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_id_responsable_idx_f28b2d33\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_id_responsable_idx_f28b2d33\" ON \"public\".\"almacen_prestamo\" (\"id_responsable\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_id_responsable_idx_f28b2d33\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_id_responsable_idx_f28b2d33\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo_detalle.almacen_prestamo_detalle_id_prestamo_idx_25add7ba",
+    "label": "Create index \"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\" on \"almacen_prestamo_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_detalle_id_prestamo_idx_25add7ba",
+        "table": "almacen_prestamo_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\" ON \"public\".\"almacen_prestamo_detalle\" (\"id_prestamo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle_id_prestamo_idx_25add7ba\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo_detalle.almacen_prestamo_detalle_id_producto_idx_f4d96d2e",
+    "label": "Create index \"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\" on \"almacen_prestamo_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_detalle_id_producto_idx_f4d96d2e",
+        "table": "almacen_prestamo_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\" ON \"public\".\"almacen_prestamo_detalle\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_prestamo_retorno.almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de",
+    "label": "Create index \"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\" on \"almacen_prestamo_retorno\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de",
+        "table": "almacen_prestamo_retorno"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\"",
+        "sql": "CREATE INDEX \"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\" ON \"public\".\"almacen_prestamo_retorno\" (\"id_prestamo_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_prestamo_retorno_id_prestamo_detalle_idx_8b2365de\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto.producto_id_almacen_default_idx_b2725ca4",
+    "label": "Create index \"producto_id_almacen_default_idx_b2725ca4\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_id_almacen_default_idx_b2725ca4",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_id_almacen_default_idx_b2725ca4\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_almacen_default_idx_b2725ca4\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_id_almacen_default_idx_b2725ca4\"",
+        "sql": "CREATE INDEX \"producto_id_almacen_default_idx_b2725ca4\" ON \"public\".\"producto\" (\"id_almacen_default\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_id_almacen_default_idx_b2725ca4\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_almacen_default_idx_b2725ca4\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto.producto_id_familia_idx_3112e49e",
+    "label": "Create index \"producto_id_familia_idx_3112e49e\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_id_familia_idx_3112e49e",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_id_familia_idx_3112e49e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_familia_idx_3112e49e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_id_familia_idx_3112e49e\"",
+        "sql": "CREATE INDEX \"producto_id_familia_idx_3112e49e\" ON \"public\".\"producto\" (\"id_familia\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_id_familia_idx_3112e49e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_id_familia_idx_3112e49e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto_alternativa.producto_alternativa_id_producto_alternativo_idx_8ae3884e",
+    "label": "Create index \"producto_alternativa_id_producto_alternativo_idx_8ae3884e\" on \"producto_alternativa\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_alternativa_id_producto_alternativo_idx_8ae3884e",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_alternativa_id_producto_alternativo_idx_8ae3884e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa_id_producto_alternativo_idx_8ae3884e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_alternativa_id_producto_alternativo_idx_8ae3884e\"",
+        "sql": "CREATE INDEX \"producto_alternativa_id_producto_alternativo_idx_8ae3884e\" ON \"public\".\"producto_alternativa\" (\"id_producto_alternativo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_alternativa_id_producto_alternativo_idx_8ae3884e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa_id_producto_alternativo_idx_8ae3884e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto_alternativa.producto_alternativa_id_producto_idx_f4d96d2e",
+    "label": "Create index \"producto_alternativa_id_producto_idx_f4d96d2e\" on \"producto_alternativa\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_alternativa_id_producto_idx_f4d96d2e",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_alternativa_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_alternativa_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"producto_alternativa_id_producto_idx_f4d96d2e\" ON \"public\".\"producto_alternativa\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_alternativa_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_alternativa_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.stock_almacen.stock_almacen_id_almacen_idx_b58d5eda",
+    "label": "Create index \"stock_almacen_id_almacen_idx_b58d5eda\" on \"stock_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "stock_almacen_id_almacen_idx_b58d5eda",
+        "table": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"stock_almacen_id_almacen_idx_b58d5eda\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"stock_almacen_id_almacen_idx_b58d5eda\"",
+        "sql": "CREATE INDEX \"stock_almacen_id_almacen_idx_b58d5eda\" ON \"public\".\"stock_almacen\" (\"id_almacen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"stock_almacen_id_almacen_idx_b58d5eda\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen_id_almacen_idx_b58d5eda\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.stock_almacen.stock_almacen_id_producto_idx_f4d96d2e",
+    "label": "Create index \"stock_almacen_id_producto_idx_f4d96d2e\" on \"stock_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "stock_almacen_id_producto_idx_f4d96d2e",
+        "table": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"stock_almacen_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"stock_almacen_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"stock_almacen_id_producto_idx_f4d96d2e\" ON \"public\".\"stock_almacen\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"stock_almacen_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"stock_almacen_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen.almacen_id_empresa_fkey",
+    "label": "Add foreign key \"almacen_id_empresa_fkey\" on \"almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_id_empresa_fkey",
+        "table": "almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_id_empresa_fkey",
+          "public",
+          "\"public\".\"almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen\"\nADD CONSTRAINT \"almacen_id_empresa_fkey\"\nFOREIGN KEY (\"id_empresa\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_id_empresa_fkey",
+          "public",
+          "\"public\".\"almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_almacen_fkey",
+    "label": "Add foreign key \"almacen_documento_id_almacen_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_almacen_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_almacen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_almacen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_almacen_fkey\"\nFOREIGN KEY (\"id_almacen\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_almacen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_almacen_destino_fkey",
+    "label": "Add foreign key \"almacen_documento_id_almacen_destino_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_almacen_destino_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_almacen_destino_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_almacen_destino_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_almacen_destino_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_almacen_destino_fkey\"\nFOREIGN KEY (\"id_almacen_destino\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_almacen_destino_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_almacen_destino_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_proveedor_fkey",
+    "label": "Add foreign key \"almacen_documento_id_proveedor_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_proveedor_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_proveedor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_proveedor_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_proveedor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_proveedor_fkey\"\nFOREIGN KEY (\"id_proveedor\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_proveedor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_proveedor_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_recibido_por_fkey",
+    "label": "Add foreign key \"almacen_documento_id_recibido_por_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_recibido_por_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_recibido_por_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_recibido_por_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_recibido_por_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_recibido_por_fkey\"\nFOREIGN KEY (\"id_recibido_por\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_recibido_por_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_recibido_por_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_solicitado_por_fkey",
+    "label": "Add foreign key \"almacen_documento_id_solicitado_por_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_solicitado_por_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_solicitado_por_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_solicitado_por_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_solicitado_por_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_solicitado_por_fkey\"\nFOREIGN KEY (\"id_solicitado_por\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_solicitado_por_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_solicitado_por_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_entregado_a_fkey",
+    "label": "Add foreign key \"almacen_documento_id_entregado_a_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_entregado_a_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_entregado_a_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_entregado_a_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_entregado_a_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_entregado_a_fkey\"\nFOREIGN KEY (\"id_entregado_a\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_entregado_a_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_entregado_a_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_centro_costo_fkey",
+    "label": "Add foreign key \"almacen_documento_id_centro_costo_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_centro_costo_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento_detalle.almacen_documento_detalle_id_documento_fkey",
+    "label": "Add foreign key \"almacen_documento_detalle_id_documento_fkey\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_detalle_id_documento_fkey",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_detalle_id_documento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_documento_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_detalle_id_documento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\"\nADD CONSTRAINT \"almacen_documento_detalle_id_documento_fkey\"\nFOREIGN KEY (\"id_documento\")\nREFERENCES \"public\".\"almacen_documento\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_detalle_id_documento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_documento_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento_detalle.almacen_documento_detalle_id_producto_fkey",
+    "label": "Add foreign key \"almacen_documento_detalle_id_producto_fkey\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_detalle_id_producto_fkey",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_detalle_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_detalle_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\"\nADD CONSTRAINT \"almacen_documento_detalle_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_detalle_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_kardex.almacen_kardex_id_producto_fkey",
+    "label": "Add foreign key \"almacen_kardex_id_producto_fkey\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_kardex_id_producto_fkey",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_kardex_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_kardex_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_kardex\"\nADD CONSTRAINT \"almacen_kardex_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_kardex_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_kardex.almacen_kardex_id_almacen_fkey",
+    "label": "Add foreign key \"almacen_kardex_id_almacen_fkey\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_kardex_id_almacen_fkey",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_kardex_id_almacen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_kardex_id_almacen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_kardex\"\nADD CONSTRAINT \"almacen_kardex_id_almacen_fkey\"\nFOREIGN KEY (\"id_almacen\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_kardex_id_almacen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_kardex.almacen_kardex_id_documento_fkey",
+    "label": "Add foreign key \"almacen_kardex_id_documento_fkey\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_kardex_id_documento_fkey",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_kardex_id_documento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_documento_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_kardex_id_documento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_kardex\"\nADD CONSTRAINT \"almacen_kardex_id_documento_fkey\"\nFOREIGN KEY (\"id_documento\")\nREFERENCES \"public\".\"almacen_documento\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_kardex_id_documento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_documento_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_kardex.almacen_kardex_id_documento_detalle_fkey",
+    "label": "Add foreign key \"almacen_kardex_id_documento_detalle_fkey\" on \"almacen_kardex\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_kardex_id_documento_detalle_fkey",
+        "table": "almacen_kardex"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_kardex_id_documento_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_documento_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_kardex_id_documento_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_kardex\"\nADD CONSTRAINT \"almacen_kardex_id_documento_detalle_fkey\"\nFOREIGN KEY (\"id_documento_detalle\")\nREFERENCES \"public\".\"almacen_documento_detalle\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_kardex_id_documento_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_kardex_id_documento_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_kardex\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo.almacen_prestamo_id_almacen_fkey",
+    "label": "Add foreign key \"almacen_prestamo_id_almacen_fkey\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_id_almacen_fkey",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_id_almacen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_id_almacen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo\"\nADD CONSTRAINT \"almacen_prestamo_id_almacen_fkey\"\nFOREIGN KEY (\"id_almacen\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_id_almacen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_almacen_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo.almacen_prestamo_id_centro_costo_fkey",
+    "label": "Add foreign key \"almacen_prestamo_id_centro_costo_fkey\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_id_centro_costo_fkey",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo\"\nADD CONSTRAINT \"almacen_prestamo_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo.almacen_prestamo_id_responsable_fkey",
+    "label": "Add foreign key \"almacen_prestamo_id_responsable_fkey\" on \"almacen_prestamo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_id_responsable_fkey",
+        "table": "almacen_prestamo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_id_responsable_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_responsable_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_id_responsable_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo\"\nADD CONSTRAINT \"almacen_prestamo_id_responsable_fkey\"\nFOREIGN KEY (\"id_responsable\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_id_responsable_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_id_responsable_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo_detalle.almacen_prestamo_detalle_id_prestamo_fkey",
+    "label": "Add foreign key \"almacen_prestamo_detalle_id_prestamo_fkey\" on \"almacen_prestamo_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_detalle_id_prestamo_fkey",
+        "table": "almacen_prestamo_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_detalle_id_prestamo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_detalle_id_prestamo_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_detalle_id_prestamo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo_detalle\"\nADD CONSTRAINT \"almacen_prestamo_detalle_id_prestamo_fkey\"\nFOREIGN KEY (\"id_prestamo\")\nREFERENCES \"public\".\"almacen_prestamo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_detalle_id_prestamo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_detalle_id_prestamo_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo_detalle.almacen_prestamo_detalle_id_producto_fkey",
+    "label": "Add foreign key \"almacen_prestamo_detalle_id_producto_fkey\" on \"almacen_prestamo_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_detalle_id_producto_fkey",
+        "table": "almacen_prestamo_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_detalle_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_detalle_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo_detalle\"\nADD CONSTRAINT \"almacen_prestamo_detalle_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_detalle_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_prestamo_retorno.almacen_prestamo_retorno_id_prestamo_detalle_fkey",
+    "label": "Add foreign key \"almacen_prestamo_retorno_id_prestamo_detalle_fkey\" on \"almacen_prestamo_retorno\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_prestamo_retorno_id_prestamo_detalle_fkey",
+        "table": "almacen_prestamo_retorno"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_prestamo_retorno_id_prestamo_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_retorno_id_prestamo_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_retorno\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_prestamo_retorno_id_prestamo_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_prestamo_retorno\"\nADD CONSTRAINT \"almacen_prestamo_retorno_id_prestamo_detalle_fkey\"\nFOREIGN KEY (\"id_prestamo_detalle\")\nREFERENCES \"public\".\"almacen_prestamo_detalle\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_prestamo_retorno_id_prestamo_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_prestamo_retorno_id_prestamo_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_prestamo_retorno\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto.producto_id_almacen_default_fkey",
+    "label": "Add foreign key \"producto_id_almacen_default_fkey\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_id_almacen_default_fkey",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_id_almacen_default_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_almacen_default_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_id_almacen_default_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto\"\nADD CONSTRAINT \"producto_id_almacen_default_fkey\"\nFOREIGN KEY (\"id_almacen_default\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_id_almacen_default_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_almacen_default_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto.producto_id_familia_fkey",
+    "label": "Add foreign key \"producto_id_familia_fkey\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_id_familia_fkey",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_id_familia_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_familia_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_id_familia_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto\"\nADD CONSTRAINT \"producto_id_familia_fkey\"\nFOREIGN KEY (\"id_familia\")\nREFERENCES \"public\".\"familia_almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_id_familia_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_id_familia_fkey",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto_alternativa.producto_alternativa_id_producto_fkey",
+    "label": "Add foreign key \"producto_alternativa_id_producto_fkey\" on \"producto_alternativa\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_alternativa_id_producto_fkey",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_alternativa_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_fkey",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_alternativa_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto_alternativa\"\nADD CONSTRAINT \"producto_alternativa_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_alternativa_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_fkey",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto_alternativa.producto_alternativa_id_producto_alternativo_fkey",
+    "label": "Add foreign key \"producto_alternativa_id_producto_alternativo_fkey\" on \"producto_alternativa\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_alternativa_id_producto_alternativo_fkey",
+        "table": "producto_alternativa"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_alternativa_id_producto_alternativo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_alternativo_fkey",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_alternativa_id_producto_alternativo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto_alternativa\"\nADD CONSTRAINT \"producto_alternativa_id_producto_alternativo_fkey\"\nFOREIGN KEY (\"id_producto_alternativo\")\nREFERENCES \"public\".\"producto\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_alternativa_id_producto_alternativo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_alternativa_id_producto_alternativo_fkey",
+          "public",
+          "\"public\".\"producto_alternativa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.stock_almacen.stock_almacen_id_producto_fkey",
+    "label": "Add foreign key \"stock_almacen_id_producto_fkey\" on \"stock_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "stock_almacen_id_producto_fkey",
+        "table": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"stock_almacen_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_producto_fkey",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"stock_almacen_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"stock_almacen\"\nADD CONSTRAINT \"stock_almacen_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"stock_almacen_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_producto_fkey",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.stock_almacen.stock_almacen_id_almacen_fkey",
+    "label": "Add foreign key \"stock_almacen_id_almacen_fkey\" on \"stock_almacen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "stock_almacen_id_almacen_fkey",
+        "table": "stock_almacen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"stock_almacen_id_almacen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_almacen_fkey",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"stock_almacen_id_almacen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"stock_almacen\"\nADD CONSTRAINT \"stock_almacen_id_almacen_fkey\"\nFOREIGN KEY (\"id_almacen\")\nREFERENCES \"public\".\"almacen\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"stock_almacen_id_almacen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "stock_almacen_id_almacen_fkey",
+          "public",
+          "\"public\".\"stock_almacen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.control_almacen.semillas",
+    "label": "Seed almacenes, correlativos y familias",
+    "summary": "Inserta almacenes iniciales, series de correlativos y familias (prefijos CON, HER, ...)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed almacenes",
+        "sql": "INSERT INTO \"public\".\"almacen\" (codigo, nombre) VALUES ('ALM-GENERAL','Almacén General'),('ALM-GEN1','General 1'),('ALM-GEN2','General 2'),('ALM-TAMBO','Tambo'),('ALM-ARUMA','Aruma'),('ALM-MASS','Mass'),('ALM-VALIDAR','Por validar') ON CONFLICT (codigo) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "seed correlativos",
+        "sql": "INSERT INTO \"public\".\"almacen_correlativo\" (serie, ultimo) VALUES ('ING',0),('SAL',0),('TRF',0),('PRE',0) ON CONFLICT (serie) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "seed familias",
+        "sql": "INSERT INTO \"public\".\"familia_almacen\" (prefijo, nombre) VALUES ('CON','CONSUMIBLES'),('HER','HERRAMIENTAS'),('EPP','EPPS'),('TAM','TAMBO'),('ARU','ARUMA'),('MAS','MASS'),('FER','FERRETERIA'),('ELE','HERRAMIENTAS ELECTRICAS'),('EQU','EQUIPOS VARIOS') ON CONFLICT (prefijo) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify seeds exist",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"almacen\") >= 7 AND (SELECT count(*) FROM \"public\".\"familia_almacen\") >= 9 AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

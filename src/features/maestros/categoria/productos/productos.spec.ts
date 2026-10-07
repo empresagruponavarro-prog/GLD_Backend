@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
+import { AlmacenSql } from '../../../almacen/shared/almacen-sql.js';
 import { ProductoHandler } from '../../producto/producto.handler.js';
 import { CategoriaProductosController } from './productos.controller.js';
 import { CategoriaProductosHandler } from './productos.handler.js';
@@ -44,6 +45,7 @@ describe('categoria/productos', () => {
         CategoriaProductosHandler,
         ProductoHandler,
         { provide: DB, useValue: dbMock },
+        { provide: AlmacenSql, useValue: {} },
       ],
     }).compile();
 

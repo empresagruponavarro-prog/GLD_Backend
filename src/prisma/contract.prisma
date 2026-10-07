@@ -4,6 +4,57 @@ enum tipo_item {
   SERVICIO
 }
 
+// ---- Control de almacen (plan 04) ----
+enum clase_inventario {
+  CONSUMIBLE
+  EQUIPO_RETORNABLE
+  MERCADERIA_CLIENTE
+}
+
+enum estado_operativo {
+  NORMAL
+  NO_OPERATIVO
+  DESCONTINUADO
+}
+
+enum naturaleza_documento {
+  INGRESO
+  SALIDA
+  TRANSFERENCIA
+}
+
+enum motivo_movimiento {
+  INVENTARIO_INICIAL
+  COMPRA
+  DEVOLUCION
+  INGRESO_CLIENTE
+  AJUSTE_POSITIVO
+  CONSUMO
+  VENTA
+  BAJA
+  AJUSTE_NEGATIVO
+  TRANSFERENCIA
+}
+
+enum estado_documento {
+  REGISTRADO
+  ANULADO
+}
+
+enum estado_prestamo {
+  ABIERTO
+  PARCIAL
+  CERRADO
+  ANULADO
+}
+
+enum condicion_retorno {
+  OPERATIVO
+  NO_OPERATIVO
+  CON_FALTANTES
+  DANADO
+}
+
 // ============================================================
 // Maestros modernos
 // ============================================================
@@ -65,19 +116,209 @@ model unidad_medida_equivalencia {
 }
 
 model producto {
-  id               Int           @id @default(autoincrement())
-  codigo           String        @unique
-  descripcion      String
-  id_categoria     Int
-  id_unidad_medida Int
-  tipo_producto    tipo_item     @default(PRODUCTO)
-  stock            Decimal       @default("0")
-  comentarios      String?
-  imagen_url       String?
-  estado           Boolean       @default(true)
-  categoria        categoria     @relation(fields:[id_categoria], references:[id])
-  unidad_medida    unidad_medida @relation(fields:[id_unidad_medida], references:[id])
+  id                 Int                    @id @default(autoincrement())
+  codigo             String                 @unique
+  descripcion        String
+  id_categoria       Int
+  id_unidad_medida   Int
+  tipo_producto      tipo_item              @default(PRODUCTO)
+  stock              Decimal                @default("0")
+  comentarios        String?
+  imagen_url         String?
+  estado             Boolean                @default(true)
+  id_familia         Int?
+  clase_inventario   clase_inventario       @default(CONSUMIBLE)
+  uso_principal      String?
+  stock_minimo       Decimal                @default("0")
+  stock_objetivo     Decimal                @default("0")
+  estado_operativo   estado_operativo       @default(NORMAL)
+  id_almacen_default Int?
+  costo_promedio     Decimal                @default("0")
+  categoria          categoria              @relation(fields:[id_categoria], references:[id])
+  unidad_medida      unidad_medida          @relation(fields:[id_unidad_medida], references:[id])
+  familia            familia_almacen?       @relation(fields:[id_familia], references:[id])
+  almacenDefault     almacen?               @relation("ProductoAlmacenDefault", fields:[id_almacen_default], references:[id])
+  alternativas       producto_alternativa[] @relation("ProductoAlternativas")
+  alternativaDe      producto_alternativa[] @relation("ProductoEsAlternativa")
+  stocksAlmacen      stock_almacen[]
+  documentoDetalles  almacen_documento_detalle[]
+  kardex             almacen_kardex[]
+  prestamoDetalles   almacen_prestamo_detalle[]
   @@map("producto")
+}
+
+model familia_almacen {
+  id                 Int        @id @default(autoincrement())
+  prefijo            VarChar(3) @unique
+  nombre             String
+  ultimo_correlativo Int        @default(0)
+  estado             Boolean    @default(true)
+  productos          producto[]
+  @@map("familia_almacen")
+}
+
+model almacen {
+  id                Int                 @id @default(autoincrement())
+  codigo            VarChar(20)         @unique
+  nombre            String
+  id_empresa        Int?
+  estado            Boolean             @default(true)
+  empresa           Empresas?           @relation("AlmacenEmpresa", fields:[id_empresa], references:[id_empresa], onDelete: SetNull)
+  productosDefault  producto[]          @relation("ProductoAlmacenDefault")
+  stocks            stock_almacen[]
+  documentosOrigen  almacen_documento[] @relation("DocumentoAlmacen")
+  documentosDestino almacen_documento[] @relation("DocumentoAlmacenDestino")
+  kardex            almacen_kardex[]
+  prestamos         almacen_prestamo[]
+  @@map("almacen")
+}
+
+model producto_alternativa {
+  id                      Int      @id @default(autoincrement())
+  id_producto             Int
+  id_producto_alternativo Int
+  prioridad               Int
+  producto                producto @relation("ProductoAlternativas", fields:[id_producto], references:[id], onDelete: Cascade)
+  alternativo             producto @relation("ProductoEsAlternativa", fields:[id_producto_alternativo], references:[id], onDelete: Cascade)
+  @@unique([id_producto, id_producto_alternativo])
+  @@unique([id_producto, prioridad])
+  @@map("producto_alternativa")
+}
+
+model stock_almacen {
+  id                    Int      @id @default(autoincrement())
+  id_producto           Int
+  id_almacen            Int
+  cantidad              Decimal  @default("0")
+  cantidad_prestada     Decimal  @default("0")
+  cantidad_no_operativa Decimal  @default("0")
+  updated_at            DateTime @default(now())
+  producto              producto @relation(fields:[id_producto], references:[id])
+  almacen               almacen  @relation(fields:[id_almacen], references:[id])
+  @@unique([id_producto, id_almacen])
+  @@map("stock_almacen")
+}
+
+model almacen_correlativo {
+  serie  VarChar(10) @id
+  ultimo Int         @default(0)
+  @@map("almacen_correlativo")
+}
+
+model almacen_documento {
+  id                   Int                  @id @default(autoincrement())
+  numero               VarChar(20)          @unique
+  naturaleza           naturaleza_documento
+  motivo               motivo_movimiento
+  fecha                DateString
+  id_almacen           Int
+  id_almacen_destino   Int?
+  documento_referencia VarChar(50)?
+  id_proveedor         Int?
+  id_centro_costo      Int?
+  id_recibido_por      Int?
+  id_solicitado_por    Int?
+  id_entregado_a       Int?
+  motivo_trabajo       String?
+  observaciones        String?
+  estado               estado_documento     @default(REGISTRADO)
+  id_documento_anula   Int?
+  created_at           DateTime             @default(now())
+  almacen              almacen              @relation("DocumentoAlmacen", fields:[id_almacen], references:[id])
+  almacenDestino       almacen?             @relation("DocumentoAlmacenDestino", fields:[id_almacen_destino], references:[id])
+  proveedor            Anexos?              @relation("DocumentoProveedor", fields:[id_proveedor], references:[id])
+  recibidoPor          Anexos?              @relation("DocumentoRecibidoPor", fields:[id_recibido_por], references:[id])
+  solicitadoPor        Anexos?              @relation("DocumentoSolicitadoPor", fields:[id_solicitado_por], references:[id])
+  entregadoA           Anexos?              @relation("DocumentoEntregadoA", fields:[id_entregado_a], references:[id])
+  centroCosto          CentroCostos?        @relation("DocumentoCentroCosto", fields:[id_centro_costo], references:[id])
+  detalles             almacen_documento_detalle[]
+  kardex               almacen_kardex[]
+  @@index([naturaleza, fecha])
+  @@map("almacen_documento")
+}
+
+model almacen_documento_detalle {
+  id             Int               @id @default(autoincrement())
+  id_documento   Int
+  id_producto    Int
+  cantidad       Decimal
+  costo_unitario Decimal?
+  observaciones  String?
+  documento      almacen_documento @relation(fields:[id_documento], references:[id], onDelete: Cascade)
+  producto       producto          @relation(fields:[id_producto], references:[id])
+  kardex         almacen_kardex[]
+  @@index([id_documento])
+  @@map("almacen_documento_detalle")
+}
+
+model almacen_kardex {
+  id                   Int                       @id @default(autoincrement())
+  fecha                DateString
+  created_at           DateTime                  @default(now())
+  id_producto          Int
+  id_almacen           Int
+  id_documento         Int
+  id_documento_detalle Int
+  motivo               motivo_movimiento
+  cantidad_entrada     Decimal                   @default("0")
+  cantidad_salida      Decimal                   @default("0")
+  costo_unitario       Decimal                   @default("0")
+  costo_total          Decimal                   @default("0")
+  saldo_almacen        Decimal                   @default("0")
+  saldo_total          Decimal                   @default("0")
+  costo_promedio       Decimal                   @default("0")
+  producto             producto                  @relation(fields:[id_producto], references:[id])
+  almacen              almacen                   @relation(fields:[id_almacen], references:[id])
+  documento            almacen_documento         @relation(fields:[id_documento], references:[id])
+  detalle              almacen_documento_detalle @relation(fields:[id_documento_detalle], references:[id])
+  @@index([id_producto, id_almacen, fecha])
+  @@index([id_documento])
+  @@map("almacen_kardex")
+}
+
+model almacen_prestamo {
+  id                     Int             @id @default(autoincrement())
+  numero                 VarChar(20)     @unique
+  fecha_prestamo         DateString
+  id_almacen             Int
+  id_centro_costo        Int?
+  id_responsable         Int
+  documento_referencia   VarChar(50)?
+  dias_autorizados       Int
+  fecha_prevista_retorno DateString
+  estado                 estado_prestamo @default(ABIERTO)
+  observaciones          String?
+  created_at             DateTime        @default(now())
+  almacen                almacen         @relation(fields:[id_almacen], references:[id])
+  centroCosto            CentroCostos?   @relation("PrestamoCentroCosto", fields:[id_centro_costo], references:[id])
+  responsable            Anexos          @relation("PrestamoResponsable", fields:[id_responsable], references:[id])
+  detalles               almacen_prestamo_detalle[]
+  @@map("almacen_prestamo")
+}
+
+model almacen_prestamo_detalle {
+  id                Int              @id @default(autoincrement())
+  id_prestamo       Int
+  id_producto       Int
+  cantidad          Decimal
+  cantidad_devuelta Decimal          @default("0")
+  prestamo          almacen_prestamo @relation(fields:[id_prestamo], references:[id], onDelete: Cascade)
+  producto          producto         @relation(fields:[id_producto], references:[id])
+  retornos          almacen_prestamo_retorno[]
+  @@index([id_prestamo])
+  @@map("almacen_prestamo_detalle")
+}
+
+model almacen_prestamo_retorno {
+  id                  Int                      @id @default(autoincrement())
+  id_prestamo_detalle Int
+  fecha_retorno       DateString
+  cantidad            Decimal
+  condicion           condicion_retorno
+  observaciones       String?
+  created_at          DateTime                 @default(now())
+  detalle             almacen_prestamo_detalle @relation(fields:[id_prestamo_detalle], references:[id], onDelete: Cascade)
+  @@map("almacen_prestamo_retorno")
 }
 
 // ============================================================
@@ -167,6 +408,11 @@ model Anexos {
   Correo              VarChar(255)?
   estado              Boolean       @default(true)
   ordenCompras        OrdenCompra[]
+  docProveedor        almacen_documento[] @relation("DocumentoProveedor")
+  docRecibidoPor      almacen_documento[] @relation("DocumentoRecibidoPor")
+  docSolicitadoPor    almacen_documento[] @relation("DocumentoSolicitadoPor")
+  docEntregadoA       almacen_documento[] @relation("DocumentoEntregadoA")
+  prestamosResponsable almacen_prestamo[] @relation("PrestamoResponsable")
   @@map("anexos")
 }
 
@@ -293,6 +539,8 @@ model CentroCostos {
   pptoDetalleFases       ppto_DetalleFases[]
   pptoDetalleFasesCates  ppto_DetalleFasesCate[]
   pptoPrincipales        ppto_Principal[]
+  almacenDocumentos      almacen_documento[] @relation("DocumentoCentroCosto")
+  almacenPrestamos       almacen_prestamo[] @relation("PrestamoCentroCosto")
 
   @@index([id_centro_costos_principal])
   @@map("CentroCostos")
@@ -564,6 +812,7 @@ model Empresas {
 
   almacenMovimientos      AlmacenMovimientos[]
   almacenes               Almacenes[]
+  almacenesControl        almacen[] @relation("AlmacenEmpresa")
   cajaEgresosRetail       CajaEgresosRetail[]
   cajaIngresos            CajaIngresos[]
   contrataciones          Contrataciones[]

@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
 import { ProductoController } from './producto.controller.js';
 import { ProductoHandler } from './producto.handler.js';
 
@@ -26,11 +27,14 @@ describe('producto', () => {
   const update = vi.fn();
   const categoriaFirst = vi.fn();
   const unidadFirst = vi.fn();
+  const sqlMock = { rows: vi.fn(), run: vi.fn() };
+  const transaction = vi.fn();
 
   beforeEach(async () => {
     vi.clearAllMocks();
 
     const dbMock = {
+      transaction,
       orm: {
         public: {
           producto: {
@@ -54,7 +58,7 @@ describe('producto', () => {
 
     const moduleRef = await Test.createTestingModule({
       controllers: [ProductoController],
-      providers: [ProductoHandler, { provide: DB, useValue: dbMock }],
+      providers: [ProductoHandler, { provide: DB, useValue: dbMock }, { provide: AlmacenSql, useValue: sqlMock }],
     }).compile();
 
     controller = moduleRef.get(ProductoController);
@@ -144,10 +148,10 @@ describe('producto', () => {
   });
 
   it('actualiza solo los campos enviados', async () => {
-    const updated = { ...ROW, stock: '25.5' };
+    const updated = { ...ROW, stock_minimo: '25.5' };
     update.mockResolvedValue(updated);
-    await expect(controller.update(1, { stock: '25.5' })).resolves.toEqual(updated);
-    expect(update).toHaveBeenCalledWith({ stock: '25.5' });
+    await expect(controller.update(1, { stock_minimo: '25.5' })).resolves.toEqual(updated);
+    expect(update).toHaveBeenCalledWith({ stock_minimo: '25.5' });
   });
 
   it('responde 404 al actualizar un inexistente', async () => {
@@ -172,5 +176,75 @@ describe('producto', () => {
   it('responde 404 al eliminar un inexistente', async () => {
     update.mockResolvedValue(null);
     await expect(controller.remove(99)).rejects.toBeInstanceOf(NotFoundException);
+  });
+  it('rechaza crear sin id_familia ni codigo', async () => {
+    categoriaFirst.mockResolvedValue({ id: 1 });
+    unidadFirst.mockResolvedValue({ id: 1 });
+    await expect(
+      controller.create({ descripcion: 'X', id_categoria: 1, id_unidad_medida: 1 }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('rechaza codigo manual cuando se indica id_familia', async () => {
+    categoriaFirst.mockResolvedValue({ id: 1 });
+    unidadFirst.mockResolvedValue({ id: 1 });
+    await expect(
+      controller.create({ codigo: 'CON-0009', descripcion: 'X', id_categoria: 1, id_unidad_medida: 1, id_familia: 1 }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('genera el codigo PREFIJO-0001 desde el correlativo de la familia', async () => {
+    categoriaFirst.mockResolvedValue({ id: 1 });
+    unidadFirst.mockResolvedValue({ id: 1 });
+    const txCreate = vi.fn().mockResolvedValue({ ...ROW, codigo: 'CON-0007' });
+    sqlMock.rows.mockResolvedValue([{ prefijo: 'CON', n: 7 }]);
+    transaction.mockImplementation(async (fn: (tx: unknown) => unknown) =>
+      fn({ orm: { public: { producto: { create: txCreate } } } }),
+    );
+    await controller.create({ descripcion: 'X', id_categoria: 1, id_unidad_medida: 1, id_familia: 1 });
+    expect(txCreate).toHaveBeenCalledWith(expect.objectContaining({ codigo: 'CON-0007', id_familia: 1 }));
+  });
+
+  it('rechaza una familia inexistente o inactiva', async () => {
+    categoriaFirst.mockResolvedValue({ id: 1 });
+    unidadFirst.mockResolvedValue({ id: 1 });
+    sqlMock.rows.mockResolvedValue([]);
+    transaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn({ orm: { public: {} } }));
+    await expect(
+      controller.create({ descripcion: 'X', id_categoria: 1, id_unidad_medida: 1, id_familia: 99 }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('no permite cambiar el codigo de un producto con familia', async () => {
+    first.mockResolvedValue({ ...ROW, id_familia: 1, codigo: 'CON-0001' });
+    await expect(controller.update(1, { codigo: 'OTRO-1' })).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('no permite cambiar la familia luego de crear', async () => {
+    first.mockResolvedValue({ ...ROW, id_familia: 1 });
+    await expect(controller.update(1, { id_familia: 2 })).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('rechaza alternativas repetidas o autoreferenciadas', async () => {
+    first.mockResolvedValue(ROW);
+    await expect(
+      controller.replaceAlternativas(1, { alternativas: [{ id_producto_alternativo: 1, prioridad: 1 }] }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      controller.replaceAlternativas(1, {
+        alternativas: [
+          { id_producto_alternativo: 2, prioridad: 1 },
+          { id_producto_alternativo: 2, prioridad: 2 },
+        ],
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      controller.replaceAlternativas(1, {
+        alternativas: [
+          { id_producto_alternativo: 2, prioridad: 1 },
+          { id_producto_alternativo: 3, prioridad: 1 },
+        ],
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
   });
 });
