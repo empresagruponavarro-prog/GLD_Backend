@@ -62,7 +62,7 @@ export class PptoDetalleFasesCateHandler {
         IdPresupuestoDetalle: toVarchar(dto.IdPresupuestoDetalle),
         IdpptoFaseCategoria: toVarchar(dto.IdpptoFaseCategoria),
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        id_empresa: dto.id_empresa, id_categoria: dto.id_categoria,
+        id_empresa: dto.id_empresa, 
         CodCentroCto: toVarchar(dto.CodCentroCto),
         id_centro_costo: idCentroCosto,
         CostoDirecto: toDecimalString(dto.CostoDirecto ?? 0),

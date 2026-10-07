@@ -78,7 +78,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).map(cat => ({
         ...cat,
         CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null,
-          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)', categoriaRealDescripcion: cat.id_categoria ? catRealMap.get(cat.id_categoria)?.descripcion : null, categoria: cat.id_categoria ? catRealMap.get(cat.id_categoria) : null
+          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)'
       }));
       const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
