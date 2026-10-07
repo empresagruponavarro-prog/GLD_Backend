@@ -1,0 +1,1376 @@
+[
+  {
+    "id": "table.obra_datos_generales",
+    "label": "Create table \"obra_datos_generales\"",
+    "summary": "Creates table \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_datos_generales\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_datos_generales\"",
+        "sql": "CREATE TABLE \"public\".\"obra_datos_generales\" (\n  \"contacto_cliente_correo\" character varying(150),\n  \"contacto_cliente_nombre\" character varying(150),\n  \"contacto_cliente_telefono\" character varying(50),\n  \"created_at\" timestamptz DEFAULT (now()),\n  \"departamento\" character varying(100) DEFAULT 'Lima',\n  \"direccion\" character varying(1000),\n  \"distrito\" character varying(100) DEFAULT 'Lima',\n  \"expediente_codigo\" character varying(100),\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"latitud\" numeric,\n  \"longitud\" numeric,\n  \"personal_activo_promedio\" int4 DEFAULT 0,\n  \"provincia\" character varying(100) DEFAULT 'Lima',\n  \"semanas_totales\" int4 DEFAULT 6,\n  \"turno_trabajo\" character varying(50) DEFAULT 'Diurno',\n  \"ubigeo_cod\" character varying(10),\n  \"updated_at\" timestamptz DEFAULT (now()),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_datos_generales\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_documentos_actas",
+    "label": "Create table \"obra_documentos_actas\"",
+    "summary": "Creates table \"obra_documentos_actas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_documentos_actas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_documentos_actas\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_documentos_actas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_documentos_actas\"",
+        "sql": "CREATE TABLE \"public\".\"obra_documentos_actas\" (\n  \"archivo_url\" character varying(1000),\n  \"categoria\" character varying(100) NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()),\n  \"estado\" character varying(50) DEFAULT 'Validado',\n  \"fecha_emision\" date,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"nro_registro\" character varying(100),\n  \"subtitulo\" character varying(1000),\n  \"titulo\" character varying(255) NOT NULL,\n  \"vigencia_texto\" character varying(100),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_documentos_actas\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_documentos_actas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_incidencias_rfi",
+    "label": "Create table \"obra_incidencias_rfi\"",
+    "summary": "Creates table \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_incidencias_rfi\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_incidencias_rfi\"",
+        "sql": "CREATE TABLE \"public\".\"obra_incidencias_rfi\" (\n  \"accion_solicitada_o_ejecutada\" character varying(1000),\n  \"codigo_incidencia\" character varying(50) NOT NULL,\n  \"descripcion\" character varying(1000) NOT NULL,\n  \"estado\" character varying(50) DEFAULT 'PENDIENTE',\n  \"fecha_reporte\" timestamptz DEFAULT (now()),\n  \"fecha_resolucion\" timestamptz,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"plazo_resolucion\" character varying(100),\n  \"prioridad\" character varying(50) DEFAULT 'MEDIA',\n  \"responsable\" character varying(150),\n  \"titulo\" character varying(255) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_incidencias_rfi\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_planos",
+    "label": "Create table \"obra_planos\"",
+    "summary": "Creates table \"obra_planos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_planos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_planos\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_planos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_planos\"",
+        "sql": "CREATE TABLE \"public\".\"obra_planos\" (\n  \"archivo_url\" character varying(1000),\n  \"codigo_plano\" character varying(50) NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()),\n  \"disciplina\" character varying(50) NOT NULL,\n  \"emitido_por\" character varying(150),\n  \"es_vigente\" bool DEFAULT true,\n  \"estado_aprobacion\" character varying(50) DEFAULT 'Aprobado Obra',\n  \"fecha_vobo\" date,\n  \"formato_peso\" character varying(50),\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"id_plano_anterior\" int4,\n  \"nombre_plano\" character varying(255) NOT NULL,\n  \"version\" character varying(20) DEFAULT 'v1.0',\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_planos\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_planos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_residentes",
+    "label": "Create table \"obra_residentes\"",
+    "summary": "Creates table \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_residentes\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_residentes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_residentes\"",
+        "sql": "CREATE TABLE \"public\".\"obra_residentes\" (\n  \"cip_cap\" character varying(50),\n  \"correo\" character varying(150),\n  \"created_at\" timestamptz DEFAULT (now()),\n  \"especialidad\" character varying(150),\n  \"estado_planta\" character varying(50) DEFAULT 'En Planta',\n  \"foto_url\" character varying(1000),\n  \"id\" SERIAL NOT NULL,\n  \"id_anexo\" int4,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"nombre_completo\" character varying(200) NOT NULL,\n  \"orden\" int4 DEFAULT 0,\n  \"rol_obra\" character varying(100) NOT NULL,\n  \"telefono\" character varying(50),\n  \"turno\" character varying(100) DEFAULT 'Lun - Sáb 07:00 - 18:00',\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_residentes\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_residentes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_semanas_cronograma",
+    "label": "Create table \"obra_semanas_cronograma\"",
+    "summary": "Creates table \"obra_semanas_cronograma\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_semanas_cronograma"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_semanas_cronograma\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_semanas_cronograma\"",
+        "sql": "CREATE TABLE \"public\".\"obra_semanas_cronograma\" (\n  \"descripcion_actividades\" character varying(1000),\n  \"estado\" character varying(50) DEFAULT 'Programado',\n  \"etiqueta_semana\" character varying(50) NOT NULL,\n  \"fase_principal\" character varying(255) NOT NULL,\n  \"fecha_fin\" date NOT NULL,\n  \"fecha_inicio\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"numero_semana\" int4 NOT NULL,\n  \"orden\" int4 DEFAULT 0,\n  \"porcentaje_meta\" numeric DEFAULT '0'::numeric,\n  \"porcentaje_real\" numeric DEFAULT '0'::numeric,\n  \"responsable_nombre\" character varying(150),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_semanas_cronograma\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Plantillas",
+    "label": "Create table \"ppto_Plantillas\"",
+    "summary": "Creates table \"ppto_Plantillas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Plantillas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Plantillas\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Plantillas\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Plantillas\" (\n  \"Activo\" bool DEFAULT true NOT NULL,\n  \"Descripcion\" character varying(500),\n  \"FechaCreacion\" timestamptz DEFAULT (now()) NOT NULL,\n  \"IdPlantilla\" character varying(255),\n  \"Nombre\" character varying(255) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Plantillas\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Plantillas_Categorias",
+    "label": "Create table \"ppto_Plantillas_Categorias\"",
+    "summary": "Creates table \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Plantillas_Categorias\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Plantillas_Categorias\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Plantillas_Categorias\" (\n  \"CostoReferencial\" numeric,\n  \"IdPlantillaFase\" character varying(255) NOT NULL,\n  \"IdpptoFaseCategoria\" character varying(255) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Plantillas_Categorias\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Plantillas_Fases",
+    "label": "Create table \"ppto_Plantillas_Fases\"",
+    "summary": "Creates table \"ppto_Plantillas_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Plantillas_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Plantillas_Fases\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Plantillas_Fases\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Plantillas_Fases\" (\n  \"IdPlantilla\" character varying(255) NOT NULL,\n  \"IdPlantillaFase\" character varying(255),\n  \"IdpptoFase\" character varying(255) NOT NULL,\n  \"Orden\" int4 DEFAULT 0 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Plantillas_Fases\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.id_anexo",
+    "label": "Add column \"id_anexo\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_anexo",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_anexo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_anexo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_anexo\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"id_anexo\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_anexo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_anexo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.id_empresa",
+    "label": "Add column \"id_empresa\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_empresa",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_empresa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_empresa\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"id_empresa\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_empresa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_empresa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_datos_generales.obra_datos_generales_id_centro_costo_key",
+    "label": "Add unique constraint on \"obra_datos_generales\" (id_centro_costo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_datos_generales_id_centro_costo_key",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_datos_generales_id_centro_costo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_centro_costo_key",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_datos_generales_id_centro_costo_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_id_centro_costo_key\" UNIQUE (\"id_centro_costo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_datos_generales_id_centro_costo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_centro_costo_key",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_semanas_cronograma.obra_semanas_cronograma_id_centro_costo_numero_semana_key",
+    "label": "Add unique constraint on \"obra_semanas_cronograma\" (id_centro_costo, numero_semana)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_semanas_cronograma_id_centro_costo_numero_semana_key",
+        "table": "obra_semanas_cronograma"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_semanas_cronograma_id_centro_costo_numero_semana_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_semanas_cronograma_id_centro_costo_numero_semana_key",
+          "public",
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_semanas_cronograma_id_centro_costo_numero_semana_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_semanas_cronograma\" ADD CONSTRAINT \"obra_semanas_cronograma_id_centro_costo_numero_semana_key\" UNIQUE (\"id_centro_costo\", \"numero_semana\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_semanas_cronograma_id_centro_costo_numero_semana_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_semanas_cronograma_id_centro_costo_numero_semana_key",
+          "public",
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_Plantillas.ppto_Plantillas_IdPlantilla_key",
+    "label": "Add unique constraint on \"ppto_Plantillas\" (IdPlantilla)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_Plantillas_IdPlantilla_key",
+        "table": "ppto_Plantillas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_Plantillas_IdPlantilla_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_IdPlantilla_key",
+          "public",
+          "\"public\".\"ppto_Plantillas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_Plantillas_IdPlantilla_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas\" ADD CONSTRAINT \"ppto_Plantillas_IdPlantilla_key\" UNIQUE (\"IdPlantilla\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_Plantillas_IdPlantilla_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_IdPlantilla_key",
+          "public",
+          "\"public\".\"ppto_Plantillas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_Plantillas_Fases.ppto_Plantillas_Fases_IdPlantillaFase_key",
+    "label": "Add unique constraint on \"ppto_Plantillas_Fases\" (IdPlantillaFase)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_Plantillas_Fases_IdPlantillaFase_key",
+        "table": "ppto_Plantillas_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_Plantillas_Fases_IdPlantillaFase_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Fases_IdPlantillaFase_key",
+          "public",
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_Plantillas_Fases_IdPlantillaFase_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Fases\" ADD CONSTRAINT \"ppto_Plantillas_Fases_IdPlantillaFase_key\" UNIQUE (\"IdPlantillaFase\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_Plantillas_Fases_IdPlantillaFase_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Fases_IdPlantillaFase_key",
+          "public",
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.CentroCostos.CentroCostos_id_anexo_idx_726d2e48",
+    "label": "Create index \"CentroCostos_id_anexo_idx_726d2e48\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_id_anexo_idx_726d2e48",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_id_anexo_idx_726d2e48\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"CentroCostos_id_anexo_idx_726d2e48\"",
+        "sql": "CREATE INDEX \"CentroCostos_id_anexo_idx_726d2e48\" ON \"public\".\"CentroCostos\" (\"id_anexo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_id_anexo_idx_726d2e48\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.CentroCostos.CentroCostos_id_empresa_idx_328936e2",
+    "label": "Create index \"CentroCostos_id_empresa_idx_328936e2\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_id_empresa_idx_328936e2",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"CentroCostos_id_empresa_idx_328936e2\"",
+        "sql": "CREATE INDEX \"CentroCostos_id_empresa_idx_328936e2\" ON \"public\".\"CentroCostos\" (\"id_empresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_documentos_actas.obra_documentos_actas_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_documentos_actas_id_centro_costo_idx_8c84570b\" on \"obra_documentos_actas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_documentos_actas_id_centro_costo_idx_8c84570b",
+        "table": "obra_documentos_actas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_documentos_actas_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_documentos_actas_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_documentos_actas_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_documentos_actas_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_documentos_actas\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_documentos_actas_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_documentos_actas_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_incidencias_rfi.obra_incidencias_rfi_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\" on \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_incidencias_rfi_id_centro_costo_idx_8c84570b",
+        "table": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_incidencias_rfi\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_planos.obra_planos_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_planos_id_centro_costo_idx_8c84570b\" on \"obra_planos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_planos_id_centro_costo_idx_8c84570b",
+        "table": "obra_planos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_planos_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_planos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_planos_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_planos_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_planos\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_planos_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_planos_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_residentes.obra_residentes_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_residentes_id_centro_costo_idx_8c84570b\" on \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_residentes_id_centro_costo_idx_8c84570b",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_residentes_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_residentes_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_residentes_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_residentes_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_residentes\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_residentes_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_residentes_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_semanas_cronograma.obra_semanas_cronograma_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\" on \"obra_semanas_cronograma\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_semanas_cronograma_id_centro_costo_idx_8c84570b",
+        "table": "obra_semanas_cronograma"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_semanas_cronograma\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_semanas_cronograma_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Categorias.ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696",
+    "label": "Create index \"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\" on \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696",
+        "table": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\" ON \"public\".\"ppto_Plantillas_Categorias\" (\"IdPlantillaFase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Fases.ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac",
+    "label": "Create index \"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\" on \"ppto_Plantillas_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac",
+        "table": "ppto_Plantillas_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\" ON \"public\".\"ppto_Plantillas_Fases\" (\"IdPlantilla\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Fases_IdPlantilla_idx_ca8fcfac\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.CentroCostos.CentroCostos_id_anexo_fkey",
+    "label": "Add foreign key \"CentroCostos_id_anexo_fkey\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_id_anexo_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"CentroCostos_id_anexo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_anexo_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"CentroCostos_id_anexo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\"\nADD CONSTRAINT \"CentroCostos_id_anexo_fkey\"\nFOREIGN KEY (\"id_anexo\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"CentroCostos_id_anexo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_anexo_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.CentroCostos.CentroCostos_id_empresa_fkey",
+    "label": "Add foreign key \"CentroCostos_id_empresa_fkey\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_id_empresa_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"CentroCostos_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_empresa_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"CentroCostos_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\"\nADD CONSTRAINT \"CentroCostos_id_empresa_fkey\"\nFOREIGN KEY (\"id_empresa\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"CentroCostos_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_empresa_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_centro_costo_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_centro_costo_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_documentos_actas.obra_documentos_actas_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_documentos_actas_id_centro_costo_fkey\" on \"obra_documentos_actas\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_documentos_actas_id_centro_costo_fkey",
+        "table": "obra_documentos_actas"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_documentos_actas_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_documentos_actas_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_documentos_actas\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_documentos_actas_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_documentos_actas\"\nADD CONSTRAINT \"obra_documentos_actas_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_documentos_actas_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_documentos_actas_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_documentos_actas\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_incidencias_rfi.obra_incidencias_rfi_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_incidencias_rfi_id_centro_costo_fkey\" on \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_incidencias_rfi_id_centro_costo_fkey",
+        "table": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_incidencias_rfi_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_incidencias_rfi_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_incidencias_rfi_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_incidencias_rfi\"\nADD CONSTRAINT \"obra_incidencias_rfi_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_incidencias_rfi_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_incidencias_rfi_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_planos.obra_planos_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_planos_id_centro_costo_fkey\" on \"obra_planos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_planos_id_centro_costo_fkey",
+        "table": "obra_planos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_planos_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_planos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_planos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_planos_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_planos\"\nADD CONSTRAINT \"obra_planos_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_planos_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_planos_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_planos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_residentes.obra_residentes_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_residentes_id_centro_costo_fkey\" on \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_residentes_id_centro_costo_fkey",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_residentes_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_residentes_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_residentes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_residentes_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\"\nADD CONSTRAINT \"obra_residentes_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_residentes_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_residentes_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_residentes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_semanas_cronograma.obra_semanas_cronograma_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_semanas_cronograma_id_centro_costo_fkey\" on \"obra_semanas_cronograma\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_semanas_cronograma_id_centro_costo_fkey",
+        "table": "obra_semanas_cronograma"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_semanas_cronograma_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_semanas_cronograma_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_semanas_cronograma_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_semanas_cronograma\"\nADD CONSTRAINT \"obra_semanas_cronograma_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_semanas_cronograma_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_semanas_cronograma_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_semanas_cronograma\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Categorias.ppto_Plantillas_Categorias_IdPlantillaFase_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Categorias_IdPlantillaFase_fkey\" on \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Categorias_IdPlantillaFase_fkey",
+        "table": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Categorias_IdPlantillaFase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Categorias_IdPlantillaFase_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Categorias_IdPlantillaFase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Categorias\"\nADD CONSTRAINT \"ppto_Plantillas_Categorias_IdPlantillaFase_fkey\"\nFOREIGN KEY (\"IdPlantillaFase\")\nREFERENCES \"public\".\"ppto_Plantillas_Fases\" (\"IdPlantillaFase\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Categorias_IdPlantillaFase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Categorias_IdPlantillaFase_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Fases.ppto_Plantillas_Fases_IdPlantilla_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Fases_IdPlantilla_fkey\" on \"ppto_Plantillas_Fases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Fases_IdPlantilla_fkey",
+        "table": "ppto_Plantillas_Fases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Fases_IdPlantilla_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Fases_IdPlantilla_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Fases_IdPlantilla_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Fases\"\nADD CONSTRAINT \"ppto_Plantillas_Fases_IdPlantilla_fkey\"\nFOREIGN KEY (\"IdPlantilla\")\nREFERENCES \"public\".\"ppto_Plantillas\" (\"IdPlantilla\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Fases_IdPlantilla_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Fases_IdPlantilla_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Fases\""
+        ]
+      }
+    ]
+  }
+]

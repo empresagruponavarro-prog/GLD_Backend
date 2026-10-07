@@ -971,8 +971,8 @@ model obra_semanas_cronograma {
   fase_principal          VarChar(255)
   descripcion_actividades VarChar(1000)?
   responsable_nombre      VarChar(150)?
-  porcentaje_meta         Decimal? @default(0)
-  porcentaje_real         Decimal? @default(0)
+  porcentaje_meta         Decimal? @default("0")
+  porcentaje_real         Decimal? @default("0")
   estado                  VarChar(50)? @default("Programado")
   orden                   Int? @default(0)
   @@unique([id_centro_costo, numero_semana])

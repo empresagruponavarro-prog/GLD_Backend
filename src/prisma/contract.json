@@ -15720,7 +15720,7 @@
                   "codecId": "pg/numeric@1",
                   "default": {
                     "kind": "literal",
-                    "value": 0
+                    "value": "0"
                   },
                   "nativeType": "numeric",
                   "nullable": true
@@ -15729,7 +15729,7 @@
                   "codecId": "pg/numeric@1",
                   "default": {
                     "kind": "literal",
-                    "value": 0
+                    "value": "0"
                   },
                   "nativeType": "numeric",
                   "nullable": true
@@ -18108,7 +18108,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "148542882fae05884558b4cfd1e239a338add6289539d9ff65679bf634309644"
+    "storageHash": "c4735e322dbddefb763dde8f44c473bcee4472c75c5e3f1c7dfdac941f75f58d"
   },
   "capabilities": {
     "postgres": {
