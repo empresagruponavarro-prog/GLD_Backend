@@ -1317,5 +1317,7 @@ model ppto_Plantillas_Categorias {
   CostoReferencial        Decimal?
   
   fasePlantilla           ppto_Plantillas_Fases @relation(fields: [IdPlantillaFase], references: [IdPlantillaFase])
+  id_categoria            Int?
+  categoria               categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_Plantillas_Categorias")
 }

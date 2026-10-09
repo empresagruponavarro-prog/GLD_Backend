@@ -67,12 +67,15 @@ export class PlantillasHandler {
         const resultCats = await Promise.all(
           categorias.map(async (cat: any) => {
             const catMaestra = await this.db.orm.public.ppto_FasesCategorias.first({ IdpptoFaseCategoria: cat.IdpptoFaseCategoria });
+            const catGlobal = cat.id_categoria ? await this.db.orm.public.categoria.first({ id: cat.id_categoria }) : null;
             return {
               id: cat.id,
               IdPlantillaFase: cat.IdPlantillaFase as string,
               IdpptoFaseCategoria: cat.IdpptoFaseCategoria as string,
               NombreCategoria: catMaestra?.Descripcion as string | undefined,
               CostoReferencial: cat.CostoReferencial ? Number(cat.CostoReferencial) : undefined,
+              id_categoria: cat.id_categoria as number | undefined,
+              categoria: catGlobal ? { id: catGlobal.id, descripcion: catGlobal.descripcion as string } : undefined,
             };
           })
         );

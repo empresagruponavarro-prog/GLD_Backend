@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'43596483fc81c2b7167231ac1b6db2f9652248039a33481dd17528d83212965b'>;
+  StorageHashBase<'ac94ebcb1a06d24bf7b26772397349ba994b186fc6131bdb78e5073f4102c01f'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1008,6 +1008,7 @@ export type FieldOutputTypes = {
       readonly IdPlantillaFase: Varchar<255>;
       readonly IdpptoFaseCategoria: Varchar<255>;
       readonly CostoReferencial: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly ppto_Plantillas_Fases: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1941,6 +1942,7 @@ export type FieldInputTypes = {
       readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'];
       readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'];
       readonly CostoReferencial: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly ppto_Plantillas_Fases: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2872,6 +2874,7 @@ export type StorageColumnTypes = {
     readonly ppto_Plantillas_Categorias: {
       readonly CostoReferencial: CodecTypes['pg/numeric@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
       readonly IdPlantillaFase: Varchar<255>;
       readonly IdpptoFaseCategoria: Varchar<255>;
     };
@@ -3805,6 +3808,7 @@ export type StorageColumnInputTypes = {
     readonly ppto_Plantillas_Categorias: {
       readonly CostoReferencial: CodecTypes['pg/numeric@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
       readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'];
       readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'];
     };
@@ -9788,6 +9792,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
                 };
+                readonly id_categoria: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -9796,6 +9805,12 @@ type ContractBase = Omit<
                   readonly name: 'ppto_Plantillas_Categorias_IdPlantillaFase_idx_59e4a696';
                   readonly prefix: 'ppto_Plantillas_Categorias_IdPlantillaFase_idx';
                   readonly columns: readonly ['IdPlantillaFase'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_Plantillas_Categorias_id_categoria_idx_dc879264';
+                  readonly prefix: 'ppto_Plantillas_Categorias_id_categoria_idx';
+                  readonly columns: readonly ['id_categoria'];
                   readonly unique: false;
                 },
               ];
@@ -9810,6 +9825,18 @@ type ContractBase = Omit<
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'ppto_Plantillas_Fases';
                     readonly columns: readonly ['IdPlantillaFase'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Categorias';
+                    readonly columns: readonly ['id_categoria'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'categoria';
+                    readonly columns: readonly ['id'];
                   };
                 },
               ];
@@ -18201,8 +18228,23 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
+              readonly id_categoria: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
+              readonly categoria: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'categoria';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_categoria'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly fasePlantilla: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -18223,6 +18265,7 @@ type ContractBase = Omit<
                 readonly IdPlantillaFase: { readonly column: 'IdPlantillaFase' };
                 readonly IdpptoFaseCategoria: { readonly column: 'IdpptoFaseCategoria' };
                 readonly CostoReferencial: { readonly column: 'CostoReferencial' };
+                readonly id_categoria: { readonly column: 'id_categoria' };
               };
             };
           };
