@@ -15,7 +15,7 @@ export class PlantillasHandler {
 
   async listActivas(): Promise<any[]> {
     const plantillas = await this.db.orm.public.ppto_Plantillas
-      .where((p: any) => p.Activo.eq(true))
+      .where({ Activo: true })
       .orderBy((p: any) => p.id.desc())
       .all();
 
