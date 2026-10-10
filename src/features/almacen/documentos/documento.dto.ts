@@ -178,6 +178,7 @@ export class DocumentoLineaResponseDto {
   @ApiProperty({ example: '10' }) cantidad: string;
   @ApiPropertyOptional({ example: '22.5' }) costo_unitario: string | null;
   @ApiPropertyOptional() observaciones: string | null;
+  @ApiPropertyOptional({ description: 'Línea de OC de origen (recepciones)' }) id_orden_compra_detalle: number | null;
 }
 
 export class DocumentoResponseDto {
@@ -205,6 +206,8 @@ export class DocumentoResponseDto {
   @ApiPropertyOptional() observaciones: string | null;
   @ApiProperty({ enum: ['REGISTRADO', 'ANULADO'] }) estado: string;
   @ApiPropertyOptional() id_documento_anula: number | null;
+  @ApiPropertyOptional({ description: 'Orden de compra de origen (recepciones)' }) id_orden_compra: number | null;
+  @ApiPropertyOptional() numero_oc: string | null;
   @ApiProperty() created_at: string;
   @ApiProperty({ example: 3 }) total_lineas: number;
   @ApiPropertyOptional({ type: [DocumentoLineaResponseDto] }) lineas?: DocumentoLineaResponseDto[];

@@ -35,6 +35,16 @@ export class CreateDocumentoOrigenDetalleDto {
   @IsNumber()
   @Min(0)
   precio: number;
+
+  @ApiPropertyOptional({
+    example: 12,
+    description: 'Línea del requerimiento (FUR) que atiende esta línea. Obligatorio si la OC tiene id_requerimiento',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  id_requerimiento_detalle?: number;
 }
 
 export class CreateDocumentoOrigenDto {
@@ -192,6 +202,16 @@ export class CreateDocumentoOrigenDto {
   @IsString()
   @MaxLength(255)
   cotizacion?: string;
+
+  @ApiPropertyOptional({
+    example: 5,
+    description: 'Requerimiento (FUR) APROBADO del que nace la OC. No se puede cambiar después de crearla',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  id_requerimiento?: number;
 
   @ApiPropertyOptional({
     type: [CreateDocumentoOrigenDetalleDto],
@@ -352,6 +372,15 @@ export class DocumentoOrigenDetalleResponseDto {
 
   @ApiPropertyOptional({ example: '200.00' })
   monto: string | null;
+
+  @ApiPropertyOptional({ description: 'Línea del FUR que atiende' })
+  id_requerimiento_detalle: number | null;
+
+  @ApiPropertyOptional({ example: '1.00', description: 'Recibido en almacén (ingresos COMPRA vigentes)' })
+  cantidad_recibida: string | null;
+
+  @ApiPropertyOptional({ example: '1.00', description: 'Pendiente de recibir; null en servicios o líneas sin producto de catálogo' })
+  saldo_por_recibir: string | null;
 }
 
 export class DocumentoOrigenResponseDto {
@@ -450,6 +479,18 @@ export class DocumentoOrigenResponseDto {
 
   @ApiPropertyOptional({ example: 'COT-001' })
   cotizacion: string | null;
+
+  @ApiPropertyOptional({ description: 'Requerimiento (FUR) de origen' })
+  id_requerimiento: number | null;
+
+  @ApiPropertyOptional({ example: 'FUR-000001' })
+  numero_requerimiento: string | null;
+
+  @ApiPropertyOptional({
+    enum: ['PENDIENTE', 'PARCIAL', 'RECIBIDA', 'SIN_BIENES'],
+    description: 'Recepción en almacén, calculada sobre las líneas de producto',
+  })
+  estado_recepcion: string | null;
 
   @ApiPropertyOptional({ type: [DocumentoOrigenDetalleResponseDto] })
   detalles: DocumentoOrigenDetalleResponseDto[];

@@ -8,6 +8,7 @@ import { DocumentosModule } from './features/documentos/documentos.module.js';
 import { MaestrosModule } from './features/maestros/maestros.module.js';
 import { IncidenciasModule } from './features/incidencias/incidencias.module.js';
 import { PresupuestosModule } from './features/presupuestos/presupuestos.module.js';
+import { RequerimientosModule } from './features/requerimientos/requerimientos.module.js';
 import { OperacionesObraModule } from './features/operaciones-obra/operaciones-obra.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 
@@ -18,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     AlmacenModule,
     CentrosCostosModule,
     DocumentosModule,
+    RequerimientosModule,
     MaestrosModule,
     PresupuestosModule,
     IncidenciasModule,

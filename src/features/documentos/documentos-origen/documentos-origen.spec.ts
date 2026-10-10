@@ -1,6 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
 import { DocumentosOrigenController } from './documentos-origen.controller.js';
 import { DocumentosOrigenHandler } from './documentos-origen.handler.js';
 
@@ -21,6 +22,7 @@ describe('documentos-origen', () => {
   const centroFirst = vi.fn();
   const categoriaFirst = vi.fn();
   const anexoFirst = vi.fn();
+  const sqlRows = vi.fn();
 
   const row = {
     id: 1,
@@ -51,6 +53,7 @@ describe('documentos-origen', () => {
     fecha_creacion: '2026-01-15T00:00:00.000Z',
     hora_creacion: '10:30',
     cotizacion: 'COT-001',
+    id_requerimiento: null,
   };
 
   const listResponse = {
@@ -59,6 +62,8 @@ describe('documentos-origen', () => {
     nombre_categoria: null,
     nombre_fase: 'OBRA GRUESA',
     nombre_anexo: null,
+    numero_requerimiento: null,
+    estado_recepcion: 'SIN_BIENES',
     detalles: [],
   };
   const itemResponse = {
@@ -67,11 +72,14 @@ describe('documentos-origen', () => {
     nombre_categoria: 'MATERIALES',
     nombre_fase: 'OBRA GRUESA',
     nombre_anexo: 'ACME S.A.C.',
+    numero_requerimiento: null,
+    estado_recepcion: 'SIN_BIENES',
     detalles: [],
   };
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    sqlRows.mockResolvedValue([]);
 
     faseAll.mockResolvedValue([{ id: 7, FaseProyecto: 'OBRA GRUESA' }]);
     faseFirst.mockResolvedValue({ id: 7, FaseProyecto: 'OBRA GRUESA' });
@@ -98,7 +106,7 @@ describe('documentos-origen', () => {
             })),
             create,
             first: ordenCompraFirst,
-            where: vi.fn(() => ({ update, all })),
+            where: vi.fn(() => ({ update, all, delete: vi.fn() })),
           },
           OrdenCompraDetalle: {
             create: detalleCreate,
@@ -129,10 +137,18 @@ describe('documentos-origen', () => {
         },
       },
     } as unknown as Database;
+    // La transaccion reutiliza el mismo ORM simulado.
+    (dbMock as unknown as { transaction: unknown }).transaction = vi.fn(
+      async (cb: (tx: unknown) => Promise<unknown>) => cb({ orm: (dbMock as unknown as { orm: unknown }).orm }),
+    );
 
     const moduleRef = await Test.createTestingModule({
       controllers: [DocumentosOrigenController],
-      providers: [DocumentosOrigenHandler, { provide: DB, useValue: dbMock }],
+      providers: [
+        DocumentosOrigenHandler,
+        { provide: DB, useValue: dbMock },
+        { provide: AlmacenSql, useValue: { rows: sqlRows, run: vi.fn() } },
+      ],
     }).compile();
 
     controller = moduleRef.get(DocumentosOrigenController);
@@ -212,6 +228,11 @@ describe('documentos-origen', () => {
         monto: '151.50',
       });
 
+    detalleAll.mockResolvedValue([
+      { id: 11, ProductoCodigo: 'P1', TipoProducto: 'PRODUCTO', Cantidad: '2.00', Precio: '100.00', monto: '200.00', id_requerimiento_detalle: null },
+      { id: 12, ProductoCodigo: 'P2', TipoProducto: 'PRODUCTO', Cantidad: '3.00', Precio: '50.50', monto: '151.50', id_requerimiento_detalle: null },
+    ]);
+
     const result = await controller.create({
       id_oc: 'OC-002',
       igv: 18,
@@ -285,5 +306,109 @@ describe('documentos-origen', () => {
   it('responde 404 al obtener uno inexistente', async () => {
     ordenCompraFirst.mockResolvedValueOnce(null);
     await expect(controller.getById(99)).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  describe('desde un requerimiento (FUR)', () => {
+    const detalleFur = { id_producto: 1, cantidad: 2, precio: 10, id_requerimiento_detalle: 12 };
+
+    it('rechaza id_requerimiento_detalle en una OC sin requerimiento', async () => {
+      await expect(controller.create({ detalles: [detalleFur] })).rejects.toBeInstanceOf(BadRequestException);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('rechaza un requerimiento que no esta APROBADO', async () => {
+      sqlRows.mockResolvedValueOnce([{ id: 5, estado: 'ENVIADO', id_centro_costo: 884, id_fase: null }]);
+      await expect(controller.create({ id_requerimiento: 5, detalles: [detalleFur] })).rejects.toBeInstanceOf(
+        ConflictException,
+      );
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('rechaza un requerimiento inexistente', async () => {
+      await expect(controller.create({ id_requerimiento: 5, detalles: [detalleFur] })).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
+    });
+
+    it('exige id_requerimiento_detalle en cada linea', async () => {
+      sqlRows.mockResolvedValueOnce([{ id: 5, estado: 'APROBADO', id_centro_costo: 884, id_fase: null }]);
+      await expect(
+        controller.create({ id_requerimiento: 5, detalles: [{ id_producto: 1, cantidad: 1, precio: 1 }] }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('rechaza una cantidad que supera el saldo aprobado', async () => {
+      productoAll.mockResolvedValue([{ id: 1, codigo: 'P1', descripcion: 'P1', tipo_producto: 'PRODUCTO' }]);
+      sqlRows
+        .mockResolvedValueOnce([{ id: 5, estado: 'APROBADO', id_centro_costo: 884, id_fase: null }])
+        .mockResolvedValueOnce([
+          { id: 12, id_requerimiento: 5, id_producto: 1, aprobada: '5', ordenado: '4', cabe: false },
+        ]);
+      await expect(controller.create({ id_requerimiento: 5, detalles: [detalleFur] })).rejects.toThrow(/saldo aprobado/);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('rechaza una linea que corresponde a otro producto', async () => {
+      sqlRows
+        .mockResolvedValueOnce([{ id: 5, estado: 'APROBADO', id_centro_costo: 884, id_fase: null }])
+        .mockResolvedValueOnce([
+          { id: 12, id_requerimiento: 5, id_producto: 99, aprobada: '5', ordenado: '0', cabe: true },
+        ]);
+      await expect(controller.create({ id_requerimiento: 5, detalles: [detalleFur] })).rejects.toThrow(/otro producto/);
+    });
+
+    it('crea la OC vinculada y hereda centro de costo y fase del FUR', async () => {
+      productoAll.mockResolvedValue([{ id: 1, codigo: 'P1', descripcion: 'P1', tipo_producto: 'PRODUCTO' }]);
+      create.mockResolvedValue({ ...row, id_requerimiento: 5 });
+      ordenCompraFirst.mockResolvedValue({ ...row, id_requerimiento: 5 });
+      detalleCreate.mockResolvedValue({
+        id: 11,
+        ProductoCodigo: 'P1',
+        TipoProducto: 'PRODUCTO',
+        Cantidad: '2.00',
+        Precio: '10.00',
+        monto: '20.00',
+        id_requerimiento_detalle: 12,
+      });
+      sqlRows
+        .mockResolvedValueOnce([{ id: 5, estado: 'APROBADO', id_centro_costo: 111, id_fase: 7 }])
+        .mockResolvedValueOnce([
+          { id: 12, id_requerimiento: 5, id_producto: 1, aprobada: '5', ordenado: '0', cabe: true },
+        ]);
+
+      await controller.create({ id_requerimiento: 5, detalles: [detalleFur] });
+
+      expect(create).toHaveBeenCalledWith(
+        expect.objectContaining({ id_requerimiento: 5, id_centro_costo: 111, id_fase: 7 }),
+      );
+      expect(detalleCreate).toHaveBeenCalledWith(
+        expect.objectContaining({ id_producto: 1, id_requerimiento_detalle: 12 }),
+      );
+    });
+
+    it('no permite cambiar el requerimiento de una OC', async () => {
+      ordenCompraFirst.mockResolvedValue({ ...row, id_requerimiento: 5 });
+      await expect(controller.update(1, { id_requerimiento: 6 })).rejects.toBeInstanceOf(BadRequestException);
+    });
+  });
+
+  describe('con recepciones en almacen', () => {
+    it('no permite reemplazar el detalle', async () => {
+      productoAll.mockResolvedValue([{ id: 1, codigo: 'P1', descripcion: 'P1', tipo_producto: 'PRODUCTO' }]);
+      sqlRows.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([{ existe: true }]);
+      await expect(
+        controller.update(1, { detalles: [{ id_producto: 1, cantidad: 1, precio: 1 }] }),
+      ).rejects.toBeInstanceOf(ConflictException);
+      expect(update).not.toHaveBeenCalled();
+    });
+
+    it('no permite eliminar la OC', async () => {
+      sqlRows.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([{ existe: true }]);
+      await expect(controller.delete(1)).rejects.toBeInstanceOf(ConflictException);
+    });
+
+    it('elimina la OC sin recepciones', async () => {
+      await expect(controller.delete(1)).resolves.toEqual({ deleted: true, id: 1 });
+    });
   });
 });

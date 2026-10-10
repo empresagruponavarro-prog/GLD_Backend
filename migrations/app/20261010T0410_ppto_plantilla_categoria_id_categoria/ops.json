@@ -1,0 +1,494 @@
+[
+  {
+    "id": "column.public.ppto_DetalleFases.id_categoria",
+    "label": "Add column \"id_categoria\" to \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" ADD COLUMN \"id_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "id_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFasesCate.id_categoria",
+    "label": "Add column \"id_categoria\" to \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" ADD COLUMN \"id_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "id_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Plantillas_Categorias.id_categoria",
+    "label": "Add column \"id_categoria\" to \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Plantillas_Categorias",
+          "id_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Categorias\" ADD COLUMN \"id_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Plantillas_Categorias",
+          "id_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.id_categoria",
+    "label": "Add column \"id_categoria\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_categoria",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"id_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFases.ppto_DetalleFases_id_categoria_idx_dc879264",
+    "label": "Create index \"ppto_DetalleFases_id_categoria_idx_dc879264\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFases_id_categoria_idx_dc879264",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFases_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFases_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFases_id_categoria_idx_dc879264\" ON \"public\".\"ppto_DetalleFases\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFases_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFases_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleFasesCate.ppto_DetalleFasesCate_id_categoria_idx_dc879264",
+    "label": "Create index \"ppto_DetalleFasesCate_id_categoria_idx_dc879264\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleFasesCate_id_categoria_idx_dc879264",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleFasesCate_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleFasesCate_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"ppto_DetalleFasesCate_id_categoria_idx_dc879264\" ON \"public\".\"ppto_DetalleFasesCate\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleFasesCate_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleFasesCate_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Categorias.ppto_Plantillas_Categorias_id_categoria_idx_dc879264",
+    "label": "Create index \"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\" on \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Categorias_id_categoria_idx_dc879264",
+        "table": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\" ON \"public\".\"ppto_Plantillas_Categorias\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Categorias_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Principal.ppto_Principal_id_categoria_idx_dc879264",
+    "label": "Create index \"ppto_Principal_id_categoria_idx_dc879264\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_id_categoria_idx_dc879264",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_id_categoria_idx_dc879264\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_categoria_idx_dc879264\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Principal_id_categoria_idx_dc879264\"",
+        "sql": "CREATE INDEX \"ppto_Principal_id_categoria_idx_dc879264\" ON \"public\".\"ppto_Principal\" (\"id_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_id_categoria_idx_dc879264\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_categoria_idx_dc879264\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFases.ppto_DetalleFases_id_categoria_fkey",
+    "label": "Add foreign key \"ppto_DetalleFases_id_categoria_fkey\" on \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFases_id_categoria_fkey",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFases_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFases_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\"\nADD CONSTRAINT \"ppto_DetalleFases_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFases_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFases_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFases\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleFasesCate.ppto_DetalleFasesCate_id_categoria_fkey",
+    "label": "Add foreign key \"ppto_DetalleFasesCate_id_categoria_fkey\" on \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleFasesCate_id_categoria_fkey",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleFasesCate_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleFasesCate_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\"\nADD CONSTRAINT \"ppto_DetalleFasesCate_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleFasesCate_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleFasesCate_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleFasesCate\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Categorias.ppto_Plantillas_Categorias_id_categoria_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Categorias_id_categoria_fkey\" on \"ppto_Plantillas_Categorias\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Categorias_id_categoria_fkey",
+        "table": "ppto_Plantillas_Categorias"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Categorias_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Categorias_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Categorias_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Categorias\"\nADD CONSTRAINT \"ppto_Plantillas_Categorias_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Categorias_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Categorias_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Categorias\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Principal.ppto_Principal_id_categoria_fkey",
+    "label": "Add foreign key \"ppto_Principal_id_categoria_fkey\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Principal_id_categoria_fkey",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Principal_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Principal_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\"\nADD CONSTRAINT \"ppto_Principal_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Principal_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  }
+]

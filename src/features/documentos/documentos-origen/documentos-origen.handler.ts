@@ -1,10 +1,20 @@
 import '../../../platform/db/temporal.js';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import type { CodecTypes, Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { AlmacenSql, I, T, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import {
+  csv,
+  estadoRecepcionPorOc,
+  recibidoPorLinea,
+  tieneRecepciones,
+  type EstadoRecepcion,
+} from '../../almacen/shared/oc-saldos.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
+import { bloquearRequerimiento } from '../../requerimientos/shared/requerimiento-eventos.js';
+import { validarConsumoLinea } from '../../requerimientos/shared/requerimiento-saldos.js';
 import {
   CreateDocumentoOrigenDetalleDto,
   CreateDocumentoOrigenDto,
@@ -18,6 +28,9 @@ import {
 
 /** Input del codec `pg/timestamptz-temporal@1`: un `Temporal.Instant`. */
 type InstantInput = CodecTypes['pg/timestamptz-temporal@1']['input'];
+
+/** Cliente ORM; dentro de una transaccion se usa `tx.orm.public` con la misma forma. */
+type Orm = Database['orm']['public'];
 
 type DocumentoOrigenUpdateData = Partial<{
   id_oc: Varchar255;
@@ -78,11 +91,15 @@ type DocumentoOrigenRow = {
   fecha_creacion: { toString(): string } | null;
   hora_creacion: string | null;
   cotizacion: string | null;
+  id_requerimiento: number | null;
 };
 
 @Injectable()
 export class DocumentosOrigenHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+  ) {}
 
   async list(query: ListDocumentosOrigenQueryDto): Promise<Paginated<DocumentoOrigenResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
@@ -114,11 +131,17 @@ export class DocumentosOrigenHandler {
       this.getNombresFase(data),
       this.getNombresCentroCosto(data),
     ]);
+    const [recepcionPorOc, furPorId] = await Promise.all([
+      estadoRecepcionPorOc(this.sql, data.map((row) => row.id)),
+      this.getNumerosRequerimiento(data.map((row) => row.id_requerimiento)),
+    ]);
     const items = data.map((row) =>
       toResponse(row, {
         nombreFase: row.id_fase === null ? null : (fasesPorId.get(row.id_fase) ?? null),
         nombreCentroCosto:
           row.id_centro_costo === null ? null : (centrosPorId.get(row.id_centro_costo) ?? null),
+        numeroRequerimiento: row.id_requerimiento === null ? null : (furPorId.get(row.id_requerimiento) ?? null),
+        estadoRecepcion: recepcionPorOc.get(row.id) ?? null,
       }),
     );
 
@@ -267,13 +290,20 @@ export class DocumentosOrigenHandler {
     const row = await this.db.orm.public.OrdenCompra.first({ id });
     if (!row) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
 
-    const [nombreFase, nombreCentroCosto, nombreCategoria, nombreAnexo, detalles] =
+    return this.respuestaCompleta(row);
+  }
+
+  /** Arma la respuesta de detalle (nombres, lineas con saldos de recepcion y estado de recepcion). */
+  private async respuestaCompleta(row: DocumentoOrigenRow): Promise<DocumentoOrigenResponseDto> {
+    const [nombreFase, nombreCentroCosto, nombreCategoria, nombreAnexo, detalles, recepcionPorOc, furPorId] =
       await Promise.all([
         this.getNombreFase(row.id_fase),
         this.getNombreCentroCosto(row.id_centro_costo),
         this.getNombreCategoria(row.id_categoria),
         this.getNombreAnexo(row.id_anexo),
         this.getDetalles(row.id),
+        estadoRecepcionPorOc(this.sql, [row.id]),
+        this.getNumerosRequerimiento([row.id_requerimiento]),
       ]);
 
     return toResponse(row, {
@@ -282,7 +312,19 @@ export class DocumentosOrigenHandler {
       nombreCentroCosto,
       nombreCategoria,
       nombreAnexo,
+      numeroRequerimiento: row.id_requerimiento === null ? null : (furPorId.get(row.id_requerimiento) ?? null),
+      estadoRecepcion: recepcionPorOc.get(row.id) ?? null,
     });
+  }
+
+  private async getNumerosRequerimiento(ids: Array<number | null>): Promise<Map<number, string>> {
+    const validos = ids.filter((id): id is number => id !== null);
+    if (validos.length === 0) return new Map();
+    const q = sqlTag(this.sql);
+    const rows = await q.rows<{ id: number; numero: string }>({ id: I, numero: T })`
+      SELECT id, numero::text AS numero FROM requerimiento
+       WHERE id = ANY(string_to_array(${csv(validos)}::text, ',')::int[])`;
+    return new Map(rows.map((r) => [r.id, r.numero]));
   }
 
   private async getNombresFase(rows: DocumentoOrigenRow[]): Promise<Map<number, string>> {
@@ -307,9 +349,34 @@ export class DocumentosOrigenHandler {
 
   async create(dto: CreateDocumentoOrigenDto): Promise<DocumentoOrigenResponseDto> {
     const detalles = dto.detalles ?? [];
+    if (dto.id_requerimiento === undefined) {
+      if (detalles.some((d) => d.id_requerimiento_detalle !== undefined)) {
+        throw new BadRequestException('id_requerimiento_detalle solo aplica cuando la OC tiene id_requerimiento');
+      }
+      const id = await this.crearOc(this.db.orm.public, dto);
+      return this.getById(id);
+    }
+
+    // OC desde un FUR: el FUR se bloquea para que dos OC no consuman el mismo saldo a la vez.
+    const idRequerimiento = dto.id_requerimiento;
+    const id = await this.db.transaction(async (tx) => {
+      const fur = await this.validarContraRequerimiento(tx, idRequerimiento, detalles, 0);
+      const conDefaults: CreateDocumentoOrigenDto = {
+        ...dto,
+        id_centro_costo: dto.id_centro_costo ?? fur.id_centro_costo,
+        id_fase: dto.id_fase ?? fur.id_fase ?? undefined,
+      };
+      return this.crearOc(tx.orm.public as unknown as Orm, conDefaults);
+    });
+    // La respuesta se arma despues del commit: dentro de la transaccion las lecturas por otra conexion no ven lo creado.
+    return this.getById(id);
+  }
+
+  private async crearOc(orm: Orm, dto: CreateDocumentoOrigenDto): Promise<number> {
+    const detalles = dto.detalles ?? [];
     await this.assertProductosExisten(detalles);
     const montos = this.calcularMontos(detalles, dto);
-    const row = await this.db.orm.public.OrdenCompra.create({
+    const row = await orm.OrdenCompra.create({
       id_oc: toVarchar(dto.id_oc),
       tipo_costo: toVarchar(dto.tipo_costo),
       tipo_oc: toVarchar(dto.tipo_oc),
@@ -337,15 +404,57 @@ export class DocumentosOrigenHandler {
       fecha_creacion: toInstant(dto.fecha_creacion),
       hora_creacion: toVarchar<10>(dto.hora_creacion),
       cotizacion: toVarchar(dto.cotizacion),
+      id_requerimiento: dto.id_requerimiento,
     });
-    const detallesCreados = await this.createDetalles(row.id, dto.id_oc, detalles);
-    return toResponse(row, {
-      nombreFase: await this.getNombreFase(row.id_fase),
-      detalles: detallesCreados,
-      nombreCentroCosto: await this.getNombreCentroCosto(row.id_centro_costo),
-      nombreCategoria: await this.getNombreCategoria(row.id_categoria),
-      nombreAnexo: await this.getNombreAnexo(row.id_anexo),
-    });
+    await this.createDetalles(orm, row.id, dto.id_oc, detalles);
+    return row.id;
+  }
+
+  /**
+   * Bloquea el FUR y valida que las lineas de la OC respeten su saldo aprobado.
+   * `excluirOc` descuenta las lineas actuales de esa OC (para reemplazar su detalle).
+   */
+  private async validarContraRequerimiento(
+    tx: Tx,
+    idRequerimiento: number,
+    detalles: CreateDocumentoOrigenDetalleDto[],
+    excluirOc: number,
+  ): Promise<{ id_centro_costo: number; id_fase: number | null }> {
+    const fur = await bloquearRequerimiento(this.sql, tx, idRequerimiento);
+    if (!fur) throw new BadRequestException(`Requerimiento ${idRequerimiento} no existe`);
+    if (fur.estado !== 'APROBADO') {
+      throw new ConflictException(`El requerimiento está ${fur.estado}; solo un requerimiento APROBADO genera órdenes de compra`);
+    }
+    if (detalles.length === 0) throw new BadRequestException('La OC de un requerimiento debe tener al menos una línea');
+
+    const solicitadoPorLinea = new Map<number, number>();
+    for (const d of detalles) {
+      if (d.id_requerimiento_detalle === undefined) {
+        throw new BadRequestException(`La línea del producto ${d.id_producto} debe indicar id_requerimiento_detalle`);
+      }
+      solicitadoPorLinea.set(
+        d.id_requerimiento_detalle,
+        Math.round(((solicitadoPorLinea.get(d.id_requerimiento_detalle) ?? 0) + d.cantidad) * 10000) / 10000,
+      );
+    }
+    for (const d of detalles) {
+      const idDetalle = d.id_requerimiento_detalle as number;
+      const total = solicitadoPorLinea.get(idDetalle) as number;
+      const linea = await validarConsumoLinea(this.sql, tx, idDetalle, total.toFixed(4), excluirOc);
+      if (!linea || linea.id_requerimiento !== idRequerimiento) {
+        throw new BadRequestException(`La línea ${idDetalle} no pertenece al requerimiento ${idRequerimiento}`);
+      }
+      if (linea.id_producto !== d.id_producto) {
+        throw new BadRequestException(`La línea ${idDetalle} del requerimiento corresponde a otro producto`);
+      }
+      if (!linea.cabe) {
+        const saldo = Math.max(Number(linea.aprobada) - Number(linea.ordenado), 0);
+        throw new BadRequestException(
+          `La cantidad ordenada (${total}) supera el saldo aprobado de la línea ${idDetalle} (${saldo})`,
+        );
+      }
+    }
+    return { id_centro_costo: fur.id_centro_costo, id_fase: fur.id_fase };
   }
 
   private calcularMontos(
@@ -390,6 +499,7 @@ export class DocumentosOrigenHandler {
   }
 
   private async createDetalles(
+    orm: Orm,
     idOrdenCompra: number,
     idOC: string | undefined,
     detalles: CreateDocumentoOrigenDetalleDto[] | undefined,
@@ -408,8 +518,10 @@ export class DocumentosOrigenHandler {
     const result: DocumentoOrigenDetalleResponseDto[] = [];
     for (const detalle of detalles) {
       const producto = productoPorId.get(detalle.id_producto)!;
-      const created = await this.db.orm.public.OrdenCompraDetalle.create({
+      const created = await orm.OrdenCompraDetalle.create({
         id_orden_compra: idOrdenCompra,
+        id_producto: producto.id,
+        id_requerimiento_detalle: detalle.id_requerimiento_detalle,
         IdOC: toVarchar(idOC),
         ProductoCodigo: toVarchar(producto.codigo),
         TipoProducto: producto.tipo_producto,
@@ -426,6 +538,9 @@ export class DocumentosOrigenHandler {
         cantidad: created.Cantidad,
         precio: created.Precio,
         monto: created.monto,
+        id_requerimiento_detalle: created.id_requerimiento_detalle,
+        cantidad_recibida: null,
+        saldo_por_recibir: null,
       });
     }
     return result;
@@ -435,9 +550,39 @@ export class DocumentosOrigenHandler {
     const current = await this.db.orm.public.OrdenCompra.first({ id });
     if (!current) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
 
+    if (dto.id_requerimiento !== undefined && dto.id_requerimiento !== current.id_requerimiento) {
+      throw new BadRequestException('El requerimiento de una OC no se puede cambiar');
+    }
     const reemplazaDetalles = dto.detalles !== undefined;
-    if (reemplazaDetalles) await this.assertProductosExisten(dto.detalles);
+    if (reemplazaDetalles) {
+      await this.assertProductosExisten(dto.detalles);
+      if (current.id_requerimiento === null && dto.detalles?.some((d) => d.id_requerimiento_detalle !== undefined)) {
+        throw new BadRequestException('id_requerimiento_detalle solo aplica a OC que nacen de un requerimiento');
+      }
+    }
 
+    await this.db.transaction(async (tx) => {
+      await this.bloquearOc(tx, id);
+      if (reemplazaDetalles) {
+        if (await tieneRecepciones(this.sql, id, tx)) {
+          throw new ConflictException('La OC ya tiene recepciones en almacén; su detalle no se puede reemplazar');
+        }
+        if (current.id_requerimiento !== null) {
+          await this.validarContraRequerimiento(tx, current.id_requerimiento, dto.detalles ?? [], id);
+        }
+      }
+      await this.aplicarUpdate(tx.orm.public as unknown as Orm, id, dto, current, reemplazaDetalles);
+    });
+    return this.getById(id);
+  }
+
+  private async aplicarUpdate(
+    orm: Orm,
+    id: number,
+    dto: UpdateDocumentoOrigenDto,
+    current: DocumentoOrigenRow,
+    reemplazaDetalles: boolean,
+  ): Promise<void> {
     const data: DocumentoOrigenUpdateData = {};
     if (dto.id_oc !== undefined) data.id_oc = toVarchar(dto.id_oc);
     if (dto.tipo_costo !== undefined) data.tipo_costo = toVarchar(dto.tipo_costo);
@@ -478,42 +623,35 @@ export class DocumentosOrigenHandler {
     data.dscto_otros = toDecimalString(dscto_otros);
     data.total = toDecimalString(total);
 
-    const row = await this.db.orm.public.OrdenCompra.where({ id }).update(data);
-    if (!row) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
+    const updated = await orm.OrdenCompra.where({ id }).update(data);
+    if (!updated) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
 
-    let detalles: DocumentoOrigenDetalleResponseDto[];
     if (reemplazaDetalles) {
-      await this.db.orm.public.OrdenCompraDetalle
-        .where((d) => d.id_orden_compra.eq(id))
-        .delete();
-      detalles = await this.createDetalles(
-        id,
-        dto.id_oc ?? current.id_oc ?? undefined,
-        dto.detalles,
-      );
-    } else {
-      detalles = await this.getDetalles(id);
+      await orm.OrdenCompraDetalle.where((d) => d.id_orden_compra.eq(id)).delete();
+      await this.createDetalles(orm, id, dto.id_oc ?? current.id_oc ?? undefined, dto.detalles);
     }
-
-    return toResponse(row, {
-      nombreFase: await this.getNombreFase(row.id_fase),
-      detalles,
-      nombreCentroCosto: await this.getNombreCentroCosto(row.id_centro_costo),
-      nombreCategoria: await this.getNombreCategoria(row.id_categoria),
-      nombreAnexo: await this.getNombreAnexo(row.id_anexo),
-    });
   }
 
-  
   async delete(id: number): Promise<{ deleted: boolean; id: number }> {
     const current = await this.db.orm.public.OrdenCompra.first({ id });
     if (!current) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
-    // Primero eliminar el detalle (FK)
-    await this.db.orm.public.OrdenCompraDetalle
-      .where((d) => d.id_orden_compra.eq(id))
-      .delete();
-    await this.db.orm.public.OrdenCompra.where({ id }).delete();
+    await this.db.transaction(async (tx) => {
+      await this.bloquearOc(tx, id);
+      if (await tieneRecepciones(this.sql, id, tx)) {
+        throw new ConflictException('La OC tiene recepciones en almacén; no se puede eliminar');
+      }
+      const orm = tx.orm.public as unknown as Orm;
+      // Primero eliminar el detalle (FK); al borrar la OC se libera el saldo del requerimiento.
+      await orm.OrdenCompraDetalle.where((d) => d.id_orden_compra.eq(id)).delete();
+      await orm.OrdenCompra.where({ id }).delete();
+    });
     return { deleted: true, id };
+  }
+
+  /** Bloquea la OC hasta el fin de la transaccion: serializa ediciones, bajas y recepciones. */
+  private async bloquearOc(tx: Tx, id: number): Promise<void> {
+    const q = sqlTag(this.sql);
+    await q.rows<{ id: number }>({ id: I }, tx)`SELECT id FROM "documentosOrigen" WHERE id = ${id}::int FOR UPDATE`;
   }
 
   private async getDetalles(idOrdenCompra: number): Promise<DocumentoOrigenDetalleResponseDto[]> {
@@ -537,8 +675,12 @@ export class DocumentosOrigenHandler {
         : [];
     const productoPorCodigo = new Map(productos.map((p) => [p.codigo, p]));
 
+    const recibidoPorId = await recibidoPorLinea(this.sql, [idOrdenCompra]);
     return rows.map((r) => {
       const producto = r.ProductoCodigo ? productoPorCodigo.get(r.ProductoCodigo) : undefined;
+      // Solo los productos del catalogo se reciben en almacen; servicios y lineas sin catalogo no tienen saldo.
+      const recibible = producto !== undefined && producto.tipo_producto === 'PRODUCTO';
+      const recibido = recibidoPorId.get(r.id) ?? '0';
       return {
         id: r.id,
         id_producto: producto?.id ?? null,
@@ -548,6 +690,9 @@ export class DocumentosOrigenHandler {
         cantidad: r.Cantidad,
         precio: r.Precio,
         monto: r.monto,
+        id_requerimiento_detalle: r.id_requerimiento_detalle,
+        cantidad_recibida: recibible ? recibido : null,
+        saldo_por_recibir: recibible ? restante(r.Cantidad, recibido) : null,
       };
     });
   }
@@ -559,6 +704,8 @@ type ResponseExtras = {
   nombreCentroCosto?: string | null;
   nombreCategoria?: string | null;
   nombreAnexo?: string | null;
+  numeroRequerimiento?: string | null;
+  estadoRecepcion?: EstadoRecepcion | null;
 };
 
 function toResponse(row: DocumentoOrigenRow, extras: ResponseExtras = {}): DocumentoOrigenResponseDto {
@@ -595,8 +742,17 @@ function toResponse(row: DocumentoOrigenRow, extras: ResponseExtras = {}): Docum
     fecha_creacion: toIsoString(row.fecha_creacion),
     hora_creacion: row.hora_creacion,
     cotizacion: row.cotizacion,
+    id_requerimiento: row.id_requerimiento,
+    numero_requerimiento: extras.numeroRequerimiento ?? null,
+    estado_recepcion: extras.estadoRecepcion ?? null,
     detalles: extras.detalles ?? [],
   };
+}
+
+/** `cantidad - recibido` (>= 0) como string con hasta 4 decimales; es solo para mostrar, la validacion real es en SQL. */
+function restante(cantidad: string | null, recibido: string): string {
+  const resto = Math.max(Number(cantidad ?? 0) - Number(recibido), 0);
+  return String(Math.round(resto * 10000) / 10000);
 }
 
 function toIsoString(value: { toString(): string } | null): string | null {

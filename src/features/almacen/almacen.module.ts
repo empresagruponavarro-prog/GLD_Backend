@@ -11,6 +11,8 @@ import { SalidasController } from './documentos/salidas.controller.js';
 import { TransferenciasController } from './documentos/transferencias.controller.js';
 import { KardexController } from './kardex/kardex.controller.js';
 import { KardexHandler } from './kardex/kardex.handler.js';
+import { RecepcionController } from './recepciones/recepcion.controller.js';
+import { RecepcionHandler } from './recepciones/recepcion.handler.js';
 import { PrestamoController } from './prestamos/prestamo.controller.js';
 import { PrestamoHandler } from './prestamos/prestamo.handler.js';
 import { AlmacenSql } from './shared/almacen-sql.js';
@@ -27,6 +29,7 @@ import { StockHandler } from './stock/stock.handler.js';
     SalidasController,
     TransferenciasController,
     PrestamoController,
+    RecepcionController,
     StockController,
     KardexController,
     ConsultaController,
@@ -37,6 +40,7 @@ import { StockHandler } from './stock/stock.handler.js';
     AlmacenHandler,
     DocumentoHandler,
     PrestamoHandler,
+    RecepcionHandler,
     StockHandler,
     KardexHandler,
     ConsultaHandler,

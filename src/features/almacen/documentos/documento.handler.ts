@@ -14,6 +14,12 @@ import {
   type Naturaleza,
 } from './documento.dto.js';
 
+/** Enlace opcional de un ingreso con su orden de compra (recepcion). `idsDetalleOc` va alineado con `dto.lineas`. */
+export interface VinculoOrdenCompra {
+  idOrdenCompra: number;
+  idsDetalleOc?: number[];
+}
+
 const SERIE: Record<Naturaleza, string> = { INGRESO: 'ING', SALIDA: 'SAL', TRANSFERENCIA: 'TRF' };
 const MOTIVOS_PERMITIDOS: Record<Naturaleza, readonly string[]> = {
   INGRESO: MOTIVOS_INGRESO,
@@ -47,6 +53,8 @@ const CABECERA_SPEC = {
   observaciones: TN,
   estado: T,
   id_documento_anula: IN,
+  id_orden_compra: IN,
+  numero_oc: TN,
   created_at: T,
   total_lineas: I,
 } as const;
@@ -92,6 +100,7 @@ export class DocumentoHandler {
              d.id_solicitado_por, sp."Anexo"::text AS solicitado_por,
              d.id_entregado_a, ea."Anexo"::text AS entregado_a,
              d.motivo_trabajo, d.observaciones, d.estado::text AS estado, d.id_documento_anula,
+             d.id_orden_compra, oc.numero_oc::text AS numero_oc,
              d.created_at::text AS created_at,
              (SELECT count(*)::int FROM almacen_documento_detalle x WHERE x.id_documento = d.id) AS total_lineas
         FROM almacen_documento d
@@ -102,6 +111,7 @@ export class DocumentoHandler {
         LEFT JOIN anexos rp ON rp.id = d.id_recibido_por
         LEFT JOIN anexos sp ON sp.id = d.id_solicitado_por
         LEFT JOIN anexos ea ON ea.id = d.id_entregado_a
+        LEFT JOIN "documentosOrigen" oc ON oc.id = d.id_orden_compra
        WHERE d.naturaleza = ${naturaleza}
          AND d.fecha >= ${desde}::date AND d.fecha <= ${hasta}::date
          AND (${idAlm}::int = 0 OR d.id_almacen = ${idAlm}::int OR d.id_almacen_destino = ${idAlm}::int)
@@ -127,6 +137,7 @@ export class DocumentoHandler {
              d.id_solicitado_por, sp."Anexo"::text AS solicitado_por,
              d.id_entregado_a, ea."Anexo"::text AS entregado_a,
              d.motivo_trabajo, d.observaciones, d.estado::text AS estado, d.id_documento_anula,
+             d.id_orden_compra, oc.numero_oc::text AS numero_oc,
              d.created_at::text AS created_at,
              (SELECT count(*)::int FROM almacen_documento_detalle x WHERE x.id_documento = d.id) AS total_lineas
         FROM almacen_documento d
@@ -137,6 +148,7 @@ export class DocumentoHandler {
         LEFT JOIN anexos rp ON rp.id = d.id_recibido_por
         LEFT JOIN anexos sp ON sp.id = d.id_solicitado_por
         LEFT JOIN anexos ea ON ea.id = d.id_entregado_a
+        LEFT JOIN "documentosOrigen" oc ON oc.id = d.id_orden_compra
        WHERE d.id = ${id}::int`;
     if (!row || (naturaleza && row['naturaleza'] !== naturaleza)) {
       throw new NotFoundException(`Documento ${id} no encontrado`);
@@ -150,10 +162,11 @@ export class DocumentoHandler {
       cantidad: T,
       costo_unitario: TN,
       observaciones: TN,
+      id_orden_compra_detalle: IN,
     })`
       SELECT l.id, l.id_producto, p.codigo::text AS codigo, p.descripcion::text AS descripcion,
              COALESCE(u.simbolo, u.codigo)::text AS unidad, l.cantidad::text AS cantidad,
-             l.costo_unitario::text AS costo_unitario, l.observaciones
+             l.costo_unitario::text AS costo_unitario, l.observaciones, l.id_orden_compra_detalle
         FROM almacen_documento_detalle l
         JOIN producto p ON p.id = l.id_producto
         JOIN unidad_medida u ON u.id = p.id_unidad_medida
@@ -164,12 +177,18 @@ export class DocumentoHandler {
   // -------------------------------------------------------------- escritura
 
   async registrar(naturaleza: Naturaleza, dto: CreateDocumentoDto): Promise<DocumentoResponseDto> {
-    this.validarEstructura(naturaleza, dto);
-    const id = await this.db.transaction(async (tx) => {
-      await this.validarReferencias(tx, naturaleza, dto);
-      return this.crearYAplicar(tx, naturaleza, dto, null);
-    });
+    const id = await this.db.transaction((tx) => this.registrarEnTx(tx, naturaleza, dto));
     return this.getById(id);
+  }
+
+  /**
+   * Valida, inserta y aplica un documento dentro de una transaccion ya abierta (la usan las recepciones
+   * de compra, que ademas bloquean la OC). Devuelve el id del documento creado.
+   */
+  async registrarEnTx(tx: Tx, naturaleza: Naturaleza, dto: CreateDocumentoDto, vinculo?: VinculoOrdenCompra): Promise<number> {
+    this.validarEstructura(naturaleza, dto, vinculo !== undefined);
+    await this.validarReferencias(tx, naturaleza, dto);
+    return this.crearYAplicar(tx, naturaleza, dto, null, vinculo);
   }
 
   async anular(id: number, naturaleza: Naturaleza): Promise<DocumentoResponseDto> {
@@ -245,7 +264,7 @@ export class DocumentoHandler {
 
   // ---------------------------------------------------------------- privado
 
-  private validarEstructura(naturaleza: Naturaleza, dto: CreateDocumentoDto): void {
+  private validarEstructura(naturaleza: Naturaleza, dto: CreateDocumentoDto, permitirRepetidos = false): void {
     if (!MOTIVOS_PERMITIDOS[naturaleza].includes(dto.motivo)) {
       throw new BadRequestException(
         `El motivo ${dto.motivo} no es válido para ${naturaleza} (permitidos: ${MOTIVOS_PERMITIDOS[naturaleza].join(', ')})`,
@@ -260,7 +279,9 @@ export class DocumentoHandler {
       throw new BadRequestException('id_almacen_destino solo aplica a transferencias');
     }
     const ids = dto.lineas.map((l) => l.id_producto);
-    if (new Set(ids).size !== ids.length) throw new BadRequestException('Hay productos repetidos en las líneas');
+    if (!permitirRepetidos && new Set(ids).size !== ids.length) {
+      throw new BadRequestException('Hay productos repetidos en las líneas');
+    }
     for (const l of dto.lineas) {
       if (Number(l.cantidad) <= 0) throw new BadRequestException(`La cantidad del producto ${l.id_producto} debe ser mayor a 0`);
       if (COSTO_OBLIGATORIO.has(dto.motivo) && l.costo_unitario === undefined) {
@@ -300,30 +321,34 @@ export class DocumentoHandler {
     naturaleza: Naturaleza,
     dto: CreateDocumentoDto,
     reversa: { anula: number; costoReversa: boolean } | null,
+    vinculo?: VinculoOrdenCompra,
   ): Promise<number> {
     const q = sqlTag(this.sql);
     const numero = await this.ledger.siguienteNumero(tx, SERIE[naturaleza]);
     const [doc] = await q.rows<{ id: number }>({ id: I }, tx)`
       INSERT INTO almacen_documento
         (numero, naturaleza, motivo, fecha, id_almacen, id_almacen_destino, documento_referencia, id_proveedor,
-         id_centro_costo, id_recibido_por, id_solicitado_por, id_entregado_a, motivo_trabajo, observaciones, id_documento_anula)
+         id_centro_costo, id_recibido_por, id_solicitado_por, id_entregado_a, motivo_trabajo, observaciones, id_documento_anula,
+         id_orden_compra)
       VALUES
         (${numero}, ${naturaleza}, ${dto.motivo}, ${dto.fecha}::date, ${dto.id_almacen}::int,
          NULLIF(${dto.id_almacen_destino ?? 0}::int, 0), NULLIF(${dto.documento_referencia ?? ''}::text, ''),
          NULLIF(${dto.id_proveedor ?? 0}::int, 0), NULLIF(${dto.id_centro_costo ?? 0}::int, 0),
          NULLIF(${dto.id_recibido_por ?? 0}::int, 0), NULLIF(${dto.id_solicitado_por ?? 0}::int, 0),
          NULLIF(${dto.id_entregado_a ?? 0}::int, 0), NULLIF(${dto.motivo_trabajo ?? ''}::text, ''),
-         NULLIF(${dto.observaciones ?? ''}::text, ''), NULLIF(${reversa?.anula ?? 0}::int, 0))
+         NULLIF(${dto.observaciones ?? ''}::text, ''), NULLIF(${reversa?.anula ?? 0}::int, 0),
+         NULLIF(${vinculo?.idOrdenCompra ?? 0}::int, 0))
       RETURNING id`;
 
     // Lineas en el orden del usuario; el movimiento se aplica ordenado por producto (orden de bloqueo estable).
     const detalles: Array<{ idDetalle: number; linea: CreateDocumentoDto['lineas'][number] }> = [];
-    for (const linea of dto.lineas) {
+    for (const [i, linea] of dto.lineas.entries()) {
+      const idDetalleOc = vinculo?.idsDetalleOc?.[i] ?? 0;
       const [d] = await q.rows<{ id: number }>({ id: I }, tx)`
-        INSERT INTO almacen_documento_detalle (id_documento, id_producto, cantidad, costo_unitario, observaciones)
+        INSERT INTO almacen_documento_detalle (id_documento, id_producto, cantidad, costo_unitario, observaciones, id_orden_compra_detalle)
         VALUES (${doc.id}::int, ${linea.id_producto}::int, ${linea.cantidad}::numeric,
                 CASE WHEN ${linea.costo_unitario !== undefined}::boolean THEN ${linea.costo_unitario ?? '0'}::numeric ELSE NULL END,
-                NULLIF(${linea.observaciones ?? ''}::text, ''))
+                NULLIF(${linea.observaciones ?? ''}::text, ''), NULLIF(${idDetalleOc}::int, 0))
         RETURNING id`;
       detalles.push({ idDetalle: d.id, linea });
     }

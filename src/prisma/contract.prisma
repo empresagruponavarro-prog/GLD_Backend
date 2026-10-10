@@ -17,6 +17,25 @@ enum estado_operativo {
   DESCONTINUADO
 }
 
+// ---- Requerimientos FUR (plan 05) ----
+enum estado_requerimiento {
+  BORRADOR
+  ENVIADO
+  OBSERVADO
+  APROBADO
+  RECHAZADO
+  ANULADO
+}
+
+enum accion_requerimiento {
+  CREAR
+  ENVIAR
+  OBSERVAR
+  APROBAR
+  RECHAZAR
+  ANULAR
+}
+
 enum naturaleza_documento {
   INGRESO
   SALIDA
@@ -144,6 +163,8 @@ model producto {
   documentoDetalles  almacen_documento_detalle[]
   kardex             almacen_kardex[]
   prestamoDetalles   almacen_prestamo_detalle[]
+  requerimientoDetalles requerimiento_detalle[]
+  ordenCompraLineas  OrdenCompraDetalle[]
   @@map("producto")
 }
 
@@ -205,6 +226,63 @@ model almacen_correlativo {
   @@map("almacen_correlativo")
 }
 
+model requerimiento {
+  id                    Int                    @id @default(autoincrement())
+  numero                VarChar(20)            @unique
+  fecha                 DateString
+  fecha_requerida       DateString?
+  id_centro_costo       Int
+  id_fase               Int?
+  id_solicitante        Int
+  area                  VarChar(100)?
+  justificacion         String
+  estado                estado_requerimiento   @default(BORRADOR)
+  id_aprobador          Int?
+  fecha_aprobacion      DateTime?
+  comentario_aprobacion String?
+  created_at            DateTime               @default(now())
+  centroCosto           CentroCostos           @relation("RequerimientoCentroCosto", fields:[id_centro_costo], references:[id])
+  fase                  ppto_Fases?            @relation("RequerimientoFase", fields:[id_fase], references:[id])
+  solicitante           Anexos                 @relation("RequerimientoSolicitante", fields:[id_solicitante], references:[id])
+  aprobador             Anexos?                @relation("RequerimientoAprobador", fields:[id_aprobador], references:[id])
+  detalles              requerimiento_detalle[]
+  eventos               requerimiento_evento[]
+  ordenesCompra         OrdenCompra[]
+  @@index([estado, fecha])
+  @@map("requerimiento")
+}
+
+model requerimiento_detalle {
+  id                 Int           @id @default(autoincrement())
+  id_requerimiento   Int
+  id_producto        Int
+  cantidad           Decimal
+  cantidad_aprobada  Decimal?
+  precio_referencial Decimal?
+  observaciones      String?
+  requerimiento      requerimiento @relation(fields:[id_requerimiento], references:[id], onDelete: Cascade)
+  producto           producto      @relation(fields:[id_producto], references:[id])
+  ordenCompraLineas  OrdenCompraDetalle[]
+  @@unique([id_requerimiento, id_producto])
+  @@index([id_requerimiento])
+  @@map("requerimiento_detalle")
+}
+
+model requerimiento_evento {
+  id               Int                   @id @default(autoincrement())
+  id_requerimiento Int
+  accion           accion_requerimiento
+  estado_anterior  estado_requerimiento?
+  estado_nuevo     estado_requerimiento
+  id_anexo         Int?
+  comentario       String?
+  created_at       DateTime              @default(now())
+  requerimiento    requerimiento         @relation(fields:[id_requerimiento], references:[id], onDelete: Cascade)
+  anexo            Anexos?               @relation("RequerimientoEventoAnexo", fields:[id_anexo], references:[id])
+  @@index([id_requerimiento])
+  @@map("requerimiento_evento")
+}
+
 model almacen_documento {
   id                   Int                  @id @default(autoincrement())
   numero               VarChar(20)          @unique
@@ -231,8 +309,11 @@ model almacen_documento {
   solicitadoPor        Anexos?              @relation("DocumentoSolicitadoPor", fields:[id_solicitado_por], references:[id])
   entregadoA           Anexos?              @relation("DocumentoEntregadoA", fields:[id_entregado_a], references:[id])
   centroCosto          CentroCostos?        @relation("DocumentoCentroCosto", fields:[id_centro_costo], references:[id])
+  id_orden_compra      Int?
+  ordenCompra          OrdenCompra?         @relation(fields:[id_orden_compra], references:[id], onDelete: Restrict)
   detalles             almacen_documento_detalle[]
   kardex               almacen_kardex[]
+  @@index([id_orden_compra])
   @@index([naturaleza, fecha])
   @@map("almacen_documento")
 }
@@ -246,8 +327,11 @@ model almacen_documento_detalle {
   observaciones  String?
   documento      almacen_documento @relation(fields:[id_documento], references:[id], onDelete: Cascade)
   producto       producto          @relation(fields:[id_producto], references:[id])
+  id_orden_compra_detalle Int?
+  ordenCompraDetalle OrdenCompraDetalle? @relation(fields:[id_orden_compra_detalle], references:[id], onDelete: Restrict)
   kardex         almacen_kardex[]
   @@index([id_documento])
+  @@index([id_orden_compra_detalle])
   @@map("almacen_documento_detalle")
 }
 
@@ -412,6 +496,9 @@ model Anexos {
   docRecibidoPor      almacen_documento[] @relation("DocumentoRecibidoPor")
   docSolicitadoPor    almacen_documento[] @relation("DocumentoSolicitadoPor")
   docEntregadoA       almacen_documento[] @relation("DocumentoEntregadoA")
+  reqSolicitante      requerimiento[]     @relation("RequerimientoSolicitante")
+  reqAprobador        requerimiento[]     @relation("RequerimientoAprobador")
+  reqEventos          requerimiento_evento[] @relation("RequerimientoEventoAnexo")
   prestamosResponsable almacen_prestamo[] @relation("PrestamoResponsable")
   @@map("anexos")
 }
@@ -540,6 +627,7 @@ model CentroCostos {
   pptoDetalleFasesCates  ppto_DetalleFasesCate[]
   pptoPrincipales        ppto_Principal[]
   almacenDocumentos      almacen_documento[] @relation("DocumentoCentroCosto")
+  requerimientos         requerimiento[]     @relation("RequerimientoCentroCosto")
   almacenPrestamos       almacen_prestamo[] @relation("PrestamoCentroCosto")
 
   @@index([id_centro_costos_principal])
@@ -882,7 +970,11 @@ model OrdenCompra {
   fecha_creacion        Timestamptz(3)?
   hora_creacion         VarChar(10)?
   cotizacion            VarChar(255)?
+  id_requerimiento      Int?
+  requerimiento         requerimiento? @relation(fields: [id_requerimiento], references: [id], onDelete: Restrict)
   detalles              OrdenCompraDetalle[]
+  almacenDocumentos     almacen_documento[]
+  @@index([id_requerimiento])
   @@map("documentosOrigen")
 }
 
@@ -897,7 +989,13 @@ model OrdenCompraDetalle {
   monto           Decimal?
   id_orden_compra Int?
   ordenCompra     OrdenCompra?  @relation(fields: [id_orden_compra], references: [id], onDelete: SetNull)
+  id_requerimiento_detalle Int?
+  requerimientoDetalle requerimiento_detalle? @relation(fields: [id_requerimiento_detalle], references: [id], onDelete: Restrict)
+  id_producto     Int?
+  producto        producto?     @relation(fields: [id_producto], references: [id], onDelete: SetNull)
+  almacenDetalles almacen_documento_detalle[]
   @@index([id_orden_compra])
+  @@index([id_requerimiento_detalle])
   @@map("ordenCompraDetalle")
 }
 
@@ -1105,6 +1203,7 @@ model ppto_Fases {
   id_centro_costos_principal Int?
   centroCostoPrincipal  centro_costos_principal? @relation(fields: [id_centro_costos_principal], references: [id], onDelete: SetNull)
   FaseProyecto          VarChar(255)?
+  requerimientos        requerimiento[] @relation("RequerimientoFase")
   categorias            ppto_FasesCategorias[]
   detalles              ppto_DetalleFases[]
   ordenCompras          OrdenCompra[]
@@ -1207,7 +1306,7 @@ model obra_residentes {
   especialidad    VarChar(150)?
   telefono        VarChar(50)?
   correo          VarChar(150)?
-  turno           VarChar(100)? @default("Lun - SÃƒÂ¡b 07:00 - 18:00")
+  turno           VarChar(100)? @default("Lun - Sáb 07:00 - 18:00")
   estado_planta   VarChar(50)?  @default("En Planta")
   foto_url        VarChar(1000)?
   orden           Int? @default(0)

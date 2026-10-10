@@ -1,0 +1,1539 @@
+[
+  {
+    "id": "table.requerimiento",
+    "label": "Create table \"requerimiento\"",
+    "summary": "Creates table \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"requerimiento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"requerimiento\"",
+        "sql": "CREATE TABLE \"public\".\"requerimiento\" (\n  \"area\" character varying(100),\n  \"comentario_aprobacion\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"estado\" text DEFAULT 'BORRADOR' NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"fecha_aprobacion\" timestamptz,\n  \"fecha_requerida\" date,\n  \"id\" SERIAL NOT NULL,\n  \"id_aprobador\" int4,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"id_fase\" int4,\n  \"id_solicitante\" int4 NOT NULL,\n  \"justificacion\" text NOT NULL,\n  \"numero\" character varying(20) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"requerimiento_estado_check_f79d8afa\" CHECK (\"estado\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"requerimiento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.requerimiento_detalle",
+    "label": "Create table \"requerimiento_detalle\"",
+    "summary": "Creates table \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"requerimiento_detalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"requerimiento_detalle\"",
+        "sql": "CREATE TABLE \"public\".\"requerimiento_detalle\" (\n  \"cantidad\" numeric NOT NULL,\n  \"cantidad_aprobada\" numeric,\n  \"id\" SERIAL NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"id_requerimiento\" int4 NOT NULL,\n  \"observaciones\" text,\n  \"precio_referencial\" numeric,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"requerimiento_detalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.requerimiento_evento",
+    "label": "Create table \"requerimiento_evento\"",
+    "summary": "Creates table \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"requerimiento_evento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"requerimiento_evento\"",
+        "sql": "CREATE TABLE \"public\".\"requerimiento_evento\" (\n  \"accion\" text NOT NULL,\n  \"comentario\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"estado_anterior\" text,\n  \"estado_nuevo\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_anexo\" int4,\n  \"id_requerimiento\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"requerimiento_evento_accion_check_5c740340\" CHECK (\"accion\" IN ('CREAR', 'ENVIAR', 'OBSERVAR', 'APROBAR', 'RECHAZAR', 'ANULAR')),\n  CONSTRAINT \"requerimiento_evento_estado_anterior_check_c285bf74\" CHECK (\"estado_anterior\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO')),\n  CONSTRAINT \"requerimiento_evento_estado_nuevo_check_8e282947\" CHECK (\"estado_nuevo\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"requerimiento_evento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacen_documento.id_orden_compra",
+    "label": "Add column \"id_orden_compra\" to \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_orden_compra",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_orden_compra\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento",
+          "id_orden_compra"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_orden_compra\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\" ADD COLUMN \"id_orden_compra\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_orden_compra\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento",
+          "id_orden_compra"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacen_documento_detalle.id_orden_compra_detalle",
+    "label": "Add column \"id_orden_compra_detalle\" to \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_orden_compra_detalle",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_orden_compra_detalle\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento_detalle",
+          "id_orden_compra_detalle"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_orden_compra_detalle\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\" ADD COLUMN \"id_orden_compra_detalle\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_orden_compra_detalle\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento_detalle",
+          "id_orden_compra_detalle"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.id_requerimiento",
+    "label": "Add column \"id_requerimiento\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_requerimiento",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_requerimiento\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_requerimiento"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_requerimiento\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"id_requerimiento\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_requerimiento\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_requerimiento"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompraDetalle.id_producto",
+    "label": "Add column \"id_producto\" to \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_producto",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_producto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_producto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_producto\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\" ADD COLUMN \"id_producto\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_producto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_producto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompraDetalle.id_requerimiento_detalle",
+    "label": "Add column \"id_requerimiento_detalle\" to \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_requerimiento_detalle",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_requerimiento_detalle\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_requerimiento_detalle"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_requerimiento_detalle\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\" ADD COLUMN \"id_requerimiento_detalle\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_requerimiento_detalle\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_requerimiento_detalle"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.requerimiento.requerimiento_numero_key",
+    "label": "Add unique constraint on \"requerimiento\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "requerimiento_numero_key",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_numero_key",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"requerimiento_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD CONSTRAINT \"requerimiento_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_numero_key",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.requerimiento_detalle.requerimiento_detalle_id_requerimiento_id_producto_key",
+    "label": "Add unique constraint on \"requerimiento_detalle\" (id_requerimiento, id_producto)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "requerimiento_detalle_id_requerimiento_id_producto_key",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_id_producto_key",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\" ADD CONSTRAINT \"requerimiento_detalle_id_requerimiento_id_producto_key\" UNIQUE (\"id_requerimiento\", \"id_producto\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_id_producto_key",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento.almacen_documento_id_orden_compra_idx_ceb1e2df",
+    "label": "Create index \"almacen_documento_id_orden_compra_idx_ceb1e2df\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_id_orden_compra_idx_ceb1e2df",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_id_orden_compra_idx_ceb1e2df\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_orden_compra_idx_ceb1e2df\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_id_orden_compra_idx_ceb1e2df\"",
+        "sql": "CREATE INDEX \"almacen_documento_id_orden_compra_idx_ceb1e2df\" ON \"public\".\"almacen_documento\" (\"id_orden_compra\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_id_orden_compra_idx_ceb1e2df\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_id_orden_compra_idx_ceb1e2df\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento_detalle.almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf",
+    "label": "Create index \"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\"",
+        "sql": "CREATE INDEX \"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\" ON \"public\".\"almacen_documento_detalle\" (\"id_orden_compra_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.documentosOrigen.documentosOrigen_id_requerimiento_idx_a213c508",
+    "label": "Create index \"documentosOrigen_id_requerimiento_idx_a213c508\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "documentosOrigen_id_requerimiento_idx_a213c508",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"documentosOrigen_id_requerimiento_idx_a213c508\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"documentosOrigen_id_requerimiento_idx_a213c508\"",
+        "sql": "CREATE INDEX \"documentosOrigen_id_requerimiento_idx_a213c508\" ON \"public\".\"documentosOrigen\" (\"id_requerimiento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"documentosOrigen_id_requerimiento_idx_a213c508\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompraDetalle.ordenCompraDetalle_id_producto_idx_f4d96d2e",
+    "label": "Create index \"ordenCompraDetalle_id_producto_idx_f4d96d2e\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompraDetalle_id_producto_idx_f4d96d2e",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompraDetalle_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompraDetalle_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"ordenCompraDetalle_id_producto_idx_f4d96d2e\" ON \"public\".\"ordenCompraDetalle\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompraDetalle_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompraDetalle.ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251",
+    "label": "Create index \"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\"",
+        "sql": "CREATE INDEX \"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\" ON \"public\".\"ordenCompraDetalle\" (\"id_requerimiento_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_estado_fecha_idx_14aede9c",
+    "label": "Create index \"requerimiento_estado_fecha_idx_14aede9c\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_estado_fecha_idx_14aede9c",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_estado_fecha_idx_14aede9c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_estado_fecha_idx_14aede9c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_estado_fecha_idx_14aede9c\"",
+        "sql": "CREATE INDEX \"requerimiento_estado_fecha_idx_14aede9c\" ON \"public\".\"requerimiento\" (\"estado\", \"fecha\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_estado_fecha_idx_14aede9c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_estado_fecha_idx_14aede9c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_aprobador_idx_450234e5",
+    "label": "Create index \"requerimiento_id_aprobador_idx_450234e5\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_aprobador_idx_450234e5",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_aprobador_idx_450234e5\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_aprobador_idx_450234e5\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_aprobador_idx_450234e5\"",
+        "sql": "CREATE INDEX \"requerimiento_id_aprobador_idx_450234e5\" ON \"public\".\"requerimiento\" (\"id_aprobador\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_aprobador_idx_450234e5\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_aprobador_idx_450234e5\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"requerimiento_id_centro_costo_idx_8c84570b\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_centro_costo_idx_8c84570b",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"requerimiento_id_centro_costo_idx_8c84570b\" ON \"public\".\"requerimiento\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_fase_idx_f598027b",
+    "label": "Create index \"requerimiento_id_fase_idx_f598027b\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_fase_idx_f598027b",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_fase_idx_f598027b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_fase_idx_f598027b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_fase_idx_f598027b\"",
+        "sql": "CREATE INDEX \"requerimiento_id_fase_idx_f598027b\" ON \"public\".\"requerimiento\" (\"id_fase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_fase_idx_f598027b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_fase_idx_f598027b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_solicitante_idx_e2e93885",
+    "label": "Create index \"requerimiento_id_solicitante_idx_e2e93885\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_solicitante_idx_e2e93885",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_solicitante_idx_e2e93885\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_solicitante_idx_e2e93885\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_solicitante_idx_e2e93885\"",
+        "sql": "CREATE INDEX \"requerimiento_id_solicitante_idx_e2e93885\" ON \"public\".\"requerimiento\" (\"id_solicitante\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_solicitante_idx_e2e93885\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_solicitante_idx_e2e93885\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_detalle.requerimiento_detalle_id_producto_idx_f4d96d2e",
+    "label": "Create index \"requerimiento_detalle_id_producto_idx_f4d96d2e\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_detalle_id_producto_idx_f4d96d2e",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_detalle_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_detalle_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"requerimiento_detalle_id_producto_idx_f4d96d2e\" ON \"public\".\"requerimiento_detalle\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_detalle_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_detalle.requerimiento_detalle_id_requerimiento_idx_a213c508",
+    "label": "Create index \"requerimiento_detalle_id_requerimiento_idx_a213c508\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_detalle_id_requerimiento_idx_a213c508",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_detalle_id_requerimiento_idx_a213c508\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_detalle_id_requerimiento_idx_a213c508\"",
+        "sql": "CREATE INDEX \"requerimiento_detalle_id_requerimiento_idx_a213c508\" ON \"public\".\"requerimiento_detalle\" (\"id_requerimiento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_detalle_id_requerimiento_idx_a213c508\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_evento.requerimiento_evento_id_anexo_idx_726d2e48",
+    "label": "Create index \"requerimiento_evento_id_anexo_idx_726d2e48\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_evento_id_anexo_idx_726d2e48",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_evento_id_anexo_idx_726d2e48\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_evento_id_anexo_idx_726d2e48\"",
+        "sql": "CREATE INDEX \"requerimiento_evento_id_anexo_idx_726d2e48\" ON \"public\".\"requerimiento_evento\" (\"id_anexo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_evento_id_anexo_idx_726d2e48\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento_id_anexo_idx_726d2e48\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_evento.requerimiento_evento_id_requerimiento_idx_a213c508",
+    "label": "Create index \"requerimiento_evento_id_requerimiento_idx_a213c508\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_evento_id_requerimiento_idx_a213c508",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_evento_id_requerimiento_idx_a213c508\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_evento_id_requerimiento_idx_a213c508\"",
+        "sql": "CREATE INDEX \"requerimiento_evento_id_requerimiento_idx_a213c508\" ON \"public\".\"requerimiento_evento\" (\"id_requerimiento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_evento_id_requerimiento_idx_a213c508\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_evento_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento.almacen_documento_id_orden_compra_fkey",
+    "label": "Add foreign key \"almacen_documento_id_orden_compra_fkey\" on \"almacen_documento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_id_orden_compra_fkey",
+        "table": "almacen_documento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_id_orden_compra_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_orden_compra_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_id_orden_compra_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento\"\nADD CONSTRAINT \"almacen_documento_id_orden_compra_fkey\"\nFOREIGN KEY (\"id_orden_compra\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_id_orden_compra_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_id_orden_compra_fkey",
+          "public",
+          "\"public\".\"almacen_documento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento_detalle.almacen_documento_detalle_id_orden_compra_detalle_fkey",
+    "label": "Add foreign key \"almacen_documento_detalle_id_orden_compra_detalle_fkey\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_detalle_id_orden_compra_detalle_fkey",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_detalle_id_orden_compra_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_orden_compra_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_detalle_id_orden_compra_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\"\nADD CONSTRAINT \"almacen_documento_detalle_id_orden_compra_detalle_fkey\"\nFOREIGN KEY (\"id_orden_compra_detalle\")\nREFERENCES \"public\".\"ordenCompraDetalle\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_detalle_id_orden_compra_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_orden_compra_detalle_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompraDetalle.ordenCompraDetalle_id_producto_fkey",
+    "label": "Add foreign key \"ordenCompraDetalle_id_producto_fkey\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompraDetalle_id_producto_fkey",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompraDetalle_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_producto_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompraDetalle_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\"\nADD CONSTRAINT \"ordenCompraDetalle_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompraDetalle_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_producto_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_centro_costo_fkey",
+    "label": "Add foreign key \"requerimiento_id_centro_costo_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_centro_costo_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_fase_fkey",
+    "label": "Add foreign key \"requerimiento_id_fase_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_fase_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_fase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_fase_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_fase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_fase_fkey\"\nFOREIGN KEY (\"id_fase\")\nREFERENCES \"public\".\"ppto_Fases\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_fase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_fase_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_solicitante_fkey",
+    "label": "Add foreign key \"requerimiento_id_solicitante_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_solicitante_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_solicitante_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_solicitante_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_solicitante_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_solicitante_fkey\"\nFOREIGN KEY (\"id_solicitante\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_solicitante_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_solicitante_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_aprobador_fkey",
+    "label": "Add foreign key \"requerimiento_id_aprobador_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_aprobador_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_aprobador_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_aprobador_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_aprobador_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_aprobador_fkey\"\nFOREIGN KEY (\"id_aprobador\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_aprobador_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_aprobador_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.documentosOrigen.documentosOrigen_id_requerimiento_fkey",
+    "label": "Add foreign key \"documentosOrigen_id_requerimiento_fkey\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "documentosOrigen_id_requerimiento_fkey",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"documentosOrigen_id_requerimiento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"documentosOrigen_id_requerimiento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\"\nADD CONSTRAINT \"documentosOrigen_id_requerimiento_fkey\"\nFOREIGN KEY (\"id_requerimiento\")\nREFERENCES \"public\".\"requerimiento\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"documentosOrigen_id_requerimiento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_detalle.requerimiento_detalle_id_requerimiento_fkey",
+    "label": "Add foreign key \"requerimiento_detalle_id_requerimiento_fkey\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_detalle_id_requerimiento_fkey",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_detalle_id_requerimiento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_detalle_id_requerimiento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\"\nADD CONSTRAINT \"requerimiento_detalle_id_requerimiento_fkey\"\nFOREIGN KEY (\"id_requerimiento\")\nREFERENCES \"public\".\"requerimiento\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_detalle_id_requerimiento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_detalle.requerimiento_detalle_id_producto_fkey",
+    "label": "Add foreign key \"requerimiento_detalle_id_producto_fkey\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_detalle_id_producto_fkey",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_detalle_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_detalle_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\"\nADD CONSTRAINT \"requerimiento_detalle_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_detalle_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_producto_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompraDetalle.ordenCompraDetalle_id_requerimiento_detalle_fkey",
+    "label": "Add foreign key \"ordenCompraDetalle_id_requerimiento_detalle_fkey\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompraDetalle_id_requerimiento_detalle_fkey",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompraDetalle_id_requerimiento_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_requerimiento_detalle_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompraDetalle_id_requerimiento_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\"\nADD CONSTRAINT \"ordenCompraDetalle_id_requerimiento_detalle_fkey\"\nFOREIGN KEY (\"id_requerimiento_detalle\")\nREFERENCES \"public\".\"requerimiento_detalle\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompraDetalle_id_requerimiento_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_requerimiento_detalle_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_evento.requerimiento_evento_id_requerimiento_fkey",
+    "label": "Add foreign key \"requerimiento_evento_id_requerimiento_fkey\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_evento_id_requerimiento_fkey",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_evento_id_requerimiento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_evento_id_requerimiento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\"\nADD CONSTRAINT \"requerimiento_evento_id_requerimiento_fkey\"\nFOREIGN KEY (\"id_requerimiento\")\nREFERENCES \"public\".\"requerimiento\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_evento_id_requerimiento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_evento.requerimiento_evento_id_anexo_fkey",
+    "label": "Add foreign key \"requerimiento_evento_id_anexo_fkey\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_evento_id_anexo_fkey",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_evento_id_anexo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_id_anexo_fkey",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_evento_id_anexo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\"\nADD CONSTRAINT \"requerimiento_evento_id_anexo_fkey\"\nFOREIGN KEY (\"id_anexo\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_evento_id_anexo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_id_anexo_fkey",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.requerimientos_fur.semillas",
+    "label": "Serie FUR y backfill de id_producto en lineas de OC",
+    "summary": "Crea la serie de correlativo FUR y enlaza las lineas de OC existentes con producto por ProductoCodigo",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_correlativo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed correlativo FUR",
+        "sql": "INSERT INTO \"public\".\"almacen_correlativo\" (serie, ultimo) VALUES ('FUR',0) ON CONFLICT (serie) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "backfill id_producto en ordenCompraDetalle",
+        "sql": "UPDATE \"public\".\"ordenCompraDetalle\" d SET id_producto = p.id FROM \"public\".producto p WHERE p.codigo = d.\"ProductoCodigo\" AND d.id_producto IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FUR series exists",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"almacen_correlativo\" WHERE serie = 'FUR') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

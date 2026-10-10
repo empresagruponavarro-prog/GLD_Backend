@@ -248,6 +248,18 @@
       "model": "Productos",
       "namespace": "public"
     },
+    "requerimiento": {
+      "model": "requerimiento",
+      "namespace": "public"
+    },
+    "requerimiento_detalle": {
+      "model": "requerimiento_detalle",
+      "namespace": "public"
+    },
+    "requerimiento_evento": {
+      "model": "requerimiento_evento",
+      "namespace": "public"
+    },
     "semana": {
       "model": "Semana",
       "namespace": "public"
@@ -311,6 +323,35 @@
               {
                 "name": "Trabajador",
                 "value": "Trabajador"
+              }
+            ]
+          },
+          "accion_requerimiento": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "CREAR",
+                "value": "CREAR"
+              },
+              {
+                "name": "ENVIAR",
+                "value": "ENVIAR"
+              },
+              {
+                "name": "OBSERVAR",
+                "value": "OBSERVAR"
+              },
+              {
+                "name": "APROBAR",
+                "value": "APROBAR"
+              },
+              {
+                "name": "RECHAZAR",
+                "value": "RECHAZAR"
+              },
+              {
+                "name": "ANULAR",
+                "value": "ANULAR"
               }
             ]
           },
@@ -396,6 +437,35 @@
               {
                 "name": "CERRADO",
                 "value": "CERRADO"
+              },
+              {
+                "name": "ANULADO",
+                "value": "ANULADO"
+              }
+            ]
+          },
+          "estado_requerimiento": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "BORRADOR",
+                "value": "BORRADOR"
+              },
+              {
+                "name": "ENVIADO",
+                "value": "ENVIADO"
+              },
+              {
+                "name": "OBSERVADO",
+                "value": "OBSERVADO"
+              },
+              {
+                "name": "APROBADO",
+                "value": "APROBADO"
+              },
+              {
+                "name": "RECHAZADO",
+                "value": "RECHAZADO"
               },
               {
                 "name": "ANULADO",
@@ -1228,6 +1298,51 @@
                 },
                 "to": {
                   "model": "almacen_prestamo",
+                  "namespace": "public"
+                }
+              },
+              "reqAprobador": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_aprobador"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
+                  "namespace": "public"
+                }
+              },
+              "reqEventos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_anexo"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_evento",
+                  "namespace": "public"
+                }
+              },
+              "reqSolicitante": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_solicitante"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
                   "namespace": "public"
                 }
               },
@@ -2590,6 +2705,21 @@
                 },
                 "to": {
                   "model": "centro_costos_principal",
+                  "namespace": "public"
+                }
+              },
+              "requerimientos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
                   "namespace": "public"
                 }
               }
@@ -6362,6 +6492,13 @@
                   }
                 }
               },
+              "id_requerimiento": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "igv": {
                 "nullable": true,
                 "type": {
@@ -6482,6 +6619,21 @@
               }
             },
             "relations": {
+              "almacenDocumentos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_orden_compra"
+                  ]
+                },
+                "to": {
+                  "model": "almacen_documento",
+                  "namespace": "public"
+                }
+              },
               "anexo": {
                 "cardinality": "N:1",
                 "on": {
@@ -6556,6 +6708,21 @@
                   "model": "ppto_Fases",
                   "namespace": "public"
                 }
+              },
+              "requerimiento": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_requerimiento"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -6604,6 +6771,9 @@
                 },
                 "id_oc": {
                   "column": "id_oc"
+                },
+                "id_requerimiento": {
+                  "column": "id_requerimiento"
                 },
                 "igv": {
                   "column": "igv"
@@ -6722,6 +6892,20 @@
                   "kind": "scalar"
                 }
               },
+              "id_producto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_requerimiento_detalle": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "monto": {
                 "nullable": true,
                 "type": {
@@ -6731,6 +6915,21 @@
               }
             },
             "relations": {
+              "almacenDetalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_orden_compra_detalle"
+                  ]
+                },
+                "to": {
+                  "model": "almacen_documento_detalle",
+                  "namespace": "public"
+                }
+              },
               "ordenCompra": {
                 "cardinality": "N:1",
                 "on": {
@@ -6743,6 +6942,36 @@
                 },
                 "to": {
                   "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "requerimientoDetalle": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_requerimiento_detalle"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_detalle",
                   "namespace": "public"
                 }
               }
@@ -6772,6 +7001,12 @@
                 },
                 "id_orden_compra": {
                   "column": "id_orden_compra"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "id_requerimiento_detalle": {
+                  "column": "id_requerimiento_detalle"
                 },
                 "monto": {
                   "column": "monto"
@@ -8015,6 +8250,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_orden_compra": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_proveedor": {
                 "nullable": true,
                 "type": {
@@ -8178,6 +8420,21 @@
                   "namespace": "public"
                 }
               },
+              "ordenCompra": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_orden_compra"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
               "proveedor": {
                 "cardinality": "N:1",
                 "on": {
@@ -8256,6 +8513,9 @@
                 "id_entregado_a": {
                   "column": "id_entregado_a"
                 },
+                "id_orden_compra": {
+                  "column": "id_orden_compra"
+                },
                 "id_proveedor": {
                   "column": "id_proveedor"
                 },
@@ -8315,6 +8575,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_orden_compra_detalle": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": false,
                 "type": {
@@ -8361,6 +8628,21 @@
                   "namespace": "public"
                 }
               },
+              "ordenCompraDetalle": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_orden_compra_detalle"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompraDetalle",
+                  "namespace": "public"
+                }
+              },
               "producto": {
                 "cardinality": "N:1",
                 "on": {
@@ -8390,6 +8672,9 @@
                 },
                 "id_documento": {
                   "column": "id_documento"
+                },
+                "id_orden_compra_detalle": {
+                  "column": "id_orden_compra_detalle"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -11068,6 +11353,21 @@
                   "model": "OrdenCompra",
                   "namespace": "public"
                 }
+              },
+              "requerimientos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_fase"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -12285,6 +12585,21 @@
                   "namespace": "public"
                 }
               },
+              "ordenCompraLineas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_producto"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompraDetalle",
+                  "namespace": "public"
+                }
+              },
               "prestamoDetalles": {
                 "cardinality": "1:N",
                 "on": {
@@ -12297,6 +12612,21 @@
                 },
                 "to": {
                   "model": "almacen_prestamo_detalle",
+                  "namespace": "public"
+                }
+              },
+              "requerimientoDetalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_producto"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_detalle",
                   "namespace": "public"
                 }
               },
@@ -12472,6 +12802,542 @@
               },
               "namespaceId": "public",
               "table": "producto_alternativa"
+            }
+          },
+          "requerimiento": {
+            "fields": {
+              "area": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              },
+              "comentario_aprobacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_requerimiento",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_aprobacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_requerida": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_aprobador": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_fase": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_solicitante": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "justificacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              }
+            },
+            "relations": {
+              "aprobador": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_aprobador"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "detalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_requerimiento"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_detalle",
+                  "namespace": "public"
+                }
+              },
+              "eventos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_requerimiento"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_evento",
+                  "namespace": "public"
+                }
+              },
+              "fase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_fase"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Fases",
+                  "namespace": "public"
+                }
+              },
+              "ordenesCompra": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_requerimiento"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
+              "solicitante": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_solicitante"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "area": {
+                  "column": "area"
+                },
+                "comentario_aprobacion": {
+                  "column": "comentario_aprobacion"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "fecha": {
+                  "column": "fecha"
+                },
+                "fecha_aprobacion": {
+                  "column": "fecha_aprobacion"
+                },
+                "fecha_requerida": {
+                  "column": "fecha_requerida"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_aprobador": {
+                  "column": "id_aprobador"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_fase": {
+                  "column": "id_fase"
+                },
+                "id_solicitante": {
+                  "column": "id_solicitante"
+                },
+                "justificacion": {
+                  "column": "justificacion"
+                },
+                "numero": {
+                  "column": "numero"
+                }
+              },
+              "namespaceId": "public",
+              "table": "requerimiento"
+            }
+          },
+          "requerimiento_detalle": {
+            "fields": {
+              "cantidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "cantidad_aprobada": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_requerimiento": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "observaciones": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "precio_referencial": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "ordenCompraLineas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_requerimiento_detalle"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompraDetalle",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "requerimiento": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_requerimiento"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "cantidad": {
+                  "column": "cantidad"
+                },
+                "cantidad_aprobada": {
+                  "column": "cantidad_aprobada"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "id_requerimiento": {
+                  "column": "id_requerimiento"
+                },
+                "observaciones": {
+                  "column": "observaciones"
+                },
+                "precio_referencial": {
+                  "column": "precio_referencial"
+                }
+              },
+              "namespaceId": "public",
+              "table": "requerimiento_detalle"
+            }
+          },
+          "requerimiento_evento": {
+            "fields": {
+              "accion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "accion_requerimiento",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "comentario": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado_anterior": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_requerimiento",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "estado_nuevo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_requerimiento",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_anexo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_requerimiento": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "anexo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_anexo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "requerimiento": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_requerimiento"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "accion": {
+                  "column": "accion"
+                },
+                "comentario": {
+                  "column": "comentario"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "estado_anterior": {
+                  "column": "estado_anterior"
+                },
+                "estado_nuevo": {
+                  "column": "estado_nuevo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_anexo": {
+                  "column": "id_anexo"
+                },
+                "id_requerimiento": {
+                  "column": "id_requerimiento"
+                }
+              },
+              "namespaceId": "public",
+              "table": "requerimiento_evento"
             }
           },
           "stock_almacen": {
@@ -13497,6 +14363,11 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_orden_compra": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_proveedor": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -13665,6 +14536,23 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_orden_compra"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "almacen_documento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "documentosOrigen"
+                  }
                 }
               ],
               "indexes": [
@@ -13698,6 +14586,14 @@
                   ],
                   "name": "almacen_documento_id_entregado_a_idx_216d3850",
                   "prefix": "almacen_documento_id_entregado_a_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_orden_compra"
+                  ],
+                  "name": "almacen_documento_id_orden_compra_idx_ceb1e2df",
+                  "prefix": "almacen_documento_id_orden_compra_idx",
                   "unique": false
                 },
                 {
@@ -13773,6 +14669,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_orden_compra_detalle": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -13817,6 +14718,23 @@
                     "namespaceId": "public",
                     "tableName": "producto"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_orden_compra_detalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "almacen_documento_detalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ordenCompraDetalle"
+                  }
                 }
               ],
               "indexes": [
@@ -13826,6 +14744,14 @@
                   ],
                   "name": "almacen_documento_detalle_id_documento_idx_d2ce5840",
                   "prefix": "almacen_documento_detalle_id_documento_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_orden_compra_detalle"
+                  ],
+                  "name": "almacen_documento_detalle_id_orden_compra_detalle_idx_fd456bbf",
+                  "prefix": "almacen_documento_detalle_id_orden_compra_detalle_idx",
                   "unique": false
                 },
                 {
@@ -17320,6 +18246,11 @@
                     "length": 255
                   }
                 },
+                "id_requerimiento": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "igv": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
@@ -17481,6 +18412,23 @@
                     "namespaceId": "public",
                     "tableName": "anexos"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_requerimiento"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "documentosOrigen"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  }
                 }
               ],
               "indexes": [
@@ -17514,6 +18462,14 @@
                   ],
                   "name": "documentosOrigen_id_fase_idx_f598027b",
                   "prefix": "documentosOrigen_id_fase_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_requerimiento"
+                  ],
+                  "name": "documentosOrigen_id_requerimiento_idx_a213c508",
+                  "prefix": "documentosOrigen_id_requerimiento_idx",
                   "unique": false
                 }
               ],
@@ -19033,7 +19989,7 @@
                   "codecId": "sql/varchar@1",
                   "default": {
                     "kind": "literal",
-                    "value": "Lun - SÃƒÂ¡b 07:00 - 18:00"
+                    "value": "Lun - Sáb 07:00 - 18:00"
                   },
                   "nativeType": "character varying",
                   "nullable": true,
@@ -19292,6 +20248,16 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_requerimiento_detalle": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "monto": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
@@ -19315,6 +20281,40 @@
                     "namespaceId": "public",
                     "tableName": "documentosOrigen"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_requerimiento_detalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ordenCompraDetalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_detalle"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ordenCompraDetalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
                 }
               ],
               "indexes": [
@@ -19324,6 +20324,22 @@
                   ],
                   "name": "ordenCompraDetalle_id_orden_compra_idx_ceb1e2df",
                   "prefix": "ordenCompraDetalle_id_orden_compra_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "ordenCompraDetalle_id_producto_idx_f4d96d2e",
+                  "prefix": "ordenCompraDetalle_id_producto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_requerimiento_detalle"
+                  ],
+                  "name": "ordenCompraDetalle_id_requerimiento_detalle_idx_59ff1251",
+                  "prefix": "ordenCompraDetalle_id_requerimiento_detalle_idx",
                   "unique": false
                 }
               ],
@@ -21333,6 +22349,487 @@
               },
               "uniques": []
             },
+            "requerimiento": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO')",
+                  "name": "requerimiento_estado_check_f79d8afa",
+                  "prefix": "requerimiento_estado_check"
+                }
+              ],
+              "columns": {
+                "area": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 100
+                  }
+                },
+                "comentario_aprobacion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "BORRADOR"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_requerimiento",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "fecha_aprobacion": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "fecha_requerida": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_aprobador": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_fase": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_solicitante": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "justificacion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "numero": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_fase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Fases"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_solicitante"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_aprobador"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "estado",
+                    "fecha"
+                  ],
+                  "name": "requerimiento_estado_fecha_idx_14aede9c",
+                  "prefix": "requerimiento_estado_fecha_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_aprobador"
+                  ],
+                  "name": "requerimiento_id_aprobador_idx_450234e5",
+                  "prefix": "requerimiento_id_aprobador_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "requerimiento_id_centro_costo_idx_8c84570b",
+                  "prefix": "requerimiento_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_fase"
+                  ],
+                  "name": "requerimiento_id_fase_idx_f598027b",
+                  "prefix": "requerimiento_id_fase_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_solicitante"
+                  ],
+                  "name": "requerimiento_id_solicitante_idx_e2e93885",
+                  "prefix": "requerimiento_id_solicitante_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "numero"
+                  ]
+                }
+              ]
+            },
+            "requerimiento_detalle": {
+              "columns": {
+                "cantidad": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "cantidad_aprobada": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_requerimiento": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "observaciones": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "precio_referencial": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_requerimiento"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_detalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_detalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "requerimiento_detalle_id_producto_idx_f4d96d2e",
+                  "prefix": "requerimiento_detalle_id_producto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_requerimiento"
+                  ],
+                  "name": "requerimiento_detalle_id_requerimiento_idx_a213c508",
+                  "prefix": "requerimiento_detalle_id_requerimiento_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_requerimiento",
+                    "id_producto"
+                  ]
+                }
+              ]
+            },
+            "requerimiento_evento": {
+              "checks": [
+                {
+                  "expression": "\"accion\" IN ('CREAR', 'ENVIAR', 'OBSERVAR', 'APROBAR', 'RECHAZAR', 'ANULAR')",
+                  "name": "requerimiento_evento_accion_check_5c740340",
+                  "prefix": "requerimiento_evento_accion_check"
+                },
+                {
+                  "expression": "\"estado_anterior\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO')",
+                  "name": "requerimiento_evento_estado_anterior_check_c285bf74",
+                  "prefix": "requerimiento_evento_estado_anterior_check"
+                },
+                {
+                  "expression": "\"estado_nuevo\" IN ('BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO')",
+                  "name": "requerimiento_evento_estado_nuevo_check_8e282947",
+                  "prefix": "requerimiento_evento_estado_nuevo_check"
+                }
+              ],
+              "columns": {
+                "accion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "accion_requerimiento",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "comentario": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "estado_anterior": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_requerimiento",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "estado_nuevo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_requerimiento",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_anexo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_requerimiento": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_requerimiento"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_evento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_anexo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_evento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_anexo"
+                  ],
+                  "name": "requerimiento_evento_id_anexo_idx_726d2e48",
+                  "prefix": "requerimiento_evento_id_anexo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_requerimiento"
+                  ],
+                  "name": "requerimiento_evento_id_requerimiento_idx_a213c508",
+                  "prefix": "requerimiento_evento_id_requerimiento_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "semana": {
               "columns": {
                 "CodSemana": {
@@ -22008,6 +23505,17 @@
                 "Trabajador"
               ]
             },
+            "accion_requerimiento": {
+              "kind": "valueSet",
+              "values": [
+                "CREAR",
+                "ENVIAR",
+                "OBSERVAR",
+                "APROBAR",
+                "RECHAZAR",
+                "ANULAR"
+              ]
+            },
             "clase_inventario": {
               "kind": "valueSet",
               "values": [
@@ -22049,6 +23557,17 @@
                 "ANULADO"
               ]
             },
+            "estado_requerimiento": {
+              "kind": "valueSet",
+              "values": [
+                "BORRADOR",
+                "ENVIADO",
+                "OBSERVADO",
+                "APROBADO",
+                "RECHAZADO",
+                "ANULADO"
+              ]
+            },
             "motivo_movimiento": {
               "kind": "valueSet",
               "values": [
@@ -22085,7 +23604,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ac94ebcb1a06d24bf7b26772397349ba994b186fc6131bdb78e5073f4102c01f"
+    "storageHash": "9d3c3c371ab285efc968c4f0a42750ff8f510b8c806abae85dc38b135b805092"
   },
   "capabilities": {
     "postgres": {
