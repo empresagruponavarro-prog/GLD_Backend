@@ -1,50 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
-
-// ─── Respuestas de Residentes ─────────────────────────────────────────────────
-export class ObraResidenteDto {
-  @ApiProperty() id: number;
-  @ApiProperty() nombre_completo: string;
-  @ApiProperty() rol_obra: string;
-  @ApiPropertyOptional() cip_cap?: string;
-  @ApiPropertyOptional() especialidad?: string;
-  @ApiPropertyOptional() telefono?: string;
-  @ApiPropertyOptional() correo?: string;
-  @ApiPropertyOptional() turno?: string;
-  @ApiProperty() estado_planta: string;
-  @ApiPropertyOptional() foto_url?: string;
-  /** Enlace directo WhatsApp generado al vuelo */
-  @ApiPropertyOptional() whatsapp_url?: string;
-}
-
-// ─── Respuestas del Cronograma Semanal ────────────────────────────────────────
-export class ObraSemanaDto {
-  @ApiProperty() id: number;
-  @ApiProperty() numero_semana: number;
-  @ApiProperty() etiqueta_semana: string;
-  @ApiProperty() fecha_inicio: string;
-  @ApiProperty() fecha_fin: string;
-  @ApiProperty() fase_principal: string;
-  @ApiPropertyOptional() responsable_nombre?: string;
-  @ApiProperty() porcentaje_meta: number;
-  @ApiProperty() porcentaje_real: number;
-  @ApiProperty() estado: string;
-}
-
-// ─── Respuestas de Planos ─────────────────────────────────────────────────────
-export class ObraPlanoDto {
-  @ApiProperty() id: number;
-  @ApiProperty() codigo_plano: string;
-  @ApiProperty() nombre_plano: string;
-  @ApiProperty() disciplina: string;
-  @ApiProperty() version: string;
-  @ApiProperty() es_vigente: boolean;
-  @ApiProperty() estado_aprobacion: string;
-  @ApiPropertyOptional() formato_peso?: string;
-  @ApiPropertyOptional() archivo_url?: string;
-  @ApiPropertyOptional() emitido_por?: string;
-}
+import { IsEmail, IsInt, IsLatitude, IsLongitude, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { ObraSemanaDto } from '../cronograma/cronograma.dto.js';
+import { ObraDocumentoDto } from '../documentos/documentos.dto.js';
+import { ObraIncidenciaDto } from '../incidencias/incidencias.dto.js';
+import { ObraPlanoDto } from '../planos/planos.dto.js';
+import { ObraResidenteDto } from '../residentes/residentes.dto.js';
 
 // ─── Datos generales de la Obra ────────────────────────────────────────────────
 export class ObraDatosGeneralesDto {
@@ -69,59 +30,63 @@ export class ObraDatosGeneralesDto {
   @ApiPropertyOptional() contacto_cliente_correo?: string;
 }
 
+// ─── Cabecera tomada del Centro de Costo (solo lectura) ───────────────────────
+export class ObraCabeceraDto {
+  @ApiPropertyOptional() estado?: string;
+  @ApiPropertyOptional() fecha_inicio?: string;
+  @ApiPropertyOptional() fecha_fin_prog?: string;
+  @ApiPropertyOptional() fecha_fin_real?: string;
+  @ApiPropertyOptional() empresa?: string;
+  @ApiPropertyOptional() cliente?: string;
+  @ApiPropertyOptional() cod_cliente?: string;
+}
+
 // ─── KPIs calculados ─────────────────────────────────────────────────────────
 export class ObraKpiDto {
-  @ApiProperty() avance_real_global: number;     // % calculado desde semanas
-  @ApiProperty() avance_meta_global: number;     // % planificado acumulado
-  @ApiProperty() desviacion: number;             // avance_real_global - avance_meta_global
-  @ApiProperty() semana_activa: number;          // semana con estado 'En Plazo' o 'Retrasado'
+  /** % acumulado real reportado (última semana con avance) */
+  @ApiProperty() avance_real_global: number;
+  /** % acumulado programado a la fecha (semana en curso) */
+  @ApiProperty() avance_meta_global: number;
+  /** avance_real_global - avance_meta_global */
+  @ApiProperty() desviacion: number;
+  /** Semana en curso según fechas (0 si la obra no ha iniciado) */
+  @ApiProperty() semana_activa: number;
   @ApiProperty() semanas_totales: number;
   @ApiProperty() personal_activo: number;
+  @ApiProperty() dias_totales: number;
+  @ApiProperty() dias_transcurridos: number;
+  @ApiProperty() semanas_retrasadas: number;
+  @ApiProperty() incidencias_pendientes: number;
 }
 
 // ─── Payload del Cockpit Completo ─────────────────────────────────────────────
 export class ObraCockpitDto {
   @ApiProperty() id_centro_costo: number;
   @ApiProperty() nombre_obra: string;
+  @ApiProperty({ type: ObraCabeceraDto }) cabecera: ObraCabeceraDto;
   @ApiPropertyOptional({ type: ObraDatosGeneralesDto }) generales?: ObraDatosGeneralesDto;
   @ApiProperty({ type: ObraKpiDto }) kpis: ObraKpiDto;
   @ApiProperty({ type: [ObraSemanaDto] }) cronograma: ObraSemanaDto[];
   @ApiProperty({ type: [ObraResidenteDto] }) residentes: ObraResidenteDto[];
   @ApiProperty({ type: [ObraPlanoDto] }) planos: ObraPlanoDto[];
+  @ApiProperty({ type: [ObraDocumentoDto] }) documentos: ObraDocumentoDto[];
+  @ApiProperty({ type: [ObraIncidenciaDto] }) incidencias: ObraIncidenciaDto[];
 }
 
 // ─── DTOs de Entrada ─────────────────────────────────────────────────────────
 export class UpdateObraDatosGeneralesDto {
-  @IsOptional() @IsString() expediente_codigo?: string;
-  @IsOptional() @IsString() direccion?: string;
-  @IsOptional() @IsString() departamento?: string;
-  @IsOptional() @IsString() provincia?: string;
-  @IsOptional() @IsString() distrito?: string;
-  @IsOptional() @IsString() ubigeo_cod?: string;
-  @IsOptional() @IsNumber() @Type(() => Number) latitud?: number;
-  @IsOptional() @IsNumber() @Type(() => Number) longitud?: number;
-  @IsOptional() @IsInt() @Type(() => Number) semanas_totales?: number;
-  @IsOptional() @IsInt() @Type(() => Number) personal_activo_promedio?: number;
-  @IsOptional() @IsString() turno_trabajo?: string;
-  @IsOptional() @IsString() contacto_cliente_nombre?: string;
-  @IsOptional() @IsString() contacto_cliente_telefono?: string;
-  @IsOptional() @IsString() contacto_cliente_correo?: string;
-}
-
-export class UpdateAvanceSemanalDto {
-  @IsNumber() @Type(() => Number) porcentaje_real: number;
-  @IsOptional() @IsString() estado?: string;
-}
-
-export class CreateObraResidenteDto {
-  @IsOptional() @IsInt() @Type(() => Number) id_anexo?: number;
-  @IsString() nombre_completo: string;
-  @IsString() rol_obra: string;
-  @IsOptional() @IsString() cip_cap?: string;
-  @IsOptional() @IsString() especialidad?: string;
-  @IsOptional() @IsString() telefono?: string;
-  @IsOptional() @IsString() correo?: string;
-  @IsOptional() @IsString() turno?: string;
-  @IsOptional() @IsString() estado_planta?: string;
-  @IsOptional() @IsInt() @Type(() => Number) orden?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) expediente_codigo?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(1000) direccion?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) departamento?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) provincia?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) distrito?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(10) ubigeo_cod?: string;
+  @ApiPropertyOptional() @IsOptional() @IsLatitude() @Type(() => Number) latitud?: number;
+  @ApiPropertyOptional() @IsOptional() @IsLongitude() @Type(() => Number) longitud?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Min(1) @Type(() => Number) semanas_totales?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Min(0) @Type(() => Number) personal_activo_promedio?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) turno_trabajo?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) contacto_cliente_nombre?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) contacto_cliente_telefono?: string;
+  @ApiPropertyOptional() @IsOptional() @IsEmail() @MaxLength(150) contacto_cliente_correo?: string;
 }
