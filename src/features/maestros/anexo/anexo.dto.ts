@@ -70,6 +70,18 @@ export class CreateAnexoDto {
   @MaxLength(255)
   Correo?: string;
 
+  @ApiPropertyOptional({ example: '00-123-456789', description: 'Cuenta de detracciones del proveedor (Banco de la Nacion)' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(30)
+  cuenta_detraccion?: string;
+
+  @ApiPropertyOptional({ default: false, description: 'Buen contribuyente / agente de retencion o percepcion: no se le retiene el IGV' })
+  @IsOptional()
+  @toBoolean()
+  @IsBoolean()
+  exceptuado_retencion?: boolean;
+
   @ApiPropertyOptional({ default: true })
   @IsOptional()
   @toBoolean()
@@ -164,6 +176,12 @@ export class AnexoResponseDto {
 
   @ApiProperty({ example: 'correo@acme.com', nullable: true })
   Correo: string | null;
+
+  @ApiProperty({ example: '00-123-456789', nullable: true })
+  cuenta_detraccion: string | null;
+
+  @ApiProperty({ example: false })
+  exceptuado_retencion: boolean;
 
   @ApiProperty({ example: true })
   estado: boolean;

@@ -4,6 +4,7 @@ import { RequerimientoResponseDto } from '../requerimiento/requerimiento.dto.js'
 import {
   AnularRequerimientoDto,
   AprobarRequerimientoDto,
+  CotizacionFlujoDto,
   EnviarRequerimientoDto,
   ObservarRequerimientoDto,
   RechazarRequerimientoDto,
@@ -25,9 +26,27 @@ export class FlujoController {
     return this.handler.enviar(id, dto);
   }
 
+  @Post('cerrar-cotizacion')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Cerrar el cuadro comparativo (ENVIADO → COTIZADO); requiere al menos 1 cotizacion' })
+  @ApiOkResponse({ type: RequerimientoResponseDto })
+  @ApiConflictResponse({ description: 'Transicion no valida o sin cotizaciones' })
+  cerrarCotizacion(@Param('id', ParseIntPipe) id: number, @Body() dto: CotizacionFlujoDto): Promise<RequerimientoResponseDto> {
+    return this.handler.cerrarCotizacion(id, dto);
+  }
+
+  @Post('reabrir-cotizacion')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reabrir las cotizaciones (COTIZADO → ENVIADO)' })
+  @ApiOkResponse({ type: RequerimientoResponseDto })
+  @ApiConflictResponse({ description: 'Transicion no valida' })
+  reabrirCotizacion(@Param('id', ParseIntPipe) id: number, @Body() dto: CotizacionFlujoDto): Promise<RequerimientoResponseDto> {
+    return this.handler.reabrirCotizacion(id, dto);
+  }
+
   @Post('observar')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Devolver con observaciones (ENVIADO → OBSERVADO)' })
+  @ApiOperation({ summary: 'Devolver con observaciones (ENVIADO o COTIZADO → OBSERVADO)' })
   @ApiOkResponse({ type: RequerimientoResponseDto })
   @ApiConflictResponse({ description: 'Transición no válida' })
   observar(@Param('id', ParseIntPipe) id: number, @Body() dto: ObservarRequerimientoDto): Promise<RequerimientoResponseDto> {
@@ -36,7 +55,7 @@ export class FlujoController {
 
   @Post('aprobar')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Aprobar (ENVIADO → APROBADO), con cantidades aprobadas opcionales por línea' })
+  @ApiOperation({ summary: 'Aprobar y generar los documentos de origen (COTIZADO en compras, ENVIADO en los demas tipos)' })
   @ApiOkResponse({ type: RequerimientoResponseDto })
   @ApiBadRequestResponse({ description: 'Cantidades inválidas o aprobador no es Trabajador' })
   @ApiConflictResponse({ description: 'Transición no válida' })
@@ -46,7 +65,7 @@ export class FlujoController {
 
   @Post('rechazar')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Rechazar (ENVIADO → RECHAZADO, estado final)' })
+  @ApiOperation({ summary: 'Rechazar (ENVIADO o COTIZADO → RECHAZADO, estado final)' })
   @ApiOkResponse({ type: RequerimientoResponseDto })
   @ApiConflictResponse({ description: 'Transición no válida' })
   rechazar(@Param('id', ParseIntPipe) id: number, @Body() dto: RechazarRequerimientoDto): Promise<RequerimientoResponseDto> {
@@ -55,9 +74,9 @@ export class FlujoController {
 
   @Post('anular')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Anular un FUR sin órdenes de compra vinculadas' })
+  @ApiOperation({ summary: 'Anular un FUR sin documentos de origen vigentes' })
   @ApiOkResponse({ type: RequerimientoResponseDto })
-  @ApiConflictResponse({ description: 'Transición no válida o tiene OC vinculadas' })
+  @ApiConflictResponse({ description: 'Transición no válida o tiene documentos de origen vigentes' })
   anular(@Param('id', ParseIntPipe) id: number, @Body() dto: AnularRequerimientoDto): Promise<RequerimientoResponseDto> {
     return this.handler.anular(id, dto);
   }

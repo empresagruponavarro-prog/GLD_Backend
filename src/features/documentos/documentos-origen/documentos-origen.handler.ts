@@ -405,6 +405,7 @@ export class DocumentosOrigenHandler {
       hora_creacion: toVarchar<10>(dto.hora_creacion),
       cotizacion: toVarchar(dto.cotizacion),
       id_requerimiento: dto.id_requerimiento,
+      clase_documento: dto.tipo_oc === 'SERVICIO' ? 'ORDEN_SERVICIO' : 'ORDEN_COMPRA',
     });
     await this.createDetalles(orm, row.id, dto.id_oc, detalles);
     return row.id;
@@ -481,7 +482,8 @@ export class DocumentosOrigenHandler {
     const dscto_compras = input.dscto_compras ?? 0;
     const dscto_intervencion = input.dscto_intervencion ?? 0;
     const dscto_otros = input.dscto_otros ?? 0;
-    const total = monto + igv - renta_4ta - dscto_compras - dscto_intervencion - dscto_otros;
+    // El total es bruto (monto + IGV); renta 4ta, descuentos, detraccion y retencion se restan en el neto a pagar.
+    const total = monto + igv;
     return { monto, igv, renta_4ta, dscto_compras, dscto_intervencion, dscto_otros, total };
   }
 
@@ -567,9 +569,19 @@ export class DocumentosOrigenHandler {
         if (await tieneRecepciones(this.sql, id, tx)) {
           throw new ConflictException('La OC ya tiene recepciones en almacén; su detalle no se puede reemplazar');
         }
-        if (current.id_requerimiento !== null) {
-          await this.validarContraRequerimiento(tx, current.id_requerimiento, dto.detalles ?? [], id);
-        }
+      }
+      const cambiaMontos =
+        reemplazaDetalles ||
+        dto.igv !== undefined ||
+        dto.renta_4ta !== undefined ||
+        dto.dscto_compras !== undefined ||
+        dto.dscto_intervencion !== undefined ||
+        dto.dscto_otros !== undefined;
+      if (cambiaMontos && (await this.tieneMovimientoDePago(tx, id))) {
+        throw new ConflictException('El documento tiene pagos o programaciones de pago; no se pueden cambiar sus montos');
+      }
+      if (reemplazaDetalles && current.id_requerimiento !== null) {
+        await this.validarContraRequerimiento(tx, current.id_requerimiento, dto.detalles ?? [], id);
       }
       await this.aplicarUpdate(tx.orm.public as unknown as Orm, id, dto, current, reemplazaDetalles);
     });
@@ -613,7 +625,7 @@ export class DocumentosOrigenHandler {
     const dscto_compras = dto.dscto_compras ?? Number(current.dscto_compras ?? 0);
     const dscto_intervencion = dto.dscto_intervencion ?? Number(current.dscto_intervencion ?? 0);
     const dscto_otros = dto.dscto_otros ?? Number(current.dscto_otros ?? 0);
-    const total = monto + igv - renta_4ta - dscto_compras - dscto_intervencion - dscto_otros;
+    const total = monto + igv;
 
     data.monto = toDecimalString(monto);
     data.igv = toDecimalString(igv);
@@ -640,12 +652,24 @@ export class DocumentosOrigenHandler {
       if (await tieneRecepciones(this.sql, id, tx)) {
         throw new ConflictException('La OC tiene recepciones en almacén; no se puede eliminar');
       }
+      if (await this.tieneMovimientoDePago(tx, id)) {
+        throw new ConflictException('El documento tiene pagos o programaciones de pago (aunque estén anulados); anúlelo en lugar de eliminarlo');
+      }
       const orm = tx.orm.public as unknown as Orm;
       // Primero eliminar el detalle (FK); al borrar la OC se libera el saldo del requerimiento.
       await orm.OrdenCompraDetalle.where((d) => d.id_orden_compra.eq(id)).delete();
       await orm.OrdenCompra.where({ id }).delete();
     });
     return { deleted: true, id };
+  }
+
+  /** `true` si el documento tiene alguna programacion o pago (cualquier estado): el historial lo vuelve inmutable. */
+  private async tieneMovimientoDePago(tx: Tx, id: number): Promise<boolean> {
+    const q = sqlTag(this.sql);
+    const [row] = await q.rows<{ existe: boolean }>({ existe: { codecId: 'pg/bool@1', nullable: false } }, tx)`
+      SELECT (EXISTS (SELECT 1 FROM pago_programado WHERE id_documento_origen = ${id}::int)
+              OR EXISTS (SELECT 1 FROM pago WHERE id_documento_origen = ${id}::int)) AS existe`;
+    return row.existe;
   }
 
   /** Bloquea la OC hasta el fin de la transaccion: serializa ediciones, bajas y recepciones. */

@@ -15,11 +15,22 @@ import {
 } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 
-export const ESTADOS_REQUERIMIENTO = ['BORRADOR', 'ENVIADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'] as const;
+export const ESTADOS_REQUERIMIENTO = ['BORRADOR', 'ENVIADO', 'COTIZADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'] as const;
 export type EstadoRequerimiento = (typeof ESTADOS_REQUERIMIENTO)[number];
 
-export const ACCIONES_REQUERIMIENTO = ['CREAR', 'ENVIAR', 'OBSERVAR', 'APROBAR', 'RECHAZAR', 'ANULAR'] as const;
+export const ACCIONES_REQUERIMIENTO = ['CREAR', 'ENVIAR', 'CERRAR_COTIZACION', 'REABRIR_COTIZACION', 'OBSERVAR', 'APROBAR', 'RECHAZAR', 'ANULAR'] as const;
 export type AccionRequerimiento = (typeof ACCIONES_REQUERIMIENTO)[number];
+
+export const TIPOS_REQUERIMIENTO = [
+  'COMPRA',
+  'PLANILLA_PERSONAL',
+  'PLANILLA_OBRA',
+  'CAJA_CHICA',
+  'GASTO_FINANCIERO',
+  'PAGO_SERVICIO',
+  'OTRO',
+] as const;
+export type TipoRequerimiento = (typeof TIPOS_REQUERIMIENTO)[number];
 
 export const AVANCES_REQUERIMIENTO = ['SIN_ATENDER', 'PARCIAL', 'ATENDIDO'] as const;
 
@@ -45,6 +56,12 @@ export class RequerimientoLineaDto {
   @IsOptional()
   @IsString()
   observaciones?: string;
+
+  @ApiPropertyOptional({ description: 'Anexo beneficiario de la linea (planilla por trabajador); si falta se usa el de la cabecera' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  id_beneficiario?: number;
 }
 
 export class CreateRequerimientoDto {
@@ -79,6 +96,23 @@ export class CreateRequerimientoDto {
   @MaxLength(100)
   area?: string;
 
+  @ApiPropertyOptional({ enum: TIPOS_REQUERIMIENTO, default: 'COMPRA' })
+  @IsOptional()
+  @IsIn(TIPOS_REQUERIMIENTO)
+  tipo?: TipoRequerimiento;
+
+  @ApiPropertyOptional({ description: 'Anexo beneficiario por defecto (obligatorio en tipos que no son compra si las lineas no lo traen)' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  id_beneficiario?: number;
+
+  @ApiPropertyOptional({ description: 'Area de la empresa (maestros/area)' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  id_area?: number;
+
   @ApiProperty({ example: 'Reposición de materiales para la fase de estructura' })
   @IsString()
   @MinLength(1)
@@ -112,6 +146,17 @@ export class ListRequerimientoQueryDto extends PaginationQueryDto {
   @IsInt()
   id_solicitante?: number;
 
+  @ApiPropertyOptional({ enum: TIPOS_REQUERIMIENTO })
+  @IsOptional()
+  @IsIn(TIPOS_REQUERIMIENTO)
+  tipo?: TipoRequerimiento;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  id_area?: number;
+
   @ApiPropertyOptional({ example: '2026-10-01' })
   @IsOptional()
   @Matches(FECHA_REGEX)
@@ -140,6 +185,8 @@ export class RequerimientoLineaResponseDto {
   @ApiPropertyOptional({ example: '8', description: 'Se fija al aprobar' }) cantidad_aprobada: string | null;
   @ApiPropertyOptional() precio_referencial: string | null;
   @ApiPropertyOptional() observaciones: string | null;
+  @ApiPropertyOptional() id_beneficiario: number | null;
+  @ApiPropertyOptional() beneficiario: string | null;
   @ApiProperty({ example: '3', description: 'Suma de lo ordenado en OC' }) cantidad_ordenada: string;
   @ApiProperty({ example: '5', description: 'aprobada - ordenada (0 si no está aprobado)' }) saldo_por_ordenar: string;
 }
@@ -161,6 +208,9 @@ export class RequerimientoOrdenCompraResponseDto {
   @ApiPropertyOptional() numero_oc: string | null;
   @ApiPropertyOptional() total: string | null;
   @ApiPropertyOptional() fecha_emision: string | null;
+  @ApiPropertyOptional() numero_documento: string | null;
+  @ApiPropertyOptional() clase_documento: string | null;
+  @ApiPropertyOptional() estado: string | null;
 }
 
 export class RequerimientoResponseDto {
@@ -175,6 +225,14 @@ export class RequerimientoResponseDto {
   @ApiProperty() id_solicitante: number;
   @ApiPropertyOptional() solicitante: string | null;
   @ApiPropertyOptional() area: string | null;
+  @ApiProperty({ enum: TIPOS_REQUERIMIENTO }) tipo: string;
+  @ApiPropertyOptional() id_beneficiario: number | null;
+  @ApiPropertyOptional() beneficiario: string | null;
+  @ApiPropertyOptional() id_area: number | null;
+  @ApiPropertyOptional({ description: 'Nombre del area de la empresa' }) area_nombre: string | null;
+  @ApiPropertyOptional() id_cotizacion_ganadora: number | null;
+  @ApiPropertyOptional() comentario_adjudicacion: string | null;
+  @ApiProperty({ example: 2 }) total_cotizaciones: number;
   @ApiProperty() justificacion: string;
   @ApiProperty({ enum: ESTADOS_REQUERIMIENTO }) estado: string;
   @ApiPropertyOptional() id_aprobador: number | null;

@@ -17,6 +17,7 @@ export async function ordenadoPorDetalle(
       FROM "ordenCompraDetalle" l
      WHERE l.id_requerimiento_detalle = ANY(string_to_array(${csv(idsDetalle)}::text, ',')::int[])
        AND (${excluirOc}::int = 0 OR l.id_orden_compra IS DISTINCT FROM ${excluirOc}::int)
+       AND l.id_orden_compra IN (SELECT id FROM "documentosOrigen" WHERE estado <> 'ANULADO')
      GROUP BY l.id_requerimiento_detalle`;
   return new Map(rows.map((r) => [r.id, r.ordenado]));
 }
@@ -43,6 +44,7 @@ export async function avancePorRequerimiento(
       LEFT JOIN (
         SELECT id_requerimiento_detalle AS id, SUM("Cantidad") AS ordenado
           FROM "ordenCompraDetalle" WHERE id_requerimiento_detalle IS NOT NULL
+           AND id_orden_compra IN (SELECT id FROM "documentosOrigen" WHERE estado <> 'ANULADO')
          GROUP BY id_requerimiento_detalle
       ) o ON o.id = d.id
      WHERE d.id_requerimiento = ANY(string_to_array(${csv(idsRequerimiento)}::text, ',')::int[])
@@ -88,6 +90,7 @@ export async function validarConsumoLinea(
         SELECT SUM("Cantidad") AS ordenado FROM "ordenCompraDetalle"
          WHERE id_requerimiento_detalle = ${idDetalle}::int
            AND (${excluirOc}::int = 0 OR id_orden_compra IS DISTINCT FROM ${excluirOc}::int)
+           AND id_orden_compra IN (SELECT id FROM "documentosOrigen" WHERE estado <> 'ANULADO')
       ) o ON true
      WHERE d.id = ${idDetalle}::int`;
   return row ?? null;

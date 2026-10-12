@@ -50,11 +50,45 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
     return res.body;
   }
 
-  async function aprobarFur(id: number, lineas?: Array<{ id_detalle: number; cantidad_aprobada: string }>) {
+  /** Registra la cotizacion de un proveedor para todas las lineas del FUR y cierra el cuadro comparativo. */
+  async function cotizarYCerrar(id: number): Promise<number> {
+    const fur = (await api().get(`/requerimientos/${id}`).expect(200)).body;
+    const cot = await api()
+      .post(`/requerimientos/${id}/cotizaciones`)
+      .send({
+        id_proveedor: proveedorId,
+        fecha: '2026-10-10',
+        moneda_id: 'PEN',
+        moneda_simbolo: 'S/',
+        forma_pago: 'Contado',
+        lineas: fur.lineas.map((l: { id: number; cantidad: string }) => ({
+          id_requerimiento_detalle: l.id,
+          cantidad: l.cantidad,
+          precio_unitario: '20',
+        })),
+      })
+      .expect(201);
+    await api().post(`/requerimientos/${id}/cerrar-cotizacion`).send({}).expect(200);
+    return cot.body.id;
+  }
+
+  /**
+   * Envia, cotiza y aprueba. La aprobacion genera OC/OS; como estos tests prueban la OC creada a mano desde el FUR,
+   * se anulan los documentos generados (el saldo del FUR se libera) salvo que `conservar` sea true.
+   */
+  async function aprobarFur(id: number, lineas?: Array<{ id_detalle: number; cantidad_aprobada: string }>, conservar = false) {
     await api().post(`/requerimientos/${id}/enviar`).send({}).expect(200);
-    return api()
+    const idCot = await cotizarYCerrar(id);
+    const res = await api()
       .post(`/requerimientos/${id}/aprobar`)
-      .send({ id_aprobador: trabajadorId, comentario: 'OK', ...(lineas ? { lineas } : {}) });
+      .send({ id_aprobador: trabajadorId, comentario: 'OK', id_cotizacion_ganadora: idCot, ...(lineas ? { lineas } : {}) });
+    if (res.status === 200 && !conservar) await anularGenerados(id);
+    return res;
+  }
+
+  async function anularGenerados(idFur: number) {
+    const docs = await db.query(`select id from "documentosOrigen" where id_requerimiento = $1 and estado <> 'ANULADO'`, [idFur]);
+    for (const d of docs.rows) await api().post(`/administracion/documentos-origen/${d.id}/anular`).send({}).expect(200);
   }
 
   const detalleOc = (idProducto: number, cantidad: number, precio: number, idDetalleFur?: number) => ({
@@ -104,11 +138,19 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
       await db.query('delete from almacen_documento where id = any($1)', [docs]);
       await db.query('delete from stock_almacen where id_producto = any($1)', [productos]);
     }
+    if (requerimientoIds.length > 0) {
+      const generados = (await db.query('select id from "documentosOrigen" where id_requerimiento = any($1)', [requerimientoIds])).rows.map((r) => r.id);
+      ocIds.push(...generados);
+    }
     if (ocIds.length > 0) {
       await db.query('delete from "ordenCompraDetalle" where id_orden_compra = any($1)', [ocIds]);
       await db.query('delete from "documentosOrigen" where id = any($1)', [ocIds]);
     }
-    if (requerimientoIds.length > 0) await db.query('delete from requerimiento where id = any($1)', [requerimientoIds]);
+    if (requerimientoIds.length > 0) {
+      await db.query('update requerimiento set id_cotizacion_ganadora = null where id = any($1)', [requerimientoIds]);
+      await db.query('delete from cotizacion where id_requerimiento = any($1)', [requerimientoIds]);
+      await db.query('delete from requerimiento where id = any($1)', [requerimientoIds]);
+    }
     if (productos.length > 0) await db.query('delete from producto where id = any($1)', [productos]);
     await db.end();
     await app?.close();
@@ -155,26 +197,44 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
     expect(editado.body.estado).toBe('OBSERVADO');
     await api().post(`/requerimientos/${fur.id}/enviar`).send({}).expect(200);
 
+    // Una compra no se aprueba hasta cerrar el cuadro comparativo.
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: trabajadorId, id_cotizacion_ganadora: 1 }).expect(409);
+    const idCot = await cotizarYCerrar(fur.id);
+
     // El aprobador no puede aprobar más de lo pedido, una línea ajena ni con un aprobador que no es Trabajador.
     const lineaP = fur.lineas.find((l: { id_producto: number }) => l.id_producto === productoId);
     const lineaS = fur.lineas.find((l: { id_producto: number }) => l.id_producto === servicioId);
-    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: trabajadorId, lineas: [{ id_detalle: lineaP.id, cantidad_aprobada: '11' }] }).expect(400);
-    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: trabajadorId, lineas: [{ id_detalle: 999999999, cantidad_aprobada: '1' }] }).expect(400);
-    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: proveedorId }).expect(400);
-    expect((await api().get(`/requerimientos/${fur.id}`).expect(200)).body.estado).toBe('ENVIADO');
+    const base = { id_aprobador: trabajadorId, id_cotizacion_ganadora: idCot };
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ ...base, lineas: [{ id_detalle: lineaP.id, cantidad_aprobada: '11' }] }).expect(400);
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ ...base, lineas: [{ id_detalle: 999999999, cantidad_aprobada: '1' }] }).expect(400);
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ ...base, id_aprobador: proveedorId }).expect(400);
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: trabajadorId }).expect(400); // falta el ganador
+    expect((await api().get(`/requerimientos/${fur.id}`).expect(200)).body.estado).toBe('COTIZADO');
 
     const aprobado = await api()
       .post(`/requerimientos/${fur.id}/aprobar`)
-      .send({ id_aprobador: trabajadorId, comentario: 'Aprobado con recorte', lineas: [{ id_detalle: lineaP.id, cantidad_aprobada: '8' }] })
+      .send({ ...base, comentario: 'Aprobado con recorte', lineas: [{ id_detalle: lineaP.id, cantidad_aprobada: '8' }] })
       .expect(200);
     expect(aprobado.body.estado).toBe('APROBADO');
+    expect(aprobado.body.id_cotizacion_ganadora).toBe(idCot);
     expect(num(aprobado.body.lineas.find((l: { id: number }) => l.id === lineaP.id).cantidad_aprobada)).toBe(8);
     expect(num(aprobado.body.lineas.find((l: { id: number }) => l.id === lineaS.id).cantidad_aprobada)).toBe(1);
-    expect(aprobado.body.avance).toBe('SIN_ATENDER');
     expect(aprobado.body.eventos.map((e: { accion: string }) => e.accion)).toEqual([
-      'CREAR', 'ENVIAR', 'OBSERVAR', 'ENVIAR', 'APROBAR',
+      'CREAR', 'ENVIAR', 'OBSERVAR', 'ENVIAR', 'CERRAR_COTIZACION', 'APROBAR',
     ]);
-    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ id_aprobador: trabajadorId }).expect(409);
+    // La aprobacion genero una OC (producto) y una OS (servicio) del proveedor ganador.
+    expect(aprobado.body.ordenes_compra.map((o: { clase_documento: string }) => o.clase_documento).sort()).toEqual(['ORDEN_COMPRA', 'ORDEN_SERVICIO']);
+    expect(aprobado.body.avance).toBe('ATENDIDO');
+    await api().post(`/requerimientos/${fur.id}/aprobar`).send({ ...base }).expect(409);
+
+    // Con los documentos generados vigentes ya no hay saldo por ordenar ni se puede anular el FUR.
+    await api().post(`/requerimientos/${fur.id}/anular`).send({}).expect(409);
+    const manual = await crearOc({ id_requerimiento: fur.id, detalles: [detalleOc(productoId, 1, 20, lineaP.id)] });
+    expect(manual.status).toBe(400);
+
+    // Anular lo generado libera el saldo: la OC "a mano" desde el FUR sigue disponible.
+    await anularGenerados(fur.id);
+    expect((await api().get(`/requerimientos/${fur.id}`).expect(200)).body.avance).toBe('SIN_ATENDER');
 
     const pendientes = await api().get('/requerimientos/pendientes-oc').expect(200);
     expect(pendientes.body.some((r: { id: number }) => r.id === fur.id)).toBe(true);
@@ -201,7 +261,8 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
     let estadoFur = (await api().get(`/requerimientos/${fur.id}`).expect(200)).body;
     expect(estadoFur.avance).toBe('PARCIAL');
     expect(num(estadoFur.lineas.find((l: { id: number }) => l.id === lineaP.id).saldo_por_ordenar)).toBe(3);
-    expect(estadoFur.ordenes_compra).toHaveLength(1);
+    // El FUR lista tambien los documentos generados y anulados; solo uno vigente.
+    expect(estadoFur.ordenes_compra.filter((o: { estado: string }) => o.estado !== 'ANULADO')).toHaveLength(1);
 
     // Reglas del saldo aprobado
     const exceso = await crearOc({ id_requerimiento: fur.id, detalles: [detalleOc(productoId, 4, 20, lineaP.id)] });

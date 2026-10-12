@@ -15,6 +15,18 @@ export class EnviarRequerimientoDto {
   comentario?: string;
 }
 
+export class CotizacionFlujoDto {
+  @ApiPropertyOptional({ description: 'Anexo (Trabajador) que ejecuta la accion; por defecto el solicitante' })
+  @IsOptional()
+  @IsInt()
+  id_anexo?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  comentario?: string;
+}
+
 export class ObservarRequerimientoDto {
   @ApiProperty({ description: 'Anexo (Trabajador) que observa' })
   @IsInt()
@@ -56,6 +68,16 @@ export class AprobarRequerimientoDto {
   @IsOptional()
   @IsString()
   comentario?: string;
+
+  @ApiPropertyOptional({ description: 'COMPRA: cotizacion ganadora (obligatoria). El sistema no exige que sea la mas barata.' })
+  @IsOptional()
+  @IsInt()
+  id_cotizacion_ganadora?: number;
+
+  @ApiPropertyOptional({ description: 'Motivo de la eleccion del ganador' })
+  @IsOptional()
+  @IsString()
+  comentario_adjudicacion?: string;
 
   @ApiPropertyOptional({
     type: [AprobarLineaDto],

@@ -21,6 +21,7 @@ enum estado_operativo {
 enum estado_requerimiento {
   BORRADOR
   ENVIADO
+  COTIZADO
   OBSERVADO
   APROBADO
   RECHAZADO
@@ -30,10 +31,66 @@ enum estado_requerimiento {
 enum accion_requerimiento {
   CREAR
   ENVIAR
+  CERRAR_COTIZACION
+  REABRIR_COTIZACION
   OBSERVAR
   APROBAR
   RECHAZAR
   ANULAR
+}
+
+// ---- Modulo administrativo (plan 06) ----
+enum tipo_requerimiento {
+  COMPRA
+  PLANILLA_PERSONAL
+  PLANILLA_OBRA
+  CAJA_CHICA
+  GASTO_FINANCIERO
+  PAGO_SERVICIO
+  OTRO
+}
+
+enum clase_documento_origen {
+  ORDEN_COMPRA
+  ORDEN_SERVICIO
+  PLANILLA_PERSONAL
+  PLANILLA_OBRA
+  CAJA_CHICA
+  GASTO_FINANCIERO
+  PAGO_SERVICIO
+  OTRO
+}
+
+enum estado_documento_origen {
+  REGISTRADO
+  ANULADO
+}
+
+enum medio_pago {
+  EFECTIVO
+  CHEQUE
+  TRANSFERENCIA
+  DEPOSITO
+  YAPE
+  PLIN
+  OTRO
+}
+
+enum tipo_cuenta_tesoreria {
+  CAJA
+  BANCO
+  BILLETERA
+}
+
+enum estado_programacion {
+  PROGRAMADO
+  EJECUTADO
+  CANCELADO
+}
+
+enum concepto_pago {
+  PROVEEDOR
+  DETRACCION
 }
 
 enum naturaleza_documento {
@@ -240,7 +297,16 @@ model requerimiento {
   id_aprobador          Int?
   fecha_aprobacion      DateTime?
   comentario_aprobacion String?
+  tipo                  tipo_requerimiento     @default(COMPRA)
+  id_beneficiario       Int?
+  id_area               Int?
+  id_cotizacion_ganadora Int?
+  comentario_adjudicacion String?
   created_at            DateTime               @default(now())
+  beneficiario          Anexos?                @relation("RequerimientoBeneficiario", fields:[id_beneficiario], references:[id])
+  areaMaestro           area?                  @relation("RequerimientoArea", fields:[id_area], references:[id])
+  cotizacionGanadora    cotizacion?            @relation("RequerimientoGanadora", fields:[id_cotizacion_ganadora], references:[id], onDelete: Restrict)
+  cotizaciones          cotizacion[]           @relation("CotizacionRequerimiento")
   centroCosto           CentroCostos           @relation("RequerimientoCentroCosto", fields:[id_centro_costo], references:[id])
   fase                  ppto_Fases?            @relation("RequerimientoFase", fields:[id_fase], references:[id])
   solicitante           Anexos                 @relation("RequerimientoSolicitante", fields:[id_solicitante], references:[id])
@@ -260,10 +326,12 @@ model requerimiento_detalle {
   cantidad_aprobada  Decimal?
   precio_referencial Decimal?
   observaciones      String?
+  id_beneficiario    Int?
   requerimiento      requerimiento @relation(fields:[id_requerimiento], references:[id], onDelete: Cascade)
   producto           producto      @relation(fields:[id_producto], references:[id])
+  beneficiario       Anexos?       @relation("RequerimientoDetalleBeneficiario", fields:[id_beneficiario], references:[id])
   ordenCompraLineas  OrdenCompraDetalle[]
-  @@unique([id_requerimiento, id_producto])
+  cotizacionLineas   cotizacion_detalle[]
   @@index([id_requerimiento])
   @@map("requerimiento_detalle")
 }
@@ -491,7 +559,12 @@ model Anexos {
   Telefono            VarChar(255)?
   Correo              VarChar(255)?
   estado              Boolean       @default(true)
+  cuenta_detraccion   VarChar(30)?
+  exceptuado_retencion Boolean      @default(false)
   ordenCompras        OrdenCompra[]
+  reqBeneficiario     requerimiento[] @relation("RequerimientoBeneficiario")
+  reqDetBeneficiario  requerimiento_detalle[] @relation("RequerimientoDetalleBeneficiario")
+  cotizaciones        cotizacion[]    @relation("CotizacionProveedor")
   docProveedor        almacen_documento[] @relation("DocumentoProveedor")
   docRecibidoPor      almacen_documento[] @relation("DocumentoRecibidoPor")
   docSolicitadoPor    almacen_documento[] @relation("DocumentoSolicitadoPor")
@@ -972,6 +1045,23 @@ model OrdenCompra {
   cotizacion            VarChar(255)?
   id_requerimiento      Int?
   requerimiento         requerimiento? @relation(fields: [id_requerimiento], references: [id], onDelete: Restrict)
+  clase_documento       clase_documento_origen?
+  numero_documento      VarChar(20)? @unique
+  estado                estado_documento_origen @default(REGISTRADO)
+  id_area               Int?
+  afecto_igv            Boolean @default(true)
+  dias_credito          Int?
+  fecha_vencimiento     DateString?
+  detraccion_porcentaje Decimal?
+  detraccion_monto      Decimal?
+  retencion_porcentaje  Decimal?
+  retencion_monto       Decimal?
+  retencion_manual      Boolean @default(false)
+  id_cotizacion         Int?
+  areaMaestro           area? @relation("DocumentoOrigenArea", fields: [id_area], references: [id])
+  cotizacionGanadora    cotizacion? @relation("DocumentoOrigenCotizacion", fields: [id_cotizacion], references: [id])
+  pagosProgramados      pago_programado[]
+  pagos                 pago[]
   detalles              OrdenCompraDetalle[]
   almacenDocumentos     almacen_documento[]
   @@index([id_requerimiento])
@@ -1419,4 +1509,137 @@ model ppto_Plantillas_Categorias {
   id_categoria            Int?
   categoria               categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_Plantillas_Categorias")
+}
+
+// ============================================================
+// Modulo administrativo (plan 06)
+// ============================================================
+model area {
+  id        Int         @id @default(autoincrement())
+  codigo    VarChar(20) @unique
+  nombre    String
+  estado    Boolean     @default(true)
+  requerimientos requerimiento[] @relation("RequerimientoArea")
+  documentos OrdenCompra[] @relation("DocumentoOrigenArea")
+  @@map("area")
+}
+
+model cotizacion {
+  id                  Int         @id @default(autoincrement())
+  numero              VarChar(20) @unique
+  id_requerimiento    Int
+  id_proveedor        Int
+  fecha               DateString
+  referencia          VarChar(50)?
+  moneda_id           VarChar(10)
+  moneda_simbolo      VarChar(10)?
+  incluye_igv         Boolean     @default(false)
+  afecto_igv          Boolean     @default(true)
+  forma_pago          VarChar(50)
+  dias_credito        Int         @default(0)
+  adelanto_porcentaje Decimal?
+  medio_pago          medio_pago?
+  plazo_entrega_dias  Int?
+  validez_dias        Int?
+  garantia            VarChar(100)?
+  condiciones         String?
+  archivo_url         VarChar(255)?
+  created_at          DateTime    @default(now())
+  requerimiento       requerimiento @relation("CotizacionRequerimiento", fields:[id_requerimiento], references:[id], onDelete: Restrict)
+  proveedor           Anexos        @relation("CotizacionProveedor", fields:[id_proveedor], references:[id])
+  detalles            cotizacion_detalle[]
+  ganadoraDe          requerimiento[] @relation("RequerimientoGanadora")
+  documentos          OrdenCompra[] @relation("DocumentoOrigenCotizacion")
+  @@unique([id_requerimiento, id_proveedor])
+  @@index([id_requerimiento])
+  @@map("cotizacion")
+}
+
+model cotizacion_detalle {
+  id                       Int     @id @default(autoincrement())
+  id_cotizacion            Int
+  id_requerimiento_detalle Int
+  cotiza                   Boolean @default(true)
+  cantidad                 Decimal
+  precio_unitario          Decimal
+  plazo_entrega_dias       Int?
+  marca_modelo             VarChar(100)?
+  observaciones            String?
+  cotizacion               cotizacion @relation(fields:[id_cotizacion], references:[id], onDelete: Cascade)
+  requerimientoDetalle     requerimiento_detalle @relation(fields:[id_requerimiento_detalle], references:[id], onDelete: Restrict)
+  @@unique([id_cotizacion, id_requerimiento_detalle])
+  @@map("cotizacion_detalle")
+}
+
+model cuenta_tesoreria {
+  id            Int                   @id @default(autoincrement())
+  codigo        VarChar(20)           @unique
+  nombre        String
+  tipo          tipo_cuenta_tesoreria
+  banco         VarChar(100)?
+  numero_cuenta VarChar(30)?
+  cci           VarChar(30)?
+  moneda_id     VarChar(10)
+  id_empresa    Int?
+  estado        Boolean               @default(true)
+  programaciones pago_programado[]
+  pagos         pago[]
+  @@map("cuenta_tesoreria")
+}
+
+model tipo_cambio_diario {
+  id        Int        @id @default(autoincrement())
+  fecha     DateString
+  moneda_id VarChar(10)
+  compra    Decimal
+  venta     Decimal
+  @@unique([fecha, moneda_id])
+  @@map("tipo_cambio_diario")
+}
+
+model pago_programado {
+  id                  Int                 @id @default(autoincrement())
+  id_documento_origen Int
+  concepto            concepto_pago       @default(PROVEEDOR)
+  fecha_programada    DateString
+  urgente             Boolean             @default(false)
+  monto               Decimal
+  medio_pago          medio_pago
+  id_cuenta           Int?
+  cuenta_destino      VarChar(50)?
+  estado              estado_programacion @default(PROGRAMADO)
+  id_programado_por   Int?
+  observaciones       String?
+  created_at          DateTime            @default(now())
+  documentoOrigen     OrdenCompra         @relation(fields:[id_documento_origen], references:[id], onDelete: Restrict)
+  cuenta              cuenta_tesoreria?   @relation(fields:[id_cuenta], references:[id])
+  pagos               pago[]
+  @@index([fecha_programada, estado])
+  @@index([id_documento_origen])
+  @@map("pago_programado")
+}
+
+model pago {
+  id                  Int              @id @default(autoincrement())
+  numero              VarChar(20)      @unique
+  id_documento_origen Int
+  concepto            concepto_pago    @default(PROVEEDOR)
+  id_pago_programado  Int?
+  fecha_pago          DateString
+  monto               Decimal
+  moneda_cuenta       VarChar(10)
+  tipo_cambio         Decimal?
+  monto_cuenta        Decimal
+  medio_pago          medio_pago
+  id_cuenta           Int
+  numero_operacion    VarChar(50)?
+  id_ejecutado_por    Int?
+  estado              estado_documento @default(REGISTRADO)
+  observaciones       String?
+  created_at          DateTime         @default(now())
+  documentoOrigen     OrdenCompra      @relation(fields:[id_documento_origen], references:[id], onDelete: Restrict)
+  cuenta              cuenta_tesoreria @relation(fields:[id_cuenta], references:[id])
+  programacion        pago_programado? @relation(fields:[id_pago_programado], references:[id])
+  @@index([id_documento_origen])
+  @@map("pago")
 }

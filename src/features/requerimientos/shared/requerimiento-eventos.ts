@@ -6,13 +6,18 @@ export interface RequerimientoBloqueado {
   estado: string;
   id_centro_costo: number;
   id_fase: number | null;
+  tipo: string;
+  id_cotizacion_ganadora: number | null;
 }
 
 /** Lee el FUR y lo bloquea (`FOR UPDATE`) hasta el fin de la transaccion. */
 export async function bloquearRequerimiento(sql: AlmacenSql, tx: Tx, id: number): Promise<RequerimientoBloqueado | null> {
   const q = sqlTag(sql);
-  const [row] = await q.rows<RequerimientoBloqueado>({ id: I, estado: T, id_centro_costo: I, id_fase: IN }, tx)`
-    SELECT id, estado::text AS estado, id_centro_costo, id_fase
+  const [row] = await q.rows<RequerimientoBloqueado>(
+    { id: I, estado: T, id_centro_costo: I, id_fase: IN, tipo: T, id_cotizacion_ganadora: IN },
+    tx,
+  )`
+    SELECT id, estado::text AS estado, id_centro_costo, id_fase, tipo::text AS tipo, id_cotizacion_ganadora
       FROM requerimiento WHERE id = ${id}::int FOR UPDATE`;
   return row ?? null;
 }

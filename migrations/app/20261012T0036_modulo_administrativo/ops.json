@@ -1,0 +1,3292 @@
+[
+  {
+    "id": "dropCheckConstraint.requerimiento.requerimiento_estado_check_f79d8afa",
+    "label": "Drop check constraint \"requerimiento_estado_check_f79d8afa\" on \"requerimiento\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_estado_check_f79d8afa",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_estado_check_f79d8afa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_estado_check_f79d8afa",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"requerimiento_estado_check_f79d8afa\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" DROP CONSTRAINT \"requerimiento_estado_check_f79d8afa\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_estado_check_f79d8afa\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_estado_check_f79d8afa",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.requerimiento_detalle.requerimiento_detalle_id_requerimiento_id_producto_key",
+    "label": "Drop constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\" on \"requerimiento_detalle\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "requerimiento_detalle_id_requerimiento_id_producto_key",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_id_producto_key",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\" DROP CONSTRAINT \"requerimiento_detalle_id_requerimiento_id_producto_key\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_detalle_id_requerimiento_id_producto_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_requerimiento_id_producto_key",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.requerimiento_evento.requerimiento_evento_accion_check_5c740340",
+    "label": "Drop check constraint \"requerimiento_evento_accion_check_5c740340\" on \"requerimiento_evento\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_accion_check_5c740340",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_accion_check_5c740340\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_accion_check_5c740340",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"requerimiento_evento_accion_check_5c740340\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" DROP CONSTRAINT \"requerimiento_evento_accion_check_5c740340\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_accion_check_5c740340\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_accion_check_5c740340",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.requerimiento_evento.requerimiento_evento_estado_anterior_check_c285bf74",
+    "label": "Drop check constraint \"requerimiento_evento_estado_anterior_check_c285bf74\" on \"requerimiento_evento\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_estado_anterior_check_c285bf74",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_estado_anterior_check_c285bf74\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_anterior_check_c285bf74",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"requerimiento_evento_estado_anterior_check_c285bf74\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" DROP CONSTRAINT \"requerimiento_evento_estado_anterior_check_c285bf74\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_estado_anterior_check_c285bf74\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_anterior_check_c285bf74",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropCheckConstraint.requerimiento_evento.requerimiento_evento_estado_nuevo_check_8e282947",
+    "label": "Drop check constraint \"requerimiento_evento_estado_nuevo_check_8e282947\" on \"requerimiento_evento\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_estado_nuevo_check_8e282947",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_estado_nuevo_check_8e282947\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_nuevo_check_8e282947",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"requerimiento_evento_estado_nuevo_check_8e282947\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" DROP CONSTRAINT \"requerimiento_evento_estado_nuevo_check_8e282947\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_estado_nuevo_check_8e282947\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_nuevo_check_8e282947",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.area",
+    "label": "Create table \"area\"",
+    "summary": "Creates table \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"area\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"area\"",
+        "sql": "CREATE TABLE \"public\".\"area\" (\n  \"codigo\" character varying(20) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"area\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cotizacion",
+    "label": "Create table \"cotizacion\"",
+    "summary": "Creates table \"cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cotizacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cotizacion\"",
+        "sql": "CREATE TABLE \"public\".\"cotizacion\" (\n  \"adelanto_porcentaje\" numeric,\n  \"afecto_igv\" bool DEFAULT true NOT NULL,\n  \"archivo_url\" character varying(255),\n  \"condiciones\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"dias_credito\" int4 DEFAULT 0 NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"forma_pago\" character varying(50) NOT NULL,\n  \"garantia\" character varying(100),\n  \"id\" SERIAL NOT NULL,\n  \"id_proveedor\" int4 NOT NULL,\n  \"id_requerimiento\" int4 NOT NULL,\n  \"incluye_igv\" bool DEFAULT false NOT NULL,\n  \"medio_pago\" text,\n  \"moneda_id\" character varying(10) NOT NULL,\n  \"moneda_simbolo\" character varying(10),\n  \"numero\" character varying(20) NOT NULL,\n  \"plazo_entrega_dias\" int4,\n  \"referencia\" character varying(50),\n  \"validez_dias\" int4,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"cotizacion_medio_pago_check_e0a6d2bb\" CHECK (\"medio_pago\" IN ('EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'DEPOSITO', 'YAPE', 'PLIN', 'OTRO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cotizacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cotizacion_detalle",
+    "label": "Create table \"cotizacion_detalle\"",
+    "summary": "Creates table \"cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cotizacion_detalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cotizacion_detalle\"",
+        "sql": "CREATE TABLE \"public\".\"cotizacion_detalle\" (\n  \"cantidad\" numeric NOT NULL,\n  \"cotiza\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_cotizacion\" int4 NOT NULL,\n  \"id_requerimiento_detalle\" int4 NOT NULL,\n  \"marca_modelo\" character varying(100),\n  \"observaciones\" text,\n  \"plazo_entrega_dias\" int4,\n  \"precio_unitario\" numeric NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cotizacion_detalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.cuenta_tesoreria",
+    "label": "Create table \"cuenta_tesoreria\"",
+    "summary": "Creates table \"cuenta_tesoreria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "cuenta_tesoreria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"cuenta_tesoreria\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuenta_tesoreria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"cuenta_tesoreria\"",
+        "sql": "CREATE TABLE \"public\".\"cuenta_tesoreria\" (\n  \"banco\" character varying(100),\n  \"cci\" character varying(30),\n  \"codigo\" character varying(20) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_empresa\" int4,\n  \"moneda_id\" character varying(10) NOT NULL,\n  \"nombre\" text NOT NULL,\n  \"numero_cuenta\" character varying(30),\n  \"tipo\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"cuenta_tesoreria_tipo_check_87119110\" CHECK (\"tipo\" IN ('CAJA', 'BANCO', 'BILLETERA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"cuenta_tesoreria\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cuenta_tesoreria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.pago",
+    "label": "Create table \"pago\"",
+    "summary": "Creates table \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"pago\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"pago\"",
+        "sql": "CREATE TABLE \"public\".\"pago\" (\n  \"concepto\" text DEFAULT 'PROVEEDOR' NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"estado\" text DEFAULT 'REGISTRADO' NOT NULL,\n  \"fecha_pago\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_cuenta\" int4 NOT NULL,\n  \"id_documento_origen\" int4 NOT NULL,\n  \"id_ejecutado_por\" int4,\n  \"id_pago_programado\" int4,\n  \"medio_pago\" text NOT NULL,\n  \"moneda_cuenta\" character varying(10) NOT NULL,\n  \"monto\" numeric NOT NULL,\n  \"monto_cuenta\" numeric NOT NULL,\n  \"numero\" character varying(20) NOT NULL,\n  \"numero_operacion\" character varying(50),\n  \"observaciones\" text,\n  \"tipo_cambio\" numeric,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"pago_concepto_check_61e9b31d\" CHECK (\"concepto\" IN ('PROVEEDOR', 'DETRACCION')),\n  CONSTRAINT \"pago_estado_check_22231c7b\" CHECK (\"estado\" IN ('REGISTRADO', 'ANULADO')),\n  CONSTRAINT \"pago_medio_pago_check_e0a6d2bb\" CHECK (\"medio_pago\" IN ('EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'DEPOSITO', 'YAPE', 'PLIN', 'OTRO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"pago\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.pago_programado",
+    "label": "Create table \"pago_programado\"",
+    "summary": "Creates table \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"pago_programado\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"pago_programado\"",
+        "sql": "CREATE TABLE \"public\".\"pago_programado\" (\n  \"concepto\" text DEFAULT 'PROVEEDOR' NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"cuenta_destino\" character varying(50),\n  \"estado\" text DEFAULT 'PROGRAMADO' NOT NULL,\n  \"fecha_programada\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_cuenta\" int4,\n  \"id_documento_origen\" int4 NOT NULL,\n  \"id_programado_por\" int4,\n  \"medio_pago\" text NOT NULL,\n  \"monto\" numeric NOT NULL,\n  \"observaciones\" text,\n  \"urgente\" bool DEFAULT false NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"pago_programado_concepto_check_61e9b31d\" CHECK (\"concepto\" IN ('PROVEEDOR', 'DETRACCION')),\n  CONSTRAINT \"pago_programado_estado_check_e760a11a\" CHECK (\"estado\" IN ('PROGRAMADO', 'EJECUTADO', 'CANCELADO')),\n  CONSTRAINT \"pago_programado_medio_pago_check_e0a6d2bb\" CHECK (\"medio_pago\" IN ('EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'DEPOSITO', 'YAPE', 'PLIN', 'OTRO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"pago_programado\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipo_cambio_diario",
+    "label": "Create table \"tipo_cambio_diario\"",
+    "summary": "Creates table \"tipo_cambio_diario\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_cambio_diario"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipo_cambio_diario\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_cambio_diario\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipo_cambio_diario\"",
+        "sql": "CREATE TABLE \"public\".\"tipo_cambio_diario\" (\n  \"compra\" numeric NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"moneda_id\" character varying(10) NOT NULL,\n  \"venta\" numeric NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipo_cambio_diario\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_cambio_diario\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.anexos.cuenta_detraccion",
+    "label": "Add column \"cuenta_detraccion\" to \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "cuenta_detraccion",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"cuenta_detraccion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "anexos",
+          "cuenta_detraccion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"cuenta_detraccion\"",
+        "sql": "ALTER TABLE \"public\".\"anexos\" ADD COLUMN \"cuenta_detraccion\" character varying(30)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"cuenta_detraccion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "anexos",
+          "cuenta_detraccion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.anexos.exceptuado_retencion",
+    "label": "Add column \"exceptuado_retencion\" to \"anexos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "exceptuado_retencion",
+        "table": "anexos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"exceptuado_retencion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "anexos",
+          "exceptuado_retencion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"exceptuado_retencion\"",
+        "sql": "ALTER TABLE \"public\".\"anexos\" ADD COLUMN \"exceptuado_retencion\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"exceptuado_retencion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "anexos",
+          "exceptuado_retencion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.afecto_igv",
+    "label": "Add column \"afecto_igv\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "afecto_igv",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"afecto_igv\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "afecto_igv"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"afecto_igv\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"afecto_igv\" bool DEFAULT true NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"afecto_igv\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "afecto_igv"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.clase_documento",
+    "label": "Add column \"clase_documento\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "clase_documento",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"clase_documento\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "clase_documento"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"clase_documento\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"clase_documento\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"clase_documento\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "clase_documento"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.detraccion_monto",
+    "label": "Add column \"detraccion_monto\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "detraccion_monto",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"detraccion_monto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "detraccion_monto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"detraccion_monto\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"detraccion_monto\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"detraccion_monto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "detraccion_monto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.detraccion_porcentaje",
+    "label": "Add column \"detraccion_porcentaje\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "detraccion_porcentaje",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"detraccion_porcentaje\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "detraccion_porcentaje"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"detraccion_porcentaje\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"detraccion_porcentaje\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"detraccion_porcentaje\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "detraccion_porcentaje"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.dias_credito",
+    "label": "Add column \"dias_credito\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dias_credito",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dias_credito\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "dias_credito"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"dias_credito\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"dias_credito\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dias_credito\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "dias_credito"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.estado",
+    "label": "Add column \"estado\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "estado",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"estado\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "estado"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"estado\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"estado\" text DEFAULT 'REGISTRADO' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"estado\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "estado"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.fecha_vencimiento",
+    "label": "Add column \"fecha_vencimiento\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_vencimiento",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_vencimiento\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "fecha_vencimiento"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_vencimiento\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"fecha_vencimiento\" date"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_vencimiento\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "fecha_vencimiento"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.id_area",
+    "label": "Add column \"id_area\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_area",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_area\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_area"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_area\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"id_area\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_area\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_area"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.id_cotizacion",
+    "label": "Add column \"id_cotizacion\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_cotizacion",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_cotizacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_cotizacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_cotizacion\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"id_cotizacion\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_cotizacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "id_cotizacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.numero_documento",
+    "label": "Add column \"numero_documento\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "numero_documento",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"numero_documento\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "numero_documento"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"numero_documento\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"numero_documento\" character varying(20)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"numero_documento\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "numero_documento"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.retencion_manual",
+    "label": "Add column \"retencion_manual\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "retencion_manual",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"retencion_manual\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_manual"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"retencion_manual\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"retencion_manual\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"retencion_manual\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_manual"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.retencion_monto",
+    "label": "Add column \"retencion_monto\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "retencion_monto",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"retencion_monto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_monto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"retencion_monto\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"retencion_monto\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"retencion_monto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_monto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.documentosOrigen.retencion_porcentaje",
+    "label": "Add column \"retencion_porcentaje\" to \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "retencion_porcentaje",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"retencion_porcentaje\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_porcentaje"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"retencion_porcentaje\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD COLUMN \"retencion_porcentaje\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"retencion_porcentaje\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "documentosOrigen",
+          "retencion_porcentaje"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.comentario_adjudicacion",
+    "label": "Add column \"comentario_adjudicacion\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "comentario_adjudicacion",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"comentario_adjudicacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "comentario_adjudicacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"comentario_adjudicacion\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"comentario_adjudicacion\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"comentario_adjudicacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "comentario_adjudicacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.id_area",
+    "label": "Add column \"id_area\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_area",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_area\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_area"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_area\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"id_area\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_area\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_area"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.id_beneficiario",
+    "label": "Add column \"id_beneficiario\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_beneficiario",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_beneficiario\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_beneficiario"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_beneficiario\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"id_beneficiario\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_beneficiario\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_beneficiario"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.id_cotizacion_ganadora",
+    "label": "Add column \"id_cotizacion_ganadora\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_cotizacion_ganadora",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_cotizacion_ganadora\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_cotizacion_ganadora"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_cotizacion_ganadora\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"id_cotizacion_ganadora\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_cotizacion_ganadora\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_cotizacion_ganadora"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.tipo",
+    "label": "Add column \"tipo\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "tipo",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"tipo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "tipo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"tipo\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"tipo\" text DEFAULT 'COMPRA' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"tipo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "tipo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento_detalle.id_beneficiario",
+    "label": "Add column \"id_beneficiario\" to \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_beneficiario",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_beneficiario\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_beneficiario"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_beneficiario\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\" ADD COLUMN \"id_beneficiario\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_beneficiario\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_beneficiario"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.area.area_codigo_key",
+    "label": "Add unique constraint on \"area\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "area_codigo_key",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"area_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_codigo_key",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"area_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"area\" ADD CONSTRAINT \"area_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"area_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_codigo_key",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.cotizacion.cotizacion_numero_key",
+    "label": "Add unique constraint on \"cotizacion\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "cotizacion_numero_key",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"cotizacion_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_numero_key",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"cotizacion_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion\" ADD CONSTRAINT \"cotizacion_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"cotizacion_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_numero_key",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.cotizacion.cotizacion_id_requerimiento_id_proveedor_key",
+    "label": "Add unique constraint on \"cotizacion\" (id_requerimiento, id_proveedor)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "cotizacion_id_requerimiento_id_proveedor_key",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"cotizacion_id_requerimiento_id_proveedor_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_requerimiento_id_proveedor_key",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"cotizacion_id_requerimiento_id_proveedor_key\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion\" ADD CONSTRAINT \"cotizacion_id_requerimiento_id_proveedor_key\" UNIQUE (\"id_requerimiento\", \"id_proveedor\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"cotizacion_id_requerimiento_id_proveedor_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_requerimiento_id_proveedor_key",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.cotizacion_detalle.cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key",
+    "label": "Add unique constraint on \"cotizacion_detalle\" (id_cotizacion, id_requerimiento_detalle)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key",
+        "table": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion_detalle\" ADD CONSTRAINT \"cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key\" UNIQUE (\"id_cotizacion\", \"id_requerimiento_detalle\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_cotizacion_id_requerimiento_detalle_key",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.cuenta_tesoreria.cuenta_tesoreria_codigo_key",
+    "label": "Add unique constraint on \"cuenta_tesoreria\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "cuenta_tesoreria_codigo_key",
+        "table": "cuenta_tesoreria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"cuenta_tesoreria_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cuenta_tesoreria_codigo_key",
+          "public",
+          "\"public\".\"cuenta_tesoreria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"cuenta_tesoreria_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"cuenta_tesoreria\" ADD CONSTRAINT \"cuenta_tesoreria_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"cuenta_tesoreria_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cuenta_tesoreria_codigo_key",
+          "public",
+          "\"public\".\"cuenta_tesoreria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.documentosOrigen.documentosOrigen_clase_documento_check_078e3f9b",
+    "label": "Add check constraint \"documentosOrigen_clase_documento_check_078e3f9b\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "documentosOrigen_clase_documento_check_078e3f9b",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_clase_documento_check_078e3f9b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_clase_documento_check_078e3f9b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"documentosOrigen_clase_documento_check_078e3f9b\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD CONSTRAINT \"documentosOrigen_clase_documento_check_078e3f9b\" CHECK (\"clase_documento\" IN ('ORDEN_COMPRA', 'ORDEN_SERVICIO', 'PLANILLA_PERSONAL', 'PLANILLA_OBRA', 'CAJA_CHICA', 'GASTO_FINANCIERO', 'PAGO_SERVICIO', 'OTRO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_clase_documento_check_078e3f9b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_clase_documento_check_078e3f9b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.documentosOrigen.documentosOrigen_estado_check_22231c7b",
+    "label": "Add check constraint \"documentosOrigen_estado_check_22231c7b\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "documentosOrigen_estado_check_22231c7b",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_estado_check_22231c7b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_22231c7b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"documentosOrigen_estado_check_22231c7b\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD CONSTRAINT \"documentosOrigen_estado_check_22231c7b\" CHECK (\"estado\" IN ('REGISTRADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_estado_check_22231c7b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_22231c7b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.documentosOrigen.documentosOrigen_numero_documento_key",
+    "label": "Add unique constraint on \"documentosOrigen\" (numero_documento)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "documentosOrigen_numero_documento_key",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_numero_documento_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_numero_documento_key",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"documentosOrigen_numero_documento_key\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD CONSTRAINT \"documentosOrigen_numero_documento_key\" UNIQUE (\"numero_documento\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_numero_documento_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_numero_documento_key",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.pago.pago_numero_key",
+    "label": "Add unique constraint on \"pago\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "pago_numero_key",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"pago_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_numero_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"pago_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"pago\" ADD CONSTRAINT \"pago_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"pago_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_numero_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.pago.pago_id_pago_programado_key",
+    "label": "Add unique constraint on \"pago\" (id_pago_programado)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "pago_id_pago_programado_key",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"pago_id_pago_programado_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"pago_id_pago_programado_key\"",
+        "sql": "ALTER TABLE \"public\".\"pago\" ADD CONSTRAINT \"pago_id_pago_programado_key\" UNIQUE (\"id_pago_programado\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"pago_id_pago_programado_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento.requerimiento_estado_check_1d164afe",
+    "label": "Add check constraint \"requerimiento_estado_check_1d164afe\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_estado_check_1d164afe",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_estado_check_1d164afe\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_estado_check_1d164afe",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_estado_check_1d164afe\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD CONSTRAINT \"requerimiento_estado_check_1d164afe\" CHECK (\"estado\" IN ('BORRADOR', 'ENVIADO', 'COTIZADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_estado_check_1d164afe\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_estado_check_1d164afe",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento.requerimiento_tipo_check_e0ca4d80",
+    "label": "Add check constraint \"requerimiento_tipo_check_e0ca4d80\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_tipo_check_e0ca4d80",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_tipo_check_e0ca4d80\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_tipo_check_e0ca4d80",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_tipo_check_e0ca4d80\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD CONSTRAINT \"requerimiento_tipo_check_e0ca4d80\" CHECK (\"tipo\" IN ('COMPRA', 'PLANILLA_PERSONAL', 'PLANILLA_OBRA', 'CAJA_CHICA', 'GASTO_FINANCIERO', 'PAGO_SERVICIO', 'OTRO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_tipo_check_e0ca4d80\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_tipo_check_e0ca4d80",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento_evento.requerimiento_evento_accion_check_27cceb6a",
+    "label": "Add check constraint \"requerimiento_evento_accion_check_27cceb6a\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_accion_check_27cceb6a",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_accion_check_27cceb6a\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_accion_check_27cceb6a",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_evento_accion_check_27cceb6a\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" ADD CONSTRAINT \"requerimiento_evento_accion_check_27cceb6a\" CHECK (\"accion\" IN ('CREAR', 'ENVIAR', 'CERRAR_COTIZACION', 'REABRIR_COTIZACION', 'OBSERVAR', 'APROBAR', 'RECHAZAR', 'ANULAR'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_accion_check_27cceb6a\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_accion_check_27cceb6a",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento_evento.requerimiento_evento_estado_anterior_check_fcf761d8",
+    "label": "Add check constraint \"requerimiento_evento_estado_anterior_check_fcf761d8\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_estado_anterior_check_fcf761d8",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_estado_anterior_check_fcf761d8\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_anterior_check_fcf761d8",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_evento_estado_anterior_check_fcf761d8\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" ADD CONSTRAINT \"requerimiento_evento_estado_anterior_check_fcf761d8\" CHECK (\"estado_anterior\" IN ('BORRADOR', 'ENVIADO', 'COTIZADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_estado_anterior_check_fcf761d8\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_anterior_check_fcf761d8",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento_evento.requerimiento_evento_estado_nuevo_check_d4a94e8c",
+    "label": "Add check constraint \"requerimiento_evento_estado_nuevo_check_d4a94e8c\" on \"requerimiento_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_evento_estado_nuevo_check_d4a94e8c",
+        "table": "requerimiento_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_evento_estado_nuevo_check_d4a94e8c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_nuevo_check_d4a94e8c",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_evento_estado_nuevo_check_d4a94e8c\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_evento\" ADD CONSTRAINT \"requerimiento_evento_estado_nuevo_check_d4a94e8c\" CHECK (\"estado_nuevo\" IN ('BORRADOR', 'ENVIADO', 'COTIZADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_evento_estado_nuevo_check_d4a94e8c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_evento_estado_nuevo_check_d4a94e8c",
+          "public",
+          "\"public\".\"requerimiento_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.tipo_cambio_diario.tipo_cambio_diario_fecha_moneda_id_key",
+    "label": "Add unique constraint on \"tipo_cambio_diario\" (fecha, moneda_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "tipo_cambio_diario_fecha_moneda_id_key",
+        "table": "tipo_cambio_diario"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"tipo_cambio_diario_fecha_moneda_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_cambio_diario_fecha_moneda_id_key",
+          "public",
+          "\"public\".\"tipo_cambio_diario\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"tipo_cambio_diario_fecha_moneda_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_cambio_diario\" ADD CONSTRAINT \"tipo_cambio_diario_fecha_moneda_id_key\" UNIQUE (\"fecha\", \"moneda_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"tipo_cambio_diario_fecha_moneda_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_cambio_diario_fecha_moneda_id_key",
+          "public",
+          "\"public\".\"tipo_cambio_diario\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cotizacion.cotizacion_id_proveedor_idx_4edef4d1",
+    "label": "Create index \"cotizacion_id_proveedor_idx_4edef4d1\" on \"cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cotizacion_id_proveedor_idx_4edef4d1",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cotizacion_id_proveedor_idx_4edef4d1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cotizacion_id_proveedor_idx_4edef4d1\"",
+        "sql": "CREATE INDEX \"cotizacion_id_proveedor_idx_4edef4d1\" ON \"public\".\"cotizacion\" (\"id_proveedor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cotizacion_id_proveedor_idx_4edef4d1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cotizacion.cotizacion_id_requerimiento_idx_a213c508",
+    "label": "Create index \"cotizacion_id_requerimiento_idx_a213c508\" on \"cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cotizacion_id_requerimiento_idx_a213c508",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cotizacion_id_requerimiento_idx_a213c508\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cotizacion_id_requerimiento_idx_a213c508\"",
+        "sql": "CREATE INDEX \"cotizacion_id_requerimiento_idx_a213c508\" ON \"public\".\"cotizacion\" (\"id_requerimiento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cotizacion_id_requerimiento_idx_a213c508\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_id_requerimiento_idx_a213c508\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cotizacion_detalle.cotizacion_detalle_id_cotizacion_idx_49595cf0",
+    "label": "Create index \"cotizacion_detalle_id_cotizacion_idx_49595cf0\" on \"cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cotizacion_detalle_id_cotizacion_idx_49595cf0",
+        "table": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cotizacion_detalle_id_cotizacion_idx_49595cf0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cotizacion_detalle_id_cotizacion_idx_49595cf0\"",
+        "sql": "CREATE INDEX \"cotizacion_detalle_id_cotizacion_idx_49595cf0\" ON \"public\".\"cotizacion_detalle\" (\"id_cotizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cotizacion_detalle_id_cotizacion_idx_49595cf0\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.cotizacion_detalle.cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251",
+    "label": "Create index \"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\" on \"cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251",
+        "table": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\"",
+        "sql": "CREATE INDEX \"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\" ON \"public\".\"cotizacion_detalle\" (\"id_requerimiento_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"cotizacion_detalle_id_requerimiento_detalle_idx_59ff1251\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.documentosOrigen.documentosOrigen_id_area_idx_2da0f6a6",
+    "label": "Create index \"documentosOrigen_id_area_idx_2da0f6a6\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "documentosOrigen_id_area_idx_2da0f6a6",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"documentosOrigen_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"documentosOrigen_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"documentosOrigen_id_area_idx_2da0f6a6\" ON \"public\".\"documentosOrigen\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"documentosOrigen_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.documentosOrigen.documentosOrigen_id_cotizacion_idx_49595cf0",
+    "label": "Create index \"documentosOrigen_id_cotizacion_idx_49595cf0\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "documentosOrigen_id_cotizacion_idx_49595cf0",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"documentosOrigen_id_cotizacion_idx_49595cf0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"documentosOrigen_id_cotizacion_idx_49595cf0\"",
+        "sql": "CREATE INDEX \"documentosOrigen_id_cotizacion_idx_49595cf0\" ON \"public\".\"documentosOrigen\" (\"id_cotizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"documentosOrigen_id_cotizacion_idx_49595cf0\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"documentosOrigen_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago.pago_id_cuenta_idx_48ca1c78",
+    "label": "Create index \"pago_id_cuenta_idx_48ca1c78\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_id_cuenta_idx_48ca1c78",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_id_cuenta_idx_48ca1c78\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_cuenta_idx_48ca1c78\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_id_cuenta_idx_48ca1c78\"",
+        "sql": "CREATE INDEX \"pago_id_cuenta_idx_48ca1c78\" ON \"public\".\"pago\" (\"id_cuenta\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_id_cuenta_idx_48ca1c78\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_cuenta_idx_48ca1c78\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago.pago_id_documento_origen_idx_90e8b67c",
+    "label": "Create index \"pago_id_documento_origen_idx_90e8b67c\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_id_documento_origen_idx_90e8b67c",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_id_documento_origen_idx_90e8b67c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_id_documento_origen_idx_90e8b67c\"",
+        "sql": "CREATE INDEX \"pago_id_documento_origen_idx_90e8b67c\" ON \"public\".\"pago\" (\"id_documento_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_id_documento_origen_idx_90e8b67c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago_programado.pago_programado_fecha_programada_estado_idx_0d8b5cf9",
+    "label": "Create index \"pago_programado_fecha_programada_estado_idx_0d8b5cf9\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_programado_fecha_programada_estado_idx_0d8b5cf9",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_programado_fecha_programada_estado_idx_0d8b5cf9\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_fecha_programada_estado_idx_0d8b5cf9\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_programado_fecha_programada_estado_idx_0d8b5cf9\"",
+        "sql": "CREATE INDEX \"pago_programado_fecha_programada_estado_idx_0d8b5cf9\" ON \"public\".\"pago_programado\" (\"fecha_programada\", \"estado\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_programado_fecha_programada_estado_idx_0d8b5cf9\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_fecha_programada_estado_idx_0d8b5cf9\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago_programado.pago_programado_id_cuenta_idx_48ca1c78",
+    "label": "Create index \"pago_programado_id_cuenta_idx_48ca1c78\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_programado_id_cuenta_idx_48ca1c78",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_programado_id_cuenta_idx_48ca1c78\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_cuenta_idx_48ca1c78\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_programado_id_cuenta_idx_48ca1c78\"",
+        "sql": "CREATE INDEX \"pago_programado_id_cuenta_idx_48ca1c78\" ON \"public\".\"pago_programado\" (\"id_cuenta\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_programado_id_cuenta_idx_48ca1c78\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_cuenta_idx_48ca1c78\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago_programado.pago_programado_id_documento_origen_idx_90e8b67c",
+    "label": "Create index \"pago_programado_id_documento_origen_idx_90e8b67c\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_programado_id_documento_origen_idx_90e8b67c",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_programado_id_documento_origen_idx_90e8b67c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_programado_id_documento_origen_idx_90e8b67c\"",
+        "sql": "CREATE INDEX \"pago_programado_id_documento_origen_idx_90e8b67c\" ON \"public\".\"pago_programado\" (\"id_documento_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_programado_id_documento_origen_idx_90e8b67c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_area_idx_2da0f6a6",
+    "label": "Create index \"requerimiento_id_area_idx_2da0f6a6\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_area_idx_2da0f6a6",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"requerimiento_id_area_idx_2da0f6a6\" ON \"public\".\"requerimiento\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_beneficiario_idx_9721cabf",
+    "label": "Create index \"requerimiento_id_beneficiario_idx_9721cabf\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_beneficiario_idx_9721cabf",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_beneficiario_idx_9721cabf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_beneficiario_idx_9721cabf\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_beneficiario_idx_9721cabf\"",
+        "sql": "CREATE INDEX \"requerimiento_id_beneficiario_idx_9721cabf\" ON \"public\".\"requerimiento\" (\"id_beneficiario\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_beneficiario_idx_9721cabf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_beneficiario_idx_9721cabf\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_cotizacion_ganadora_idx_912cf2a3",
+    "label": "Create index \"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_cotizacion_ganadora_idx_912cf2a3",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\"",
+        "sql": "CREATE INDEX \"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\" ON \"public\".\"requerimiento\" (\"id_cotizacion_ganadora\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_cotizacion_ganadora_idx_912cf2a3\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_detalle.requerimiento_detalle_id_beneficiario_idx_9721cabf",
+    "label": "Create index \"requerimiento_detalle_id_beneficiario_idx_9721cabf\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_detalle_id_beneficiario_idx_9721cabf",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_detalle_id_beneficiario_idx_9721cabf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_beneficiario_idx_9721cabf\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_detalle_id_beneficiario_idx_9721cabf\"",
+        "sql": "CREATE INDEX \"requerimiento_detalle_id_beneficiario_idx_9721cabf\" ON \"public\".\"requerimiento_detalle\" (\"id_beneficiario\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_detalle_id_beneficiario_idx_9721cabf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_beneficiario_idx_9721cabf\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cotizacion.cotizacion_id_requerimiento_fkey",
+    "label": "Add foreign key \"cotizacion_id_requerimiento_fkey\" on \"cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cotizacion_id_requerimiento_fkey",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cotizacion_id_requerimiento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cotizacion_id_requerimiento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion\"\nADD CONSTRAINT \"cotizacion_id_requerimiento_fkey\"\nFOREIGN KEY (\"id_requerimiento\")\nREFERENCES \"public\".\"requerimiento\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cotizacion_id_requerimiento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_requerimiento_fkey",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cotizacion.cotizacion_id_proveedor_fkey",
+    "label": "Add foreign key \"cotizacion_id_proveedor_fkey\" on \"cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cotizacion_id_proveedor_fkey",
+        "table": "cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cotizacion_id_proveedor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_proveedor_fkey",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cotizacion_id_proveedor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion\"\nADD CONSTRAINT \"cotizacion_id_proveedor_fkey\"\nFOREIGN KEY (\"id_proveedor\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cotizacion_id_proveedor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_id_proveedor_fkey",
+          "public",
+          "\"public\".\"cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cotizacion_detalle.cotizacion_detalle_id_cotizacion_fkey",
+    "label": "Add foreign key \"cotizacion_detalle_id_cotizacion_fkey\" on \"cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cotizacion_detalle_id_cotizacion_fkey",
+        "table": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cotizacion_detalle_id_cotizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cotizacion_detalle_id_cotizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion_detalle\"\nADD CONSTRAINT \"cotizacion_detalle_id_cotizacion_fkey\"\nFOREIGN KEY (\"id_cotizacion\")\nREFERENCES \"public\".\"cotizacion\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cotizacion_detalle_id_cotizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.cotizacion_detalle.cotizacion_detalle_id_requerimiento_detalle_fkey",
+    "label": "Add foreign key \"cotizacion_detalle_id_requerimiento_detalle_fkey\" on \"cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "cotizacion_detalle_id_requerimiento_detalle_fkey",
+        "table": "cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"cotizacion_detalle_id_requerimiento_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_requerimiento_detalle_fkey",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"cotizacion_detalle_id_requerimiento_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"cotizacion_detalle\"\nADD CONSTRAINT \"cotizacion_detalle_id_requerimiento_detalle_fkey\"\nFOREIGN KEY (\"id_requerimiento_detalle\")\nREFERENCES \"public\".\"requerimiento_detalle\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"cotizacion_detalle_id_requerimiento_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "cotizacion_detalle_id_requerimiento_detalle_fkey",
+          "public",
+          "\"public\".\"cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.documentosOrigen.documentosOrigen_id_area_fkey",
+    "label": "Add foreign key \"documentosOrigen_id_area_fkey\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "documentosOrigen_id_area_fkey",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"documentosOrigen_id_area_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_area_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"documentosOrigen_id_area_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\"\nADD CONSTRAINT \"documentosOrigen_id_area_fkey\"\nFOREIGN KEY (\"id_area\")\nREFERENCES \"public\".\"area\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"documentosOrigen_id_area_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_area_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.documentosOrigen.documentosOrigen_id_cotizacion_fkey",
+    "label": "Add foreign key \"documentosOrigen_id_cotizacion_fkey\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "documentosOrigen_id_cotizacion_fkey",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"documentosOrigen_id_cotizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"documentosOrigen_id_cotizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\"\nADD CONSTRAINT \"documentosOrigen_id_cotizacion_fkey\"\nFOREIGN KEY (\"id_cotizacion\")\nREFERENCES \"public\".\"cotizacion\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"documentosOrigen_id_cotizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago.pago_id_documento_origen_fkey",
+    "label": "Add foreign key \"pago_id_documento_origen_fkey\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_id_documento_origen_fkey",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_id_documento_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_id_documento_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago\"\nADD CONSTRAINT \"pago_id_documento_origen_fkey\"\nFOREIGN KEY (\"id_documento_origen\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_id_documento_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago.pago_id_cuenta_fkey",
+    "label": "Add foreign key \"pago_id_cuenta_fkey\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_id_cuenta_fkey",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_id_cuenta_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_cuenta_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_id_cuenta_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago\"\nADD CONSTRAINT \"pago_id_cuenta_fkey\"\nFOREIGN KEY (\"id_cuenta\")\nREFERENCES \"public\".\"cuenta_tesoreria\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_id_cuenta_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_cuenta_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago.pago_id_pago_programado_fkey",
+    "label": "Add foreign key \"pago_id_pago_programado_fkey\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_id_pago_programado_fkey",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_id_pago_programado_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_id_pago_programado_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago\"\nADD CONSTRAINT \"pago_id_pago_programado_fkey\"\nFOREIGN KEY (\"id_pago_programado\")\nREFERENCES \"public\".\"pago_programado\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_id_pago_programado_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_fkey",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago_programado.pago_programado_id_documento_origen_fkey",
+    "label": "Add foreign key \"pago_programado_id_documento_origen_fkey\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_programado_id_documento_origen_fkey",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_programado_id_documento_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_programado_id_documento_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago_programado\"\nADD CONSTRAINT \"pago_programado_id_documento_origen_fkey\"\nFOREIGN KEY (\"id_documento_origen\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_programado_id_documento_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago_programado.pago_programado_id_cuenta_fkey",
+    "label": "Add foreign key \"pago_programado_id_cuenta_fkey\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_programado_id_cuenta_fkey",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_programado_id_cuenta_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_cuenta_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_programado_id_cuenta_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago_programado\"\nADD CONSTRAINT \"pago_programado_id_cuenta_fkey\"\nFOREIGN KEY (\"id_cuenta\")\nREFERENCES \"public\".\"cuenta_tesoreria\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_programado_id_cuenta_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_cuenta_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_area_fkey",
+    "label": "Add foreign key \"requerimiento_id_area_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_area_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_area_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_area_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_area_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_area_fkey\"\nFOREIGN KEY (\"id_area\")\nREFERENCES \"public\".\"area\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_area_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_area_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_beneficiario_fkey",
+    "label": "Add foreign key \"requerimiento_id_beneficiario_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_beneficiario_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_beneficiario_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_beneficiario_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_beneficiario_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_beneficiario_fkey\"\nFOREIGN KEY (\"id_beneficiario\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_beneficiario_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_beneficiario_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_cotizacion_ganadora_fkey",
+    "label": "Add foreign key \"requerimiento_id_cotizacion_ganadora_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_cotizacion_ganadora_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_cotizacion_ganadora_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_cotizacion_ganadora_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_cotizacion_ganadora_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_cotizacion_ganadora_fkey\"\nFOREIGN KEY (\"id_cotizacion_ganadora\")\nREFERENCES \"public\".\"cotizacion\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_cotizacion_ganadora_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_cotizacion_ganadora_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_detalle.requerimiento_detalle_id_beneficiario_fkey",
+    "label": "Add foreign key \"requerimiento_detalle_id_beneficiario_fkey\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_detalle_id_beneficiario_fkey",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_detalle_id_beneficiario_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_beneficiario_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_detalle_id_beneficiario_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\"\nADD CONSTRAINT \"requerimiento_detalle_id_beneficiario_fkey\"\nFOREIGN KEY (\"id_beneficiario\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_detalle_id_beneficiario_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_beneficiario_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.modulo_administrativo.semillas",
+    "label": "Series, areas, conceptos y backfill de clase de documento de origen",
+    "summary": "Crea series de correlativo, areas iniciales, productos concepto para FUR no-compra y clasifica los documentos de origen existentes",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_correlativo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed series",
+        "sql": "INSERT INTO \"public\".\"almacen_correlativo\" (serie, ultimo) VALUES ('COT',0),('CP',0),('OC',0),('OS',0),('PP',0),('PO',0),('CCH',0),('GF',0),('PS',0),('DO',0) ON CONFLICT (serie) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "seed areas",
+        "sql": "INSERT INTO \"public\".\"area\" (codigo, nombre) VALUES ('COSTOS','Costos y Presupuesto'),('OFTEC','Oficina Tecnica'),('PROCURA','Procura'),('COMERCIAL','Comercializacion'),('POSVENTA','Posventa'),('ALMACEN','Almacen'),('SISTEMAS','Sistemas') ON CONFLICT (codigo) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "seed productos concepto",
+        "sql": "INSERT INTO \"public\".\"producto\" (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) SELECT v.codigo, v.descripcion, (SELECT id FROM \"public\".\"categoria\" WHERE codigo = 'GSGRAL' LIMIT 1), (SELECT id FROM \"public\".\"unidad_medida\" ORDER BY (codigo ILIKE 'UND%') DESC, id LIMIT 1), 'SERVICIO' FROM (VALUES ('CONC-PLANILLA-PERSONAL','PLANILLA DE PERSONAL'),('CONC-PLANILLA-OBRA','PLANILLA DE OBRA'),('CONC-CAJA-CHICA','REEMBOLSO DE CAJA CHICA'),('CONC-GASTO-FINANCIERO','GASTO FINANCIERO'),('CONC-PAGO-SERVICIO','PAGO DE SERVICIO'),('CONC-OTRO','OTRO CONCEPTO')) AS v(codigo, descripcion) WHERE EXISTS (SELECT 1 FROM \"public\".\"categoria\" WHERE codigo = 'GSGRAL') AND EXISTS (SELECT 1 FROM \"public\".\"unidad_medida\") ON CONFLICT (codigo) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "backfill clase_documento",
+        "sql": "UPDATE \"public\".\"documentosOrigen\" SET clase_documento = CASE WHEN tipo_oc = 'SERVICIO' THEN 'ORDEN_SERVICIO' ELSE 'ORDEN_COMPRA' END WHERE clase_documento IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]

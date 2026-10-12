@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
+import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
@@ -25,6 +26,8 @@ type AnexoRow = {
   Contacto: Varchar255 | null;
   Telefono: Varchar255 | null;
   Correo: Varchar255 | null;
+  cuenta_detraccion: Varchar<30> | null;
+  exceptuado_retencion: boolean;
   estado: boolean;
 };
 
@@ -39,6 +42,8 @@ type AnexoUpdateData = Partial<{
   Contacto: Varchar255 | null;
   Telefono: Varchar255 | null;
   Correo: Varchar255 | null;
+  cuenta_detraccion: Varchar<30> | null;
+  exceptuado_retencion: boolean;
   estado: boolean;
 }>;
 
@@ -101,6 +106,8 @@ export class AnexoHandler {
       Contacto: toVarchar(dto.Contacto),
       Telefono: toVarchar(dto.Telefono),
       Correo: toVarchar(dto.Correo),
+      cuenta_detraccion: toVarchar<30>(dto.cuenta_detraccion),
+      exceptuado_retencion: dto.exceptuado_retencion,
       estado: dto.estado,
     });
     return toResponse(row);
@@ -118,6 +125,8 @@ export class AnexoHandler {
     if (dto.Contacto !== undefined) data.Contacto = toVarchar(dto.Contacto);
     if (dto.Telefono !== undefined) data.Telefono = toVarchar(dto.Telefono);
     if (dto.Correo !== undefined) data.Correo = toVarchar(dto.Correo);
+    if (dto.cuenta_detraccion !== undefined) data.cuenta_detraccion = toVarchar<30>(dto.cuenta_detraccion);
+    if (dto.exceptuado_retencion !== undefined) data.exceptuado_retencion = dto.exceptuado_retencion;
     if (dto.estado !== undefined) data.estado = dto.estado;
 
     const row = await this.db.orm.public.Anexos.where({ id }).update(data);
@@ -144,6 +153,8 @@ function toResponse(row: AnexoRow): AnexoResponseDto {
     Contacto: row.Contacto,
     Telefono: row.Telefono,
     Correo: row.Correo,
+    cuenta_detraccion: row.cuenta_detraccion,
+    exceptuado_retencion: row.exceptuado_retencion,
     estado: row.estado,
   };
 }

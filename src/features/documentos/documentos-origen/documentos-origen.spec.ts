@@ -248,7 +248,7 @@ describe('documentos-origen', () => {
         monto: '351.50',
         igv: '18.00',
         dscto_compras: '10.00',
-        total: '359.50',
+        total: '369.50',
       }),
     );
     expect(result.detalles).toHaveLength(2);
@@ -407,8 +407,26 @@ describe('documentos-origen', () => {
       await expect(controller.delete(1)).rejects.toBeInstanceOf(ConflictException);
     });
 
-    it('elimina la OC sin recepciones', async () => {
+    it('elimina la OC sin recepciones ni pagos', async () => {
+      sqlRows
+        .mockResolvedValueOnce([{ id: 1 }])
+        .mockResolvedValueOnce([{ existe: false }])
+        .mockResolvedValueOnce([{ existe: false }]);
       await expect(controller.delete(1)).resolves.toEqual({ deleted: true, id: 1 });
+    });
+
+    it('no permite eliminar una OC con pagos o programaciones, aunque no tenga recepciones', async () => {
+      sqlRows
+        .mockResolvedValueOnce([{ id: 1 }])
+        .mockResolvedValueOnce([{ existe: false }])
+        .mockResolvedValueOnce([{ existe: true }]);
+      await expect(controller.delete(1)).rejects.toThrow(/pagos o programaciones/);
+    });
+
+    it('no permite cambiar el IGV de una OC con pagos o programaciones', async () => {
+      sqlRows.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([{ existe: true }]);
+      await expect(controller.update(1, { igv: 10 })).rejects.toThrow(/pagos o programaciones/);
+      expect(update).not.toHaveBeenCalled();
     });
   });
 });

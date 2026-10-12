@@ -7,6 +7,8 @@ import { CategoriaProductosController } from './categoria/productos/productos.co
 import { CategoriaProductosHandler } from './categoria/productos/productos.handler.js';
 import { AnexoController } from './anexo/anexo.controller.js';
 import { AnexoHandler } from './anexo/anexo.handler.js';
+import { AreaController } from './area/area.controller.js';
+import { AreaHandler } from './area/area.handler.js';
 import { FamiliaAlmacenController } from './familia-almacen/familia-almacen.controller.js';
 import { FamiliaAlmacenHandler } from './familia-almacen/familia-almacen.handler.js';
 import { EspecialidadController } from './especialidad/especialidad.controller.js';
@@ -38,8 +40,10 @@ import { UnidadMedidaProductosHandler } from './unidad-medida/productos/producto
     TipoDocIdentidadController,
     AnexoController,
     FamiliaAlmacenController,
+    AreaController,
   ],
   providers: [
+    AreaHandler,
     FamiliaAlmacenHandler,
     TipoCategoriaHandler,
     CategoriaHandler,

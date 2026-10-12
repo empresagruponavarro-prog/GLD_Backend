@@ -1,0 +1,83 @@
+[
+  {
+    "id": "dropConstraint.pago.pago_id_pago_programado_key",
+    "label": "Drop constraint \"pago_id_pago_programado_key\" on \"pago\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "pago_id_pago_programado_key",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"pago_id_pago_programado_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"pago_id_pago_programado_key\"",
+        "sql": "ALTER TABLE \"public\".\"pago\" DROP CONSTRAINT \"pago_id_pago_programado_key\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"pago_id_pago_programado_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_id_pago_programado_key",
+          "public",
+          "\"public\".\"pago\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago.pago_id_pago_programado_idx_f0940ecb",
+    "label": "Create index \"pago_id_pago_programado_idx_f0940ecb\" on \"pago\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_id_pago_programado_idx_f0940ecb",
+        "table": "pago"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_id_pago_programado_idx_f0940ecb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_pago_programado_idx_f0940ecb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_id_pago_programado_idx_f0940ecb\"",
+        "sql": "CREATE INDEX \"pago_id_pago_programado_idx_f0940ecb\" ON \"public\".\"pago\" (\"id_pago_programado\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_id_pago_programado_idx_f0940ecb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_id_pago_programado_idx_f0940ecb\""
+        ]
+      }
+    ]
+  }
+]

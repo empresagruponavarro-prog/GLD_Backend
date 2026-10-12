@@ -1,7 +1,8 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { DocumentoHandler } from '../documentos/documento.handler.js';
 import { CreateDocumentoDto, DocumentoResponseDto } from '../documentos/documento.dto.js';
+import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag } from '../shared/almacen-sql.js';
 import {
   CreateRecepcionDto,
@@ -54,7 +55,8 @@ export class RecepcionHandler {
         LEFT JOIN anexos pr ON pr.id = o.id_anexo
         LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo
         LEFT JOIN requerimiento r ON r.id = o.id_requerimiento
-       WHERE (${patron}::text = '%%' OR o.numero_oc ILIKE ${patron}::text OR o.id_oc ILIKE ${patron}::text)
+       WHERE o.estado <> 'ANULADO'
+         AND (${patron}::text = '%%' OR o.numero_oc ILIKE ${patron}::text OR o.id_oc ILIKE ${patron}::text)
       ) t WHERE t.lineas_pendientes > 0
        ORDER BY t.id DESC
        LIMIT 500`;
@@ -145,22 +147,33 @@ export class RecepcionHandler {
         id_centro_costo: number | null;
         es_soles: boolean;
         tipo_anexo: string | null;
+        estado: string;
+        moneda_id: string | null;
+        moneda_simbolo: string | null;
       }>(
-        { id: I, id_oc: TN, numero_oc: TN, id_anexo: IN, id_centro_costo: IN, es_soles: B, tipo_anexo: TN },
+        { id: I, id_oc: TN, numero_oc: TN, id_anexo: IN, id_centro_costo: IN, es_soles: B, tipo_anexo: TN, estado: T, moneda_id: TN, moneda_simbolo: TN },
         tx,
       )`
-        SELECT o.id, o.id_oc::text AS id_oc, o.numero_oc::text AS numero_oc, o.id_anexo, o.id_centro_costo,
+        SELECT o.id, o.estado::text AS estado, o.id_oc::text AS id_oc, o.numero_oc::text AS numero_oc, o.id_anexo, o.id_centro_costo,
+               o.moneda_id::text AS moneda_id, o.moneda_simbolo::text AS moneda_simbolo,
                (COALESCE(o.moneda_simbolo, '') = '' OR upper(o.moneda_simbolo) LIKE 'S/%' OR upper(COALESCE(o.moneda_id, '')) = 'PEN') AS es_soles,
                (SELECT a."tipoAnexo"::text FROM anexos a WHERE a.id = o.id_anexo) AS tipo_anexo
           FROM "documentosOrigen" o WHERE o.id = ${dto.id_orden_compra}::int FOR UPDATE OF o`;
       if (!oc) throw new NotFoundException(`Orden de compra ${dto.id_orden_compra} no encontrada`);
-      if (!oc.es_soles && dto.tipo_cambio === undefined) {
-        throw new BadRequestException('La OC no está en soles: indique tipo_cambio para valorizar el ingreso');
+      if (oc.estado === 'ANULADO') throw new ConflictException(`La orden de compra ${dto.id_orden_compra} está anulada`);
+      // Sin tipo de cambio en el body se usa el de venta registrado en Tesorería (el de la fecha o el último anterior).
+      let tipoCambio = dto.tipo_cambio;
+      if (!oc.es_soles && tipoCambio === undefined) {
+        const vigente = await tcVigente(this.sql, claveMoneda(oc.moneda_id, oc.moneda_simbolo), dto.fecha, tx);
+        if (vigente) tipoCambio = vigente.venta;
       }
-      if (dto.tipo_cambio !== undefined && Number(dto.tipo_cambio) <= 0) {
+      if (!oc.es_soles && tipoCambio === undefined) {
+        throw new BadRequestException('La OC no está en soles: indique tipo_cambio o registre el tipo de cambio en Tesorería para valorizar el ingreso');
+      }
+      if (tipoCambio !== undefined && Number(tipoCambio) <= 0) {
         throw new BadRequestException('tipo_cambio debe ser mayor a 0');
       }
-      const tc = oc.es_soles ? '1' : (dto.tipo_cambio as string);
+      const tc = oc.es_soles ? '1' : (tipoCambio as string);
 
       const lineasDoc: CreateDocumentoDto['lineas'] = [];
       for (const l of dto.lineas) {
