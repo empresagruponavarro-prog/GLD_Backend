@@ -1,7 +1,10 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
+
+export const PPTO_ESTADO_GRUPOS = ['abierto', 'cierre', 'cerrado'] as const;
+export type PptoEstadoGrupo = (typeof PPTO_ESTADO_GRUPOS)[number];
 
 export class CreateCentroCostoDto {
   @ApiProperty({ example: 2026, description: 'Periodo fiscal' })
@@ -143,6 +146,14 @@ export class ListCentroCostoQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   pptoEstado?: string;
+
+  @ApiPropertyOptional({
+    enum: PPTO_ESTADO_GRUPOS,
+    description: 'Grupo de estado del presupuesto: abierto (ABIERTO o APROBADO), cierre o cerrado',
+  })
+  @IsOptional()
+  @IsIn(PPTO_ESTADO_GRUPOS)
+  pptoEstadoGrupo?: PptoEstadoGrupo;
 }
 
 export class CentroCostoResponseDto {
@@ -243,6 +254,23 @@ export class CentroCostoMetricasResponseDto {
 }
 
 export type CentroCostoMetricas = CentroCostoMetricasResponseDto;
+
+export class CentroCostoMetricasPresupuestoResponseDto {
+  @ApiProperty({ example: 934, description: 'Total de centros de costos' })
+  total: number;
+
+  @ApiProperty({ example: 483, description: 'Con presupuesto ABIERTO o APROBADO' })
+  abiertos: number;
+
+  @ApiProperty({ example: 12, description: 'Con presupuesto en cierre' })
+  enCierre: number;
+
+  @ApiProperty({ example: 439, description: 'Con presupuesto cerrado' })
+  cerrados: number;
+
+  @ApiProperty({ example: 15400000.5, description: 'Suma del monto presupuestado de todos los centros de costos' })
+  totalPortafolio: number;
+}
 
 export class CentroCostoResumenResponseDto {
   @ApiProperty({ example: 1, description: 'ID del centro de costos' })

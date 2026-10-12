@@ -4,6 +4,7 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../presupuestos/presupuestos.helpers.js';
 import {
   CatalogosFiltrosResponseDto,
+  CentroCostoMetricasPresupuestoResponseDto,
   CentroCostoMetricasResponseDto,
   CentroCostoPrincipalResponseDto,
   CentroCostoResponseDto,
@@ -11,6 +12,7 @@ import {
   CentroCostoSelectResponseDto,
   CreateCentroCostoDto,
   ListCentroCostoQueryDto,
+  type PptoEstadoGrupo,
   UpdateCentroCostoDto,
 } from './centro-costo.dto.js';
 
@@ -23,103 +25,118 @@ export class CentroCostoHandler {
   async findAll(query: ListCentroCostoQueryDto): Promise<Paginated<CentroCostoResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
     try {
-      const [rows, empresas, principales, pptos, detalleFases] = await Promise.all([
-        this.db.orm.public.CentroCostos.orderBy((c) => c.id.desc()).all(),
-        this.db.orm.public.Empresas.all(),
-        this.db.orm.public.centro_costos_principal.all(),
-        this.db.orm.public.ppto_Principal.all(),
-        this.db.orm.public.ppto_DetalleFases.all(),
-      ]);
-
-      const empresasById = new Map(empresas.map((e) => [e.id_empresa, e.razon_social]));
-      const principalesByRowId = new Map(principales.map((p) => [p.id, p]));
-
-      // Map CostoDirecto from ppto_DetalleFases
-      const fasesByPpto = new Map<string, number>();
-      const fasesByCC = new Map<number, number>();
-      for (const f of detalleFases) {
-        const monto = Number(f.CostoDirecto) || 0;
-        if (f.IdPresupuesto) {
-          const prev = fasesByPpto.get(String(f.IdPresupuesto)) ?? 0;
-          fasesByPpto.set(String(f.IdPresupuesto), prev + monto);
-        }
-        if (f.id_centro_costo != null) {
-          const prev = fasesByCC.get(f.id_centro_costo) ?? 0;
-          fasesByCC.set(f.id_centro_costo, prev + monto);
-        }
-      }
-
-      // Map CostoDirecto and Estado by CC
-      const pptoMontoByCC = new Map<number, number>();
-      const pptoEstadoByCC = new Map<number, string>();
-
-      for (const p of pptos) {
-        const pptoCode = p.IdPresupuesto ? String(p.IdPresupuesto) : '';
-        const cdPrincipal = Number(p.CostoDirecto) || 0;
-        const cdFases = pptoCode ? (fasesByPpto.get(pptoCode) ?? 0) : 0;
-        const cdReal = Math.max(cdPrincipal, cdFases);
-
-        if (p.id_centro_costo != null) {
-          const prev = pptoMontoByCC.get(p.id_centro_costo) ?? 0;
-          pptoMontoByCC.set(p.id_centro_costo, prev + cdReal);
-          if (p.Estado) pptoEstadoByCC.set(p.id_centro_costo, p.Estado);
-        }
-      }
-
-      for (const [ccId, fasesMonto] of fasesByCC.entries()) {
-        const current = pptoMontoByCC.get(ccId) ?? 0;
-        if (fasesMonto > current) {
-          pptoMontoByCC.set(ccId, fasesMonto);
-        }
-      }
-
-      const filtered = rows
-        .map((r) => {
-          // Use id_empresa directly from the row (new column), fallback to deriving from principal
-          const idEmpresa: number | null = r.id_empresa != null
-            ? r.id_empresa
-            : (r.id_centro_costos_principal != null
-                ? (principalesByRowId.get(r.id_centro_costos_principal)?.id_empresa ?? null)
-                : null);
-          const codCliente = r.cod_cliente;
-          const idPrincipal = r.id_centro_costos_principal;
-          const principalName = idPrincipal != null ? principalesByRowId.get(idPrincipal)?.descripcion ?? null : null;
-
-          const pptoCalculado = pptoMontoByCC.get(r.id);
-          const pptoMonto = pptoCalculado !== undefined && pptoCalculado > 0
-            ? String(pptoCalculado)
-            : (r.presupuesto_costo_directo != null && Number(r.presupuesto_costo_directo) > 0
-                ? String(r.presupuesto_costo_directo)
-                : (r.presupuesto_monto != null ? String(r.presupuesto_monto) : '0.00'));
-
-          const pptoEstado = pptoEstadoByCC.get(r.id) || r.presupuesto_estado || 'ABIERTO';
-
-          return {
-            id: r.id,
-            idCentroCostosPrincipal: idPrincipal,
-            CentroCostoPrincipal: principalName,
-            CentroCosto: r.centro_costo,
-            Estado: r.estado ?? 'ABIERTO',
-            id_empresa: idEmpresa,
-            id_anexo: (r as any).id_anexo ?? null,
-            Empresa: idEmpresa != null ? empresasById.get(idEmpresa) ?? null : null,
-            periodo: r.periodo,
-            CodCliente: r.cod_cliente,
-            Cliente: codCliente,
-            PresupuestoEstado: pptoEstado,
-            PresupuestoMonto: pptoMonto,
-            FechaIncio: r.fecha_inicio,
-            FechaFinProg: r.fecha_fin_prog,
-            FechaFinReal: r.fecha_fin_real,
-          };
-        })
-        .filter((r) => matchesFilters(r, query));
-
+      const filtered = (await this.listarFilas()).filter((r) => matchesFilters(r, query));
       return toPaginated(filtered.slice(offset, offset + pageSize), filtered.length, page, pageSize);
     } catch (error) {
       this.logger.error('Error listando centros de costos', error);
       throw error;
     }
+  }
+
+  /** Conteo por grupo de estado de presupuesto y monto total, sobre todos los centros de costos. */
+  async getMetricasPresupuestos(): Promise<CentroCostoMetricasPresupuestoResponseDto> {
+    const filas = await this.listarFilas();
+    return {
+      total: filas.length,
+      abiertos: filas.filter((r) => perteneceAGrupo(r, 'abierto')).length,
+      enCierre: filas.filter((r) => perteneceAGrupo(r, 'cierre')).length,
+      cerrados: filas.filter((r) => perteneceAGrupo(r, 'cerrado')).length,
+      totalPortafolio: filas.reduce((acc, r) => acc + (Number(r.PresupuestoMonto) || 0), 0),
+    };
+  }
+
+  /** Todas las filas del listado, con empresa, cliente, estado y monto de presupuesto resueltos. */
+  private async listarFilas(): Promise<CentroCostoResponseDto[]> {
+    const [rows, empresas, principales, pptos, detalleFases] = await Promise.all([
+      this.db.orm.public.CentroCostos.orderBy((c) => c.id.desc()).all(),
+      this.db.orm.public.Empresas.all(),
+      this.db.orm.public.centro_costos_principal.all(),
+      this.db.orm.public.ppto_Principal.all(),
+      this.db.orm.public.ppto_DetalleFases.all(),
+    ]);
+
+    const empresasById = new Map(empresas.map((e) => [e.id_empresa, e.razon_social]));
+    const principalesByRowId = new Map(principales.map((p) => [p.id, p]));
+
+    // Map CostoDirecto from ppto_DetalleFases
+    const fasesByPpto = new Map<string, number>();
+    const fasesByCC = new Map<number, number>();
+    for (const f of detalleFases) {
+      const monto = Number(f.CostoDirecto) || 0;
+      if (f.IdPresupuesto) {
+        const prev = fasesByPpto.get(String(f.IdPresupuesto)) ?? 0;
+        fasesByPpto.set(String(f.IdPresupuesto), prev + monto);
+      }
+      if (f.id_centro_costo != null) {
+        const prev = fasesByCC.get(f.id_centro_costo) ?? 0;
+        fasesByCC.set(f.id_centro_costo, prev + monto);
+      }
+    }
+
+    // Map CostoDirecto and Estado by CC
+    const pptoMontoByCC = new Map<number, number>();
+    const pptoEstadoByCC = new Map<number, string>();
+
+    for (const p of pptos) {
+      const pptoCode = p.IdPresupuesto ? String(p.IdPresupuesto) : '';
+      const cdPrincipal = Number(p.CostoDirecto) || 0;
+      const cdFases = pptoCode ? (fasesByPpto.get(pptoCode) ?? 0) : 0;
+      const cdReal = Math.max(cdPrincipal, cdFases);
+
+      if (p.id_centro_costo != null) {
+        const prev = pptoMontoByCC.get(p.id_centro_costo) ?? 0;
+        pptoMontoByCC.set(p.id_centro_costo, prev + cdReal);
+        if (p.Estado) pptoEstadoByCC.set(p.id_centro_costo, p.Estado);
+      }
+    }
+
+    for (const [ccId, fasesMonto] of fasesByCC.entries()) {
+      const current = pptoMontoByCC.get(ccId) ?? 0;
+      if (fasesMonto > current) {
+        pptoMontoByCC.set(ccId, fasesMonto);
+      }
+    }
+
+    return rows
+      .map((r) => {
+        // Use id_empresa directly from the row (new column), fallback to deriving from principal
+        const idEmpresa: number | null = r.id_empresa != null
+          ? r.id_empresa
+          : (r.id_centro_costos_principal != null
+              ? (principalesByRowId.get(r.id_centro_costos_principal)?.id_empresa ?? null)
+              : null);
+        const codCliente = r.cod_cliente;
+        const idPrincipal = r.id_centro_costos_principal;
+        const principalName = idPrincipal != null ? principalesByRowId.get(idPrincipal)?.descripcion ?? null : null;
+
+        const pptoCalculado = pptoMontoByCC.get(r.id);
+        const pptoMonto = pptoCalculado !== undefined && pptoCalculado > 0
+          ? String(pptoCalculado)
+          : (r.presupuesto_costo_directo != null && Number(r.presupuesto_costo_directo) > 0
+              ? String(r.presupuesto_costo_directo)
+              : (r.presupuesto_monto != null ? String(r.presupuesto_monto) : '0.00'));
+
+        const pptoEstado = pptoEstadoByCC.get(r.id) || r.presupuesto_estado || 'ABIERTO';
+
+        return {
+          id: r.id,
+          idCentroCostosPrincipal: idPrincipal,
+          CentroCostoPrincipal: principalName,
+          CentroCosto: r.centro_costo,
+          Estado: r.estado ?? 'ABIERTO',
+          id_empresa: idEmpresa,
+          id_anexo: (r as any).id_anexo ?? null,
+          Empresa: idEmpresa != null ? empresasById.get(idEmpresa) ?? null : null,
+          periodo: r.periodo,
+          CodCliente: r.cod_cliente,
+          Cliente: codCliente,
+          PresupuestoEstado: pptoEstado,
+          PresupuestoMonto: pptoMonto,
+          FechaIncio: r.fecha_inicio,
+          FechaFinProg: r.fecha_fin_prog,
+          FechaFinReal: r.fecha_fin_real,
+        };
+      });
   }
 
   async getCentrosCostoPrincipal(): Promise<CentroCostoPrincipalResponseDto[]> {
@@ -431,6 +448,7 @@ function matchesFilters(row: CentroCostoResponseDto, query: ListCentroCostoQuery
       return false;
     }
   }
+  if (query.pptoEstadoGrupo && !perteneceAGrupo(row, query.pptoEstadoGrupo)) return false;
   if (pptoEstado && pptoEstado.trim() && pptoEstado.toUpperCase() !== 'TODOS') {
     const filterNorm = normalizePptoEstado(pptoEstado);
     const rowNorm = normalizePptoEstado(row.PresupuestoEstado);
@@ -464,6 +482,17 @@ function unique<T>(values: Array<T | null | undefined>): T[] {
 
 function toNumber(value: string | number | null | undefined): number {
   return Number(value ?? 0);
+}
+
+/**
+ * Agrupa el estado del presupuesto como las pastillas de la pantalla de Presupuestos:
+ * abierto = ABIERTO o APROBADO, cierre = contiene CIERRE, cerrado = contiene CERRADO.
+ */
+function perteneceAGrupo(row: CentroCostoResponseDto, grupo: PptoEstadoGrupo): boolean {
+  const st = (row.PresupuestoEstado || row.Estado || '').toUpperCase();
+  if (grupo === 'abierto') return st.includes('ABIERTO') || st.includes('APROBADO');
+  if (grupo === 'cierre') return st.includes('CIERRE');
+  return st.includes('CERRADO');
 }
 
 function normalizePptoEstado(val: string | null | undefined): string {

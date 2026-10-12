@@ -126,6 +126,50 @@ describe('centro-costo', () => {
     expect(result.totalPages).toBe(2);
   });
 
+  describe('grupos de estado de presupuesto', () => {
+    beforeEach(() => {
+      centroAll.mockResolvedValue([
+        ccRow({ id: 1, presupuesto_estado: 'ABIERTO', presupuesto_monto: '100.50' }),
+        ccRow({ id: 2, presupuesto_estado: 'Aprobado', presupuesto_monto: '200' }),
+        ccRow({ id: 3, presupuesto_estado: 'EN CIERRE', presupuesto_monto: '300' }),
+        ccRow({ id: 4, presupuesto_estado: 'Cerrado', presupuesto_monto: null }),
+        ccRow({ id: 5, presupuesto_estado: 'Pendiente', presupuesto_monto: '50' }),
+      ]);
+      empresasAll.mockResolvedValue([]);
+      principalesAll.mockResolvedValue([]);
+    });
+
+    it.each([
+      ['abierto', [1, 2]],
+      ['cierre', [3]],
+      ['cerrado', [4]],
+    ] as const)('filtra pptoEstadoGrupo=%s', async (grupo, ids) => {
+      const result = await controller.findAll({ pptoEstadoGrupo: grupo });
+      expect(result.data.map((r) => r.id)).toEqual(ids);
+      expect(result.total).toBe(ids.length);
+    });
+
+    it('sin pptoEstadoGrupo devuelve todos', async () => {
+      const result = await controller.findAll({});
+      expect(result.total).toBe(5);
+    });
+
+    it('combina el grupo con la búsqueda', async () => {
+      const result = await controller.findAll({ pptoEstadoGrupo: 'abierto', search: 'aprobado' });
+      expect(result.data.map((r) => r.id)).toEqual([2]);
+    });
+
+    it('cuenta por grupo y suma el portafolio de todos los centros de costos', async () => {
+      await expect(controller.getMetricasPresupuestos()).resolves.toEqual({
+        total: 5,
+        abiertos: 2,
+        enCierre: 1,
+        cerrados: 1,
+        totalPortafolio: 650.5,
+      });
+    });
+  });
+
   it('devuelve el conteo de estados', async () => {
     centroAll.mockResolvedValue([
       ccRow(),

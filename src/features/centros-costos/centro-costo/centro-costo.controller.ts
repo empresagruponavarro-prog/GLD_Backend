@@ -4,6 +4,7 @@ import { Paginated } from '../../../platform/db/pagination.js';
 import {
   CatalogosFiltrosResponseDto,
   CentroCostoPrincipalResponseDto,
+  CentroCostoMetricasPresupuestoResponseDto,
   CentroCostoMetricasResponseDto,
   CentroCostoResponseDto,
   CentroCostoResumenResponseDto,
@@ -38,6 +39,16 @@ export class CentroCostoController {
   })
   getConteoEstados(): Promise<CentroCostoMetricasResponseDto> {
     return this.handler.getConteoEstados();
+  }
+
+  @Get('metricas/presupuestos')
+  @ApiOperation({ summary: 'Conteo por grupo de estado de presupuesto y total del portafolio' })
+  @ApiOkResponse({
+    type: CentroCostoMetricasPresupuestoResponseDto,
+    description: 'Abiertos (ABIERTO/APROBADO), en cierre y cerrados, sobre todos los centros de costos',
+  })
+  getMetricasPresupuestos(): Promise<CentroCostoMetricasPresupuestoResponseDto> {
+    return this.handler.getMetricasPresupuestos();
   }
 
   @Get('catalogos-filtros')
