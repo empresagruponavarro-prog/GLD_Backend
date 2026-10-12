@@ -12,6 +12,7 @@ import type {
   UpdateAvanceSemanalDto,
   UpdateObraDatosGeneralesDto,
   CreateObraResidenteDto,
+  UpdateObraResidenteDto,
 } from './obra.dto.js';
 
 function toVarchar<N extends number = 255>(value: string | undefined): Varchar<N> | undefined;
@@ -168,6 +169,25 @@ export class ObraHandler {
       turno: toVarchar<100>(dto.turno),
       estado_planta: toVarchar<50>(dto.estado_planta),
       orden: dto.orden,
+    });
+  }
+
+  /** Actualiza un residente existente en la obra */
+  async updateResidente(idResidente: number, dto: UpdateObraResidenteDto) {
+    const res = await this.db.orm.public.obra_residentes.first({ id: idResidente });
+    if (!res) throw new NotFoundException(`Residente ${idResidente} no encontrado`);
+
+    return this.db.orm.public.obra_residentes.where({ id: idResidente }).update({
+      id_anexo: dto.id_anexo ?? undefined,
+      nombre_completo: dto.nombre_completo ? toVarchar<200>(dto.nombre_completo) : undefined,
+      rol_obra: dto.rol_obra ? toVarchar<100>(dto.rol_obra) : undefined,
+      cip_cap: dto.cip_cap !== undefined ? toVarchar<50>(dto.cip_cap) : undefined,
+      especialidad: dto.especialidad !== undefined ? toVarchar<150>(dto.especialidad) : undefined,
+      telefono: dto.telefono !== undefined ? toVarchar<50>(dto.telefono) : undefined,
+      correo: dto.correo !== undefined ? toVarchar<150>(dto.correo) : undefined,
+      turno: dto.turno !== undefined ? toVarchar<100>(dto.turno) : undefined,
+      estado_planta: dto.estado_planta !== undefined ? toVarchar<50>(dto.estado_planta) : undefined,
+      orden: dto.orden !== undefined ? dto.orden : undefined,
     });
   }
 

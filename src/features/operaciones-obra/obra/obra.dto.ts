@@ -125,3 +125,6 @@ export class CreateObraResidenteDto {
   @IsOptional() @IsString() estado_planta?: string;
   @IsOptional() @IsInt() @Type(() => Number) orden?: number;
 }
+
+import { PartialType } from '@nestjs/swagger';
+export class UpdateObraResidenteDto extends PartialType(CreateObraResidenteDto) {}

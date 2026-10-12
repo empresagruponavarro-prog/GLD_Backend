@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObraHandler } from './obra.handler.js';
-import type {
+import {
   UpdateObraDatosGeneralesDto,
   UpdateAvanceSemanalDto,
   CreateObraResidenteDto,
+  UpdateObraResidenteDto,
 } from './obra.dto.js';
 
 @ApiTags('Operaciones de Obra')
@@ -49,6 +50,17 @@ export class ObraController {
     @Body() dto: CreateObraResidenteDto,
   ) {
     return this.handler.createResidente(id, dto);
+  }
+
+  @Patch(':idCentroCosto/residentes/:idResidente')
+  @ApiOperation({ summary: 'Actualizar datos de un residente' })
+  @ApiParam({ name: 'idCentroCosto', type: Number })
+  @ApiParam({ name: 'idResidente', type: Number })
+  updateResidente(
+    @Param('idResidente', ParseIntPipe) idResidente: number,
+    @Body() dto: UpdateObraResidenteDto,
+  ) {
+    return this.handler.updateResidente(idResidente, dto);
   }
 
   @Delete(':idCentroCosto/residentes/:idResidente')
