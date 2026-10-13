@@ -9,7 +9,6 @@ export class ObraResidenteDto {
   @ApiPropertyOptional() id_anexo?: number;
   @ApiProperty() nombre_completo: string;
   @ApiProperty() rol_obra: string;
-  @ApiPropertyOptional() cip_cap?: string;
   @ApiPropertyOptional() especialidad?: string;
   @ApiPropertyOptional() telefono?: string;
   @ApiPropertyOptional() correo?: string;
@@ -25,7 +24,6 @@ export class CreateObraResidenteDto {
   @ApiPropertyOptional() @IsOptional() @IsInt() @Type(() => Number) id_anexo?: number;
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(200) nombre_completo: string;
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(100) rol_obra: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) cip_cap?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) especialidad?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) telefono?: string;
   @ApiPropertyOptional() @IsOptional() @IsEmail() @MaxLength(150) correo?: string;

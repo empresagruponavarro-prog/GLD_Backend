@@ -1392,7 +1392,6 @@ model obra_residentes {
   id_anexo        Int?
   nombre_completo VarChar(200)
   rol_obra        VarChar(100)
-  cip_cap         VarChar(50)?
   especialidad    VarChar(150)?
   telefono        VarChar(50)?
   correo          VarChar(150)?

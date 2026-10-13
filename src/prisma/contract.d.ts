@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'4094c875961b5775e82a7be4a8df6fc52e556211c0d44087739ef57ed74327d6'>;
+  StorageHashBase<'1068956d3aa340b4863bcb9f63aa803d1cf62f9e318b6caa7ed877afe7a06382'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -911,7 +911,6 @@ export type FieldOutputTypes = {
       readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
       readonly nombre_completo: Varchar<200>;
       readonly rol_obra: Varchar<100>;
-      readonly cip_cap: Varchar<50> | null;
       readonly especialidad: Varchar<150> | null;
       readonly telefono: Varchar<50> | null;
       readonly correo: Varchar<150> | null;
@@ -2035,7 +2034,6 @@ export type FieldInputTypes = {
       readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
       readonly nombre_completo: CodecTypes['sql/varchar@1']['input'];
       readonly rol_obra: CodecTypes['sql/varchar@1']['input'];
-      readonly cip_cap: CodecTypes['sql/varchar@1']['input'] | null;
       readonly especialidad: CodecTypes['sql/varchar@1']['input'] | null;
       readonly telefono: CodecTypes['sql/varchar@1']['input'] | null;
       readonly correo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -3207,7 +3205,6 @@ export type StorageColumnTypes = {
       readonly version: Varchar<20> | null;
     };
     readonly obra_residentes: {
-      readonly cip_cap: Varchar<50> | null;
       readonly correo: Varchar<150> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly especialidad: Varchar<150> | null;
@@ -4331,7 +4328,6 @@ export type StorageColumnInputTypes = {
       readonly version: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly obra_residentes: {
-      readonly cip_cap: CodecTypes['sql/varchar@1']['input'] | null;
       readonly correo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly especialidad: CodecTypes['sql/varchar@1']['input'] | null;
@@ -10081,12 +10077,6 @@ type ContractBase = Omit<
                   readonly codecId: 'sql/varchar@1';
                   readonly nullable: false;
                   readonly typeParams: { readonly length: 100 };
-                };
-                readonly cip_cap: {
-                  readonly nativeType: 'character varying';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly nullable: true;
-                  readonly typeParams: { readonly length: 50 };
                 };
                 readonly especialidad: {
                   readonly nativeType: 'character varying';
@@ -19695,14 +19685,6 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 100 };
                 };
               };
-              readonly cip_cap: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 50 };
-                };
-              };
               readonly especialidad: {
                 readonly nullable: true;
                 readonly type: {
@@ -19785,7 +19767,6 @@ type ContractBase = Omit<
                 readonly id_anexo: { readonly column: 'id_anexo' };
                 readonly nombre_completo: { readonly column: 'nombre_completo' };
                 readonly rol_obra: { readonly column: 'rol_obra' };
-                readonly cip_cap: { readonly column: 'cip_cap' };
                 readonly especialidad: { readonly column: 'especialidad' };
                 readonly telefono: { readonly column: 'telefono' };
                 readonly correo: { readonly column: 'correo' };

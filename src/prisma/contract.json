@@ -11546,16 +11546,6 @@
           },
           "obra_residentes": {
             "fields": {
-              "cip_cap": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 50
-                  }
-                }
-              },
               "correo": {
                 "nullable": true,
                 "type": {
@@ -11691,9 +11681,6 @@
             },
             "storage": {
               "fields": {
-                "cip_cap": {
-                  "column": "cip_cap"
-                },
                 "correo": {
                   "column": "correo"
                 },
@@ -22419,14 +22406,6 @@
             },
             "obra_residentes": {
               "columns": {
-                "cip_cap": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 50
-                  }
-                },
                 "correo": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -26832,7 +26811,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "4094c875961b5775e82a7be4a8df6fc52e556211c0d44087739ef57ed74327d6"
+    "storageHash": "1068956d3aa340b4863bcb9f63aa803d1cf62f9e318b6caa7ed877afe7a06382"
   },
   "capabilities": {
     "postgres": {
