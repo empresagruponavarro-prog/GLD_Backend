@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDateString, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, ValidateNested } from 'class-validator';
 import { ESTADOS_SEMANA } from '../shared/obra-shared.js';
 
 export class ObraSemanaDto {
@@ -56,4 +56,17 @@ export class UpdateObraSemanaDto {
 export class UpdateAvanceSemanalDto {
   @ApiProperty() @IsNumber() @Min(0) @Max(100) @Type(() => Number) porcentaje_real: number;
   @ApiPropertyOptional({ enum: ESTADOS_SEMANA }) @IsOptional() @IsIn(ESTADOS_SEMANA) estado?: string;
+}
+
+export class CreateLoteSemanasDto {
+  @ApiProperty({ type: [CreateObraSemanaDto], description: 'Listado de semanas a insertar' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateObraSemanaDto)
+  semanas: CreateObraSemanaDto[];
+
+  @ApiPropertyOptional({ description: 'Si es true, elimina las semanas previas del centro de costo antes de insertar' })
+  @IsOptional()
+  @IsBoolean()
+  reemplazar_existentes?: boolean;
 }

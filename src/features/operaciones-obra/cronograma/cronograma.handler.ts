@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar } from '../../presupuestos/presupuestos.helpers.js';
 import { assertCentroCosto, compact, etiquetaSemana, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
-import type { CreateObraSemanaDto, ObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
+import type { CreateLoteSemanasDto, CreateObraSemanaDto, ObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
 
 type SemanaRow = NonNullable<Awaited<ReturnType<Database['orm']['public']['obra_semanas_cronograma']['first']>>>;
 
@@ -84,6 +84,41 @@ export class CronogramaHandler {
 
   async updateAvance(idCentroCosto: number, idSemana: number, dto: UpdateAvanceSemanalDto): Promise<ObraSemanaDto> {
     return this.update(idCentroCosto, idSemana, { porcentaje_real: dto.porcentaje_real, estado: dto.estado });
+  }
+
+  async createLote(idCentroCosto: number, dto: CreateLoteSemanasDto): Promise<ObraSemanaDto[]> {
+    await assertCentroCosto(this.db, idCentroCosto);
+    if (!dto.semanas || dto.semanas.length === 0) {
+      throw new BadRequestException('El lote de semanas no puede estar vacío');
+    }
+
+    if (dto.reemplazar_existentes) {
+      await this.db.orm.public.obra_semanas_cronograma.where({ id_centro_costo: idCentroCosto }).delete();
+    }
+
+    const existentes = await this.list(idCentroCosto);
+    let siguienteNumero = existentes.reduce((max, s) => Math.max(max, s.numero_semana), 0) + 1;
+
+    for (const semDto of dto.semanas) {
+      const numero = semDto.numero_semana ?? siguienteNumero++;
+      this.assertRangoFechas(semDto.fecha_inicio, semDto.fecha_fin);
+      await this.db.orm.public.obra_semanas_cronograma.create({
+        id_centro_costo: idCentroCosto,
+        numero_semana: numero,
+        etiqueta_semana: toVarchar<50>(semDto.etiqueta_semana?.trim() || etiquetaSemana(numero)),
+        fecha_inicio: toDateOnly(semDto.fecha_inicio)!,
+        fecha_fin: toDateOnly(semDto.fecha_fin)!,
+        fase_principal: toVarchar<255>(semDto.fase_principal.trim()),
+        descripcion_actividades: toVarchar<1000>(semDto.descripcion_actividades),
+        responsable_nombre: toVarchar<150>(semDto.responsable_nombre),
+        porcentaje_meta: toDecimalString(semDto.porcentaje_meta ?? 0),
+        porcentaje_real: toDecimalString(semDto.porcentaje_real ?? 0),
+        estado: toVarchar<50>(semDto.estado ?? 'Programado'),
+        orden: numero,
+      });
+    }
+
+    return this.list(idCentroCosto);
   }
 
   async remove(idCentroCosto: number, idSemana: number) {

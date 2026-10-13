@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CronogramaHandler } from './cronograma.handler.js';
-import { CreateObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
+import { CreateLoteSemanasDto, CreateObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/cronograma')
@@ -13,6 +13,15 @@ export class CronogramaController {
   @ApiOperation({ summary: 'Listar las semanas del cronograma de la obra' })
   list(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
     return this.handler.list(idCentroCosto);
+  }
+
+  @Post('lote')
+  @ApiOperation({ summary: 'Crear múltiples semanas en lote para la obra' })
+  createLote(
+    @Param('idCentroCosto', ParseIntPipe) idCentroCosto: number,
+    @Body() dto: CreateLoteSemanasDto,
+  ) {
+    return this.handler.createLote(idCentroCosto, dto);
   }
 
   @Post()
