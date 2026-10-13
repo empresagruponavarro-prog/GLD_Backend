@@ -39,3 +39,6 @@ opencode.json
 *.mjs
 *.tsbuildinfo
 
+
+# Archivos subidos (planos de obra, etc.)
+/uploads/

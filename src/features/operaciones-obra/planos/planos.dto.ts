@@ -20,6 +20,14 @@ export class ObraPlanoDto {
   @ApiProperty() created_at: string;
 }
 
+/** Respuesta de la subida de un archivo de plano. */
+export class ArchivoPlanoDto {
+  @ApiProperty({ example: 'obras/944/planos/1a2b3c4d_ARQ-01.pdf' }) archivo_url: string;
+  @ApiProperty({ example: 'PDF (14.2 MB)' }) formato_peso: string;
+  @ApiProperty() nombre_original: string;
+  @ApiProperty() bytes: number;
+}
+
 export class CreateObraPlanoDto {
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(50) codigo_plano: string;
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(255) nombre_plano: string;
@@ -28,7 +36,7 @@ export class CreateObraPlanoDto {
   @ApiPropertyOptional({ enum: ESTADOS_APROBACION_PLANO }) @IsOptional() @IsIn(ESTADOS_APROBACION_PLANO) estado_aprobacion?: string;
   @ApiPropertyOptional() @IsOptional() @IsDateString() fecha_vobo?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) formato_peso?: string;
-  @ApiPropertyOptional({ description: 'Enlace externo al archivo (la subida real se define en la Fase D)' })
+  @ApiPropertyOptional({ description: 'Clave del archivo subido (POST /planos/archivo) o enlace externo http(s)' })
   @IsOptional() @IsString() @MaxLength(1000)
   archivo_url?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) emitido_por?: string;
