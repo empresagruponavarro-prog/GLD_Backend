@@ -2,8 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
-import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiConSesion } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -22,7 +22,7 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
   const requerimientoIds: number[] = [];
   const ocIds: number[] = [];
 
-  const api = () => request(app.getHttpServer());
+  const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
 
   async function crearItem(tipo: 'PRODUCTO' | 'SERVICIO'): Promise<number> {

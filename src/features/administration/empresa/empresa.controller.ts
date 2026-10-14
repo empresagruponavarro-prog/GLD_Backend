@@ -20,6 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { CreateEmpresaDto, EmpresaResponseDto, UpdateEmpresaDto } from './empresa.dto.js';
 import { EmpresaHandler } from './empresa.handler.js';
+import { Roles } from '../../../platform/auth/roles.decorator.js';
+import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
 
 @ApiTags('administration/empresas')
 @Controller('administration/empresas')
@@ -43,6 +45,7 @@ export class EmpresaController {
   }
 
   @Post()
+  @Roles(ROL_ADMINISTRADOR)
   @ApiOperation({ summary: 'Crear una empresa' })
   @ApiCreatedResponse({ type: EmpresaResponseDto, description: 'Empresa creada exitosamente' })
   create(@Body() dto: CreateEmpresaDto): Promise<EmpresaResponseDto> {
@@ -50,6 +53,7 @@ export class EmpresaController {
   }
 
   @Patch(':id')
+  @Roles(ROL_ADMINISTRADOR)
   @ApiOperation({ summary: 'Actualizar una empresa' })
   @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
   @ApiOkResponse({ type: EmpresaResponseDto, description: 'Empresa actualizada exitosamente' })
@@ -62,6 +66,7 @@ export class EmpresaController {
   }
 
   @Delete(':id')
+  @Roles(ROL_ADMINISTRADOR)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar una empresa' })
   @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })

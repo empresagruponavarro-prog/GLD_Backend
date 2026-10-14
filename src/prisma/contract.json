@@ -284,6 +284,10 @@
       "model": "requerimiento_evento",
       "namespace": "public"
     },
+    "rol": {
+      "model": "rol",
+      "namespace": "public"
+    },
     "semana": {
       "model": "Semana",
       "namespace": "public"
@@ -15118,6 +15122,73 @@
               "table": "requerimiento_evento"
             }
           },
+          "rol": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "es_sistema": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 50
+                  }
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "es_sistema": {
+                  "column": "es_sistema"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "rol"
+            }
+          },
           "stock_almacen": {
             "fields": {
               "cantidad": {
@@ -25916,6 +25987,67 @@
               },
               "uniques": []
             },
+            "rol": {
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "es_sistema": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 50
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "nombre"
+                  ]
+                }
+              ]
+            },
             "semana": {
               "columns": {
                 "CodSemana": {
@@ -26811,7 +26943,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1068956d3aa340b4863bcb9f63aa803d1cf62f9e318b6caa7ed877afe7a06382"
+    "storageHash": "7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38"
   },
   "capabilities": {
     "postgres": {

@@ -1,0 +1,9 @@
+{
+  "from": "7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38",
+  "to": "7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38",
+  "providedInvariants": [
+    "obra_residentes-sin-cip_cap"
+  ],
+  "createdAt": "2026-10-14T18:07:37.796Z",
+  "migrationHash": "0c0f75709cd30b3f0f308112fc0b959798eb7ba60cb14cbcd2088b120861b5c7"
+}

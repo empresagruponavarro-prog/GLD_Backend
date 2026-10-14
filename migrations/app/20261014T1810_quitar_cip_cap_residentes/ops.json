@@ -1,0 +1,38 @@
+[
+  {
+    "id": "column.obra_residentes.cip_cap.drop",
+    "label": "Drop column cip_cap from obra_residentes",
+    "summary": "Elimina la columna \"cip_cap\" de \"obra_residentes\" (sin uso en el contrato ni en el código)",
+    "operationClass": "data",
+    "invariantId": "obra_residentes-sin-cip_cap",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column cip_cap exists and holds no data",
+        "sql": "SELECT EXISTS (   SELECT 1 FROM information_schema.columns   WHERE table_schema = 'public' AND table_name = 'obra_residentes' AND column_name = 'cip_cap' ) AND NOT EXISTS (   SELECT 1 FROM \"public\".\"obra_residentes\" WHERE \"cip_cap\" IS NOT NULL ) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column cip_cap",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\" DROP COLUMN \"cip_cap\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column cip_cap no longer exists",
+        "sql": "SELECT NOT EXISTS (   SELECT 1 FROM information_schema.columns   WHERE table_schema = 'public' AND table_name = 'obra_residentes' AND column_name = 'cip_cap' ) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

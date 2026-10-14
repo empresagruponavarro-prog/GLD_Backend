@@ -1,4 +1,6 @@
 {
-  "hash": "4094c875961b5775e82a7be4a8df6fc52e556211c0d44087739ef57ed74327d6",
-  "invariants": []
+  "hash": "7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38",
+  "invariants": [
+    "obra_residentes-sin-cip_cap"
+  ]
 }

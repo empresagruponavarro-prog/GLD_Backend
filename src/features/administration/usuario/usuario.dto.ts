@@ -1,36 +1,38 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { CLAVE_MAX, CLAVE_MIN } from '../../../platform/auth/passwords.js';
 
+/** Alta de usuario. El `IdUsuario` lo asigna el backend (correlativo USR-0001, USR-0002…). */
 export class CreateUsuarioDto {
-  @ApiProperty({ example: 'U-001' })
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(255)
-  IdUsuario: string;
-
   @ApiProperty({ example: 'Juan Pérez' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
   Nombres: string;
 
-  @ApiProperty({ example: 'jperez' })
+  @ApiProperty({ example: 'jperez', description: 'Login; único sin distinguir mayúsculas' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
   Usuario: string;
 
-  @ApiPropertyOptional({ default: '123456' })
-  @IsOptional()
+  @ApiProperty({ minLength: CLAVE_MIN, maxLength: CLAVE_MAX, format: 'password' })
   @IsString()
-  @MaxLength(255)
-  Clave?: string;
+  @MinLength(CLAVE_MIN)
+  @MaxLength(CLAVE_MAX)
+  Clave: string;
 
-  @ApiPropertyOptional({ default: 'Usuario' })
-  @IsOptional()
+  @ApiProperty({ example: 'Usuario', maxLength: 50, description: 'Nombre de un rol existente en la tabla rol (400 si no existe)' })
   @IsString()
-  @MaxLength(255)
-  Rol?: string;
+  @IsNotEmpty()
+  @MaxLength(50)
+  Rol: string;
 }
 
 export class UpdateUsuarioDto {
@@ -40,40 +42,44 @@ export class UpdateUsuarioDto {
   @MaxLength(255)
   Nombres?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Login; único sin distinguir mayúsculas' })
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   @MaxLength(255)
   Usuario?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    minLength: CLAVE_MIN,
+    maxLength: CLAVE_MAX,
+    format: 'password',
+    description: 'Si se envía, se reemplaza la clave',
+  })
   @IsOptional()
   @IsString()
-  @MaxLength(255)
+  @MinLength(CLAVE_MIN)
+  @MaxLength(CLAVE_MAX)
   Clave?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ maxLength: 50, description: 'Nombre de un rol existente en la tabla rol (400 si no existe)' })
   @IsOptional()
   @IsString()
-  @MaxLength(255)
+  @IsNotEmpty()
+  @MaxLength(50)
   Rol?: string;
 }
 
+/** Respuesta de usuarios: NUNCA incluye `Clave`. */
 export class UsuarioResponseDto {
-  @ApiProperty({ example: 'U-001', description: 'Identificador único del usuario' })
+  @ApiProperty({ example: 'USR-0001', description: 'Identificador único del usuario (correlativo asignado al crear)' })
   IdUsuario: string;
 
-  @ApiProperty({ example: 'Juan Pérez', description: 'Nombres completos del usuario' })
+  @ApiProperty({ example: 'Juan Pérez', description: 'Nombres completos del usuario', nullable: true, type: String })
   Nombres: string | null;
 
-  @ApiProperty({ example: 'jperez', description: 'Nombre de usuario / cuenta de acceso' })
+  @ApiProperty({ example: 'jperez', description: 'Nombre de usuario / cuenta de acceso', nullable: true, type: String })
   Usuario: string | null;
 
-  @ApiPropertyOptional({ example: '123456', description: 'Clave de acceso' })
-  Clave: string | null;
-
-  @ApiProperty({ example: 'Usuario', description: 'Rol asignado al usuario' })
+  @ApiProperty({ example: 'Usuario', description: 'Rol asignado al usuario', nullable: true, type: String })
   Rol: string | null;
 }
-
-export type UsuarioRow = UsuarioResponseDto;

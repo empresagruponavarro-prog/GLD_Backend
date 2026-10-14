@@ -57,6 +57,34 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Autenticación (login JWT)
+
+- `POST /auth/login` con `{ "usuario", "clave" }` devuelve `{ token, expiraEn, usuario }`. El token es un JWT HS256 válido por 8 h. Máximo 5 intentos por minuto por IP (luego 429).
+- `GET /auth/me` con `Authorization: Bearer <token>` devuelve el usuario de la sesión leído de la BD.
+- Variable obligatoria en `.env`: `JWT_SECRET` (mínimo 32 caracteres; el servidor no arranca sin ella). Genérela con `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+- Las claves se guardan con argon2id. Una clave heredada en texto plano **no** permite iniciar sesión hasta convertirla con el script de abajo.
+- Etapa A: todavía no hay guard global; solo `/auth/me` exige token. `src/platform/auth/` ya trae `JwtAuthGuard`, `RolesGuard`, `@Roles()`, `@Public()` y `@CurrentUser()` para la etapa siguiente.
+
+### Scripts de usuarios
+
+Requieren Node >= 22.18 (cargan los `.ts` del proyecto con el type-stripping de Node) y leen `DATABASE_URL` de `.env`. Funcionan en PowerShell y Git Bash. Nunca imprimen claves.
+
+```bash
+# Convertir a argon2id las claves en texto plano (idempotente: salta las que ya son hash)
+$ npm run usuarios:hash-claves -- --dry-run   # solo cuenta
+$ npm run usuarios:hash-claves                # aplica
+
+# Crear el administrador (rol Administrador); pide la clave dos veces sin mostrarla
+$ npm run usuarios:crear-admin
+$ npm run usuarios:crear-admin -- --usuario jefe --nombres "Jefe de Sistemas"
+$ npm run usuarios:crear-admin -- --dry-run   # solo muestra qué haría
+$ npm run usuarios:crear-admin -- --help
+```
+
+- Si el login ya existe, `usuarios:crear-admin` pide confirmación y actualiza su clave y su rol (`--si` confirma sin preguntar).
+- Modo no interactivo: defina `ADMIN_CLAVE` (mínimo 8 caracteres) en el entorno y bórrela al terminar.
+- En Git Bash (mintty) sin consola real la clave no puede ocultarse: use `winpty npm run usuarios:crear-admin`, PowerShell o `ADMIN_CLAVE`.
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

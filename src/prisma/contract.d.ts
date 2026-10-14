@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'1068956d3aa340b4863bcb9f63aa803d1cf62f9e318b6caa7ed877afe7a06382'>;
+  StorageHashBase<'7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1277,6 +1277,13 @@ export type FieldOutputTypes = {
       readonly comentario: CodecTypes['pg/text@1']['output'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
+    readonly rol: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<50>;
+      readonly descripcion: Varchar<255> | null;
+      readonly es_sistema: CodecTypes['pg/bool@1']['output'];
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
     readonly Semana: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly CodSemana: Varchar<255> | null;
@@ -2398,6 +2405,13 @@ export type FieldInputTypes = {
         'BORRADOR' | 'ENVIADO' | 'COTIZADO' | 'OBSERVADO' | 'APROBADO' | 'RECHAZADO' | 'ANULADO';
       readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
       readonly comentario: CodecTypes['pg/text@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
+    readonly rol: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly es_sistema: CodecTypes['pg/bool@1']['input'];
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Semana: {
@@ -3523,6 +3537,13 @@ export type StorageColumnTypes = {
       readonly id_anexo: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_requerimiento: CodecTypes['pg/int4@1']['output'];
     };
+    readonly rol: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly descripcion: Varchar<255> | null;
+      readonly es_sistema: CodecTypes['pg/bool@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<50>;
+    };
     readonly semana: {
       readonly CodSemana: Varchar<255> | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -4645,6 +4666,13 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_anexo: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_requerimiento: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly rol: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly es_sistema: CodecTypes['pg/bool@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
     };
     readonly semana: {
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
@@ -12677,6 +12705,50 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly rol: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly descripcion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly es_sistema: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['nombre'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
             readonly semana: {
               columns: {
                 readonly id: {
@@ -13554,6 +13626,7 @@ type ContractBase = Omit<
       readonly model: 'UnidadMedida';
     };
     readonly usuarios: { readonly namespace: 'public' & NamespaceId; readonly model: 'Usuarios' };
+    readonly rol: { readonly namespace: 'public' & NamespaceId; readonly model: 'rol' };
     readonly usuariosMenus: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'UsuariosMenus';
@@ -22761,6 +22834,53 @@ type ContractBase = Omit<
                 readonly estado_nuevo: { readonly column: 'estado_nuevo' };
                 readonly id_anexo: { readonly column: 'id_anexo' };
                 readonly comentario: { readonly column: 'comentario' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly rol: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly descripcion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly es_sistema: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'rol';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly descripcion: { readonly column: 'descripcion' };
+                readonly es_sistema: { readonly column: 'es_sistema' };
                 readonly created_at: { readonly column: 'created_at' };
               };
             };

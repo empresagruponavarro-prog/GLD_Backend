@@ -10,6 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -25,9 +26,12 @@ import {
   UsuarioResponseDto,
 } from './usuario.dto.js';
 import { UsuarioHandler } from './usuario.handler.js';
+import { Roles } from '../../../platform/auth/roles.decorator.js';
+import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
 
 @ApiTags('administration/usuarios')
 @Controller('administration/usuarios')
+@Roles(ROL_ADMINISTRADOR)
 export class UsuarioController {
   constructor(private readonly handler: UsuarioHandler) {}
 
@@ -43,10 +47,10 @@ export class UsuarioController {
   }
 
   @Get('roles')
-  @ApiOperation({ summary: 'Listar roles disponibles' })
+  @ApiOperation({ summary: 'Listar los nombres de los roles (tabla rol)' })
   @ApiOkResponse({
     type: [String],
-    description: 'Lista de roles disponibles',
+    description: 'Nombres de los roles, primero los del sistema y luego por nombre. El detalle está en GET /administration/roles',
   })
   getRoles(): Promise<string[]> {
     return this.handler.getRoles();
@@ -67,7 +71,8 @@ export class UsuarioController {
     type: UsuarioResponseDto,
     description: 'Usuario creado exitosamente',
   })
-  @ApiConflictResponse({ description: 'Ya existe un usuario con este identificador' })
+  @ApiBadRequestResponse({ description: 'Datos inválidos o el rol indicado no existe en la tabla rol' })
+  @ApiConflictResponse({ description: 'Ya existe un usuario con este identificador o login' })
   create(@Body() dto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
     return this.handler.create(dto);
   }
@@ -80,6 +85,8 @@ export class UsuarioController {
     description: 'Usuario actualizado exitosamente',
   })
   @ApiNotFoundResponse({ description: 'Usuario no encontrado' })
+  @ApiBadRequestResponse({ description: 'Datos inválidos o el rol indicado no existe en la tabla rol' })
+  @ApiConflictResponse({ description: 'Otro usuario ya usa ese login' })
   update(
     @Param('id') id: string,
     @Body() dto: UpdateUsuarioDto,

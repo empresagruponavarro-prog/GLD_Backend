@@ -21,14 +21,19 @@
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "postinstall": "prisma skills sync || exit 0",
-    "contract:emit": "prisma contract emit"
+    "contract:emit": "prisma contract emit",
+    "usuarios:hash-claves": "node scripts/usuarios-hash-claves.js",
+    "usuarios:crear-admin": "node scripts/usuarios-crear-admin.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
     "@nestjs/core": "^12.0.1",
+    "@nestjs/jwt": "12.0.3",
     "@nestjs/observe": "^0.1.8",
     "@nestjs/platform-express": "^12.0.1",
     "@nestjs/swagger": "^12.0.1",
+    "@nestjs/throttler": "6.7.1",
+    "@node-rs/argon2": "2.2.2",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",

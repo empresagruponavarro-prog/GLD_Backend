@@ -1,0 +1,106 @@
+[
+  {
+    "id": "table.rol",
+    "label": "Create table \"rol\"",
+    "summary": "Creates table \"rol\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"rol\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"rol\"",
+        "sql": "CREATE TABLE \"public\".\"rol\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"descripcion\" character varying(255),\n  \"es_sistema\" bool DEFAULT false NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(50) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"rol\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rol.rol_nombre_key",
+    "label": "Add unique constraint on \"rol\" (nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rol_nombre_key",
+        "table": "rol"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rol_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_nombre_key",
+          "public",
+          "\"public\".\"rol\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rol_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"rol\" ADD CONSTRAINT \"rol_nombre_key\" UNIQUE (\"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rol_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_nombre_key",
+          "public",
+          "\"public\".\"rol\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.rol.semilla",
+    "label": "Semilla del catalogo de roles",
+    "summary": "Inserta Administrador (sistema), Promotor, Supervisor y Usuario si no existen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed roles",
+        "sql": "INSERT INTO \"public\".\"rol\" (nombre, descripcion, es_sistema) VALUES ('Administrador', 'Acceso total, incluida la administración de usuarios y empresas', true), ('Promotor', NULL, false), ('Supervisor', NULL, false), ('Usuario', NULL, false) ON CONFLICT (nombre) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]

@@ -36,7 +36,6 @@ export class UpdateObraResidenteDto {
   @ApiPropertyOptional() @IsOptional() @IsInt() @Type(() => Number) id_anexo?: number;
   @ApiPropertyOptional() @IsOptional() @IsString() @IsNotEmpty() @MaxLength(200) nombre_completo?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @IsNotEmpty() @MaxLength(100) rol_obra?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) cip_cap?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) especialidad?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) telefono?: string;
   @ApiPropertyOptional() @IsOptional() @IsEmail() @MaxLength(150) correo?: string;

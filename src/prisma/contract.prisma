@@ -1179,6 +1179,16 @@ model Usuarios {
   @@map("usuarios")
 }
 
+// Catalogo de roles (usuarios.Rol guarda el NOMBRE del rol, sin FK).
+model rol {
+  id          Int           @id @default(autoincrement())
+  nombre      VarChar(50)   @unique
+  descripcion VarChar(255)?
+  es_sistema  Boolean       @default(false)
+  created_at  DateTime      @default(now())
+  @@map("rol")
+}
+
 model UsuariosMenus {
   id            Int           @id @default(autoincrement())
   IdUsuarioMenu VarChar(255)?

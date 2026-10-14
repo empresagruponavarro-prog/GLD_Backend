@@ -2,8 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
-import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiConSesion } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -27,7 +27,7 @@ describe('Módulo administrativo: cotizaciones, documentos de origen y pagos (e2
   const requerimientoIds: number[] = [];
   const documentoIds: number[] = [];
 
-  const api = () => request(app.getHttpServer());
+  const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
   const VIERNES = '2026-10-16';
   const MIERCOLES = '2026-10-14';

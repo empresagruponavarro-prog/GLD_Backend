@@ -2,8 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
-import request from 'supertest';
 import { App } from 'supertest/types';
+import { apiConSesion } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -17,7 +17,7 @@ describe('Control de almacén (e2e)', () => {
   let familiaId = 0;
   let trabajadorId = 0;
 
-  const api = () => request(app.getHttpServer());
+  const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
 
   async function crearProducto(extra: Record<string, unknown> = {}): Promise<number> {
