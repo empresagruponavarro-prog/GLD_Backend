@@ -166,6 +166,14 @@ export class PlanosHandler {
 
   /** Registra un archivo ya guardado por multer y devuelve la clave + formato/peso. */
   async subirArchivo(idCentroCosto: number, file: ArchivoSubido | undefined): Promise<ArchivoPlanoDto> {
+    if (file?.path) {
+      if (process.env.ALLOW_LOCAL_STORAGE !== 'true') {
+        await unlink(file.path).catch(() => undefined);
+        throw new BadRequestException(
+          'El almacenamiento local de archivos en el servidor está deshabilitado. Ingrese el enlace en la nube (Google Drive, OneDrive, BIM 360, etc.).',
+        );
+      }
+    }
     if (!file) throw new BadRequestException('Debes adjuntar un archivo (campo "archivo")');
     try {
       await assertCentroCosto(this.db, idCentroCosto);

@@ -155,6 +155,14 @@ export class DocumentosHandler {
 
   /** Registra un archivo ya guardado por multer y devuelve la clave para archivo_url. */
   async subirArchivo(idCentroCosto: number, file: ArchivoSubido | undefined): Promise<ArchivoDocumentoDto> {
+    if (file?.path) {
+      if (process.env.ALLOW_LOCAL_STORAGE !== 'true') {
+        await unlink(file.path).catch(() => undefined);
+        throw new BadRequestException(
+          'El almacenamiento local de archivos en el servidor está deshabilitado. Ingrese el enlace en la nube (Google Drive, OneDrive, etc.).',
+        );
+      }
+    }
     if (!file) throw new BadRequestException('Debes adjuntar un archivo (campo "archivo")');
     try {
       await assertCentroCosto(this.db, idCentroCosto);

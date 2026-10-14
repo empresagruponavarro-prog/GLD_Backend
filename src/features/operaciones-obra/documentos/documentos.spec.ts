@@ -355,6 +355,22 @@ describe('documentos / DocumentosHandler', () => {
   });
 
   describe('subirArchivo', () => {
+    it('400 si ALLOW_LOCAL_STORAGE está deshabilitado', async () => {
+      const ruta = crearArchivo('bloqueado.pdf');
+      delete process.env.ALLOW_LOCAL_STORAGE;
+      await expect(
+        new DocumentosHandler(mockDb().db).subirArchivo(CC, { filename: 'bloqueado.pdf', originalname: 'b.pdf', size: 10, path: ruta }),
+      ).rejects.toThrow('El almacenamiento local de archivos en el servidor está deshabilitado');
+    });
+
+    beforeEach(() => {
+      process.env.ALLOW_LOCAL_STORAGE = 'true';
+    });
+
+    afterAll(() => {
+      delete process.env.ALLOW_LOCAL_STORAGE;
+    });
+
     it('400 sin archivo', async () => {
       await expect(new DocumentosHandler(mockDb().db).subirArchivo(CC, undefined)).rejects.toBeInstanceOf(BadRequestException);
     });
