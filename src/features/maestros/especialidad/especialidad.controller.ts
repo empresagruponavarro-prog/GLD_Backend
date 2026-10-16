@@ -30,9 +30,11 @@ import {
   UpdateEspecialidadDto,
 } from './especialidad.dto.js';
 import { EspecialidadHandler } from './especialidad.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/especialidad')
 @Controller('maestros/especialidad')
+@Modulo('maestros.generales')
 export class EspecialidadController {
   constructor(private readonly handler: EspecialidadHandler) {}
 
@@ -45,6 +47,7 @@ export class EspecialidadController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar especialidades para selector (id y nombre), filtrable por tipoAnexo' })
   @ApiOkResponse({

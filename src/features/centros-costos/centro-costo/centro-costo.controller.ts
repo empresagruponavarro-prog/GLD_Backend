@@ -14,12 +14,15 @@ import {
   UpdateCentroCostoDto,
 } from './centro-costo.dto.js';
 import { CentroCostoHandler } from './centro-costo.handler.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('centros-costos')
 @Controller('centros-costos')
+@Modulo('centros-costos')
 export class CentroCostoController {
   constructor(private readonly handler: CentroCostoHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Listar centros de costos con filtros' })
   @ApiOkResponse({
@@ -31,6 +34,7 @@ export class CentroCostoController {
     return this.handler.findAll(query);
   }
 
+  @TambienDesde('dashboard')
   @Get('metricas/estados')
   @ApiOperation({ summary: 'Conteo de estados de centros de costos' })
   @ApiOkResponse({
@@ -41,6 +45,7 @@ export class CentroCostoController {
     return this.handler.getConteoEstados();
   }
 
+  @LecturaCompartida()
   @Get('metricas/presupuestos')
   @ApiOperation({ summary: 'Conteo por grupo de estado de presupuesto y total del portafolio' })
   @ApiOkResponse({
@@ -51,6 +56,7 @@ export class CentroCostoController {
     return this.handler.getMetricasPresupuestos();
   }
 
+  @LecturaCompartida()
   @Get('catalogos-filtros')
   @ApiOperation({ summary: 'Catálogos para los filtros' })
   @ApiOkResponse({
@@ -72,6 +78,7 @@ export class CentroCostoController {
     return this.handler.getCentrosCostoPrincipal();
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar centros de costos para selector (id y nombre)' })
   @ApiOkResponse({
@@ -98,6 +105,7 @@ export class CentroCostoController {
     return this.handler.getPresupuestos(id);
   }
 
+  @TambienDesde('dashboard')
   @Get(':id/resumen-financiero')
   @ApiOperation({ summary: 'Resumen financiero de un centro de costos' })
   @ApiParam({ name: 'id', description: 'ID del centro de costo', example: 1 })

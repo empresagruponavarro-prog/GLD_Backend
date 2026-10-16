@@ -18,9 +18,11 @@ import type { Response } from 'express';
 import { type ArchivoSubido, PlanosHandler } from './planos.handler.js';
 import { CreateObraPlanoDto, NuevaVersionPlanoDto, UpdateObraPlanoDto } from './planos.dto.js';
 import { PLANO_EXTENSIONES, planoMulterOptions } from './planos.storage.js';
+import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/planos')
+@Modulo('obra')
 @ApiParam({ name: 'idCentroCosto', type: Number })
 export class PlanosController {
   constructor(private readonly handler: PlanosHandler) {}
@@ -84,6 +86,7 @@ export class PlanosController {
     return this.handler.update(idCentroCosto, idPlano, dto);
   }
 
+  @Accion('editar')
   @Post(':idPlano/versiones')
   @ApiOperation({ summary: 'Emitir una nueva versión/revisión del plano (la anterior queda histórica)' })
   @ApiParam({ name: 'idPlano', type: Number })

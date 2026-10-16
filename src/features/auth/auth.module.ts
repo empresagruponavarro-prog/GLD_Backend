@@ -6,6 +6,8 @@ import { LoginController } from './login/login.controller.js';
 import { LoginHandler } from './login/login.handler.js';
 import { MeController } from './me/me.controller.js';
 import { MeHandler } from './me/me.handler.js';
+import { MisPermisosController } from './mis-permisos/mis-permisos.controller.js';
+import { MisPermisosHandler } from './mis-permisos/mis-permisos.handler.js';
 
 export const LOGIN_INTENTOS_POR_MINUTO = 5;
 export const DEMASIADOS_INTENTOS = 'Demasiados intentos. Espera un minuto e int√©ntalo de nuevo.';
@@ -20,7 +22,7 @@ export const DEMASIADOS_INTENTOS = 'Demasiados intentos. Espera un minuto e int√
       errorMessage: DEMASIADOS_INTENTOS,
     }),
   ],
-  controllers: [LoginController, MeController],
-  providers: [LoginHandler, MeHandler],
+  controllers: [LoginController, MeController, MisPermisosController],
+  providers: [LoginHandler, MeHandler, MisPermisosHandler],
 })
 export class AuthModule {}

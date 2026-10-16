@@ -8,9 +8,11 @@ import {
   UpdatePptoDetalleFaseDto,
 } from './detalle-fases.dto.js';
 import { PptoDetalleFasesHandler } from './detalle-fases.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('presupuestos / fases-asignadas')
 @Controller('presupuestos/fases-asignadas')
+@Modulo('presupuestos')
 export class PptoDetalleFasesController {
   constructor(private readonly handler: PptoDetalleFasesHandler) {}
 
@@ -21,6 +23,7 @@ export class PptoDetalleFasesController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('centro-costo/:idCentroCosto')
   @ApiOperation({ summary: 'Listar fases del centro de costo principal asociado a un Centro de Costo' })
   @ApiParam({ name: 'idCentroCosto', type: Number, description: 'ID del Centro de Costo' })

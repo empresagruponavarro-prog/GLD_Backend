@@ -29,9 +29,11 @@ import {
   TipoCategoriaResponseDto,
   UpdateTipoCategoriaDto,
 } from './tipo-categoria.dto.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/tipo-categoria')
 @Controller('maestros/tipo-categoria')
+@Modulo('maestros.generales')
 export class TipoCategoriaController {
   constructor(private readonly handler: TipoCategoriaHandler) {}
 

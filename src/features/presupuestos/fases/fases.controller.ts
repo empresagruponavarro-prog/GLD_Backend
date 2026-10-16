@@ -7,12 +7,15 @@ import {
   UpdatePptoFaseDto,
 } from './fases.dto.js';
 import { PptoFasesHandler } from './fases.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('presupuestos / fases-maestras')
 @Controller('presupuestos/fases-maestras')
+@Modulo('presupuestos')
 export class PptoFasesController {
   constructor(private readonly handler: PptoFasesHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Listar catálogo de fases maestras de presupuestos' })
   @ApiOkResponse({ type: PptoFaseResponseDto, isArray: true })
@@ -20,6 +23,7 @@ export class PptoFasesController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get(':idOrCode')
   @ApiOperation({ summary: 'Obtener fase maestra por ID o código IdpptoFase' })
   @ApiParam({ name: 'idOrCode', description: 'ID numérico o código de fase (ej. FASE-01)' })
@@ -28,6 +32,7 @@ export class PptoFasesController {
     return this.handler.getById(idOrCode);
   }
 
+  @LecturaCompartida()
   @Get(':idpptoFase/categorias')
   @ApiOperation({ summary: 'Listar categorías maestras pertenecientes a una fase' })
   @ApiParam({ name: 'idpptoFase', description: 'Código IdpptoFase' })

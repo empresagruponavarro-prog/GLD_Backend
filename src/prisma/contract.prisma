@@ -1176,6 +1176,8 @@ model Usuarios {
   Usuario   VarChar(255)?
   Clave     VarChar(255)?
   Rol       VarChar(255)?
+  // Usuario desactivado: no puede iniciar sesion y su sesion abierta se corta (plan 05-roles, D6).
+  activo    Boolean       @default(true)
   @@map("usuarios")
 }
 
@@ -1186,7 +1188,43 @@ model rol {
   descripcion VarChar(255)?
   es_sistema  Boolean       @default(false)
   created_at  DateTime      @default(now())
+  permisos    rol_permiso[]
   @@map("rol")
+}
+
+// ---- Roles y permisos por modulo (plan 05-roles-y-permisos) ----
+// Catalogo del sistema (semilla en la migracion); `clave` es el identificador estable
+// que usan backend y frontend (`CLAVES_MODULO`).
+model modulo {
+  id             Int           @id @default(autoincrement())
+  clave          VarChar(80)   @unique
+  nombre         VarChar(120)
+  grupo          VarChar(60)
+  ruta           VarChar(255)?
+  orden          Int
+  admite_aprobar Boolean       @default(false)
+  admite_anular  Boolean       @default(false)
+  activo         Boolean       @default(true)
+  permisos       rol_permiso[]
+  @@map("modulo")
+}
+
+// Permisos de un rol en un modulo. Sin fila = todo denegado. El Administrador no tiene filas (implicito).
+model rol_permiso {
+  id        Int     @id @default(autoincrement())
+  rol_id    Int
+  modulo_id Int
+  ver       Boolean @default(false)
+  crear     Boolean @default(false)
+  editar    Boolean @default(false)
+  eliminar  Boolean @default(false)
+  aprobar   Boolean @default(false)
+  anular    Boolean @default(false)
+  rol       rol     @relation(fields:[rol_id], references:[id], onDelete: Cascade)
+  modulo    modulo  @relation(fields:[modulo_id], references:[id], onDelete: Cascade)
+  @@unique([rol_id, modulo_id])
+  @@index([modulo_id])
+  @@map("rol_permiso")
 }
 
 model UsuariosMenus {

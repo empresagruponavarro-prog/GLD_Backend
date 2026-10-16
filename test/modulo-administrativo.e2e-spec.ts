@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
 import { App } from 'supertest/types';
-import { apiConSesion } from './helpers/sesion.js';
+import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -90,6 +90,7 @@ describe('Módulo administrativo: cotizaciones, documentos de origen y pagos (e2
   beforeAll(async () => {
     db = new pg.Client({ connectionString: process.env['DATABASE_URL'] });
     await db.connect();
+    await crearUsuarioE2E(db);
     trabajadores = (await db.query(`select id from anexos where "tipoAnexo" = 'Trabajador' order by id limit 2`)).rows.map((r) => r.id);
     centroCostoId = (await db.query(`select id from "CentroCostos" limit 1`)).rows[0].id;
     provA = await crearAnexo('ZZ-ADM PROVEEDOR A');
@@ -139,6 +140,7 @@ describe('Módulo administrativo: cotizaciones, documentos de origen y pagos (e2
     await db.query(`delete from tipo_cambio_diario where moneda_id = 'USD' and fecha = $1`, [VIERNES]);
     if (productos.length > 0) await db.query('delete from producto where id = any($1)', [productos]);
     await db.query('delete from anexos where id = any($1)', [[provA, provB]]);
+    await borrarUsuarioE2E(db);
     await db.end();
     await app?.close();
   });

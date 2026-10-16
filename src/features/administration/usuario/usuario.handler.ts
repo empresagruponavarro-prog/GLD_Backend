@@ -7,12 +7,14 @@ import {
 } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { hashClave } from '../../../platform/auth/passwords.js';
+import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
 import {
   buscarUsuariosPorLogin,
   type UsuarioFila,
 } from '../../../platform/auth/usuarios-login.js';
 import { siguienteIdUsuario } from '../../../platform/auth/usuarios-id.js';
 import { pgErrorCode } from '../../../platform/db/pg-errors.js';
+import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { ordenarRoles } from '../rol/rol.handler.js';
 import {
@@ -22,13 +24,20 @@ import {
 } from './usuario.dto.js';
 
 type Varchar255 = Varchar<255>;
+/** Transacción de la ORM (lo que recibe el callback de `db.transaction`). */
+type Tx = Parameters<Parameters<Database['transaction']>[0]>[0];
 
-function toVarchar(value: string): Varchar255;
-function toVarchar(value: string | undefined): Varchar255 | undefined;
-function toVarchar(value: string | null | undefined): Varchar255 | null | undefined;
-function toVarchar(value: string | null | undefined): Varchar255 | null | undefined {
-  return value as unknown as Varchar255;
+export const NO_DESACTIVARSE = 'No puedes desactivar tu propio usuario';
+export const ULTIMO_ADMINISTRADOR = 'Debe quedar al menos un Administrador activo';
+export const NO_ELIMINARSE = 'No puedes eliminar tu propio usuario';
+
+/** Los DTO ya limitan a 255; si llegara algo más largo es un 400 (no se trunca). */
+function v255(valor: string): Varchar255 {
+  if (!esVarchar(valor, 255)) throw new BadRequestException('El valor supera 255 caracteres');
+  return valor;
 }
+
+const noEncontrado = (id: string) => new NotFoundException(`Usuario con ID ${id} no encontrado`);
 
 /** Mapeo explicito: la clave (hash) nunca sale en una respuesta. */
 function toResponse(row: UsuarioFila): UsuarioResponseDto {
@@ -37,15 +46,41 @@ function toResponse(row: UsuarioFila): UsuarioResponseDto {
     Nombres: row.Nombres,
     Usuario: row.Usuario,
     Rol: row.Rol,
+    activo: row.activo,
   };
 }
 
 /** Reintentos si dos altas simultáneas calculan el mismo correlativo (choque de clave primaria). */
 const INTENTOS_ID = 5;
 
+/** Nombres (sin espacios extremos) de los roles de sistema: el "Administrador". */
+async function nombresRolSistema(tx: Tx): Promise<Set<string>> {
+  const sistema = await tx.orm.public.rol.where({ es_sistema: true }).all();
+  return new Set(sistema.map((r) => r.nombre.trim()));
+}
+
+/**
+ * 409 si, sin el usuario `id`, no quedaría ningún Administrador activo. Para que dos operaciones
+ * simultáneas (desactivar, cambiar el rol o borrar) no dejen el sistema sin Administrador, se
+ * bloquean (UPDATE sin cambios) las filas de los Administradores activos antes de contarlos,
+ * dentro de la transacción del llamador.
+ */
+async function asegurarOtroAdministradorActivo(tx: Tx, id: string, sistema: ReadonlySet<string>): Promise<void> {
+  for (const nombre of sistema) {
+    if (!esVarchar(nombre, 255)) continue;
+    await tx.orm.public.Usuarios.where({ Rol: nombre, activo: true }).updateAndCount({ activo: true });
+  }
+  const activos = await tx.orm.public.Usuarios.where({ activo: true }).all();
+  const otros = activos.filter((u) => u.IdUsuario !== id && sistema.has((u.Rol ?? '').trim()));
+  if (otros.length === 0) throw new ConflictException(ULTIMO_ADMINISTRADOR);
+}
+
 @Injectable()
 export class UsuarioHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sesiones: SesionUsuariosService,
+  ) {}
 
   async list(): Promise<UsuarioResponseDto[]> {
     const rows = await this.db.orm.public.Usuarios.orderBy((u) => u.IdUsuario.asc()).all();
@@ -53,16 +88,13 @@ export class UsuarioHandler {
   }
 
   async getById(id: string): Promise<UsuarioResponseDto> {
-    const row = await this.db.orm.public.Usuarios.first({
-      IdUsuario: toVarchar(id),
-    });
-    if (!row) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    }
+    if (!esVarchar(id, 255)) throw noEncontrado(id);
+    const row = await this.db.orm.public.Usuarios.first({ IdUsuario: id });
+    if (!row) throw noEncontrado(id);
     return toResponse(row);
   }
 
-  /** Crea el usuario asignándole el siguiente correlativo USR-NNNN. */
+  /** Crea el usuario (activo) asignándole el siguiente correlativo USR-NNNN. */
   async create(dto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
     await this.assertRolExiste(dto.Rol);
     await this.assertLoginLibre(dto.Usuario);
@@ -73,11 +105,12 @@ export class UsuarioHandler {
       const id = siguienteIdUsuario(ids);
       try {
         const row = await this.db.orm.public.Usuarios.create({
-          IdUsuario: toVarchar(id),
-          Nombres: toVarchar(dto.Nombres),
-          Usuario: toVarchar(dto.Usuario.trim()),
-          Clave: toVarchar(clave),
-          Rol: toVarchar(dto.Rol),
+          IdUsuario: v255(id),
+          Nombres: v255(dto.Nombres),
+          Usuario: v255(dto.Usuario.trim()),
+          Clave: v255(clave),
+          Rol: v255(dto.Rol),
+          activo: true,
         });
         return toResponse(row);
       } catch (error) {
@@ -91,7 +124,13 @@ export class UsuarioHandler {
     }
   }
 
+  /**
+   * Actualiza los campos enviados. Si cambia el Rol de un Administrador activo (rol de sistema) a
+   * otro que no lo es, se exige que quede otro Administrador activo, con el mismo bloqueo que
+   * `cambiarEstado`, dentro de la transacción que hace el cambio.
+   */
   async update(id: string, dto: UpdateUsuarioDto): Promise<UsuarioResponseDto> {
+    if (!esVarchar(id, 255)) throw noEncontrado(id);
     const updateData: {
       Nombres?: Varchar255;
       Usuario?: Varchar255;
@@ -102,30 +141,74 @@ export class UsuarioHandler {
     if (dto.Rol !== undefined) await this.assertRolExiste(dto.Rol);
     if (dto.Usuario !== undefined) {
       await this.assertLoginLibre(dto.Usuario, id);
-      updateData.Usuario = toVarchar(dto.Usuario.trim());
+      updateData.Usuario = v255(dto.Usuario.trim());
     }
-    if (dto.Nombres !== undefined) updateData.Nombres = toVarchar(dto.Nombres);
-    if (dto.Clave !== undefined) updateData.Clave = toVarchar(await hashClave(dto.Clave));
-    if (dto.Rol !== undefined) updateData.Rol = toVarchar(dto.Rol);
+    if (dto.Nombres !== undefined) updateData.Nombres = v255(dto.Nombres);
+    if (dto.Clave !== undefined) updateData.Clave = v255(await hashClave(dto.Clave));
+    if (dto.Rol !== undefined) updateData.Rol = v255(dto.Rol);
 
-    const row = await this.db.orm.public.Usuarios.where({
-      IdUsuario: toVarchar(id),
-    }).update(updateData);
-
-    if (!row) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    }
+    const nuevoRol = dto.Rol;
+    const row =
+      nuevoRol === undefined
+        ? await this.db.orm.public.Usuarios.where({ IdUsuario: id }).update(updateData)
+        : await this.db.transaction(async (tx) => {
+            const actual = await tx.orm.public.Usuarios.first({ IdUsuario: id });
+            if (!actual) throw noEncontrado(id);
+            const sistema = await nombresRolSistema(tx);
+            const dejaDeSerAdmin = sistema.has((actual.Rol ?? '').trim()) && !sistema.has(nuevoRol.trim());
+            if (actual.activo && dejaDeSerAdmin) await asegurarOtroAdministradorActivo(tx, id, sistema);
+            return tx.orm.public.Usuarios.where({ IdUsuario: id }).update(updateData);
+          });
+    if (!row) throw noEncontrado(id);
+    // El rol vigente lo lee JwtAuthGuard de la BD: se aplica sin volver a entrar.
+    this.sesiones.invalidar(id);
     return toResponse(row);
   }
 
-  async remove(id: string): Promise<void> {
-    const row = await this.db.orm.public.Usuarios.where({
-      IdUsuario: toVarchar(id),
-    }).delete();
+  /**
+   * Nadie puede eliminarse a sí mismo (409) ni eliminar al último Administrador activo (409, con
+   * el mismo bloqueo que `cambiarEstado`).
+   */
+  async remove(id: string, actorId: string): Promise<void> {
+    if (!esVarchar(id, 255)) throw noEncontrado(id);
+    if (id === actorId) throw new ConflictException(NO_ELIMINARSE);
+    await this.db.transaction(async (tx) => {
+      const actual = await tx.orm.public.Usuarios.first({ IdUsuario: id });
+      if (!actual) throw noEncontrado(id);
+      const sistema = await nombresRolSistema(tx);
+      if (actual.activo && sistema.has((actual.Rol ?? '').trim())) {
+        await asegurarOtroAdministradorActivo(tx, id, sistema);
+      }
+      const borrado = await tx.orm.public.Usuarios.where({ IdUsuario: id }).delete();
+      if (!borrado) throw noEncontrado(id);
+    });
+    this.sesiones.invalidar(id);
+  }
 
-    if (!row) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    }
+  /**
+   * Desactiva o reactiva un usuario (D6). Nadie puede desactivarse a sí mismo ni dejar el
+   * sistema sin un Administrador activo (`asegurarOtroAdministradorActivo`).
+   */
+  async cambiarEstado(id: string, activo: boolean, actorId: string): Promise<UsuarioResponseDto> {
+    if (!esVarchar(id, 255)) throw noEncontrado(id);
+
+    await this.db.transaction(async (tx) => {
+      const actual = await tx.orm.public.Usuarios.first({ IdUsuario: id });
+      if (!actual) throw noEncontrado(id);
+      if (activo || !actual.activo) {
+        await tx.orm.public.Usuarios.where({ IdUsuario: id }).update({ activo });
+        return;
+      }
+      if (id === actorId) throw new ConflictException(NO_DESACTIVARSE);
+
+      const sistema = await nombresRolSistema(tx);
+      if (sistema.has((actual.Rol ?? '').trim())) await asegurarOtroAdministradorActivo(tx, id, sistema);
+      await tx.orm.public.Usuarios.where({ IdUsuario: id }).update({ activo: false });
+    });
+
+    this.sesiones.invalidar(id);
+    // La respuesta se arma después del commit.
+    return this.getById(id);
   }
 
   /** Nombres de la tabla `rol`, en el mismo orden que GET /administration/roles. */
@@ -136,7 +219,7 @@ export class UsuarioHandler {
 
   /** 400 si el rol no existe en la tabla `rol` (comparación exacta del nombre). */
   private async assertRolExiste(rol: string): Promise<void> {
-    const existe = await this.db.orm.public.rol.first({ nombre: rol as unknown as Varchar<50> });
+    const existe = esVarchar(rol, 50) ? await this.db.orm.public.rol.first({ nombre: rol }) : null;
     if (!existe) throw new BadRequestException(`El rol "${rol}" no existe`);
   }
 

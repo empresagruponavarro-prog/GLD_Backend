@@ -30,9 +30,11 @@ import {
   ListEquivalenciaQueryDto,
   UpdateEquivalenciaDto,
 } from './equivalencia.dto.js';
+import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/unidad-medida')
 @Controller('maestros/unidad-medida/:id/equivalencias')
+@Modulo('maestros.generales')
 export class EquivalenciaController {
   constructor(private readonly handler: EquivalenciaHandler) {}
 

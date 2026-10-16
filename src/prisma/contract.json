@@ -180,6 +180,10 @@
       "model": "Menu",
       "namespace": "public"
     },
+    "modulo": {
+      "model": "modulo",
+      "namespace": "public"
+    },
     "monedas": {
       "model": "Monedas",
       "namespace": "public"
@@ -286,6 +290,10 @@
     },
     "rol": {
       "model": "rol",
+      "namespace": "public"
+    },
+    "rol_permiso": {
+      "model": "rol_permiso",
       "namespace": "public"
     },
     "semana": {
@@ -8297,6 +8305,13 @@
                     "length": 255
                   }
                 }
+              },
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {},
@@ -8316,6 +8331,9 @@
                 },
                 "Usuario": {
                   "column": "Usuario"
+                },
+                "activo": {
+                  "column": "activo"
                 }
               },
               "namespaceId": "public",
@@ -10789,6 +10807,135 @@
               },
               "namespaceId": "public",
               "table": "familia_almacen"
+            }
+          },
+          "modulo": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "admite_anular": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "admite_aprobar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "clave": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 80
+                  }
+                }
+              },
+              "grupo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 60
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 120
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "ruta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "permisos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "modulo_id"
+                  ]
+                },
+                "to": {
+                  "model": "rol_permiso",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "admite_anular": {
+                  "column": "admite_anular"
+                },
+                "admite_aprobar": {
+                  "column": "admite_aprobar"
+                },
+                "clave": {
+                  "column": "clave"
+                },
+                "grupo": {
+                  "column": "grupo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                },
+                "ruta": {
+                  "column": "ruta"
+                }
+              },
+              "namespaceId": "public",
+              "table": "modulo"
             }
           },
           "obra_datos_generales": {
@@ -15166,7 +15313,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "permisos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "rol_id"
+                  ]
+                },
+                "to": {
+                  "model": "rol_permiso",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "created_at": {
@@ -15187,6 +15350,138 @@
               },
               "namespaceId": "public",
               "table": "rol"
+            }
+          },
+          "rol_permiso": {
+            "fields": {
+              "anular": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "aprobar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "crear": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "editar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "eliminar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "modulo_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "rol_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "ver": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "modulo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "modulo_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "modulo",
+                  "namespace": "public"
+                }
+              },
+              "rol": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "rol_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "rol",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "anular": {
+                  "column": "anular"
+                },
+                "aprobar": {
+                  "column": "aprobar"
+                },
+                "crear": {
+                  "column": "crear"
+                },
+                "editar": {
+                  "column": "editar"
+                },
+                "eliminar": {
+                  "column": "eliminar"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "modulo_id": {
+                  "column": "modulo_id"
+                },
+                "rol_id": {
+                  "column": "rol_id"
+                },
+                "ver": {
+                  "column": "ver"
+                }
+              },
+              "namespaceId": "public",
+              "table": "rol_permiso"
             }
           },
           "stock_almacen": {
@@ -21819,6 +22114,97 @@
               },
               "uniques": []
             },
+            "modulo": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "admite_anular": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "admite_aprobar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "clave": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 80
+                  }
+                },
+                "grupo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 60
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 120
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "ruta": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "clave"
+                  ]
+                }
+              ]
+            },
             "monedas": {
               "columns": {
                 "Moneda": {
@@ -26048,6 +26434,150 @@
                 }
               ]
             },
+            "rol_permiso": {
+              "columns": {
+                "anular": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "aprobar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "crear": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "editar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "eliminar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "modulo_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "rol_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "ver": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "rol_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "rol_permiso"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "rol"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "modulo_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "rol_permiso"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "modulo"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "modulo_id"
+                  ],
+                  "name": "rol_permiso_modulo_id_idx_610f44c7",
+                  "prefix": "rol_permiso_modulo_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "rol_id"
+                  ],
+                  "name": "rol_permiso_rol_id_idx_369fac19",
+                  "prefix": "rol_permiso_rol_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "rol_id",
+                    "modulo_id"
+                  ]
+                }
+              ]
+            },
             "semana": {
               "columns": {
                 "CodSemana": {
@@ -26664,6 +27194,15 @@
                   "typeParams": {
                     "length": 255
                   }
+                },
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -26943,7 +27482,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38"
+    "storageHash": "03999aaba285f1f70263a03303adb61b7375d403cab165f80265644047fa622f"
   },
   "capabilities": {
     "postgres": {

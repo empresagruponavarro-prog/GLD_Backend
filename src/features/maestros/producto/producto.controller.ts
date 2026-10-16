@@ -35,12 +35,15 @@ import {
   ProductoSelectResponseDto,
   UpdateProductoDto,
 } from './producto.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/producto')
 @Controller('maestros/producto')
+@Modulo('maestros.productos')
 export class ProductoController {
   constructor(private readonly handler: ProductoHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Listar productos' })
   @ApiOkResponse({
@@ -50,6 +53,7 @@ export class ProductoController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar productos para selector (id y descripcion), filtrable por tipo_producto' })
   @ApiOkResponse({

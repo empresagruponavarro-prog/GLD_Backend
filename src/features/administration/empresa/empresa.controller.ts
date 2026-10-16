@@ -20,14 +20,15 @@ import {
 } from '@nestjs/swagger';
 import { CreateEmpresaDto, EmpresaResponseDto, UpdateEmpresaDto } from './empresa.dto.js';
 import { EmpresaHandler } from './empresa.handler.js';
-import { Roles } from '../../../platform/auth/roles.decorator.js';
-import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('administration/empresas')
 @Controller('administration/empresas')
+@Modulo('admin.empresas')
 export class EmpresaController {
   constructor(private readonly handler: EmpresaHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Listar empresas' })
   @ApiOkResponse({ type: EmpresaResponseDto, isArray: true, description: 'Lista de empresas registradas' })
@@ -35,6 +36,7 @@ export class EmpresaController {
     return this.handler.list();
   }
 
+  @LecturaCompartida()
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una empresa por id' })
   @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
@@ -45,7 +47,6 @@ export class EmpresaController {
   }
 
   @Post()
-  @Roles(ROL_ADMINISTRADOR)
   @ApiOperation({ summary: 'Crear una empresa' })
   @ApiCreatedResponse({ type: EmpresaResponseDto, description: 'Empresa creada exitosamente' })
   create(@Body() dto: CreateEmpresaDto): Promise<EmpresaResponseDto> {
@@ -53,7 +54,6 @@ export class EmpresaController {
   }
 
   @Patch(':id')
-  @Roles(ROL_ADMINISTRADOR)
   @ApiOperation({ summary: 'Actualizar una empresa' })
   @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })
   @ApiOkResponse({ type: EmpresaResponseDto, description: 'Empresa actualizada exitosamente' })
@@ -66,7 +66,6 @@ export class EmpresaController {
   }
 
   @Delete(':id')
-  @Roles(ROL_ADMINISTRADOR)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar una empresa' })
   @ApiParam({ name: 'id', description: 'Identificador de la empresa', example: 1 })

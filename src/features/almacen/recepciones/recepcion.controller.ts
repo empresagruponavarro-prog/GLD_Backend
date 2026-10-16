@@ -12,9 +12,11 @@ import {
 import { DocumentoResponseDto } from '../documentos/documento.dto.js';
 import { RecepcionHandler } from './recepcion.handler.js';
 import { CreateRecepcionDto, RecepcionOrdenCompraResponseDto, RecepcionPendienteResponseDto } from './recepcion.dto.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('almacen/recepciones')
 @Controller('almacen/recepciones')
+@Modulo('almacen.recepciones')
 export class RecepcionController {
   constructor(private readonly handler: RecepcionHandler) {}
 

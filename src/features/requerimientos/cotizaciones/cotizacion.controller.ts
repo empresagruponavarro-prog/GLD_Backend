@@ -16,9 +16,11 @@ import {
   UpdateCotizacionDto,
 } from './cotizacion.dto.js';
 import { CotizacionHandler } from './cotizacion.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('requerimientos / cotizaciones')
 @Controller('requerimientos/:id')
+@Modulo('requerimientos')
 @ApiParam({ name: 'id', type: Number, description: 'ID del requerimiento' })
 export class CotizacionController {
   constructor(private readonly handler: CotizacionHandler) {}
@@ -30,6 +32,7 @@ export class CotizacionController {
     return this.handler.list(id);
   }
 
+  @LecturaCompartida()
   @Get('cuadro-comparativo')
   @ApiOperation({ summary: 'Cuadro comparativo linea x proveedor (no sugiere ganador)' })
   @ApiOkResponse({ type: CuadroComparativoDto })

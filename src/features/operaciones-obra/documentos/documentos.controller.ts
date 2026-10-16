@@ -35,9 +35,11 @@ import {
   UpdateObraDocumentoDto,
 } from './documentos.dto.js';
 import { DOCUMENTO_EXTENSIONES, documentoMulterOptions, tipoMime } from './documentos.storage.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/documentos')
+@Modulo('obra')
 @ApiParam({ name: 'idCentroCosto', type: Number })
 export class DocumentosObraController {
   constructor(private readonly handler: DocumentosHandler) {}

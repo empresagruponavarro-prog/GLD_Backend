@@ -2,9 +2,11 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from 
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CronogramaHandler } from './cronograma.handler.js';
 import { CreateLoteSemanasDto, CreateObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/cronograma')
+@Modulo('obra')
 @ApiParam({ name: 'idCentroCosto', type: Number })
 export class CronogramaController {
   constructor(private readonly handler: CronogramaHandler) {}

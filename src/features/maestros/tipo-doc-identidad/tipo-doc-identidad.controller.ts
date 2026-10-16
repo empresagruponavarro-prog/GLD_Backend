@@ -30,9 +30,11 @@ import {
   UpdateTipoDocIdentidadDto,
 } from './tipo-doc-identidad.dto.js';
 import { TipoDocIdentidadHandler } from './tipo-doc-identidad.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/tipo-doc-identidad')
 @Controller('maestros/tipo-doc-identidad')
+@Modulo('maestros.generales')
 export class TipoDocIdentidadController {
   constructor(private readonly handler: TipoDocIdentidadHandler) {}
 
@@ -47,6 +49,7 @@ export class TipoDocIdentidadController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar tipos de documento para selector (id y nombre), filtrable por tipoAnexo' })
   @ApiOkResponse({

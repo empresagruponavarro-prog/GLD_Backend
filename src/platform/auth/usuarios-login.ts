@@ -9,6 +9,8 @@ export interface UsuarioFila {
   Usuario: string | null;
   Clave: string | null;
   Rol: string | null;
+  /** Usuario desactivado: no puede iniciar sesion (plan 05-roles, D6). */
+  activo: boolean;
 }
 
 /** Login normalizado: sin espacios extremos y en minusculas. */

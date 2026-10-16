@@ -3,9 +3,11 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotF
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { DocumentoHandler } from './documento.handler.js';
 import { CreateDocumentoDto, DocumentoResponseDto, ListDocumentoQueryDto } from './documento.dto.js';
+import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('almacen/ingresos')
 @Controller('almacen/ingresos')
+@Modulo('almacen.ingresos')
 export class IngresosController {
   constructor(private readonly handler: DocumentoHandler) {}
 
@@ -33,6 +35,7 @@ export class IngresosController {
     return this.handler.registrar('INGRESO', dto);
   }
 
+  @Accion('anular')
   @Post(':id/anular')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Anular un ingreso (genera el documento inverso)' })

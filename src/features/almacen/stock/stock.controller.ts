@@ -3,12 +3,22 @@ import { ApiConflictResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation,
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { StockHandler } from './stock.handler.js';
 import { ListStockQueryDto, MarcarOperativoDto, StockResponseDto } from './stock.dto.js';
+import { Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('almacen/stock')
 @Controller('almacen/stock')
+@Modulo('almacen.stock')
 export class StockController {
   constructor(private readonly handler: StockHandler) {}
 
+  @TambienDesde(
+    'almacen.ingresos',
+    'almacen.salidas',
+    'almacen.transferencias',
+    'almacen.inventario-inicial',
+    'almacen.prestamos',
+    'almacen.kardex',
+  )
   @Get()
   @ApiOperation({ summary: 'Stock actual por producto (total, prestado, disponible, compra sugerida, alerta)' })
   @ApiOkResponse({ description: 'Lista paginada' })
@@ -23,6 +33,7 @@ export class StockController {
     return this.handler.compraSugerida(query);
   }
 
+  @TambienDesde('almacen.consulta')
   @Patch(':idProducto/:idAlmacen/operativo')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Marcar unidades no operativas como operativas (vuelven a disponibles)' })

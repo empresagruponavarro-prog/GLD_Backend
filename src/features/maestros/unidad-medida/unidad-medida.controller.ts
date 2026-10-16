@@ -30,9 +30,11 @@ import {
   UnidadMedidaSelectResponseDto,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/unidad-medida')
 @Controller('maestros/unidad-medida')
+@Modulo('maestros.generales')
 export class UnidadMedidaController {
   constructor(private readonly handler: UnidadMedidaHandler) {}
 
@@ -45,6 +47,7 @@ export class UnidadMedidaController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar unidades de medida para selector (id y nombre)' })
   @ApiOkResponse({

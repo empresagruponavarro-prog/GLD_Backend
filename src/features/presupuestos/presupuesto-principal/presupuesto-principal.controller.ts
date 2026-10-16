@@ -7,9 +7,11 @@ import {
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('presupuestos / principal')
 @Controller('presupuestos')
+@Modulo('presupuestos')
 export class PresupuestoPrincipalController {
   constructor(private readonly handler: PresupuestoPrincipalHandler) {}
 

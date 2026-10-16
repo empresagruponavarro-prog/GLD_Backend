@@ -17,9 +17,11 @@ import {
   ListDocumentosOrigenQueryDto,
   UpdateDocumentoOrigenDto,
 } from './documentos-origen.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('documentos / origen')
 @Controller('documentos/origen')
+@Modulo('documentos.origen')
 export class DocumentosOrigenController {
   constructor(private readonly handler: DocumentosOrigenHandler) {}
 
@@ -30,6 +32,7 @@ export class DocumentosOrigenController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('detalle-por-fase')
   @ApiOperation({ summary: 'Listar el detalle (productos) de documentos de origen por centro de costo y fase' })
   @ApiOkResponse({ type: DocumentoOrigenDetalleLineaResponseDto, isArray: true })

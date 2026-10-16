@@ -21,14 +21,13 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { Roles } from '../../../platform/auth/roles.decorator.js';
-import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
 import { CreateRolDto, RolResponseDto, UpdateRolDto } from './rol.dto.js';
 import { RolHandler } from './rol.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('administration/roles')
 @Controller('administration/roles')
-@Roles(ROL_ADMINISTRADOR)
+@Modulo('admin.roles')
 export class RolController {
   constructor(private readonly handler: RolHandler) {}
 

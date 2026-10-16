@@ -4,6 +4,7 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { RequerimientoHandler } from '../requerimiento/requerimiento.handler.js';
+import { FlujoAprobacionController } from './flujo-aprobacion.controller.js';
 import { FlujoController } from './flujo.controller.js';
 import { FlujoHandler } from './flujo.handler.js';
 
@@ -12,6 +13,7 @@ vi.mock('../shared/generar-documentos-origen.js', () => ({ generarDocumentosOrig
 
 describe('requerimientos / flujo', () => {
   let controller: FlujoController;
+  let aprobacion: FlujoAprobacionController;
   const sqlRows = vi.fn();
   const sqlRun = vi.fn();
   const getById = vi.fn();
@@ -27,7 +29,7 @@ describe('requerimientos / flujo', () => {
     getById.mockResolvedValue({ id: 1 });
     generarDocumentosOrigen.mockResolvedValue([]);
     const moduleRef = await Test.createTestingModule({
-      controllers: [FlujoController],
+      controllers: [FlujoController, FlujoAprobacionController],
       providers: [
         FlujoHandler,
         { provide: DB, useValue: { transaction: vi.fn(async (cb: (tx: unknown) => unknown) => cb({})) } as unknown as Database },
@@ -37,6 +39,7 @@ describe('requerimientos / flujo', () => {
       ],
     }).compile();
     controller = moduleRef.get(FlujoController);
+    aprobacion = moduleRef.get(FlujoAprobacionController);
   });
 
   it('responde 404 si el requerimiento no existe', async () => {
@@ -57,14 +60,14 @@ describe('requerimientos / flujo', () => {
 
     it.each(['BORRADOR', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'])('no se puede aprobar un requerimiento %s', async (estado) => {
       conEstado(estado);
-      await expect(controller.aprobar(1, { id_aprobador: 5 })).rejects.toBeInstanceOf(ConflictException);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5 })).rejects.toBeInstanceOf(ConflictException);
     });
 
     it.each(['BORRADOR', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'])('no se puede observar ni rechazar un requerimiento %s', async (estado) => {
       conEstado(estado);
-      await expect(controller.observar(1, { id_aprobador: 5, comentario: 'x' })).rejects.toBeInstanceOf(ConflictException);
+      await expect(aprobacion.observar(1, { id_aprobador: 5, comentario: 'x' })).rejects.toBeInstanceOf(ConflictException);
       conEstado(estado);
-      await expect(controller.rechazar(1, { id_aprobador: 5, comentario: 'x' })).rejects.toBeInstanceOf(ConflictException);
+      await expect(aprobacion.rechazar(1, { id_aprobador: 5, comentario: 'x' })).rejects.toBeInstanceOf(ConflictException);
     });
 
     it.each(['BORRADOR', 'COTIZADO', 'OBSERVADO', 'APROBADO', 'RECHAZADO', 'ANULADO'])('no se puede cerrar la cotización de un requerimiento %s', async (estado) => {
@@ -147,45 +150,45 @@ describe('requerimientos / flujo', () => {
     it.each(['ENVIADO', 'COTIZADO'])('observa un requerimiento %s exigiendo un aprobador Trabajador', async (estado) => {
       conEstado(estado);
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]);
-      await expect(controller.observar(1, { id_aprobador: 5, comentario: 'falta detalle' })).resolves.toEqual({ id: 1 });
+      await expect(aprobacion.observar(1, { id_aprobador: 5, comentario: 'falta detalle' })).resolves.toEqual({ id: 1 });
     });
 
     it('rechaza la aprobación si el aprobador no es Trabajador', async () => {
       conEstado('COTIZADO');
       sqlRows.mockResolvedValueOnce([{ nombre: 'ACME', ok: false }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2 })).rejects.toThrow(/no es un Anexo de tipo Trabajador/);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2 })).rejects.toThrow(/no es un Anexo de tipo Trabajador/);
       expect(sqlRun).not.toHaveBeenCalled();
     });
 
     it('una compra no se aprueba desde ENVIADO: primero se cierra el cuadro comparativo', async () => {
       conEstado('ENVIADO');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2 })).rejects.toThrow(/COTIZADO/);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2 })).rejects.toThrow(/COTIZADO/);
     });
 
     it('un requerimiento que no es de compra se aprueba desde ENVIADO, no desde COTIZADO', async () => {
       conEstado('COTIZADO', 'CAJA_CHICA');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5 })).rejects.toThrow(/desde ENVIADO/);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5 })).rejects.toThrow(/desde ENVIADO/);
     });
 
     it('una compra exige elegir la cotización ganadora', async () => {
       conEstado('COTIZADO');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5 })).rejects.toBeInstanceOf(BadRequestException);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5 })).rejects.toBeInstanceOf(BadRequestException);
     });
 
     it('rechaza una cotización ganadora de otro requerimiento', async () => {
       conEstado('COTIZADO');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]).mockResolvedValueOnce([]);
-      await expect(controller.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 99 })).rejects.toThrow(/no pertenece al requerimiento/);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 99 })).rejects.toThrow(/no pertenece al requerimiento/);
     });
 
     it('rechaza aprobar la misma línea dos veces', async () => {
       conEstado('ENVIADO', 'CAJA_CHICA');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]);
       await expect(
-        controller.aprobar(1, {
+        aprobacion.aprobar(1, {
           id_aprobador: 5,
           lineas: [
             { id_detalle: 1, cantidad_aprobada: '1' },
@@ -198,7 +201,7 @@ describe('requerimientos / flujo', () => {
     it('no aprueba si ninguna línea queda con cantidad mayor a 0', async () => {
       conEstado('ENVIADO', 'CAJA_CHICA');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]).mockResolvedValueOnce([{ ok: false }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5 })).rejects.toThrow(/al menos una línea/);
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5 })).rejects.toThrow(/al menos una línea/);
       expect(generarDocumentosOrigen).not.toHaveBeenCalled();
     });
 
@@ -209,7 +212,7 @@ describe('requerimientos / flujo', () => {
         .mockResolvedValueOnce([{ id: 2 }])
         .mockResolvedValueOnce([{ ok: true }]);
       await expect(
-        controller.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2, comentario_adjudicacion: 'entrega inmediata' }),
+        aprobacion.aprobar(1, { id_aprobador: 5, id_cotizacion_ganadora: 2, comentario_adjudicacion: 'entrega inmediata' }),
       ).resolves.toEqual({ id: 1 });
       expect(generarDocumentosOrigen).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), 1, 2);
     });
@@ -217,7 +220,7 @@ describe('requerimientos / flujo', () => {
     it('aprueba una caja chica enviada y genera su documento', async () => {
       conEstado('ENVIADO', 'CAJA_CHICA');
       sqlRows.mockResolvedValueOnce([{ nombre: 'Ana', ok: true }]).mockResolvedValueOnce([{ ok: true }]);
-      await expect(controller.aprobar(1, { id_aprobador: 5, comentario: 'OK' })).resolves.toEqual({ id: 1 });
+      await expect(aprobacion.aprobar(1, { id_aprobador: 5, comentario: 'OK' })).resolves.toEqual({ id: 1 });
       expect(generarDocumentosOrigen).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), 1, null);
     });
   });

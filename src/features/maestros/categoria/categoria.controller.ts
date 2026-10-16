@@ -31,9 +31,11 @@ import {
   ListCategoriaQueryDto,
   UpdateCategoriaDto,
 } from './categoria.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria')
+@Modulo('maestros.generales')
 export class CategoriaController {
   constructor(private readonly handler: CategoriaHandler) {}
 
@@ -46,6 +48,7 @@ export class CategoriaController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar categorías para selector (id y nombre)' })
   @ApiOkResponse({

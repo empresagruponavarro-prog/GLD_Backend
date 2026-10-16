@@ -8,9 +8,11 @@ import {
   UpdateProgramacionDto,
 } from '../tesoreria.dto.js';
 import { ProgramacionHandler, type ProgramacionRow } from './programacion.handler.js';
+import { Accion, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('tesoreria / programacion de pagos')
 @Controller('tesoreria/programacion')
+@Modulo('tesoreria.programacion')
 export class ProgramacionController {
   constructor(private readonly handler: ProgramacionHandler) {}
 
@@ -21,6 +23,7 @@ export class ProgramacionController {
     return this.handler.pendientes(query);
   }
 
+  @TambienDesde('tesoreria.pagos')
   @Get()
   @ApiOperation({ summary: 'Agenda de pagos programados con totales en soles por fecha' })
   @ApiOkResponse({ description: 'items y totales_por_fecha' })
@@ -49,6 +52,7 @@ export class ProgramacionController {
     return this.handler.actualizar(id, dto);
   }
 
+  @Accion('anular')
   @Post(':id/cancelar')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Cancelar una programacion (libera el saldo)' })

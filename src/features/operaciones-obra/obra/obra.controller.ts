@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/commo
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObraHandler } from './obra.handler.js';
 import { ObraCockpitDto, ObraDatosGeneralesDto, UpdateObraDatosGeneralesDto } from './obra.dto.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 /**
  * Rutas de cronograma (avance) y residentes viven en sus propios slices:
@@ -10,6 +11,7 @@ import { ObraCockpitDto, ObraDatosGeneralesDto, UpdateObraDatosGeneralesDto } fr
  */
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra')
+@Modulo('obra')
 export class ObraController {
   constructor(private readonly handler: ObraHandler) {}
 

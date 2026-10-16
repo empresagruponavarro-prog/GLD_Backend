@@ -1,21 +1,30 @@
-import { Controller, Get, type INestApplication } from '@nestjs/common';
+import { Controller, Get, Module, type INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from '../../app.controller.js';
 import { EmpresaController } from '../../features/administration/empresa/empresa.controller.js';
 import { RolController } from '../../features/administration/rol/rol.controller.js';
 import { UsuarioController } from '../../features/administration/usuario/usuario.controller.js';
 import { LoginController } from '../../features/auth/login/login.controller.js';
 import { MeController } from '../../features/auth/me/me.controller.js';
+import { MisPermisosController } from '../../features/auth/mis-permisos/mis-permisos.controller.js';
+import { CatalogoPermisosController } from '../../features/administration/permisos/catalogo/catalogo.controller.js';
+import { MatrizPermisosController } from '../../features/administration/permisos/matriz/matriz.controller.js';
+import { DB, PrismaModule } from '../../prisma/prisma.module.js';
+import { AuditoriaPermisosService } from './auditoria-permisos.js';
 import type { AuthUser } from './auth-user.js';
 import { CurrentUser } from './current-user.decorator.js';
-import { PlatformAuthModule } from './platform-auth.module.js';
+import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { LECTURA_COMPARTIDA_KEY, LecturaCompartida, MODULO_KEY, Modulo } from './permisos.decorator.js';
+import { PermisosGuard } from './permisos.guard.js';
+import { GUARDS_GLOBALES, PlatformAuthModule } from './platform-auth.module.js';
 import { IS_PUBLIC_KEY, Public } from './public.decorator.js';
-import { ROLES_KEY, Roles } from './roles.decorator.js';
 import { ROL_ADMINISTRADOR } from './roles.js';
 
 @Controller('prueba')
+@Modulo('admin.usuarios')
 class PruebaController {
   @Public()
   @Get('publico')
@@ -23,12 +32,12 @@ class PruebaController {
     return { ok: true };
   }
 
+  @LecturaCompartida()
   @Get('privado')
   privado(@CurrentUser() user: AuthUser) {
     return user;
   }
 
-  @Roles('Administrador')
   @Get('admin')
   admin() {
     return { admin: true };
@@ -37,13 +46,66 @@ class PruebaController {
 
 const SECRET = 'x'.repeat(48);
 
+/** Usuarios de la BD (los lee `JwtAuthGuard`): el `sub` del token elige la fila. */
+const USUARIOS_BD: Record<string, { IdUsuario: string; Rol: string; activo: boolean }> = {
+  U1: { IdUsuario: 'U1', Rol: 'Usuario', activo: true },
+  ADM: { IdUsuario: 'ADM', Rol: 'Administrador', activo: true },
+  INACTIVO: { IdUsuario: 'INACTIVO', Rol: 'Administrador', activo: false },
+};
+
+const ROLES_BD = [
+  { id: 1, nombre: 'Administrador', es_sistema: true },
+  { id: 2, nombre: 'Usuario', es_sistema: false },
+];
+const MODULOS_BD = [
+  {
+    id: 32,
+    clave: 'admin.usuarios',
+    nombre: 'Usuarios',
+    grupo: 'Administración',
+    ruta: '/admin/usuarios',
+    orden: 32,
+    admite_aprobar: false,
+    admite_anular: false,
+    activo: true,
+  },
+];
+
+@Module({
+  providers: [
+    {
+      provide: DB,
+      useValue: {
+        orm: {
+          public: {
+            Usuarios: {
+              first: async ({ IdUsuario }: { IdUsuario: string }) => USUARIOS_BD[IdUsuario] ?? null,
+            },
+            rol: { first: async ({ nombre }: { nombre: string }) => ROLES_BD.find((r) => r.nombre === nombre) ?? null },
+            modulo: { orderBy: () => ({ all: async () => MODULOS_BD }) },
+            // "Usuario" no tiene filas: sin permisos en ningún módulo.
+            rol_permiso: { where: () => ({ all: async () => [] }) },
+          },
+        },
+      },
+    },
+  ],
+  exports: [DB],
+})
+class FakePrismaModule {}
+
 describe('guards globales (toda la API exige sesión)', () => {
   let app: INestApplication;
   let jwt: JwtService;
   const secretAnterior = process.env['JWT_SECRET'];
 
-  const token = (rol: string, opciones: { expiresIn?: number } = {}) =>
-    jwt.sign({ sub: 'U1', usuario: 'u1', rol }, { expiresIn: opciones.expiresIn ?? 3600 });
+  /** El rol del token se ignora: manda el de la BD (fila elegida por `sub`). */
+  const SUB_POR_ROL: Record<string, string> = { Usuario: 'U1', Administrador: 'ADM' };
+  const token = (rol: string, opciones: { expiresIn?: number; sub?: string } = {}) =>
+    jwt.sign(
+      { sub: opciones.sub ?? SUB_POR_ROL[rol] ?? 'U1', usuario: 'u1', rol },
+      { expiresIn: opciones.expiresIn ?? 3600 },
+    );
   const get = (url: string, t?: string) => {
     const r = request(app.getHttpServer()).get(url);
     return t ? r.set('Authorization', `Bearer ${t}`) : r;
@@ -54,7 +116,13 @@ describe('guards globales (toda la API exige sesión)', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PlatformAuthModule],
       controllers: [PruebaController],
-    }).compile();
+    })
+      .overrideModule(PrismaModule)
+      .useModule(FakePrismaModule)
+      // No escribir en logs/ del proyecto durante los tests.
+      .overrideProvider(AuditoriaPermisosService)
+      .useValue({ registrar: () => undefined, archivo: '' })
+      .compile();
     app = moduleRef.createNestApplication();
     await app.init();
     jwt = app.get(JwtService);
@@ -91,52 +159,92 @@ describe('guards globales (toda la API exige sesión)', () => {
     expect(res.body).toEqual({ id: 'U1', usuario: 'u1', rol: 'Usuario' });
   });
 
-  it('@Roles: un rol distinto recibe 403 y Administrador pasa', async () => {
+  it('PermisosGuard: sin permiso en Administración → 403 SIN_PERMISO (estricto aun en auditoría); Administrador pasa', async () => {
     const res = await get('/prueba/admin', token('Usuario')).expect(403);
-    expect(res.body.message).toBe('No tiene permisos para esta operación');
+    expect(res.body).toEqual({
+      statusCode: 403,
+      message: 'No tienes permiso para ver en Usuarios',
+      error: 'Forbidden',
+      codigo: 'SIN_PERMISO',
+      modulo: 'admin.usuarios',
+      accion: 'ver',
+    });
     await get('/prueba/admin', token('Administrador')).expect(200, { admin: true });
+  });
+
+  it('los guards globales son JwtAuthGuard y luego PermisosGuard (RolesGuard retirado)', () => {
+    expect(GUARDS_GLOBALES).toEqual([
+      { provide: APP_GUARD, useClass: JwtAuthGuard },
+      { provide: APP_GUARD, useClass: PermisosGuard },
+    ]);
+  });
+
+  it('el rol sale de la BD: un token que dice Administrador con usuario Usuario recibe 403', async () => {
+    await get('/prueba/admin', token('Administrador', { sub: 'U1' })).expect(403);
+    const res = await get('/prueba/privado', token('Administrador', { sub: 'U1' })).expect(200);
+    expect(res.body.rol).toBe('Usuario');
+  });
+
+  it('usuario borrado → 401; usuario inactivo → 403 USUARIO_INACTIVO en cualquier ruta con sesión', async () => {
+    await get('/prueba/privado', token('Usuario', { sub: 'BORRADO' })).expect(401);
+    const res = await get('/prueba/privado', token('Administrador', { sub: 'INACTIVO' })).expect(403);
+    expect(res.body).toEqual({
+      statusCode: 403,
+      message: 'Tu usuario está desactivado. Contacta al administrador',
+      error: 'Forbidden',
+      codigo: 'USUARIO_INACTIVO',
+    });
+    await get('/prueba/admin', token('Administrador', { sub: 'INACTIVO' })).expect(403);
+    await get('/prueba/publico', token('Administrador', { sub: 'INACTIVO' })).expect(200);
   });
 });
 
 describe('permisos declarados en los controladores', () => {
   const publico = (target: object) => Reflect.getMetadata(IS_PUBLIC_KEY, target) === true;
-  const roles = (target: object) => Reflect.getMetadata(ROLES_KEY, target) as string[] | undefined;
+  const compartida = (target: object) => Reflect.getMetadata(LECTURA_COMPARTIDA_KEY, target) === true;
+  const modulo = (target: object): unknown => Reflect.getMetadata(MODULO_KEY, target);
   const handler = (clase: { prototype: object }, metodo: string) =>
     (clase.prototype as Record<string, object>)[metodo];
+  const metodos = (clase: { prototype: object }) =>
+    Object.getOwnPropertyNames(clase.prototype).filter((m) => m !== 'constructor');
 
-  it('login y health son públicos; /auth/me no', () => {
+  it('login y health son públicos; /auth/me y /auth/mis-permisos solo exigen sesión', () => {
     expect(publico(LoginController)).toBe(true);
     expect(publico(handler(AppController, 'getHello'))).toBe(true);
-    expect(publico(MeController)).toBe(false);
-    expect(publico(handler(MeController, 'me'))).toBe(false);
+    for (const clase of [MeController, MisPermisosController]) {
+      expect(publico(clase)).toBe(false);
+      expect(compartida(clase)).toBe(true);
+      for (const m of metodos(clase)) expect(publico(handler(clase, m))).toBe(false);
+    }
   });
 
   it('ROL_ADMINISTRADOR es el nombre del rol del sistema', () => {
     expect(ROL_ADMINISTRADOR).toBe('Administrador');
   });
 
-  it('todo /administration/usuarios exige Administrador', () => {
-    expect(roles(UsuarioController)).toEqual(['Administrador']);
-  });
-
-  it('todo /administration/roles exige Administrador y ningún método lo relaja', () => {
-    expect(roles(RolController)).toEqual(['Administrador']);
-    const metodos = Object.getOwnPropertyNames(RolController.prototype).filter((m) => m !== 'constructor');
-    expect(metodos.length).toBe(4);
-    for (const m of metodos) {
-      expect(publico(handler(RolController, m))).toBe(false);
-      expect(roles(handler(RolController, m))).toBeUndefined();
+  it('usuarios, roles, catálogo y matriz de permisos: módulo de Administración y ningún método lo relaja', () => {
+    for (const [clase, clave] of [
+      [UsuarioController, 'admin.usuarios'],
+      [RolController, 'admin.roles'],
+      [CatalogoPermisosController, 'admin.roles'],
+      [MatrizPermisosController, 'admin.roles'],
+    ] as const) {
+      expect(modulo(clase)).toBe(clave);
+      expect(publico(clase)).toBe(false);
+      expect(compartida(clase)).toBe(false);
+      for (const m of metodos(clase)) {
+        expect(publico(handler(clase, m))).toBe(false);
+        expect(compartida(handler(clase, m))).toBe(false);
+      }
     }
+    expect(metodos(RolController).length).toBe(4);
   });
 
-  it('empresas: leer es para cualquier sesión; crear, editar y eliminar exigen Administrador', () => {
-    const metodos = Object.getOwnPropertyNames(EmpresaController.prototype).filter((m) => m !== 'constructor');
-    const conRol = metodos.filter((m) => roles(handler(EmpresaController, m))?.includes('Administrador'));
-    const sinRol = metodos.filter((m) => !roles(handler(EmpresaController, m)));
-
-    expect(roles(EmpresaController)).toBeUndefined();
-    expect(conRol.length).toBe(3);
-    expect(sinRol.length).toBe(metodos.length - 3);
-    expect(sinRol.length).toBeGreaterThanOrEqual(2); // listar y ver detalle
+  it('empresas: leer es lectura compartida (selects); crear, editar y eliminar exigen permiso en admin.empresas', () => {
+    expect(modulo(EmpresaController)).toBe('admin.empresas');
+    const todos = metodos(EmpresaController);
+    const lecturas = todos.filter((m) => compartida(handler(EmpresaController, m)));
+    expect(lecturas.length).toBe(todos.length - 3);
+    expect(lecturas.length).toBeGreaterThanOrEqual(2); // listar y ver detalle
   });
 });

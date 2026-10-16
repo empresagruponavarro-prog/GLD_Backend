@@ -125,7 +125,8 @@ export class DocumentoHandler {
     return toPaginated(rows as unknown as DocumentoResponseDto[], count.total, page, pageSize);
   }
 
-  async getById(id: number, naturaleza?: Naturaleza): Promise<DocumentoResponseDto> {
+  /** `motivo` restringe el documento a ese motivo (p. ej. inventario inicial): si no coincide, 404. */
+  async getById(id: number, naturaleza?: Naturaleza, motivo?: MotivoMovimiento): Promise<DocumentoResponseDto> {
     const q = sqlTag(this.sql);
     const [row] = await q.rows<Record<string, unknown>>(CABECERA_SPEC)`
       SELECT d.id, d.numero::text AS numero, d.naturaleza::text AS naturaleza, d.motivo::text AS motivo,
@@ -150,7 +151,7 @@ export class DocumentoHandler {
         LEFT JOIN anexos ea ON ea.id = d.id_entregado_a
         LEFT JOIN "documentosOrigen" oc ON oc.id = d.id_orden_compra
        WHERE d.id = ${id}::int`;
-    if (!row || (naturaleza && row['naturaleza'] !== naturaleza)) {
+    if (!row || (naturaleza && row['naturaleza'] !== naturaleza) || (motivo && row['motivo'] !== motivo)) {
       throw new NotFoundException(`Documento ${id} no encontrado`);
     }
     const lineas = await q.rows<Record<string, unknown>>({
@@ -191,7 +192,8 @@ export class DocumentoHandler {
     return this.crearYAplicar(tx, naturaleza, dto, null, vinculo);
   }
 
-  async anular(id: number, naturaleza: Naturaleza): Promise<DocumentoResponseDto> {
+  /** `motivo` restringe la anulación a documentos de ese motivo (p. ej. inventario inicial): si no coincide, 404. */
+  async anular(id: number, naturaleza: Naturaleza, soloMotivo?: MotivoMovimiento): Promise<DocumentoResponseDto> {
     const reversionId = await this.db.transaction(async (tx) => {
       const q = sqlTag(this.sql);
       const [doc] = await q.rows<{
@@ -223,7 +225,9 @@ export class DocumentoHandler {
                 GREATEST(fecha, (now() AT TIME ZONE 'America/Lima')::date)::text AS fecha_reversa, id_almacen,
                 id_almacen_destino, estado::text AS estado, id_documento_anula, id_centro_costo
            FROM almacen_documento WHERE id = ${id}::int FOR UPDATE`;
-      if (!doc || doc.naturaleza !== naturaleza) throw new NotFoundException(`Documento ${id} no encontrado`);
+      if (!doc || doc.naturaleza !== naturaleza || (soloMotivo && doc.motivo !== soloMotivo)) {
+        throw new NotFoundException(`Documento ${id} no encontrado`);
+      }
       if (doc.estado === 'ANULADO') throw new ConflictException(`El documento ${id} ya está anulado`);
       if (doc.id_documento_anula !== null) throw new BadRequestException('No se puede anular un documento de reversión');
 
@@ -259,7 +263,7 @@ export class DocumentoHandler {
       return nuevoId;
     });
     void reversionId;
-    return this.getById(id);
+    return this.getById(id, naturaleza, soloMotivo);
   }
 
   // ---------------------------------------------------------------- privado

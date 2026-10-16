@@ -3,9 +3,11 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotF
 import type { Paginated } from '../../../platform/db/pagination.js';
 import { AnularPagoDto, EjecutarPagoDto, ListPagosQueryDto, PagoDirectoDto } from '../tesoreria.dto.js';
 import { PagosHandler, type PagoDetalle } from './pagos.handler.js';
+import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('tesoreria / pagos')
 @Controller('tesoreria/pagos')
+@Modulo('tesoreria.pagos')
 export class PagosController {
   constructor(private readonly handler: PagosHandler) {}
 
@@ -16,6 +18,7 @@ export class PagosController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get(':id')
   @ApiOperation({ summary: 'Datos del comprobante de pago' })
   @ApiOkResponse({ description: 'Pago' })
@@ -24,6 +27,7 @@ export class PagosController {
     return this.handler.getById(id);
   }
 
+  @Accion('ver')
   @Post()
   @ApiOperation({
     summary: 'Ejecutar una programacion y emitir el comprobante CP-',
@@ -37,6 +41,7 @@ export class PagosController {
     return this.handler.ejecutar(dto);
   }
 
+  @Accion('ver')
   @Post('directo')
   @ApiOperation({ summary: 'Pagar ahora (crea la programacion y el pago en una operacion)' })
   @ApiCreatedResponse({ description: 'Pago registrado' })
@@ -45,6 +50,7 @@ export class PagosController {
     return this.handler.pagarDirecto(dto);
   }
 
+  @Accion('anular')
   @Post(':id/anular')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Anular un pago: el saldo se libera y la programacion vuelve a PROGRAMADO' })

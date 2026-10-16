@@ -13,6 +13,7 @@ import { PresupuestoHistorialHandler } from './presupuesto-historial/presupuesto
 import { PresupuestoPrincipalController } from './presupuesto-principal/presupuesto-principal.controller.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto-principal.handler.js';
 
+import { AplicarPlantillaController } from './plantillas/aplicar-plantilla.controller.js';
 import { PlantillasController } from './plantillas/plantillas.controller.js';
 import { PlantillasHandler } from './plantillas/plantillas.handler.js';
 
@@ -26,6 +27,7 @@ import { PlantillasHandler } from './plantillas/plantillas.handler.js';
     PresupuestoHistorialController,
     PresupuestoPrincipalController,
     PlantillasController,
+    AplicarPlantillaController,
   ],
   providers: [
     PresupuestoPrincipalHandler,

@@ -3,9 +3,11 @@ import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation
 import type { TipoCambioVigente } from '../shared/tipo-cambio.js';
 import { ListTipoCambioQueryDto, TipoCambioResponseDto, UpsertTipoCambioDto } from '../tesoreria.dto.js';
 import { TipoCambioHandler } from './tipo-cambio.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('tesoreria / tipo de cambio')
 @Controller('tesoreria/tipo-cambio')
+@Modulo('tesoreria.tipo-cambio')
 export class TipoCambioController {
   constructor(private readonly handler: TipoCambioHandler) {}
 
@@ -16,6 +18,7 @@ export class TipoCambioController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('vigente')
   @ApiOperation({ summary: 'Tipo de cambio de una fecha o el ultimo anterior (exacto=false si no hay del dia)' })
   @ApiQuery({ name: 'moneda', example: 'USD' })

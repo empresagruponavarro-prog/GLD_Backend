@@ -19,9 +19,11 @@ import {
   ListAlmacenQueryDto,
   UpdateAlmacenDto,
 } from './almacen.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('almacen/almacenes')
 @Controller('almacen/almacenes')
+@Modulo('almacen.almacenes')
 export class AlmacenController {
   constructor(private readonly handler: AlmacenHandler) {}
 
@@ -32,6 +34,7 @@ export class AlmacenController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Almacenes para selector (id y nombre)' })
   @ApiOkResponse({ type: AlmacenSelectResponseDto, isArray: true })

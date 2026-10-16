@@ -1,7 +1,9 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { ROLES_KEY } from '../../../platform/auth/roles.decorator.js';
+import { MODULO_KEY } from '../../../platform/auth/permisos.decorator.js';
+import { PermisosRolService } from '../../../platform/auth/permisos-rol.js';
+import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
 import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { RolController } from './rol.controller.js';
@@ -133,12 +135,19 @@ function crearBd() {
 describe('roles (/administration/roles)', () => {
   let app: INestApplication;
   const bd = crearBd();
+  const sesiones = { invalidar: vi.fn(), invalidarTodo: vi.fn() };
+  const permisosRol = { invalidarRol: vi.fn(), invalidarTodo: vi.fn() };
   const http = () => request(app.getHttpServer());
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [RolController],
-      providers: [RolHandler, { provide: DB, useValue: bd.db }],
+      providers: [
+        RolHandler,
+        { provide: DB, useValue: bd.db },
+        { provide: SesionUsuariosService, useValue: sesiones },
+        { provide: PermisosRolService, useValue: permisosRol },
+      ],
     }).compile();
     app = moduleRef.createNestApplication({ logger: false });
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
@@ -152,11 +161,14 @@ describe('roles (/administration/roles)', () => {
   beforeEach(() => {
     bd.sembrar();
     bd.transaction.mockClear();
+    sesiones.invalidarTodo.mockClear();
+    permisosRol.invalidarRol.mockClear();
+    permisosRol.invalidarTodo.mockClear();
   });
 
-  it('todo el controller exige Administrador', () => {
+  it('todo el controller pertenece al módulo admin.roles (Administración: siempre estricto)', () => {
     expect(ROL_ADMINISTRADOR).toBe('Administrador');
-    expect(Reflect.getMetadata(ROLES_KEY, RolController)).toEqual(['Administrador']);
+    expect(Reflect.getMetadata(MODULO_KEY, RolController)).toBe('admin.roles');
   });
 
   describe('GET', () => {
@@ -248,6 +260,16 @@ describe('roles (/administration/roles)', () => {
       expect(bd.estado.usuarios.filter((u) => u.Rol === 'Promotor Senior').map((u) => u.IdUsuario)).toEqual(['USR-0003', 'USR-0004']);
       // Comparación exacta: 'promotor' (minúsculas) no se toca.
       expect(bd.estado.usuarios.find((u) => u.IdUsuario === 'USR-0005')?.Rol).toBe('promotor');
+      // usuarios.Rol cambió: la caché de sesiones (rol vigente) se descarta.
+      expect(sesiones.invalidarTodo).toHaveBeenCalledTimes(1);
+      // La caché de permisos es por nombre de rol: también se descarta.
+      expect(permisosRol.invalidarTodo).toHaveBeenCalledTimes(1);
+    });
+
+    it('editar solo la descripción no invalida la caché de sesiones', async () => {
+      await http().patch('/administration/roles/2').send({ descripcion: 'x' }).expect(200);
+      expect(sesiones.invalidarTodo).not.toHaveBeenCalled();
+      expect(permisosRol.invalidarTodo).not.toHaveBeenCalled();
     });
 
     it('si falla la actualización de usuarios se revierte también el renombrado', async () => {
@@ -311,6 +333,7 @@ describe('roles (/administration/roles)', () => {
     it('sin usuarios → 204', async () => {
       await http().delete('/administration/roles/3').expect(204);
       expect(bd.estado.roles.map((r) => r.nombre)).toEqual(['Administrador', 'Promotor', 'Usuario']);
+      expect(permisosRol.invalidarRol).toHaveBeenCalledWith('Supervisor');
     });
 
     it('inexistente → 404', async () => {

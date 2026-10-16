@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
 import { App } from 'supertest/types';
-import { apiConSesion } from './helpers/sesion.js';
+import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -16,6 +16,8 @@ describe('Control de almacén (e2e)', () => {
   const productoIds: number[] = [];
   let familiaId = 0;
   let trabajadorId = 0;
+  /** Una categoría existente (la BD puede no tener la de id 1). */
+  let categoriaId = 0;
 
   const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
@@ -23,13 +25,14 @@ describe('Control de almacén (e2e)', () => {
   async function crearProducto(extra: Record<string, unknown> = {}): Promise<number> {
     const r = await db.query(
       `insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, clase_inventario, stock_minimo, stock_objetivo)
-       values ($1, $2, 1, 1, $3, $4, $5) returning id`,
+       values ($1, $2, $6, 1, $3, $4, $5) returning id`,
       [
         `ZZ-TEST-${Math.random().toString(36).slice(2, 8)}`,
         (extra['descripcion'] as string) ?? 'PRODUCTO DE PRUEBA ALMACEN',
         (extra['clase'] as string) ?? 'CONSUMIBLE',
         (extra['min'] as string) ?? '0',
         (extra['obj'] as string) ?? '0',
+        categoriaId,
       ],
     );
     productoIds.push(r.rows[0].id);
@@ -54,7 +57,9 @@ describe('Control de almacén (e2e)', () => {
   beforeAll(async () => {
     db = new pg.Client({ connectionString: process.env['DATABASE_URL'] });
     await db.connect();
+    await crearUsuarioE2E(db);
     trabajadorId = (await db.query(`select id from anexos where "tipoAnexo" = 'Trabajador' limit 1`)).rows[0].id;
+    categoriaId = (await db.query('select min(id) as id from categoria')).rows[0].id;
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
@@ -77,6 +82,7 @@ describe('Control de almacén (e2e)', () => {
       await db.query('delete from producto where id = any($1)', [productoIds]);
     }
     if (familiaId) await db.query('delete from familia_almacen where id = $1', [familiaId]);
+    await borrarUsuarioE2E(db);
     await db.end();
     await app.close();
   });
@@ -128,6 +134,25 @@ describe('Control de almacén (e2e)', () => {
     expect(kardex.body.total).toBe(6);
     const ultimo = kardex.body.data.at(-1);
     expect(num(ultimo.saldo_total)).toBe(40);
+  });
+
+  it('inventario inicial: detalle y anulación por su propia ruta, sin alcanzar otros ingresos', async () => {
+    const id = await crearProducto();
+    const inicial = await api().post('/almacen/inventario-inicial').send({ fecha: '2026-10-01', motivo: 'INVENTARIO_INICIAL', id_almacen: 1, lineas: linea(id, '12', '10') }).expect(201);
+    const compra = await api().post('/almacen/ingresos').send({ fecha: '2026-10-02', motivo: 'COMPRA', id_almacen: 1, lineas: linea(id, '3', '10') }).expect(201);
+
+    const detalle = await api().get(`/almacen/inventario-inicial/${inicial.body.id}`).expect(200);
+    expect(detalle.body.motivo).toBe('INVENTARIO_INICIAL');
+    expect(detalle.body.lineas).toHaveLength(1);
+    // Un ingreso de otro motivo no se ve ni se anula desde esta ruta.
+    await api().get(`/almacen/inventario-inicial/${compra.body.id}`).expect(404);
+    await api().post(`/almacen/inventario-inicial/${compra.body.id}/anular`).expect(404);
+    expect((await estado(id)).stock).toBe(15);
+
+    const anulado = await api().post(`/almacen/inventario-inicial/${inicial.body.id}/anular`).expect(200);
+    expect(anulado.body.estado).toBe('ANULADO');
+    expect((await estado(id)).stock).toBe(3);
+    await api().post(`/almacen/inventario-inicial/${inicial.body.id}/anular`).expect(409);
   });
 
   it('los préstamos reducen el disponible, no el stock total, y los retornos dañados quedan no operativos', async () => {

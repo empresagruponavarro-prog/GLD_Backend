@@ -2,9 +2,11 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConsultaResumenQueryDto, ConsultaRetencionesQueryDto } from '../tesoreria.dto.js';
 import { ConsultaHandler } from './consulta.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('tesoreria / consulta')
 @Controller('tesoreria/consulta')
+@Modulo('tesoreria.consulta')
 export class ConsultaController {
   constructor(private readonly handler: ConsultaHandler) {}
 

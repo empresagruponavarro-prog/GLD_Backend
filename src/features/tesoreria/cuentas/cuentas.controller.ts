@@ -2,12 +2,15 @@ import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '
 import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateCuentaDto, CuentaResponseDto, UpdateCuentaDto } from '../tesoreria.dto.js';
 import { CuentasHandler } from './cuentas.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('tesoreria / cuentas')
 @Controller('tesoreria/cuentas')
+@Modulo('tesoreria.cuentas')
 export class CuentasController {
   constructor(private readonly handler: CuentasHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Cuentas de pago (cajas, bancos, billeteras)' })
   @ApiQuery({ name: 'activas', required: false, type: Boolean })

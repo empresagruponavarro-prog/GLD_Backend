@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import 'dotenv/config';
 import pg from 'pg';
 import { App } from 'supertest/types';
-import { apiConSesion } from './helpers/sesion.js';
+import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -114,6 +114,7 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
   beforeAll(async () => {
     db = new pg.Client({ connectionString: process.env['DATABASE_URL'] });
     await db.connect();
+    await crearUsuarioE2E(db);
     trabajadorId = (await db.query(`select id from anexos where "tipoAnexo" = 'Trabajador' limit 1`)).rows[0].id;
     proveedorId = (await db.query(`select id from anexos where "tipoAnexo" = 'Proveedor' limit 1`)).rows[0].id;
     centroCostoId = (await db.query(`select id from "CentroCostos" limit 1`)).rows[0].id;
@@ -152,6 +153,7 @@ describe('Compras: FUR, OC y recepción (e2e)', () => {
       await db.query('delete from requerimiento where id = any($1)', [requerimientoIds]);
     }
     if (productos.length > 0) await db.query('delete from producto where id = any($1)', [productos]);
+    await borrarUsuarioE2E(db);
     await db.end();
     await app?.close();
   });

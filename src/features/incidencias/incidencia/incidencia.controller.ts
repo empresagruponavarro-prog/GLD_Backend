@@ -30,9 +30,11 @@ import {
   UpdateIncidenciaDto,
 } from './incidencia.dto.js';
 import { IncidenciaHandler } from './incidencia.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('incidencias')
 @Controller('incidencias')
+@Modulo('incidencias')
 export class IncidenciaController {
   constructor(private readonly handler: IncidenciaHandler) {}
 

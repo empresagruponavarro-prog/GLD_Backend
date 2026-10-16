@@ -1,0 +1,420 @@
+[
+  {
+    "id": "table.modulo",
+    "label": "Create table \"modulo\"",
+    "summary": "Creates table \"modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"modulo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"modulo\"",
+        "sql": "CREATE TABLE \"public\".\"modulo\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"admite_anular\" bool DEFAULT false NOT NULL,\n  \"admite_aprobar\" bool DEFAULT false NOT NULL,\n  \"clave\" character varying(80) NOT NULL,\n  \"grupo\" character varying(60) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(120) NOT NULL,\n  \"orden\" int4 NOT NULL,\n  \"ruta\" character varying(255),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"modulo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"modulo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.rol_permiso",
+    "label": "Create table \"rol_permiso\"",
+    "summary": "Creates table \"rol_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"rol_permiso\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"rol_permiso\"",
+        "sql": "CREATE TABLE \"public\".\"rol_permiso\" (\n  \"anular\" bool DEFAULT false NOT NULL,\n  \"aprobar\" bool DEFAULT false NOT NULL,\n  \"crear\" bool DEFAULT false NOT NULL,\n  \"editar\" bool DEFAULT false NOT NULL,\n  \"eliminar\" bool DEFAULT false NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"modulo_id\" int4 NOT NULL,\n  \"rol_id\" int4 NOT NULL,\n  \"ver\" bool DEFAULT false NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"rol_permiso\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.usuarios.activo",
+    "label": "Add column \"activo\" to \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "activo",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"activo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "activo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"activo\"",
+        "sql": "ALTER TABLE \"public\".\"usuarios\" ADD COLUMN \"activo\" bool DEFAULT true NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"activo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "activo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.modulo.modulo_clave_key",
+    "label": "Add unique constraint on \"modulo\" (clave)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "modulo_clave_key",
+        "table": "modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"modulo_clave_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "modulo_clave_key",
+          "public",
+          "\"public\".\"modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"modulo_clave_key\"",
+        "sql": "ALTER TABLE \"public\".\"modulo\" ADD CONSTRAINT \"modulo_clave_key\" UNIQUE (\"clave\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"modulo_clave_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "modulo_clave_key",
+          "public",
+          "\"public\".\"modulo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rol_permiso.rol_permiso_rol_id_modulo_id_key",
+    "label": "Add unique constraint on \"rol_permiso\" (rol_id, modulo_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rol_permiso_rol_id_modulo_id_key",
+        "table": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rol_permiso_rol_id_modulo_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_rol_id_modulo_id_key",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rol_permiso_rol_id_modulo_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"rol_permiso\" ADD CONSTRAINT \"rol_permiso_rol_id_modulo_id_key\" UNIQUE (\"rol_id\", \"modulo_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rol_permiso_rol_id_modulo_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_rol_id_modulo_id_key",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.rol_permiso.rol_permiso_modulo_id_idx_610f44c7",
+    "label": "Create index \"rol_permiso_modulo_id_idx_610f44c7\" on \"rol_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "rol_permiso_modulo_id_idx_610f44c7",
+        "table": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"rol_permiso_modulo_id_idx_610f44c7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"rol_permiso_modulo_id_idx_610f44c7\"",
+        "sql": "CREATE INDEX \"rol_permiso_modulo_id_idx_610f44c7\" ON \"public\".\"rol_permiso\" (\"modulo_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"rol_permiso_modulo_id_idx_610f44c7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.rol_permiso.rol_permiso_rol_id_idx_369fac19",
+    "label": "Create index \"rol_permiso_rol_id_idx_369fac19\" on \"rol_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "rol_permiso_rol_id_idx_369fac19",
+        "table": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"rol_permiso_rol_id_idx_369fac19\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso_rol_id_idx_369fac19\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"rol_permiso_rol_id_idx_369fac19\"",
+        "sql": "CREATE INDEX \"rol_permiso_rol_id_idx_369fac19\" ON \"public\".\"rol_permiso\" (\"rol_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"rol_permiso_rol_id_idx_369fac19\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rol_permiso_rol_id_idx_369fac19\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.rol_permiso.rol_permiso_rol_id_fkey",
+    "label": "Add foreign key \"rol_permiso_rol_id_fkey\" on \"rol_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "rol_permiso_rol_id_fkey",
+        "table": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"rol_permiso_rol_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_rol_id_fkey",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"rol_permiso_rol_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"rol_permiso\"\nADD CONSTRAINT \"rol_permiso_rol_id_fkey\"\nFOREIGN KEY (\"rol_id\")\nREFERENCES \"public\".\"rol\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"rol_permiso_rol_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_rol_id_fkey",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.rol_permiso.rol_permiso_modulo_id_fkey",
+    "label": "Add foreign key \"rol_permiso_modulo_id_fkey\" on \"rol_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "rol_permiso_modulo_id_fkey",
+        "table": "rol_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"rol_permiso_modulo_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_modulo_id_fkey",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"rol_permiso_modulo_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"rol_permiso\"\nADD CONSTRAINT \"rol_permiso_modulo_id_fkey\"\nFOREIGN KEY (\"modulo_id\")\nREFERENCES \"public\".\"modulo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"rol_permiso_modulo_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rol_permiso_modulo_id_fkey",
+          "public",
+          "\"public\".\"rol_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.modulo.semilla",
+    "label": "Semilla del catalogo de modulos",
+    "summary": "Inserta los 33 módulos del plan 05-roles-y-permisos §5 si no existen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulos",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('dashboard', 'Dashboard situacional', 'Navegación', '/dashboard-situacional', 1, false, false), ('modulos', 'Módulos principal', 'Navegación', '/modulos', 2, false, false), ('incidencias', 'Registro de incidencias', 'Operaciones', '/incidencias', 3, false, false), ('documentos.administracion', 'Compromisos de pago', 'Documentos', '/documentos/administracion', 4, true, true), ('documentos.origen', 'Órdenes de compra', 'Documentos', '/documentos/origen', 5, false, true), ('requerimientos', 'Requerimientos (FUR)', 'Documentos', '/requerimientos', 6, false, false), ('requerimientos.aprobacion', 'Aprobaciones', 'Documentos', '/requerimientos/aprobacion', 7, true, false), ('tesoreria.consulta', 'Consulta y tablero', 'Tesorería', '/tesoreria/consulta', 8, false, false), ('tesoreria.programacion', 'Programación de pagos', 'Tesorería', '/tesoreria/programacion', 9, false, true), ('tesoreria.pagos', 'Ejecución de pagos', 'Tesorería', '/tesoreria/pagos', 10, false, true), ('tesoreria.cuentas', 'Cuentas de pago', 'Tesorería', '/tesoreria/cuentas', 11, false, false), ('tesoreria.tipo-cambio', 'Tipo de cambio', 'Tesorería', '/tesoreria/tipo-cambio', 12, false, false), ('almacen.consulta', 'Consulta', 'Almacén', '/almacen/consulta', 13, false, false), ('almacen.stock', 'Stock actual', 'Almacén', '/almacen/stock', 14, false, false), ('almacen.recepciones', 'Recepción de compras', 'Almacén', '/almacen/recepciones', 15, false, true), ('almacen.ingresos', 'Entradas', 'Almacén', '/almacen/ingresos', 16, false, true), ('almacen.salidas', 'Salidas', 'Almacén', '/almacen/salidas', 17, false, true), ('almacen.transferencias', 'Transferencias', 'Almacén', '/almacen/transferencias', 18, false, true), ('almacen.prestamos', 'Préstamos de equipos', 'Almacén', '/almacen/prestamos', 19, false, true), ('almacen.kardex', 'Kardex', 'Almacén', '/almacen/kardex', 20, false, false), ('almacen.inventario-inicial', 'Inventario inicial', 'Almacén', '/almacen/inventario-inicial', 21, false, true), ('almacen.almacenes', 'Almacenes', 'Almacén', '/almacen/almacenes', 22, false, false), ('maestros.anexos', 'Anexos', 'Maestros', '/anexos', 23, false, false), ('maestros.productos', 'Productos', 'Maestros', '/productos', 24, false, false), ('maestros.areas', 'Áreas', 'Maestros', '/maestros-generales/areas', 25, false, false), ('maestros.generales', 'Maestros generales (categorías, unidades, especialidades, tipo doc.)', 'Maestros', '/maestros-generales', 26, false, false), ('centros-costos', 'Centros de costos', 'Proyectos', '/centros-costos', 27, false, false), ('obra', 'Datos de obra (cockpit)', 'Proyectos', '/centros-costos/:id/datos', 28, false, false), ('presupuestos', 'Presupuestos', 'Proyectos', '/presupuestos', 29, false, false), ('presupuestos.plantillas', 'Plantillas', 'Proyectos', '/presupuestos/plantillas', 30, false, false), ('admin.empresas', 'Empresas', 'Administración', '/admin/empresas', 31, false, false), ('admin.usuarios', 'Usuarios', 'Administración', '/admin/usuarios', 32, false, false), ('admin.roles', 'Roles y permisos', 'Administración', '/admin/roles', 33, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify modulos seeded",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"modulo\") >= 33 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.rol_permiso.semilla",
+    "label": "Semilla de permisos de los roles existentes",
+    "summary": "Roles existentes (no de sistema): todo permitido salvo el grupo Administración",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol_permiso"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed rol_permiso",
+        "sql": "INSERT INTO \"public\".\"rol_permiso\" (rol_id, modulo_id, ver, crear, editar, eliminar, aprobar, anular) SELECT r.id, m.id, true, true, true, true, m.admite_aprobar, m.admite_anular FROM \"public\".\"rol\" r CROSS JOIN \"public\".\"modulo\" m WHERE r.es_sistema = false AND m.grupo <> 'Administración' ON CONFLICT (rol_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]

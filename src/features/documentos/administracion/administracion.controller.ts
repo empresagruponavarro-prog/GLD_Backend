@@ -16,9 +16,11 @@ import {
   UpdateDeduccionesDto,
 } from './administracion.dto.js';
 import { AdministracionHandler, type DocumentoDetalle } from './administracion.handler.js';
+import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('documentos / administracion')
 @Controller('administracion/documentos-origen')
+@Modulo('documentos.administracion')
 export class AdministracionController {
   constructor(private readonly handler: AdministracionHandler) {}
 
@@ -33,6 +35,7 @@ export class AdministracionController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get(':id')
   @ApiOperation({ summary: 'Detalle: lineas, programaciones, pagos y motivo de la retencion' })
   @ApiOkResponse({ description: 'Documento' })
@@ -41,6 +44,7 @@ export class AdministracionController {
     return this.handler.getById(id);
   }
 
+  @LecturaCompartida()
   @Get(':id/expediente')
   @ApiOperation({ summary: 'Expediente: FUR, cuadro comparativo, documento, recepciones, programaciones y pagos' })
   @ApiOkResponse({ description: 'Expediente' })
@@ -68,6 +72,7 @@ export class AdministracionController {
     return this.handler.actualizarDeducciones(id, dto);
   }
 
+  @Accion('ver')
   @Post(':id/anular')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Anular el documento (sin pagos, programaciones ni recepciones vigentes)' })

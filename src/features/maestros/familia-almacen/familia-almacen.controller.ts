@@ -7,9 +7,11 @@ import {
   FamiliaAlmacenSelectResponseDto,
   UpdateFamiliaAlmacenDto,
 } from './familia-almacen.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/familia-almacen')
 @Controller('maestros/familia-almacen')
+@Modulo('maestros.generales')
 export class FamiliaAlmacenController {
   constructor(private readonly handler: FamiliaAlmacenHandler) {}
 
@@ -20,6 +22,7 @@ export class FamiliaAlmacenController {
     return this.handler.list();
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Familias activas para selector' })
   @ApiOkResponse({ type: FamiliaAlmacenSelectResponseDto, isArray: true })

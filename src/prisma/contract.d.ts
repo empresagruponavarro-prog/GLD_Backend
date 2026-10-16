@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'7d5f5baa87e6fee19d4133888ac7fe63daf16d060e663126fa0ba8b179b4bb38'>;
+  StorageHashBase<'03999aaba285f1f70263a03303adb61b7375d403cab165f80265644047fa622f'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -836,6 +836,17 @@ export type FieldOutputTypes = {
       readonly MenuNombre: Varchar<255> | null;
       readonly Imagen: Varchar<255> | null;
     };
+    readonly modulo: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly clave: Varchar<80>;
+      readonly nombre: Varchar<120>;
+      readonly grupo: Varchar<60>;
+      readonly ruta: Varchar<255> | null;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly admite_aprobar: CodecTypes['pg/bool@1']['output'];
+      readonly admite_anular: CodecTypes['pg/bool@1']['output'];
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+    };
     readonly Monedas: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly MonedaId: Varchar<255> | null;
@@ -1284,6 +1295,17 @@ export type FieldOutputTypes = {
       readonly es_sistema: CodecTypes['pg/bool@1']['output'];
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
+    readonly rol_permiso: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly rol_id: CodecTypes['pg/int4@1']['output'];
+      readonly modulo_id: CodecTypes['pg/int4@1']['output'];
+      readonly ver: CodecTypes['pg/bool@1']['output'];
+      readonly crear: CodecTypes['pg/bool@1']['output'];
+      readonly editar: CodecTypes['pg/bool@1']['output'];
+      readonly eliminar: CodecTypes['pg/bool@1']['output'];
+      readonly aprobar: CodecTypes['pg/bool@1']['output'];
+      readonly anular: CodecTypes['pg/bool@1']['output'];
+    };
     readonly Semana: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly CodSemana: Varchar<255> | null;
@@ -1353,6 +1375,7 @@ export type FieldOutputTypes = {
       readonly Usuario: Varchar<255> | null;
       readonly Clave: Varchar<255> | null;
       readonly Rol: Varchar<255> | null;
+      readonly activo: CodecTypes['pg/bool@1']['output'];
     };
     readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1966,6 +1989,17 @@ export type FieldInputTypes = {
       readonly MenuNombre: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Imagen: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly modulo: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly clave: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly grupo: CodecTypes['sql/varchar@1']['input'];
+      readonly ruta: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly admite_aprobar: CodecTypes['pg/bool@1']['input'];
+      readonly admite_anular: CodecTypes['pg/bool@1']['input'];
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+    };
     readonly Monedas: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly MonedaId: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2414,6 +2448,17 @@ export type FieldInputTypes = {
       readonly es_sistema: CodecTypes['pg/bool@1']['input'];
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
+    readonly rol_permiso: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly rol_id: CodecTypes['pg/int4@1']['input'];
+      readonly modulo_id: CodecTypes['pg/int4@1']['input'];
+      readonly ver: CodecTypes['pg/bool@1']['input'];
+      readonly crear: CodecTypes['pg/bool@1']['input'];
+      readonly editar: CodecTypes['pg/bool@1']['input'];
+      readonly eliminar: CodecTypes['pg/bool@1']['input'];
+      readonly aprobar: CodecTypes['pg/bool@1']['input'];
+      readonly anular: CodecTypes['pg/bool@1']['input'];
+    };
     readonly Semana: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2483,6 +2528,7 @@ export type FieldInputTypes = {
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Clave: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Rol: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly activo: CodecTypes['pg/bool@1']['input'];
     };
     readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3149,6 +3195,17 @@ export type StorageColumnTypes = {
       readonly MenuId: Varchar<255>;
       readonly MenuNombre: Varchar<255> | null;
     };
+    readonly modulo: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+      readonly admite_anular: CodecTypes['pg/bool@1']['output'];
+      readonly admite_aprobar: CodecTypes['pg/bool@1']['output'];
+      readonly clave: Varchar<80>;
+      readonly grupo: Varchar<60>;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<120>;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly ruta: Varchar<255> | null;
+    };
     readonly monedas: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly Moneda: Varchar<255> | null;
@@ -3544,6 +3601,17 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly nombre: Varchar<50>;
     };
+    readonly rol_permiso: {
+      readonly anular: CodecTypes['pg/bool@1']['output'];
+      readonly aprobar: CodecTypes['pg/bool@1']['output'];
+      readonly crear: CodecTypes['pg/bool@1']['output'];
+      readonly editar: CodecTypes['pg/bool@1']['output'];
+      readonly eliminar: CodecTypes['pg/bool@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly modulo_id: CodecTypes['pg/int4@1']['output'];
+      readonly rol_id: CodecTypes['pg/int4@1']['output'];
+      readonly ver: CodecTypes['pg/bool@1']['output'];
+    };
     readonly semana: {
       readonly CodSemana: Varchar<255> | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -3608,6 +3676,7 @@ export type StorageColumnTypes = {
       readonly UniMedCodigo: Varchar<255> | null;
     };
     readonly usuarios: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly Clave: Varchar<255> | null;
       readonly IdUsuario: Varchar<255>;
       readonly Nombres: Varchar<255> | null;
@@ -4279,6 +4348,17 @@ export type StorageColumnInputTypes = {
       readonly MenuId: CodecTypes['sql/varchar@1']['input'];
       readonly MenuNombre: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly modulo: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+      readonly admite_anular: CodecTypes['pg/bool@1']['input'];
+      readonly admite_aprobar: CodecTypes['pg/bool@1']['input'];
+      readonly clave: CodecTypes['sql/varchar@1']['input'];
+      readonly grupo: CodecTypes['sql/varchar@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly ruta: CodecTypes['sql/varchar@1']['input'] | null;
+    };
     readonly monedas: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly Moneda: CodecTypes['sql/varchar@1']['input'] | null;
@@ -4674,6 +4754,17 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly nombre: CodecTypes['sql/varchar@1']['input'];
     };
+    readonly rol_permiso: {
+      readonly anular: CodecTypes['pg/bool@1']['input'];
+      readonly aprobar: CodecTypes['pg/bool@1']['input'];
+      readonly crear: CodecTypes['pg/bool@1']['input'];
+      readonly editar: CodecTypes['pg/bool@1']['input'];
+      readonly eliminar: CodecTypes['pg/bool@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly modulo_id: CodecTypes['pg/int4@1']['input'];
+      readonly rol_id: CodecTypes['pg/int4@1']['input'];
+      readonly ver: CodecTypes['pg/bool@1']['input'];
+    };
     readonly semana: {
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -4738,6 +4829,7 @@ export type StorageColumnInputTypes = {
       readonly UniMedCodigo: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly usuarios: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly Clave: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdUsuario: CodecTypes['sql/varchar@1']['input'];
       readonly Nombres: CodecTypes['sql/varchar@1']['input'] | null;
@@ -9556,6 +9648,79 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly modulo: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly clave: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 80 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 120 };
+                };
+                readonly grupo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 60 };
+                };
+                readonly ruta: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly admite_aprobar: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly admite_anular: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['clave'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
             readonly monedas: {
               columns: {
                 readonly id: {
@@ -12749,6 +12914,125 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly rol_permiso: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly rol_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly modulo_id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly ver: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly crear: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly editar: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly eliminar: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly aprobar: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly anular: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['rol_id', 'modulo_id'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'rol_permiso_modulo_id_idx_610f44c7';
+                  readonly prefix: 'rol_permiso_modulo_id_idx';
+                  readonly columns: readonly ['modulo_id'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'rol_permiso_rol_id_idx_369fac19';
+                  readonly prefix: 'rol_permiso_rol_id_idx';
+                  readonly columns: readonly ['rol_id'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'rol_permiso';
+                    readonly columns: readonly ['rol_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'rol';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'rol_permiso';
+                    readonly columns: readonly ['modulo_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'modulo';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly semana: {
               columns: {
                 readonly id: {
@@ -13232,6 +13516,15 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly typeParams: { readonly length: 255 };
                 };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
               };
               primaryKey: { readonly columns: readonly ['IdUsuario'] };
               uniques: readonly [];
@@ -13627,6 +13920,11 @@ type ContractBase = Omit<
     };
     readonly usuarios: { readonly namespace: 'public' & NamespaceId; readonly model: 'Usuarios' };
     readonly rol: { readonly namespace: 'public' & NamespaceId; readonly model: 'rol' };
+    readonly modulo: { readonly namespace: 'public' & NamespaceId; readonly model: 'modulo' };
+    readonly rol_permiso: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'rol_permiso';
+    };
     readonly usuariosMenus: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'UsuariosMenus';
@@ -19164,6 +19462,90 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly modulo: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly clave: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 80 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 120 };
+                };
+              };
+              readonly grupo: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 60 };
+                };
+              };
+              readonly ruta: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly admite_aprobar: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly admite_anular: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+            };
+            readonly relations: {
+              readonly permisos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'rol_permiso';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['modulo_id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'modulo';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly clave: { readonly column: 'clave' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly grupo: { readonly column: 'grupo' };
+                readonly ruta: { readonly column: 'ruta' };
+                readonly orden: { readonly column: 'orden' };
+                readonly admite_aprobar: { readonly column: 'admite_aprobar' };
+                readonly admite_anular: { readonly column: 'admite_anular' };
+                readonly activo: { readonly column: 'activo' };
+              };
+            };
+          };
           readonly Monedas: {
             readonly fields: {
               readonly id: {
@@ -22872,7 +23254,19 @@ type ContractBase = Omit<
                 };
               };
             };
-            readonly relations: Record<string, never>;
+            readonly relations: {
+              readonly permisos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'rol_permiso';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['rol_id'];
+                };
+              };
+            };
             readonly storage: {
               readonly table: 'rol';
               readonly namespaceId: 'public';
@@ -22882,6 +23276,82 @@ type ContractBase = Omit<
                 readonly descripcion: { readonly column: 'descripcion' };
                 readonly es_sistema: { readonly column: 'es_sistema' };
                 readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly rol_permiso: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly rol_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly modulo_id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly ver: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly crear: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly editar: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly eliminar: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly aprobar: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly anular: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+            };
+            readonly relations: {
+              readonly modulo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'modulo';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['modulo_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly rol: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'rol' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['rol_id'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'rol_permiso';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly rol_id: { readonly column: 'rol_id' };
+                readonly modulo_id: { readonly column: 'modulo_id' };
+                readonly ver: { readonly column: 'ver' };
+                readonly crear: { readonly column: 'crear' };
+                readonly editar: { readonly column: 'editar' };
+                readonly eliminar: { readonly column: 'eliminar' };
+                readonly aprobar: { readonly column: 'aprobar' };
+                readonly anular: { readonly column: 'anular' };
               };
             };
           };
@@ -23395,6 +23865,10 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
               };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
             };
             readonly relations: Record<string, never>;
             readonly storage: {
@@ -23406,6 +23880,7 @@ type ContractBase = Omit<
                 readonly Usuario: { readonly column: 'Usuario' };
                 readonly Clave: { readonly column: 'Clave' };
                 readonly Rol: { readonly column: 'Rol' };
+                readonly activo: { readonly column: 'activo' };
               };
             };
           };

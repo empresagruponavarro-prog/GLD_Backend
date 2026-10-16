@@ -11,9 +11,11 @@ import {
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { PrestamoHandler } from './prestamo.handler.js';
 import { CreatePrestamoDto, ListPrestamoQueryDto, PrestamoResponseDto, RegistrarRetornoDto } from './prestamo.dto.js';
+import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('almacen/prestamos')
 @Controller('almacen/prestamos')
+@Modulo('almacen.prestamos')
 export class PrestamoController {
   constructor(private readonly handler: PrestamoHandler) {}
 
@@ -41,6 +43,7 @@ export class PrestamoController {
     return this.handler.registrar(dto);
   }
 
+  @Accion('editar')
   @Post(':id/retornos')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Registrar retorno (total o parcial) con la condición de cada línea' })
@@ -51,6 +54,7 @@ export class PrestamoController {
     return this.handler.registrarRetorno(id, dto);
   }
 
+  @Accion('anular')
   @Post(':id/anular')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Anular préstamo sin retornos (libera lo reservado)' })

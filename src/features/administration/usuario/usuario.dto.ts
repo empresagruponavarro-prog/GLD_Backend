@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -82,4 +83,14 @@ export class UsuarioResponseDto {
 
   @ApiProperty({ example: 'Usuario', description: 'Rol asignado al usuario', nullable: true, type: String })
   Rol: string | null;
+
+  @ApiProperty({ example: true, description: 'Usuario activo. Uno inactivo no puede iniciar sesión y su sesión abierta se corta' })
+  activo: boolean;
+}
+
+/** Desactivar / reactivar un usuario (no se borra nada). */
+export class UpdateEstadoUsuarioDto {
+  @ApiProperty({ example: false, description: 'false = desactivar, true = reactivar' })
+  @IsBoolean()
+  activo: boolean;
 }

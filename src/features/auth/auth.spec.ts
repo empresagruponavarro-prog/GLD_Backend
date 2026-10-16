@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { hashClave } from '../../platform/auth/passwords.js';
+import { CLAVES_MODULO } from '../../platform/auth/permisos.js';
 import { DB, PrismaModule } from '../../prisma/prisma.module.js';
 import { AuthModule } from './auth.module.js';
 
@@ -14,21 +15,57 @@ const where = vi.fn();
 const first = vi.fn();
 const usuarios = { where, first };
 
+/** Catálogo y permisos en memoria para /auth/mis-permisos. */
+const ROLES = [
+  { id: 1, nombre: 'Administrador', es_sistema: true },
+  { id: 2, nombre: 'Promotor', es_sistema: false },
+  { id: 3, nombre: 'Sin Permisos', es_sistema: false },
+];
+const MODULOS = [
+  { id: 1, clave: 'dashboard', nombre: 'Dashboard', grupo: 'Navegación', ruta: '/d', orden: 1, admite_aprobar: false, admite_anular: false, activo: true },
+  { id: 4, clave: 'documentos.administracion', nombre: 'Compromisos', grupo: 'Documentos', ruta: '/da', orden: 4, admite_aprobar: true, admite_anular: true, activo: true },
+  { id: 10, clave: 'tesoreria.pagos', nombre: 'Pagos', grupo: 'Tesorería', ruta: '/tp', orden: 10, admite_aprobar: false, admite_anular: true, activo: true },
+  { id: 33, clave: 'admin.roles', nombre: 'Roles', grupo: 'Administración', ruta: '/ar', orden: 33, admite_aprobar: false, admite_anular: false, activo: false },
+];
+const PERMISOS = [
+  { rol_id: 2, modulo_id: 1, ver: true, crear: false, editar: false, eliminar: false, aprobar: false, anular: false },
+  { rol_id: 2, modulo_id: 10, ver: true, crear: true, editar: true, eliminar: false, aprobar: false, anular: true },
+  // Fila de un módulo inactivo: no cuenta.
+  { rol_id: 2, modulo_id: 33, ver: true, crear: true, editar: true, eliminar: true, aprobar: false, anular: false },
+];
+const orm = {
+  Usuarios: usuarios,
+  rol: {
+    first: async ({ nombre }: { nombre: string }) => ROLES.find((r) => r.nombre === nombre) ?? null,
+  },
+  modulo: {
+    where: ({ activo }: { activo: boolean }) => ({
+      orderBy: () => ({ all: async () => MODULOS.filter((m) => m.activo === activo) }),
+    }),
+  },
+  rol_permiso: {
+    where: ({ rol_id }: { rol_id: number }) => ({
+      all: async () => PERMISOS.filter((p) => p.rol_id === rol_id),
+    }),
+  },
+};
+
 @Module({
-  providers: [{ provide: DB, useValue: { orm: { public: { Usuarios: usuarios } } } }],
+  providers: [{ provide: DB, useValue: { orm: { public: orm } } }],
   exports: [DB],
 })
 class FakePrismaModule {}
 
 let hashGuardado: string;
 
-function fila(over: Partial<Record<string, string | null>> = {}) {
+function fila(over: Partial<Record<string, string | boolean | null>> = {}) {
   return {
     IdUsuario: 'U-001',
     Nombres: 'Juan Pérez',
     Usuario: 'jperez',
     Clave: hashGuardado,
     Rol: 'Promotor',
+    activo: true,
     ...over,
   };
 }
@@ -137,6 +174,24 @@ describe('auth (HTTP)', () => {
       await login({ usuario: 'jperez', clave: CLAVE }).expect(401);
     });
 
+    it('403 USUARIO_INACTIVO si el usuario está desactivado y la clave es correcta (sin token)', async () => {
+      candidatos([fila({ activo: false })]);
+      const res = await login({ usuario: 'jperez', clave: CLAVE }).expect(403);
+      expect(res.body).toEqual({
+        statusCode: 403,
+        message: 'Tu usuario está desactivado. Contacta al administrador',
+        error: 'Forbidden',
+        codigo: 'USUARIO_INACTIVO',
+      });
+      expect(res.body).not.toHaveProperty('token');
+    });
+
+    it('usuario desactivado con clave incorrecta: sigue el 401 genérico (no se revela el estado)', async () => {
+      candidatos([fila({ activo: false })]);
+      const res = await login({ usuario: 'jperez', clave: 'otra-clave' }).expect(401);
+      expect(res.body).toEqual(CREDENCIALES_401);
+    });
+
     it('401 si el login es ambiguo (varios usuarios con el mismo login)', async () => {
       candidatos([fila(), fila({ IdUsuario: 'U-002', Usuario: 'JPEREZ' })]);
       await login({ usuario: 'jperez', clave: CLAVE }).expect(401);
@@ -211,6 +266,66 @@ describe('auth (HTTP)', () => {
     it('401 si el usuario fue borrado', async () => {
       first.mockResolvedValue(null);
       await me(await jwt.signAsync(payload)).expect(401);
+    });
+
+    it('403 USUARIO_INACTIVO si el usuario fue desactivado (sesión abierta cortada)', async () => {
+      first.mockResolvedValue(fila({ activo: false }));
+      const res = await me(await jwt.signAsync(payload)).expect(403);
+      expect(res.body.codigo).toBe('USUARIO_INACTIVO');
+    });
+  });
+
+  describe('GET /auth/mis-permisos', () => {
+    const misPermisos = (token?: string) => {
+      const req = request(app.getHttpServer()).get('/auth/mis-permisos');
+      return token ? req.set('Authorization', `Bearer ${token}`) : req;
+    };
+    const tokenDe = (rol: string) => jwt.signAsync({ sub: 'U-001', usuario: 'jperez', rol });
+    const NADA = { ver: false, crear: false, editar: false, eliminar: false, aprobar: false, anular: false };
+    const TODO = { ver: true, crear: true, editar: true, eliminar: true, aprobar: true, anular: true };
+
+    it('rol normal: sus filas; sin fila o módulo inactivo/ausente → false; todas las claves presentes', async () => {
+      first.mockResolvedValue(fila({ Rol: 'Promotor' }));
+      // El rol del token se ignora: manda el de la BD.
+      const res = await misPermisos(await tokenDe('Administrador')).expect(200);
+      expect(res.body.rol).toBe('Promotor');
+      expect(res.body.esAdministrador).toBe(false);
+      expect(Object.keys(res.body.permisos)).toEqual([...CLAVES_MODULO]);
+      expect(res.body.permisos['dashboard']).toEqual({ ...NADA, ver: true });
+      expect(res.body.permisos['tesoreria.pagos']).toEqual({ ...TODO, eliminar: false, aprobar: false });
+      expect(res.body.permisos['documentos.administracion']).toEqual(NADA);
+      expect(res.body.permisos['admin.roles']).toEqual(NADA); // módulo inactivo
+      expect(res.body.permisos['almacen.stock']).toEqual(NADA); // ausente del catálogo
+    });
+
+    it('Administrador: todo true; aprobar/anular solo donde el módulo lo admite', async () => {
+      first.mockResolvedValue(fila({ Rol: 'Administrador' }));
+      const res = await misPermisos(await tokenDe('Promotor')).expect(200);
+      expect(res.body.rol).toBe('Administrador');
+      expect(res.body.esAdministrador).toBe(true);
+      expect(res.body.permisos['documentos.administracion']).toEqual(TODO);
+      expect(res.body.permisos['tesoreria.pagos']).toEqual({ ...TODO, aprobar: false });
+      expect(res.body.permisos['dashboard']).toEqual({ ...TODO, aprobar: false, anular: false });
+    });
+
+    it('rol sin filas: todo false', async () => {
+      first.mockResolvedValue(fila({ Rol: 'Sin Permisos' }));
+      const a = await misPermisos(await tokenDe('x')).expect(200);
+      expect(a.body.rol).toBe('Sin Permisos');
+      expect(Object.values(a.body.permisos).every((p) => JSON.stringify(p) === JSON.stringify(NADA))).toBe(true);
+    });
+
+    it("usuario sin rol: todo false (rol '')", async () => {
+      first.mockResolvedValue(fila({ Rol: null }));
+      const b = await misPermisos(await tokenDe('x')).expect(200);
+      expect(b.body).toMatchObject({ rol: '', esAdministrador: false });
+      expect(b.body.permisos['dashboard']).toEqual(NADA);
+    });
+
+    it('401 sin sesión; 403 si el usuario está desactivado', async () => {
+      await misPermisos().expect(401);
+      first.mockResolvedValue(fila({ activo: false }));
+      await misPermisos(await tokenDe('Promotor')).expect(403);
     });
   });
 });

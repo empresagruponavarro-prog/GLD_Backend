@@ -17,12 +17,15 @@ import {
   RequerimientoResponseDto,
   UpdateRequerimientoDto,
 } from './requerimiento.dto.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('requerimientos')
 @Controller('requerimientos')
+@Modulo('requerimientos')
 export class RequerimientoController {
   constructor(private readonly handler: RequerimientoHandler) {}
 
+  @TambienDesde('requerimientos.aprobacion')
   @Get()
   @ApiOperation({ summary: 'Listar requerimientos FUR (paginado, con filtros y avance)' })
   @ApiOkResponse({ description: 'Lista paginada' })
@@ -30,6 +33,7 @@ export class RequerimientoController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('pendientes-oc')
   @ApiOperation({ summary: 'FUR aprobados con cantidad pendiente de ordenar (para generar una OC)' })
   @ApiOkResponse({ type: RequerimientoResponseDto, isArray: true })
@@ -37,6 +41,7 @@ export class RequerimientoController {
     return this.handler.pendientesOc();
   }
 
+  @LecturaCompartida()
   @Get(':id')
   @ApiOperation({ summary: 'Obtener un FUR con líneas, saldos, historial y OC vinculadas' })
   @ApiParam({ name: 'id', type: Number })

@@ -1,18 +1,29 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
+import { PermisosRolService } from '../../../platform/auth/permisos-rol.js';
+import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
 import { pgErrorCode } from '../../../platform/db/pg-errors.js';
+import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { CreateRolDto, RolResponseDto, UpdateRolDto } from './rol.dto.js';
 
-/** Las columnas varchar son tipos con marca; los valores se pasan con un cast. */
-const v50 = (valor: string) => valor as unknown as Varchar<50>;
-const v255 = (valor: string) => valor as unknown as Varchar<255>;
-const v255n = (valor: string | null) => valor as unknown as Varchar<255> | null;
+/**
+ * Las columnas varchar son tipos con marca; `esVarchar` valida la longitud y estrecha el tipo.
+ * Los DTO ya limitan las longitudes: el 400 solo protege de un uso sin validar.
+ */
+function varchar<N extends number>(valor: string, max: N): Varchar<N> {
+  if (!esVarchar(valor, max)) throw new BadRequestException(`El valor supera ${max} caracteres`);
+  return valor;
+}
+const v50 = (valor: string) => varchar(valor, 50);
+const v255 = (valor: string) => varchar(valor, 255);
+const v255n = (valor: string | null) => (valor === null ? null : varchar(valor, 255));
 
 interface RolFila {
   id: number;
@@ -54,7 +65,11 @@ const conflictoDuplicado = (nombre: string) =>
 
 @Injectable()
 export class RolHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sesiones: SesionUsuariosService,
+    private readonly permisosRol: PermisosRolService,
+  ) {}
 
   /** Roles con su cantidad de usuarios: primero los del sistema y luego por nombre. */
   async list(): Promise<RolResponseDto[]> {
@@ -134,6 +149,12 @@ export class RolHandler {
       if (pgErrorCode(error) === '23505') throw conflictoDuplicado(dto.nombre?.trim() ?? '');
       throw error;
     }
+    // Renombrar cambia usuarios.Rol: la caché de sesiones (rol vigente) se descarta.
+    // La caché de permisos es por NOMBRE de rol: el nombre viejo deja de existir.
+    if (dto.nombre !== undefined) {
+      this.sesiones.invalidarTodo();
+      this.permisosRol.invalidarTodo();
+    }
     // La respuesta se arma después del commit.
     return this.getById(id);
   }
@@ -152,6 +173,7 @@ export class RolHandler {
     }
     const borrado = await this.db.orm.public.rol.where({ id }).delete();
     if (!borrado) throw new NotFoundException(`Rol con id ${id} no encontrado`);
+    this.permisosRol.invalidarRol(nombre);
   }
 
   private async buscar(id: number): Promise<RolFila> {

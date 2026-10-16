@@ -7,9 +7,11 @@ import {
   UpdatePptoHistorialDto,
 } from './presupuesto-historial.dto.js';
 import { PresupuestoHistorialHandler } from './presupuesto-historial.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('presupuestos / historial-versiones')
 @Controller('presupuestos/historial-versiones')
+@Modulo('presupuestos')
 export class PresupuestoHistorialController {
   constructor(private readonly handler: PresupuestoHistorialHandler) {}
 

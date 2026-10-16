@@ -2,12 +2,15 @@ import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '
 import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AreaResponseDto, CreateAreaDto, UpdateAreaDto } from './area.dto.js';
 import { AreaHandler } from './area.handler.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/area')
 @Controller('maestros/area')
+@Modulo('maestros.areas')
 export class AreaController {
   constructor(private readonly handler: AreaHandler) {}
 
+  @LecturaCompartida()
   @Get()
   @ApiOperation({ summary: 'Listar areas de la empresa' })
   @ApiQuery({ name: 'activas', required: false, type: Boolean })

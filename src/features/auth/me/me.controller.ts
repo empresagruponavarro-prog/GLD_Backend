@@ -10,9 +10,11 @@ import type { AuthUser } from '../../../platform/auth/auth-user.js';
 import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
 import { UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
 import { MeHandler } from './me.handler.js';
+import { LecturaCompartida } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('auth')
 @Controller('auth')
+@LecturaCompartida()
 export class MeController {
   constructor(private readonly handler: MeHandler) {}
 

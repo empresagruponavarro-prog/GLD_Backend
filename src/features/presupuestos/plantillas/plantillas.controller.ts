@@ -1,11 +1,14 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { PlantillasHandler } from './plantillas.handler.js';
-import { AplicarPlantillaDto, CreatePlantillaDto, UpdatePlantillaDto, UpsertPlantillaFaseDto } from './plantillas.dto.js';
+import { CreatePlantillaDto, UpdatePlantillaDto, UpsertPlantillaFaseDto } from './plantillas.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @Controller('presupuestos')
+@Modulo('presupuestos.plantillas')
 export class PlantillasController {
   constructor(private readonly handler: PlantillasHandler) {}
 
+  @LecturaCompartida()
   @Get('plantillas/activas')
   async listActivas() {
     return await this.handler.listActivas();
@@ -16,14 +19,10 @@ export class PlantillasController {
     return await this.handler.listTodas();
   }
 
+  @LecturaCompartida()
   @Get('plantillas/:id/completa')
   async getCompleta(@Param('id') idPlantilla: string) {
     return await this.handler.getCompleta(idPlantilla);
-  }
-
-  @Post(':id/aplicar-plantilla')
-  async aplicarPlantilla(@Param('id') idPresupuesto: string, @Body() dto: AplicarPlantillaDto) {
-    return await this.handler.aplicarPlantilla(idPresupuesto, dto);
   }
 
   @Post('plantillas')

@@ -30,9 +30,11 @@ import {
   ListAnexoQueryDto,
   UpdateAnexoDto,
 } from './anexo.dto.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/anexo')
 @Controller('maestros/anexo')
+@Modulo('maestros.anexos')
 export class AnexoController {
   constructor(private readonly handler: AnexoHandler) {}
 
@@ -43,6 +45,7 @@ export class AnexoController {
     return this.handler.list(query);
   }
 
+  @LecturaCompartida()
   @Get('select')
   @ApiOperation({ summary: 'Listar anexos para selector (id y nombre), filtrable por tipoAnexo' })
   @ApiOkResponse({
@@ -54,6 +57,7 @@ export class AnexoController {
     return this.handler.select(query);
   }
 
+  @LecturaCompartida()
   @Get(':id')
   @ApiOperation({ summary: 'Obtener un anexo por id' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo' })

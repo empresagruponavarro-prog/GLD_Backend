@@ -169,11 +169,12 @@ try {
     console.log(
       `El login "${login}" ya existe (IdUsuario ${existente.IdUsuario}, rol ${existente.Rol ?? '(sin rol)'}).`,
     );
-    if (!(await confirmar(`¿Actualizar su clave y asignarle el rol ${ROL_ADMIN}?`))) {
+    if (!(await confirmar(`¿Actualizar su clave, asignarle el rol ${ROL_ADMIN} y dejarlo activo?`))) {
       salir('Sin cambios (use --si para confirmar en modo no interactivo).');
     }
     const clave = await obtenerClave(CLAVE_MIN, CLAVE_MAX);
-    const datos = { Clave: await hashClave(clave), Rol: ROL_ADMIN };
+    // `activo: true`: tambien sirve para recuperar un administrador desactivado.
+    const datos = { Clave: await hashClave(clave), Rol: ROL_ADMIN, activo: true };
     if (nombres) datos.Nombres = nombres;
     await db.orm.public.Usuarios.where({ IdUsuario: existente.IdUsuario }).update(datos);
     console.log(`Usuario "${login}" actualizado con rol ${ROL_ADMIN}.`);

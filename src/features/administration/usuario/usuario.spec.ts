@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { esHashArgon2, verificarClave } from '../../../platform/auth/passwords.js';
+import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { UsuarioController } from './usuario.controller.js';
 import { CreateUsuarioDto, UpdateUsuarioDto } from './usuario.dto.js';
@@ -15,7 +16,7 @@ import { UsuarioHandler } from './usuario.handler.js';
 const HASH = '$argon2id$v=19$m=19456,t=2,p=1$c2FsdA$aGFzaA';
 
 function makeRow(IdUsuario = 'U-001', over: Record<string, unknown> = {}) {
-  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', ...over };
+  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', activo: true, ...over };
 }
 
 const nuevo = {
@@ -39,6 +40,7 @@ describe('usuario', () => {
   const remove = vi.fn();
   const rolFirst = vi.fn();
   const rolAll = vi.fn();
+  const sesiones = { invalidar: vi.fn(), invalidarTodo: vi.fn() };
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -49,6 +51,8 @@ describe('usuario', () => {
     rolAll.mockResolvedValue([]);
 
     const dbMock = {
+      // Las operaciones que tocan el rol o borran van en transacción: aquí corre sobre el mismo mock.
+      transaction: vi.fn(async (fn: (tx: unknown) => unknown) => fn(dbMock)),
       orm: {
         public: {
           Usuarios: {
@@ -61,6 +65,8 @@ describe('usuario', () => {
           },
           rol: {
             first: rolFirst,
+            // Roles de sistema: ninguno en estos casos (las reglas del último Administrador se prueban en usuario-estado.spec).
+            where: vi.fn(() => ({ all: async () => [] })),
             orderBy: vi.fn(() => ({ all: rolAll })),
           },
         },
@@ -69,7 +75,11 @@ describe('usuario', () => {
 
     const moduleRef = await Test.createTestingModule({
       controllers: [UsuarioController],
-      providers: [UsuarioHandler, { provide: DB, useValue: dbMock }],
+      providers: [
+        UsuarioHandler,
+        { provide: DB, useValue: dbMock },
+        { provide: SesionUsuariosService, useValue: sesiones },
+      ],
     }).compile();
 
     controller = moduleRef.get(UsuarioController);
@@ -80,8 +90,8 @@ describe('usuario', () => {
       all.mockResolvedValue([makeRow(), makeRow('U-002', { Clave: '123456' })]);
       const res = await controller.list();
       expect(res).toEqual([
-        { IdUsuario: 'U-001', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario' },
-        { IdUsuario: 'U-002', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario' },
+        { IdUsuario: 'U-001', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario', activo: true },
+        { IdUsuario: 'U-002', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario', activo: true },
       ]);
       for (const u of res) expect(u).not.toHaveProperty('Clave');
     });
@@ -116,7 +126,7 @@ describe('usuario', () => {
     await controller.create({ ...nuevo, Usuario: ' jperez ' });
 
     const data = create.mock.calls[0][0];
-    expect(data).toMatchObject({ IdUsuario: 'USR-0001', Usuario: 'jperez', Rol: 'Usuario' });
+    expect(data).toMatchObject({ IdUsuario: 'USR-0001', Usuario: 'jperez', Rol: 'Usuario', activo: true });
     expect(esHashArgon2(data.Clave)).toBe(true);
     expect(data.Clave).not.toBe('123456');
     await expect(verificarClave(data.Clave, 'secreta123')).resolves.toBe(true);
@@ -179,6 +189,7 @@ describe('usuario', () => {
   });
 
   it('actualiza solo los campos enviados', async () => {
+    first.mockResolvedValue(makeRow());
     update.mockResolvedValue(makeRow('U-001', { Rol: 'Supervisor' }));
     await expect(controller.update('U-001', { Rol: 'Supervisor' })).resolves.toMatchObject({
       Rol: 'Supervisor',
@@ -213,14 +224,29 @@ describe('usuario', () => {
     );
   });
 
-  it('elimina un usuario', async () => {
+  it('elimina un usuario e invalida su sesión en caché', async () => {
+    first.mockResolvedValue(makeRow());
     remove.mockResolvedValue(makeRow());
-    await expect(controller.remove('U-001')).resolves.toBeUndefined();
+    await expect(controller.remove('U-001', { id: 'ADM', usuario: 'adm', rol: 'Administrador' })).resolves.toBeUndefined();
+    expect(sesiones.invalidar).toHaveBeenCalledWith('U-001');
+  });
+
+  it('update invalida la sesión en caché (el rol vigente se lee de la BD)', async () => {
+    first.mockResolvedValue(makeRow());
+    update.mockResolvedValue(makeRow('U-001', { Rol: 'Supervisor' }));
+    await controller.update('U-001', { Rol: 'Supervisor' });
+    expect(sesiones.invalidar).toHaveBeenCalledWith('U-001');
+  });
+
+  it('un update que no encuentra el usuario no invalida nada', async () => {
+    update.mockResolvedValue(null);
+    await expect(controller.update('X', { Nombres: 'x' })).rejects.toBeInstanceOf(NotFoundException);
+    expect(sesiones.invalidar).not.toHaveBeenCalled();
   });
 
   it('responde 404 al eliminar un inexistente', async () => {
     remove.mockResolvedValue(null);
-    await expect(controller.remove('X')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(controller.remove('X', { id: 'ADM', usuario: 'adm', rol: 'Administrador' })).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('GET /administration/usuarios/roles devuelve los nombres de la tabla rol (sistema primero, luego por nombre)', async () => {
@@ -255,6 +281,7 @@ describe('usuario', () => {
       expect(rolFirst).toHaveBeenCalledWith({ nombre: 'Almacenero' });
       expect(create.mock.calls[0][0].Rol).toBe('Almacenero');
 
+      first.mockResolvedValue(makeRow());
       update.mockResolvedValue(makeRow('U-001', { Rol: 'Almacenero' }));
       await expect(controller.update('U-001', { Rol: 'Almacenero' })).resolves.toMatchObject({ Rol: 'Almacenero' });
     });

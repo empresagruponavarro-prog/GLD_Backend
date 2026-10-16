@@ -7,9 +7,11 @@ import {
   UpdatePptoDetalleFaseCateDto,
 } from './detalle-fases-cate.dto.js';
 import { PptoDetalleFasesCateHandler } from './detalle-fases-cate.handler.js';
+import { Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('presupuestos / categorias-asignadas')
 @Controller('presupuestos/categorias-asignadas')
+@Modulo('presupuestos')
 export class PptoDetalleFasesCateController {
   constructor(private readonly handler: PptoDetalleFasesCateHandler) {}
 

@@ -12,9 +12,11 @@ import {
   type ProductoRow,
 } from '../../producto/producto.dto.js';
 import { CategoriaProductosHandler } from './productos.handler.js';
+import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria/:id/productos')
+@Modulo('maestros.generales')
 export class CategoriaProductosController {
   constructor(private readonly handler: CategoriaProductosHandler) {}
 
