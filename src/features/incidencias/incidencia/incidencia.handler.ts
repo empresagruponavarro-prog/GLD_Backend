@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
+import ExcelJS from 'exceljs';
 import { nowInstant, toInstant, toInstantString } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
@@ -199,43 +200,62 @@ export class IncidenciaHandler {
   }
 
   async generateExcelCsv(query: ListIncidenciaQueryDto): Promise<string> {
+    const rows = await this.exportRows(query);
+    const cell = (value: string | number): string => (typeof value === 'number' ? String(value) : csvCell(value));
+    return [EXPORT_HEADERS.join(','), ...rows.map((r) => r.map(cell).join(','))].join('\n');
+  }
+
+  async generateExcelXlsx(query: ListIncidenciaQueryDto): Promise<Buffer> {
+    const rows = await this.exportRows(query);
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Incidencias');
+    sheet.columns = EXPORT_HEADERS.map((header, i) => ({ header, key: `c${i}`, width: EXPORT_WIDTHS[i] }));
+    sheet.addRows(rows);
+    const head = sheet.getRow(1);
+    head.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    head.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF10B981' } };
+    sheet.views = [{ state: 'frozen', ySplit: 1 }];
+    sheet.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: EXPORT_HEADERS.length } };
+    return Buffer.from(await workbook.xlsx.writeBuffer());
+  }
+
+  private async exportRows(query: ListIncidenciaQueryDto): Promise<(string | number)[][]> {
     const list = await this.list(query);
-
-    const headers = [
-      'ID',
-      'REGISTRADOR',
-      'DOC. IDENTIDAD',
-      'CARGO',
-      'SOLICITANTE',
-      'DOC. SOLICITANTE',
-      'TELÉFONO',
-      'DOMICILIO',
-      'FECHA',
-      'ORIGEN',
-      'DIRECCIÓN',
-      'ESTADO',
-      'INCIDENCIA',
-    ];
-
-    const rows = list.map((item) => [
+    return list.map((item) => [
       item.id,
-      csvCell(item.promotor),
-      csvCell(item.docRegistrador),
-      csvCell(item.cargoRegistrador),
-      csvCell(item.solicitante),
-      csvCell(item.docSolicitante),
-      csvCell(item.telefonoSolicitante),
-      csvCell(item.domicilioSolicitante),
-      csvCell(toInstantString(item.fechaIncidencia) || toInstantString(item.fechaInicio).substring(0, 10)),
-      csvCell(item.origenIncidencia),
-      csvCell(item.direccionExacta || item.domicilioSolicitante),
-      csvCell(item.estado || 'PENDIENTE'),
-      csvCell(item.incidencia),
+      item.promotor ?? '',
+      item.docRegistrador ?? '',
+      item.cargoRegistrador ?? '',
+      item.solicitante ?? '',
+      item.docSolicitante ?? '',
+      item.telefonoSolicitante ?? '',
+      item.domicilioSolicitante ?? '',
+      toInstantString(item.fechaIncidencia) || toInstantString(item.fechaInicio).substring(0, 10),
+      item.origenIncidencia ?? '',
+      item.direccionExacta || item.domicilioSolicitante || '',
+      item.estado || 'PENDIENTE',
+      item.incidencia ?? '',
     ]);
-
-    return [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
   }
 }
+
+const EXPORT_HEADERS = [
+  'ID',
+  'REGISTRADOR',
+  'DOC. IDENTIDAD',
+  'CARGO',
+  'SOLICITANTE',
+  'DOC. SOLICITANTE',
+  'TELÉFONO',
+  'DOMICILIO',
+  'FECHA',
+  'ORIGEN',
+  'DIRECCIÓN',
+  'ESTADO',
+  'INCIDENCIA',
+];
+
+const EXPORT_WIDTHS = [8, 24, 16, 20, 26, 16, 14, 30, 12, 16, 30, 14, 50];
 
 function hasFilters(query: ListIncidenciaQueryDto): boolean {
   return (

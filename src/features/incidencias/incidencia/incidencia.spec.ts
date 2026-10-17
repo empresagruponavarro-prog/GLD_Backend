@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import ExcelJS from 'exceljs';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { IncidenciaController } from './incidencia.controller.js';
@@ -42,6 +43,7 @@ function makeRow(id = 1, incidencia = 'Fuga de agua') {
 
 describe('incidencia', () => {
   let controller: IncidenciaController;
+  let handler: IncidenciaHandler;
   const create = vi.fn();
   const first = vi.fn();
   const all = vi.fn();
@@ -73,6 +75,7 @@ describe('incidencia', () => {
     }).compile();
 
     controller = moduleRef.get(IncidenciaController);
+    handler = moduleRef.get(IncidenciaHandler);
   });
 
   it('lista las incidencias', async () => {
@@ -147,5 +150,23 @@ describe('incidencia', () => {
   it('responde 404 al eliminar una inexistente', async () => {
     remove.mockResolvedValue(null);
     await expect(controller.remove(99)).rejects.toBeInstanceOf(NotFoundException);
+  });
+  it('exporta a xlsx una fila por incidencia filtrada con su cabecera', async () => {
+    all.mockResolvedValue([makeRow(2), makeRow(1)]);
+    const buffer = await handler.generateExcelXlsx({ estado: 'PENDIENTE' });
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer as unknown as ArrayBuffer);
+    const sheet = workbook.getWorksheet('Incidencias');
+    expect(sheet?.rowCount).toBe(3);
+    expect(sheet?.getRow(1).getCell(1).value).toBe('ID');
+    expect(sheet?.getRow(2).getCell(1).value).toBe(2);
+    expect(sheet?.getRow(2).getCell(13).value).toBe('Fuga de agua');
+  });
+
+  it('exporta a csv con cabecera y una fila por incidencia', async () => {
+    all.mockResolvedValue([makeRow(1)]);
+    const csv = await handler.generateExcelCsv({});
+    expect(csv.split(/\r?\n/)).toHaveLength(2);
+    expect(csv).toContain('"Fuga de agua"');
   });
 });

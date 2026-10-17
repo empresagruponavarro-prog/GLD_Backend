@@ -83,6 +83,17 @@ export class IncidenciaController {
     res.send(bom + csv);
   }
 
+  @Get('export/xlsx')
+  @ApiOperation({ summary: 'Exportar incidencias a Excel (.xlsx) según los filtros' })
+  @ApiProduces('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+  @ApiOkResponse({ description: 'Archivo Excel descargable' })
+  async exportXlsx(@Query() query: ListIncidenciaQueryDto, @Res() res: Response): Promise<void> {
+    const xlsx = await this.handler.generateExcelXlsx(query);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=Registro_Incidencias.xlsx');
+    res.send(xlsx);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una incidencia por id' })
   @ApiParam({ name: 'id', description: 'ID numérico de la incidencia', type: Number })
