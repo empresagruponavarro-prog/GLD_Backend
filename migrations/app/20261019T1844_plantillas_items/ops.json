@@ -1,0 +1,674 @@
+[
+  {
+    "id": "table.ppto_DetalleItems",
+    "label": "Create table \"ppto_DetalleItems\"",
+    "summary": "Creates table \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_DetalleItems\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_DetalleItems\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_DetalleItems\" (\n  \"Cantidad\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"CostoTotal\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"CostoUnitario\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"IdPresupuesto\" character varying(255) NOT NULL,\n  \"Item\" character varying(20),\n  \"Orden\" int4 DEFAULT 0 NOT NULL,\n  \"PrecioVenta\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"VentaTotal\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_detalle_categoria\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"id_unidad_medida\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_DetalleItems\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_Plantillas_Items",
+    "label": "Create table \"ppto_Plantillas_Items\"",
+    "summary": "Creates table \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_Plantillas_Items\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_Plantillas_Items\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_Plantillas_Items\" (\n  \"Cantidad\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"CostoTotal\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"CostoUnitario\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"Item\" character varying(20),\n  \"Orden\" int4 DEFAULT 0 NOT NULL,\n  \"PrecioVenta\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"VentaTotal\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_plantilla_categoria\" int4 NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"id_unidad_medida\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_Plantillas_Items\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_IdPresupuesto_idx_610007fd",
+    "label": "Create index \"ppto_DetalleItems_IdPresupuesto_idx_610007fd\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_IdPresupuesto_idx_610007fd",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_IdPresupuesto_idx_610007fd\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_IdPresupuesto_idx_610007fd\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_IdPresupuesto_idx_610007fd\" ON \"public\".\"ppto_DetalleItems\" (\"IdPresupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_IdPresupuesto_idx_610007fd\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_IdPresupuesto_idx_610007fd\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_id_detalle_categoria_idx_e4765203",
+    "label": "Create index \"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_id_detalle_categoria_idx_e4765203",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\" ON \"public\".\"ppto_DetalleItems\" (\"id_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_detalle_categoria_idx_e4765203\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_id_producto_idx_f4d96d2e",
+    "label": "Create index \"ppto_DetalleItems_id_producto_idx_f4d96d2e\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_id_producto_idx_f4d96d2e",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_id_producto_idx_f4d96d2e\" ON \"public\".\"ppto_DetalleItems\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_id_unidad_medida_idx_e475ad90",
+    "label": "Create index \"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_id_unidad_medida_idx_e475ad90",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\" ON \"public\".\"ppto_DetalleItems\" (\"id_unidad_medida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Items.ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f",
+    "label": "Create index \"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\" ON \"public\".\"ppto_Plantillas_Items\" (\"id_plantilla_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Items.ppto_Plantillas_Items_id_producto_idx_f4d96d2e",
+    "label": "Create index \"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Items_id_producto_idx_f4d96d2e",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\" ON \"public\".\"ppto_Plantillas_Items\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Plantillas_Items.ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90",
+    "label": "Create index \"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\"",
+        "sql": "CREATE INDEX \"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\" ON \"public\".\"ppto_Plantillas_Items\" (\"id_unidad_medida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleItems.ppto_DetalleItems_id_detalle_categoria_fkey",
+    "label": "Add foreign key \"ppto_DetalleItems_id_detalle_categoria_fkey\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleItems_id_detalle_categoria_fkey",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleItems_id_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleItems_id_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\"\nADD CONSTRAINT \"ppto_DetalleItems_id_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleItems_id_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleItems.ppto_DetalleItems_id_producto_fkey",
+    "label": "Add foreign key \"ppto_DetalleItems_id_producto_fkey\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleItems_id_producto_fkey",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleItems_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_producto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleItems_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\"\nADD CONSTRAINT \"ppto_DetalleItems_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleItems_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_producto_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleItems.ppto_DetalleItems_id_unidad_medida_fkey",
+    "label": "Add foreign key \"ppto_DetalleItems_id_unidad_medida_fkey\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleItems_id_unidad_medida_fkey",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleItems_id_unidad_medida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleItems_id_unidad_medida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\"\nADD CONSTRAINT \"ppto_DetalleItems_id_unidad_medida_fkey\"\nFOREIGN KEY (\"id_unidad_medida\")\nREFERENCES \"public\".\"unidad_medida\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleItems_id_unidad_medida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Items.ppto_Plantillas_Items_id_plantilla_categoria_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Items_id_plantilla_categoria_fkey\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Items_id_plantilla_categoria_fkey",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Items_id_plantilla_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_plantilla_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Items_id_plantilla_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Items\"\nADD CONSTRAINT \"ppto_Plantillas_Items_id_plantilla_categoria_fkey\"\nFOREIGN KEY (\"id_plantilla_categoria\")\nREFERENCES \"public\".\"ppto_Plantillas_Categorias\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Items_id_plantilla_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_plantilla_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Items.ppto_Plantillas_Items_id_producto_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Items_id_producto_fkey\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Items_id_producto_fkey",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Items_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_producto_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Items_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Items\"\nADD CONSTRAINT \"ppto_Plantillas_Items_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Items_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_producto_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Plantillas_Items.ppto_Plantillas_Items_id_unidad_medida_fkey",
+    "label": "Add foreign key \"ppto_Plantillas_Items_id_unidad_medida_fkey\" on \"ppto_Plantillas_Items\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Plantillas_Items_id_unidad_medida_fkey",
+        "table": "ppto_Plantillas_Items"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Plantillas_Items_id_unidad_medida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Plantillas_Items_id_unidad_medida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Plantillas_Items\"\nADD CONSTRAINT \"ppto_Plantillas_Items_id_unidad_medida_fkey\"\nFOREIGN KEY (\"id_unidad_medida\")\nREFERENCES \"public\".\"unidad_medida\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Plantillas_Items_id_unidad_medida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Plantillas_Items_id_unidad_medida_fkey",
+          "public",
+          "\"public\".\"ppto_Plantillas_Items\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.unidad_medida.itemizado",
+    "label": "Unidades del itemizado",
+    "summary": "Inserta GLB, PTO, M3 y MES si no existen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "unidad_medida"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed unidades itemizado",
+        "sql": "INSERT INTO \"public\".\"unidad_medida\" (codigo, descripcion, simbolo) SELECT v.codigo, v.descripcion, v.simbolo FROM (VALUES ('GLB', 'Global', 'glb'), ('PTO', 'Punto', 'pto'), ('M3', 'Metro cubico', 'm3'), ('MES', 'Mes', 'mes')) AS v(codigo, descripcion, simbolo) WHERE NOT EXISTS (SELECT 1 FROM \"public\".\"unidad_medida\" u WHERE lower(u.simbolo) = lower(v.simbolo) OR u.codigo = v.codigo)",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.unidad_medida.millar",
+    "label": "Simbolo de MILLAR",
+    "summary": "MILLAR pasa de ML a MLL para no chocar con Metro Lineal",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "unidad_medida"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "fix simbolo millar",
+        "sql": "UPDATE \"public\".\"unidad_medida\" SET simbolo = 'MLL' WHERE upper(descripcion) = 'MILLAR' AND upper(simbolo) = 'ML'",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.categoria.estructuras",
+    "label": "Categoria 6. CD - ESTRUCTURAS",
+    "summary": "Crea la categoria ESTRUC bajo COSTO DIRECTO - CONTRATISTA",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "categoria"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed categoria estructuras",
+        "sql": "INSERT INTO \"public\".\"categoria\" (codigo, id_tipo_categoria, descripcion) SELECT 'ESTRUC', tc.id, '6. CD - ESTRUCTURAS (PUERTAS,ENROLLABLES,COBERTURA,ESCALERA, OTRO)' FROM \"public\".\"tipo_categoria\" tc WHERE tc.nombre = 'COSTO DIRECTO - CONTRATISTA' ORDER BY tc.id LIMIT 1 ON CONFLICT (codigo) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]

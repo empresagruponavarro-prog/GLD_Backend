@@ -16,6 +16,8 @@ import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto
 import { AplicarPlantillaController } from './plantillas/aplicar-plantilla.controller.js';
 import { PlantillasController } from './plantillas/plantillas.controller.js';
 import { PlantillasHandler } from './plantillas/plantillas.handler.js';
+import { PlantillasItemsController } from './plantillas-items/plantillas-items.controller.js';
+import { PlantillasItemsHandler } from './plantillas-items/plantillas-items.handler.js';
 
 @Module({
   imports: [PrismaModule],
@@ -28,6 +30,7 @@ import { PlantillasHandler } from './plantillas/plantillas.handler.js';
     PresupuestoPrincipalController,
     PlantillasController,
     AplicarPlantillaController,
+    PlantillasItemsController,
   ],
   providers: [
     PresupuestoPrincipalHandler,
@@ -37,6 +40,7 @@ import { PlantillasHandler } from './plantillas/plantillas.handler.js';
     PptoDetalleFasesCateHandler,
     PresupuestoHistorialHandler,
     PlantillasHandler,
+    PlantillasItemsHandler,
   ],
   exports: [
     PresupuestoPrincipalHandler,

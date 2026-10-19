@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'03999aaba285f1f70263a03303adb61b7375d403cab165f80265644047fa622f'>;
+  StorageHashBase<'1a0cd5bcd09a5124f42a9d2d8c6efbb3e8d212c6cd341bee61089fe0cb513814'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1109,6 +1109,20 @@ export type FieldOutputTypes = {
       readonly FechaCreacion: Varchar<255> | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
     };
+    readonly ppto_DetalleItems: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'];
+      readonly IdPresupuesto: Varchar<255>;
+      readonly id_producto: CodecTypes['pg/int4@1']['output'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['output'];
+      readonly Item: Varchar<20> | null;
+      readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+    };
     readonly ppto_Fases: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdpptoFase: Varchar<255> | null;
@@ -1142,6 +1156,19 @@ export type FieldOutputTypes = {
       readonly IdPlantillaFase: Varchar<255> | null;
       readonly IdPlantilla: Varchar<255>;
       readonly IdpptoFase: Varchar<255>;
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly ppto_Plantillas_Items: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_plantilla_categoria: CodecTypes['pg/int4@1']['output'];
+      readonly id_producto: CodecTypes['pg/int4@1']['output'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['output'];
+      readonly Item: Varchar<20> | null;
+      readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
       readonly Orden: CodecTypes['pg/int4@1']['output'];
     };
     readonly ppto_Principal: {
@@ -2262,6 +2289,20 @@ export type FieldInputTypes = {
       readonly FechaCreacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
     };
+    readonly ppto_DetalleItems: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'];
+      readonly IdPresupuesto: CodecTypes['sql/varchar@1']['input'];
+      readonly id_producto: CodecTypes['pg/int4@1']['input'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['input'];
+      readonly Item: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
+    };
     readonly ppto_Fases: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2295,6 +2336,19 @@ export type FieldInputTypes = {
       readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdPlantilla: CodecTypes['sql/varchar@1']['input'];
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'];
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly ppto_Plantillas_Items: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_plantilla_categoria: CodecTypes['pg/int4@1']['input'];
+      readonly id_producto: CodecTypes['pg/int4@1']['input'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['input'];
+      readonly Item: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
       readonly Orden: CodecTypes['pg/int4@1']['input'];
     };
     readonly ppto_Principal: {
@@ -3415,6 +3469,20 @@ export type StorageColumnTypes = {
       readonly IdPresupuestoDetalleCategoria: Varchar<255> | null;
       readonly Usuario: Varchar<255> | null;
     };
+    readonly ppto_DetalleItems: {
+      readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'];
+      readonly id_producto: CodecTypes['pg/int4@1']['output'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['output'];
+      readonly IdPresupuesto: Varchar<255>;
+      readonly Item: Varchar<20> | null;
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['output'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
+    };
     readonly ppto_Fases: {
       readonly FaseProyecto: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -3449,6 +3517,19 @@ export type StorageColumnTypes = {
       readonly IdPlantillaFase: Varchar<255> | null;
       readonly IdpptoFase: Varchar<255>;
       readonly Orden: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly ppto_Plantillas_Items: {
+      readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_plantilla_categoria: CodecTypes['pg/int4@1']['output'];
+      readonly id_producto: CodecTypes['pg/int4@1']['output'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['output'];
+      readonly Item: Varchar<20> | null;
+      readonly Orden: CodecTypes['pg/int4@1']['output'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['output'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
     };
     readonly ppto_Principal: {
       readonly CodCentroCto: Varchar<255> | null;
@@ -4568,6 +4649,20 @@ export type StorageColumnInputTypes = {
       readonly IdPresupuestoDetalleCategoria: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly ppto_DetalleItems: {
+      readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'];
+      readonly id_producto: CodecTypes['pg/int4@1']['input'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['input'];
+      readonly IdPresupuesto: CodecTypes['sql/varchar@1']['input'];
+      readonly Item: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['input'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
+    };
     readonly ppto_Fases: {
       readonly FaseProyecto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -4602,6 +4697,19 @@ export type StorageColumnInputTypes = {
       readonly IdPlantillaFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'];
       readonly Orden: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly ppto_Plantillas_Items: {
+      readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_plantilla_categoria: CodecTypes['pg/int4@1']['input'];
+      readonly id_producto: CodecTypes['pg/int4@1']['input'];
+      readonly id_unidad_medida: CodecTypes['pg/int4@1']['input'];
+      readonly Item: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly Orden: CodecTypes['pg/int4@1']['input'];
+      readonly PrecioVenta: CodecTypes['pg/numeric@1']['input'];
+      readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
     };
     readonly ppto_Principal: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
@@ -11449,6 +11557,166 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly ppto_DetalleItems: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_detalle_categoria: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly IdPresupuesto: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly id_producto: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_unidad_medida: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Item: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly Cantidad: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly CostoUnitario: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly PrecioVenta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly CostoTotal: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly VentaTotal: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly Orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_DetalleItems_id_detalle_categoria_idx_e4765203';
+                  readonly prefix: 'ppto_DetalleItems_id_detalle_categoria_idx';
+                  readonly columns: readonly ['id_detalle_categoria'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_DetalleItems_IdPresupuesto_idx_610007fd';
+                  readonly prefix: 'ppto_DetalleItems_IdPresupuesto_idx';
+                  readonly columns: readonly ['IdPresupuesto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_DetalleItems_id_producto_idx_f4d96d2e';
+                  readonly prefix: 'ppto_DetalleItems_id_producto_idx';
+                  readonly columns: readonly ['id_producto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_DetalleItems_id_unidad_medida_idx_e475ad90';
+                  readonly prefix: 'ppto_DetalleItems_id_unidad_medida_idx';
+                  readonly columns: readonly ['id_unidad_medida'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id_detalle_categoria'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleFasesCate';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id_producto'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'producto';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id_unidad_medida'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'unidad_medida';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly ppto_Fases: {
               columns: {
                 readonly id: {
@@ -11768,6 +12036,154 @@ type ContractBase = Omit<
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'ppto_Plantillas';
                     readonly columns: readonly ['IdPlantilla'];
+                  };
+                },
+              ];
+            };
+            readonly ppto_Plantillas_Items: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_plantilla_categoria: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_producto: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_unidad_medida: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly Item: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly Cantidad: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly CostoUnitario: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly PrecioVenta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly CostoTotal: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly VentaTotal: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
+                readonly Orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f';
+                  readonly prefix: 'ppto_Plantillas_Items_id_plantilla_categoria_idx';
+                  readonly columns: readonly ['id_plantilla_categoria'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_Plantillas_Items_id_producto_idx_f4d96d2e';
+                  readonly prefix: 'ppto_Plantillas_Items_id_producto_idx';
+                  readonly columns: readonly ['id_producto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90';
+                  readonly prefix: 'ppto_Plantillas_Items_id_unidad_medida_idx';
+                  readonly columns: readonly ['id_unidad_medida'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Items';
+                    readonly columns: readonly ['id_plantilla_categoria'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Categorias';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Items';
+                    readonly columns: readonly ['id_producto'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'producto';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Plantillas_Items';
+                    readonly columns: readonly ['id_unidad_medida'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'unidad_medida';
+                    readonly columns: readonly ['id'];
                   };
                 },
               ];
@@ -13996,6 +14412,14 @@ type ContractBase = Omit<
     readonly ppto_Plantillas_Categorias: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ppto_Plantillas_Categorias';
+    };
+    readonly ppto_Plantillas_Items: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_Plantillas_Items';
+    };
+    readonly ppto_DetalleItems: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_DetalleItems';
     };
     readonly area: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
     readonly cotizacion: {
@@ -21662,6 +22086,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id_empresa'];
                 };
               };
+              readonly items: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_detalle_categoria'];
+                };
+              };
               readonly presupuesto: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -21694,6 +22129,119 @@ type ContractBase = Omit<
                 readonly Usuario: { readonly column: 'Usuario' };
                 readonly FechaCreacion: { readonly column: 'FechaCreacion' };
                 readonly id_categoria: { readonly column: 'id_categoria' };
+              };
+            };
+          };
+          readonly ppto_DetalleItems: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_detalle_categoria: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly IdPresupuesto: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly id_producto: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_unidad_medida: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly Item: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly Cantidad: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoUnitario: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly PrecioVenta: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoTotal: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly VentaTotal: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly Orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly partida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleFasesCate';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_detalle_categoria'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly producto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'producto';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_producto'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly unidad_medida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'unidad_medida';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_unidad_medida'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_DetalleItems';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_detalle_categoria: { readonly column: 'id_detalle_categoria' };
+                readonly IdPresupuesto: { readonly column: 'IdPresupuesto' };
+                readonly id_producto: { readonly column: 'id_producto' };
+                readonly id_unidad_medida: { readonly column: 'id_unidad_medida' };
+                readonly Item: { readonly column: 'Item' };
+                readonly Cantidad: { readonly column: 'Cantidad' };
+                readonly CostoUnitario: { readonly column: 'CostoUnitario' };
+                readonly PrecioVenta: { readonly column: 'PrecioVenta' };
+                readonly CostoTotal: { readonly column: 'CostoTotal' };
+                readonly VentaTotal: { readonly column: 'VentaTotal' };
+                readonly Orden: { readonly column: 'Orden' };
               };
             };
           };
@@ -21987,6 +22535,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['IdPlantillaFase'];
                 };
               };
+              readonly items: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas_Items';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_plantilla_categoria'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'ppto_Plantillas_Categorias';
@@ -22067,6 +22626,110 @@ type ContractBase = Omit<
                 readonly IdPlantillaFase: { readonly column: 'IdPlantillaFase' };
                 readonly IdPlantilla: { readonly column: 'IdPlantilla' };
                 readonly IdpptoFase: { readonly column: 'IdpptoFase' };
+                readonly Orden: { readonly column: 'Orden' };
+              };
+            };
+          };
+          readonly ppto_Plantillas_Items: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_plantilla_categoria: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_producto: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_unidad_medida: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly Item: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly Cantidad: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoUnitario: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly PrecioVenta: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoTotal: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly VentaTotal: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly Orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly partida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Plantillas_Categorias';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_plantilla_categoria'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly producto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'producto';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_producto'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly unidad_medida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'unidad_medida';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_unidad_medida'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_Plantillas_Items';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_plantilla_categoria: { readonly column: 'id_plantilla_categoria' };
+                readonly id_producto: { readonly column: 'id_producto' };
+                readonly id_unidad_medida: { readonly column: 'id_unidad_medida' };
+                readonly Item: { readonly column: 'Item' };
+                readonly Cantidad: { readonly column: 'Cantidad' };
+                readonly CostoUnitario: { readonly column: 'CostoUnitario' };
+                readonly PrecioVenta: { readonly column: 'PrecioVenta' };
+                readonly CostoTotal: { readonly column: 'CostoTotal' };
+                readonly VentaTotal: { readonly column: 'VentaTotal' };
                 readonly Orden: { readonly column: 'Orden' };
               };
             };

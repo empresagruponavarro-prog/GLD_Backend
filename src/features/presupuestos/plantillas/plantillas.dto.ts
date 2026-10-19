@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
 
 // ─── Response DTOs ────────────────────────────────────────────────────────────
 
@@ -45,6 +45,18 @@ export class PlantillaCategoriaDto {
 
   @ApiPropertyOptional({ example: 5000 })
   CostoReferencial?: number;
+
+  @ApiPropertyOptional({ example: 6500 })
+  VentaReferencial?: number;
+
+  @ApiPropertyOptional({ example: 12 })
+  id_categoria?: number;
+
+  @ApiPropertyOptional()
+  categoria?: { id: number; descripcion: string };
+
+  @ApiPropertyOptional({ example: 4 })
+  totalItems?: number;
 }
 
 export class PlantillaFaseDto {
@@ -102,6 +114,13 @@ export class UpdatePlantillaDto extends PartialType(CreatePlantillaDto) {
 }
 
 export class UpsertPlantillaCategoriaDto {
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  id?: number;
+
   @ApiPropertyOptional({ example: 'TPLF-001' })
   @IsOptional()
   @IsString()
@@ -118,6 +137,13 @@ export class UpsertPlantillaCategoriaDto {
   @IsNumber()
   @Min(0)
   CostoReferencial?: number;
+
+  @ApiPropertyOptional({ example: 12 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  id_categoria?: number;
 }
 
 export class UpsertPlantillaFaseDto {

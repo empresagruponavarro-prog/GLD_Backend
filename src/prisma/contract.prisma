@@ -1330,6 +1330,7 @@ model ppto_DetalleFasesCate {
   presupuesto                   ppto_Principal?     @relation(fields: [IdPresupuesto], references: [IdPresupuesto], onDelete: Cascade)
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
+  items        ppto_DetalleItems[]
   @@map("ppto_DetalleFasesCate")
 }
 
@@ -1555,7 +1556,53 @@ model ppto_Plantillas_Categorias {
   fasePlantilla           ppto_Plantillas_Fases @relation(fields: [IdPlantillaFase], references: [IdPlantillaFase])
   id_categoria            Int?
   categoria               categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
+  items                   ppto_Plantillas_Items[]
   @@map("ppto_Plantillas_Categorias")
+}
+
+// Ítems de una partida (sub fase) de plantilla: producto o servicio del catálogo con
+// cantidad, costo unitario (META) y precio de venta (contrato). Totales a 2 decimales.
+model ppto_Plantillas_Items {
+  id                     Int      @id @default(autoincrement())
+  id_plantilla_categoria Int
+  id_producto            Int
+  id_unidad_medida       Int
+  Item                   VarChar(20)?
+  Cantidad               Decimal  @default("0")
+  CostoUnitario          Decimal  @default("0")
+  PrecioVenta            Decimal  @default("0")
+  CostoTotal             Decimal  @default("0")
+  VentaTotal             Decimal  @default("0")
+  Orden                  Int      @default(0)
+
+  partida                ppto_Plantillas_Categorias @relation(fields: [id_plantilla_categoria], references: [id], onDelete: Cascade)
+  producto               producto                   @relation(fields: [id_producto], references: [id])
+  unidad_medida          unidad_medida              @relation(fields: [id_unidad_medida], references: [id])
+  @@index([id_plantilla_categoria])
+  @@map("ppto_Plantillas_Items")
+}
+
+// Ítems de una partida (sub fase) del presupuesto real; se copian desde la plantilla.
+model ppto_DetalleItems {
+  id                     Int      @id @default(autoincrement())
+  id_detalle_categoria   Int
+  IdPresupuesto          VarChar(255)
+  id_producto            Int
+  id_unidad_medida       Int
+  Item                   VarChar(20)?
+  Cantidad               Decimal  @default("0")
+  CostoUnitario          Decimal  @default("0")
+  PrecioVenta            Decimal  @default("0")
+  CostoTotal             Decimal  @default("0")
+  VentaTotal             Decimal  @default("0")
+  Orden                  Int      @default(0)
+
+  partida                ppto_DetalleFasesCate @relation(fields: [id_detalle_categoria], references: [id], onDelete: Cascade)
+  producto               producto              @relation(fields: [id_producto], references: [id])
+  unidad_medida          unidad_medida         @relation(fields: [id_unidad_medida], references: [id])
+  @@index([id_detalle_categoria])
+  @@index([IdPresupuesto])
+  @@map("ppto_DetalleItems")
 }
 
 // ============================================================

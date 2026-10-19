@@ -236,6 +236,10 @@
       "model": "ppto_DetalleFasesCate",
       "namespace": "public"
     },
+    "ppto_DetalleItems": {
+      "model": "ppto_DetalleItems",
+      "namespace": "public"
+    },
     "ppto_Fases": {
       "model": "ppto_Fases",
       "namespace": "public"
@@ -254,6 +258,10 @@
     },
     "ppto_Plantillas_Fases": {
       "model": "ppto_Plantillas_Fases",
+      "namespace": "public"
+    },
+    "ppto_Plantillas_Items": {
+      "model": "ppto_Plantillas_Items",
       "namespace": "public"
     },
     "ppto_Principal": {
@@ -12942,6 +12950,21 @@
                   "namespace": "public"
                 }
               },
+              "items": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleItems",
+                  "namespace": "public"
+                }
+              },
               "presupuesto": {
                 "cardinality": "N:1",
                 "on": {
@@ -13005,6 +13028,189 @@
               },
               "namespaceId": "public",
               "table": "ppto_DetalleFasesCate"
+            }
+          },
+          "ppto_DetalleItems": {
+            "fields": {
+              "Cantidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoTotal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoUnitario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "IdPresupuesto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "Item": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "Orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "PrecioVenta": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "VentaTotal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_detalle_categoria": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_unidad_medida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "partida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "unidad_medida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_unidad_medida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "Cantidad": {
+                  "column": "Cantidad"
+                },
+                "CostoTotal": {
+                  "column": "CostoTotal"
+                },
+                "CostoUnitario": {
+                  "column": "CostoUnitario"
+                },
+                "IdPresupuesto": {
+                  "column": "IdPresupuesto"
+                },
+                "Item": {
+                  "column": "Item"
+                },
+                "Orden": {
+                  "column": "Orden"
+                },
+                "PrecioVenta": {
+                  "column": "PrecioVenta"
+                },
+                "VentaTotal": {
+                  "column": "VentaTotal"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_detalle_categoria": {
+                  "column": "id_detalle_categoria"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "id_unidad_medida": {
+                  "column": "id_unidad_medida"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ppto_DetalleItems"
             }
           },
           "ppto_Fases": {
@@ -13411,6 +13617,21 @@
                   "model": "ppto_Plantillas_Fases",
                   "namespace": "public"
                 }
+              },
+              "items": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_plantilla_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas_Items",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -13534,6 +13755,176 @@
               },
               "namespaceId": "public",
               "table": "ppto_Plantillas_Fases"
+            }
+          },
+          "ppto_Plantillas_Items": {
+            "fields": {
+              "Cantidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoTotal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoUnitario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "Item": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "Orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "PrecioVenta": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "VentaTotal": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_plantilla_categoria": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_unidad_medida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "partida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_plantilla_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Plantillas_Categorias",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "unidad_medida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_unidad_medida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "unidad_medida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "Cantidad": {
+                  "column": "Cantidad"
+                },
+                "CostoTotal": {
+                  "column": "CostoTotal"
+                },
+                "CostoUnitario": {
+                  "column": "CostoUnitario"
+                },
+                "Item": {
+                  "column": "Item"
+                },
+                "Orden": {
+                  "column": "Orden"
+                },
+                "PrecioVenta": {
+                  "column": "PrecioVenta"
+                },
+                "VentaTotal": {
+                  "column": "VentaTotal"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_plantilla_categoria": {
+                  "column": "id_plantilla_categoria"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "id_unidad_medida": {
+                  "column": "id_unidad_medida"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ppto_Plantillas_Items"
             }
           },
           "ppto_Principal": {
@@ -24470,6 +24861,195 @@
                 }
               ]
             },
+            "ppto_DetalleItems": {
+              "columns": {
+                "Cantidad": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "CostoTotal": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "CostoUnitario": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "IdPresupuesto": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "Item": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "Orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "PrecioVenta": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "VentaTotal": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_unidad_medida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleItems"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleItems"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_unidad_medida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleItems"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "IdPresupuesto"
+                  ],
+                  "name": "ppto_DetalleItems_IdPresupuesto_idx_610007fd",
+                  "prefix": "ppto_DetalleItems_IdPresupuesto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_detalle_categoria"
+                  ],
+                  "name": "ppto_DetalleItems_id_detalle_categoria_idx_e4765203",
+                  "prefix": "ppto_DetalleItems_id_detalle_categoria_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "ppto_DetalleItems_id_producto_idx_f4d96d2e",
+                  "prefix": "ppto_DetalleItems_id_producto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_unidad_medida"
+                  ],
+                  "name": "ppto_DetalleItems_id_unidad_medida_idx_e475ad90",
+                  "prefix": "ppto_DetalleItems_id_unidad_medida_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "ppto_Fases": {
               "columns": {
                 "FaseProyecto": {
@@ -24905,6 +25485,179 @@
                   ]
                 }
               ]
+            },
+            "ppto_Plantillas_Items": {
+              "columns": {
+                "Cantidad": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "CostoTotal": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "CostoUnitario": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "Item": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "Orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "PrecioVenta": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "VentaTotal": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_plantilla_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_unidad_medida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_plantilla_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Items"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Categorias"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Items"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "id_unidad_medida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Plantillas_Items"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "unidad_medida"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_plantilla_categoria"
+                  ],
+                  "name": "ppto_Plantillas_Items_id_plantilla_categoria_idx_4793678f",
+                  "prefix": "ppto_Plantillas_Items_id_plantilla_categoria_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "ppto_Plantillas_Items_id_producto_idx_f4d96d2e",
+                  "prefix": "ppto_Plantillas_Items_id_producto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_unidad_medida"
+                  ],
+                  "name": "ppto_Plantillas_Items_id_unidad_medida_idx_e475ad90",
+                  "prefix": "ppto_Plantillas_Items_id_unidad_medida_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             },
             "ppto_Principal": {
               "columns": {
@@ -27482,7 +28235,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "03999aaba285f1f70263a03303adb61b7375d403cab165f80265644047fa622f"
+    "storageHash": "1a0cd5bcd09a5124f42a9d2d8c6efbb3e8d212c6cd341bee61089fe0cb513814"
   },
   "capabilities": {
     "postgres": {

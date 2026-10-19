@@ -6,8 +6,10 @@ import {
   CreatePlantillaDto,
   AplicarPlantillaDto,
   AplicarPlantillaResultDto,
+  UpsertPlantillaFaseDto,
 } from './plantillas.dto.js';
 import { toVarchar, toDecimalString } from '../presupuestos.helpers.js';
+import { sumarTotales } from '../plantillas-items/plantillas-items.handler.js';
 
 @Injectable()
 export class PlantillasHandler {
@@ -68,6 +70,10 @@ export class PlantillasHandler {
           categorias.map(async (cat: any) => {
             const catMaestra = await this.db.orm.public.ppto_FasesCategorias.first({ IdpptoFaseCategoria: cat.IdpptoFaseCategoria });
             const catGlobal = cat.id_categoria ? await this.db.orm.public.categoria.first({ id: cat.id_categoria }) : null;
+            const items = await this.db.orm.public.ppto_Plantillas_Items
+              .where((i: any) => i.id_plantilla_categoria.eq(cat.id))
+              .all();
+            const totales = sumarTotales(items.map((i: any) => ({ CostoTotal: Number(i.CostoTotal), VentaTotal: Number(i.VentaTotal) })));
             return {
               id: cat.id,
               IdPlantillaFase: cat.IdPlantillaFase as string,
@@ -76,6 +82,8 @@ export class PlantillasHandler {
               CostoReferencial: cat.CostoReferencial ? Number(cat.CostoReferencial) : undefined,
               id_categoria: cat.id_categoria as number | undefined,
               categoria: catGlobal ? { id: catGlobal.id, descripcion: catGlobal.descripcion as string } : undefined,
+              totalItems: items.length,
+              VentaReferencial: items.length ? totales.ventaTotal : undefined,
             };
           })
         );
@@ -188,7 +196,7 @@ export class PlantillasHandler {
             categoriasOmitidas++;
             continue;
           }
-          await orm.ppto_DetalleFasesCate.create({
+          const nuevaCat = await orm.ppto_DetalleFasesCate.create({
             IdPresupuestoDetalleCategoria: toVarchar(`DFC-${stamp}-${i}-${j}`),
             IdPresupuestoDetalle: toVarchar(idDetalle),
             IdPresupuesto: contexto.IdPresupuesto,
@@ -204,6 +212,30 @@ export class PlantillasHandler {
           catsPresentes.add(clave);
           detallesTocados.add(idDetalle);
           categoriasAgregadas++;
+
+          // Si la partida de la plantilla tiene ítems, copiarlos a ppto_DetalleItems
+          if (cat.id) {
+            const itemsPlantilla = await orm.ppto_Plantillas_Items
+              .where((it: any) => it.id_plantilla_categoria.eq(cat.id))
+              .orderBy((it: any) => it.Orden.asc())
+              .all();
+
+            for (const it of itemsPlantilla) {
+              await orm.ppto_DetalleItems.create({
+                id_detalle_categoria: nuevaCat.id,
+                IdPresupuesto: contexto.IdPresupuesto,
+                id_producto: it.id_producto,
+                id_unidad_medida: it.id_unidad_medida,
+                Item: it.Item,
+                Cantidad: it.Cantidad,
+                CostoUnitario: it.CostoUnitario,
+                PrecioVenta: it.PrecioVenta,
+                CostoTotal: it.CostoTotal,
+                VentaTotal: it.VentaTotal,
+                Orden: it.Orden,
+              });
+            }
+          }
         }
       }
 
@@ -260,36 +292,98 @@ export class PlantillasHandler {
     return this.mapToResponse(updated);
   }
 
-  async updateFases(idPlantilla: string, fases: any[]): Promise<{ success: boolean }> {
-    // Para simplificar, en un mantenedor real podríamos borrar y recrear o hacer un sync completo
-    
-    // Primero, obtenemos las fases actuales para borrarlas
-    const currentFases = await this.db.orm.public.ppto_Plantillas_Fases.where({ IdPlantilla: toVarchar(idPlantilla) }).all();
-    for (const cf of currentFases) {
-      await this.db.orm.public.ppto_Plantillas_Categorias.where({ IdPlantillaFase: cf.IdPlantillaFase }).deleteAndCount();
-    }
-    await this.db.orm.public.ppto_Plantillas_Fases.where({ IdPlantilla: toVarchar(idPlantilla) }).deleteAndCount();
-    
-    for (let i = 0; i < fases.length; i++) {
-      const f = fases[i];
-      const IdPlantillaFase = f.IdPlantillaFase || `TPLF-${Date.now()}-${i}`;
-      await this.db.orm.public.ppto_Plantillas_Fases.create({
-        IdPlantillaFase: toVarchar(IdPlantillaFase),
-        IdPlantilla: toVarchar(idPlantilla),
-        IdpptoFase: toVarchar(f.IdpptoFase),
-        Orden: f.Orden ?? i
-      });
+  /**
+   * Sincroniza la estructura (fases y partidas) de la plantilla en una transacción.
+   *
+   * - Fase: se reconoce por `IdPlantillaFase` (solo entre las fases de ESTA plantilla;
+   *   un código ajeno, p. ej. al copiar de otra plantilla, se trata como fase nueva).
+   * - Partida: se reconoce por `id` (solo entre las partidas actuales de la plantilla).
+   *   Se conservan `id_categoria` y sus ítems; si la partida tiene ítems, su
+   *   `CostoReferencial` lo manda la suma de ítems y no se sobrescribe.
+   * - Lo que no viene en el payload se elimina (los ítems caen en cascada).
+   */
+  async updateFases(idPlantilla: string, fases: UpsertPlantillaFaseDto[]): Promise<{ success: boolean }> {
+    const idVarchar = toVarchar(idPlantilla);
+    const plantilla = await this.db.orm.public.ppto_Plantillas.first({ IdPlantilla: idVarchar });
+    if (!plantilla) throw new NotFoundException('Plantilla no encontrada');
+    const stamp = Date.now();
+    const entrada = Array.isArray(fases) ? fases : [];
 
-      if (f.categorias && f.categorias.length > 0) {
-        for (const cat of f.categorias) {
-          await this.db.orm.public.ppto_Plantillas_Categorias.create({
-            IdPlantillaFase: toVarchar(IdPlantillaFase),
-            IdpptoFaseCategoria: toVarchar(cat.IdpptoFaseCategoria),
-            CostoReferencial: cat.CostoReferencial ? toDecimalString(cat.CostoReferencial) : undefined
+    await this.db.transaction(async (tx) => {
+      const orm = tx.orm.public;
+      const fasesActuales = await orm.ppto_Plantillas_Fases.where((f: any) => f.IdPlantilla.eq(idVarchar)).all();
+      const codigosActuales = fasesActuales.map((f: any) => f.IdPlantillaFase as string).filter(Boolean);
+      const catsActuales = codigosActuales.length
+        ? await orm.ppto_Plantillas_Categorias.where((c: any) => c.IdPlantillaFase.in(codigosActuales)).all()
+        : [];
+      const idsCats = catsActuales.map((c: any) => c.id as number);
+      const itemsActuales = idsCats.length
+        ? await orm.ppto_Plantillas_Items.where((i: any) => i.id_plantilla_categoria.in(idsCats)).all()
+        : [];
+
+      const fasesExistentes = new Set<string>(codigosActuales);
+      const catsExistentes = new Set<number>(idsCats);
+      const catsConItems = new Set<number>(itemsActuales.map((i: any) => i.id_plantilla_categoria as number));
+      const fasesConservadas = new Set<string>();
+      const catsConservadas = new Set<number>();
+
+      for (const [i, f] of entrada.entries()) {
+        let codigo = f.IdPlantillaFase && fasesExistentes.has(f.IdPlantillaFase) && !fasesConservadas.has(f.IdPlantillaFase)
+          ? f.IdPlantillaFase
+          : undefined;
+        if (codigo) {
+          await orm.ppto_Plantillas_Fases
+            .where({ IdPlantillaFase: toVarchar(codigo) })
+            .update({ IdpptoFase: toVarchar(f.IdpptoFase), Orden: f.Orden ?? i });
+        } else {
+          codigo = `TPLF-${stamp}-${i}`;
+          await orm.ppto_Plantillas_Fases.create({
+            IdPlantillaFase: toVarchar(codigo),
+            IdPlantilla: idVarchar,
+            IdpptoFase: toVarchar(f.IdpptoFase),
+            Orden: f.Orden ?? i,
           });
         }
+        fasesConservadas.add(codigo);
+
+        for (const cat of f.categorias ?? []) {
+          const costo = cat.CostoReferencial !== undefined && cat.CostoReferencial !== null
+            ? toDecimalString(Number(cat.CostoReferencial) || 0)
+            : null;
+          const idCategoria = cat.id_categoria ? Number(cat.id_categoria) : null;
+          const idCat = cat.id ? Number(cat.id) : 0;
+
+          if (idCat && catsExistentes.has(idCat) && !catsConservadas.has(idCat)) {
+            const datos: any = {
+              IdPlantillaFase: toVarchar(codigo),
+              IdpptoFaseCategoria: toVarchar(cat.IdpptoFaseCategoria),
+              id_categoria: idCategoria,
+            };
+            if (!catsConItems.has(idCat)) datos.CostoReferencial = costo;
+            await orm.ppto_Plantillas_Categorias.where({ id: idCat }).update(datos);
+            catsConservadas.add(idCat);
+          } else {
+            await orm.ppto_Plantillas_Categorias.create({
+              IdPlantillaFase: toVarchar(codigo),
+              IdpptoFaseCategoria: toVarchar(cat.IdpptoFaseCategoria),
+              CostoReferencial: costo,
+              id_categoria: idCategoria,
+            } as any);
+          }
+        }
       }
-    }
+
+      const catsABorrar = idsCats.filter((id) => !catsConservadas.has(id));
+      if (catsABorrar.length) {
+        await orm.ppto_Plantillas_Categorias.where((c: any) => c.id.in(catsABorrar)).deleteAndCount();
+      }
+      const fasesABorrar = codigosActuales.filter((c) => !fasesConservadas.has(c));
+      if (fasesABorrar.length) {
+        // Partidas que hubieran quedado colgando de esas fases (no deberían, pero por seguridad).
+        await orm.ppto_Plantillas_Categorias.where((c: any) => c.IdPlantillaFase.in(fasesABorrar)).deleteAndCount();
+        await orm.ppto_Plantillas_Fases.where((f: any) => f.IdPlantillaFase.in(fasesABorrar)).deleteAndCount();
+      }
+    });
     return { success: true };
   }
 

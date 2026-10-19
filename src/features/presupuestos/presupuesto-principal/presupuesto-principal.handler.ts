@@ -358,7 +358,7 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
     utilidad: Number(ut.toFixed(2)),
   };
 }
-// Genera un ID único para el presupuesto: PPTO-{año}-{correlativo 3 dígitos}
+// Genera un ID Ãºnico para el presupuesto: PPTO-{aÃ±o}-{correlativo 3 dÃ­gitos}
 async function generateIdPresupuesto(db: Database): Promise<string> {
   const year = new Date().getFullYear();
   const prefix = `PPTO-${year}-`;
