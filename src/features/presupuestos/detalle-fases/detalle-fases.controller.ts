@@ -25,7 +25,7 @@ export class PptoDetalleFasesController {
 
   @LecturaCompartida()
   @Get('centro-costo/:idCentroCosto')
-  @ApiOperation({ summary: 'Listar fases del centro de costo principal asociado a un Centro de Costo' })
+  @ApiOperation({ summary: 'Listar las fases asignadas en los presupuestos de un Centro de Costo' })
   @ApiParam({ name: 'idCentroCosto', type: Number, description: 'ID del Centro de Costo' })
   @ApiOkResponse({ type: FasePorCentroCostoResponseDto, isArray: true })
   findFasesPorCentroCosto(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {

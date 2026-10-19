@@ -54,11 +54,16 @@ export class PptoDetalleFasesHandler {
     const centroCosto = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
     if (!centroCosto) throw new NotFoundException(`Centro de Costo ${idCentroCosto} no encontrado`);
 
-    const idCentroCostosPrincipal = centroCosto.id_centro_costos_principal;
-    if (!idCentroCostosPrincipal) return [];
+    // Fases asignadas en los presupuestos de la obra (ppto_DetalleFases); el centro de costos
+    // principal ya no se usa para esto.
+    const asignadas = await this.db.orm.public.ppto_DetalleFases
+      .where((d) => d.id_centro_costo.eq(idCentroCosto))
+      .all();
+    const codigos = [...new Set(asignadas.map((d) => d.IdpptoFase).filter((c) => c !== null))];
+    if (codigos.length === 0) return [];
 
     const fases = await this.db.orm.public.ppto_Fases
-      .where((f) => f.id_centro_costos_principal.eq(idCentroCostosPrincipal))
+      .where((f) => f.IdpptoFase.in(codigos))
       .orderBy((f) => f.FaseProyecto.asc())
       .all();
 
