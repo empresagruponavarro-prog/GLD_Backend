@@ -141,6 +141,10 @@ export class PlantillasItemsHandler {
           Orden: orden,
         };
 
+        if (it.id_categoria) {
+          await orm.producto.where({ id: it.id_producto }).update({ id_categoria: it.id_categoria } as any);
+        }
+
         if (it.id && idsActuales.has(it.id) && !conservados.has(it.id)) {
           await orm.ppto_Plantillas_Items.where({ id: it.id }).update(datos as any);
           conservados.add(it.id);

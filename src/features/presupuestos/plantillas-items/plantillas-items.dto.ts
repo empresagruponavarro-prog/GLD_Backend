@@ -25,6 +25,13 @@ export class UpsertPartidaItemDto {
   @IsPositive()
   id_unidad_medida: number;
 
+  @ApiPropertyOptional({ example: 6, description: 'ID de la categoría CD asignada' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  id_categoria?: number;
+
   @ApiPropertyOptional({ example: '2.01' })
   @IsOptional()
   @IsString()
