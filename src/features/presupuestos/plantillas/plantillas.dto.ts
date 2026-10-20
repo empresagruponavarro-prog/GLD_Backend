@@ -170,6 +170,28 @@ export class UpsertPlantillaFaseDto {
   categorias: UpsertPlantillaCategoriaDto[];
 }
 
+// ─── Fusionar DTO ────────────────────────────────────────────────────────────
+
+export class FusionarPlantillaDto {
+  @ApiProperty({ example: 'IMP', description: 'Plantilla cuyo contenido se copia dentro de la plantilla destino' })
+  @IsString()
+  @IsNotEmpty()
+  IdPlantillaOrigen: string;
+
+  @ApiPropertyOptional({ default: true, description: 'Elimina la plantilla origen al terminar la fusión' })
+  @IsOptional()
+  @IsBoolean()
+  EliminarOrigen?: boolean;
+}
+
+export class FusionarPlantillaResultDto {
+  @ApiProperty() success: boolean;
+  @ApiProperty() fasesAgregadas: number;
+  @ApiProperty() categoriasAgregadas: number;
+  @ApiProperty() categoriasOmitidas: number;
+  @ApiProperty() origenEliminado: boolean;
+}
+
 // ─── Aplicar DTO ─────────────────────────────────────────────────────────────
 
 export class AplicarPlantillaDto {

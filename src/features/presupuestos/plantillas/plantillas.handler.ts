@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
   PlantillaCompletaResponseDto,
@@ -7,6 +7,8 @@ import {
   AplicarPlantillaDto,
   AplicarPlantillaResultDto,
   UpsertPlantillaFaseDto,
+  FusionarPlantillaDto,
+  FusionarPlantillaResultDto,
 } from './plantillas.dto.js';
 import { toVarchar, toDecimalString } from '../presupuestos.helpers.js';
 import { sumarTotales } from '../plantillas-items/plantillas-items.handler.js';
@@ -385,6 +387,97 @@ export class PlantillasHandler {
       }
     });
     return { success: true };
+  }
+
+  /**
+   * Fusiona la plantilla origen dentro de la destino (todo en una transacción).
+   *
+   * - Fase ya presente en el destino (misma `IdpptoFase`) → se reutiliza; si no, se crea al final.
+   * - Partida ya presente en esa fase (misma `IdpptoFaseCategoria`) → se omite (no duplica).
+   * - Las partidas nuevas copian también sus ítems.
+   * - Por defecto elimina la plantilla origen al terminar.
+   */
+  async fusionar(idDestino: string, dto: FusionarPlantillaDto): Promise<FusionarPlantillaResultDto> {
+    if (idDestino === dto.IdPlantillaOrigen) {
+      throw new BadRequestException('No se puede fusionar una plantilla consigo misma');
+    }
+    const destino = await this.getCompleta(idDestino);
+    const origen = await this.getCompleta(dto.IdPlantillaOrigen);
+    const eliminarOrigen = dto.EliminarOrigen ?? true;
+    const stamp = Date.now();
+
+    return this.db.transaction(async (tx) => {
+      const orm = tx.orm.public;
+      const idDestinoVarchar = toVarchar(idDestino);
+
+      const faseDestinoPorMaestra = new Map<string, string>();
+      const catsPresentes = new Set<string>();
+      let siguienteOrden = 0;
+      for (const f of destino.fases) {
+        if (!faseDestinoPorMaestra.has(f.IdpptoFase)) faseDestinoPorMaestra.set(f.IdpptoFase, f.IdPlantillaFase);
+        for (const c of f.categorias ?? []) catsPresentes.add(`${f.IdPlantillaFase}|${c.IdpptoFaseCategoria}`);
+        siguienteOrden = Math.max(siguienteOrden, (f.Orden ?? 0) + 1);
+      }
+
+      let fasesAgregadas = 0;
+      let categoriasAgregadas = 0;
+      let categoriasOmitidas = 0;
+
+      for (const [i, fase] of origen.fases.entries()) {
+        let codigoFase = faseDestinoPorMaestra.get(fase.IdpptoFase);
+        if (!codigoFase) {
+          codigoFase = `TPLF-${stamp}-${i}`;
+          await orm.ppto_Plantillas_Fases.create({
+            IdPlantillaFase: toVarchar(codigoFase),
+            IdPlantilla: idDestinoVarchar,
+            IdpptoFase: toVarchar(fase.IdpptoFase),
+            Orden: siguienteOrden++,
+          });
+          faseDestinoPorMaestra.set(fase.IdpptoFase, codigoFase);
+          fasesAgregadas++;
+        }
+
+        for (const cat of fase.categorias ?? []) {
+          const clave = `${codigoFase}|${cat.IdpptoFaseCategoria}`;
+          if (catsPresentes.has(clave)) {
+            categoriasOmitidas++;
+            continue;
+          }
+          const nueva = await orm.ppto_Plantillas_Categorias.create({
+            IdPlantillaFase: toVarchar(codigoFase),
+            IdpptoFaseCategoria: toVarchar(cat.IdpptoFaseCategoria),
+            CostoReferencial: cat.CostoReferencial !== undefined ? toDecimalString(cat.CostoReferencial) : null,
+            id_categoria: cat.id_categoria ?? null,
+          } as any);
+          catsPresentes.add(clave);
+          categoriasAgregadas++;
+
+          const items = await orm.ppto_Plantillas_Items
+            .where((it: any) => it.id_plantilla_categoria.eq(cat.id))
+            .orderBy((it: any) => it.Orden.asc())
+            .all();
+          for (const it of items) {
+            await orm.ppto_Plantillas_Items.create({
+              id_plantilla_categoria: nueva.id,
+              id_producto: it.id_producto,
+              id_unidad_medida: it.id_unidad_medida,
+              Item: it.Item,
+              Cantidad: it.Cantidad,
+              CostoUnitario: it.CostoUnitario,
+              PrecioVenta: it.PrecioVenta,
+              CostoTotal: it.CostoTotal,
+              VentaTotal: it.VentaTotal,
+              Orden: it.Orden,
+            } as any);
+          }
+        }
+      }
+
+      if (eliminarOrigen) {
+        await orm.ppto_Plantillas.where({ IdPlantilla: toVarchar(dto.IdPlantillaOrigen) }).delete();
+      }
+      return { success: true, fasesAgregadas, categoriasAgregadas, categoriasOmitidas, origenEliminado: eliminarOrigen };
+    });
   }
 
   async deletePlantilla(idPlantilla: string): Promise<{ success: boolean }> {

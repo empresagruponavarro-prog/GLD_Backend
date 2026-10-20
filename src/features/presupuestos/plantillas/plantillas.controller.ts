@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { PlantillasHandler } from './plantillas.handler.js';
-import { CreatePlantillaDto, UpdatePlantillaDto, UpsertPlantillaFaseDto } from './plantillas.dto.js';
+import { CreatePlantillaDto, UpdatePlantillaDto, UpsertPlantillaFaseDto, FusionarPlantillaDto } from './plantillas.dto.js';
 import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
 
 @Controller('presupuestos')
@@ -38,6 +38,11 @@ export class PlantillasController {
   @Put('plantillas/:id/fases')
   async updateFases(@Param('id') idPlantilla: string, @Body() fases: UpsertPlantillaFaseDto[]) {
     return await this.handler.updateFases(idPlantilla, fases);
+  }
+
+  @Post('plantillas/:id/fusionar')
+  async fusionar(@Param('id') idPlantilla: string, @Body() dto: FusionarPlantillaDto) {
+    return await this.handler.fusionar(idPlantilla, dto);
   }
 
   @Delete('plantillas/:id')
