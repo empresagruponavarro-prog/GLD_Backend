@@ -61,24 +61,30 @@ export class PresupuestoPrincipalHandler {
     const idPresupuesto = ppto.IdPresupuesto;
     if (!idPresupuesto) return { ...ppto, centroCosto: null, fases: [], historiales: [] };
 
-const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, pptoFasesCat, dbCategorias] = await Promise.all([
+const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, pptoFasesCat, dbCategorias, itemsPresupuesto] = await Promise.all([
       ppto.id_centro_costo ? this.db.orm.public.CentroCostos.first({ id: ppto.id_centro_costo }) : null,
       this.db.orm.public.ppto_DetalleFases.where((d) => d.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Principal_Historial.where((h) => h.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_DetalleFasesCate.where((c) => c.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
       this.db.orm.public.ppto_Fases.all(),
       this.db.orm.public.ppto_FasesCategorias.all(), this.db.orm.public.categoria.all(),
+      this.db.orm.public.ppto_DetalleItems.where((i) => i.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
     ]);
 
     const fasesMap = new Map(pptoFases.map(f => [f.IdpptoFase, f]));
     const fasesByNameMap = new Map(pptoFases.map(f => [f.FaseProyecto?.trim().toUpperCase(), f]));
     const catMap = new Map(pptoFasesCat.map(c => [c.IdpptoFaseCategoria, c.Descripcion])); const catRealMap = new Map(dbCategorias.map(c => [c.id, c]));
+    const itemsPorPartida = new Map<number, number>();
+    for (const it of itemsPresupuesto) {
+      itemsPorPartida.set(it.id_detalle_categoria, (itemsPorPartida.get(it.id_detalle_categoria) ?? 0) + 1);
+    }
 
     const fasesConCategorias = detallesFases.map((fase) => {
       const categorias = todasCategorias.filter((cat) => cat.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).map(cat => ({
         ...cat,
         CategoriaInsumo: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : null,
-          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)', categoria: cat.id_categoria ? catRealMap.get(cat.id_categoria) : null
+          Descripcion: cat.IdpptoFaseCategoria ? catMap.get(cat.IdpptoFaseCategoria) || cat.IdpptoFaseCategoria : '(Categoria vacia)', categoria: cat.id_categoria ? catRealMap.get(cat.id_categoria) : null,
+        totalItems: itemsPorPartida.get(cat.id) ?? 0,
       }));
       const faseMaestra = (fase.IdpptoFase ? fasesMap.get(fase.IdpptoFase) : null)
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);

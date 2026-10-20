@@ -30,6 +30,89 @@ export function sumarTotales(items: ReadonlyArray<{ CostoTotal: number; VentaTot
 }
 
 /**
+ * Enriquece filas de ítems (de plantilla o de presupuesto) con su producto, categoría y unidad
+ * del catálogo. Compartido por plantillas y presupuestos.
+ */
+export async function mapearItemsConCatalogo(
+  db: Database,
+  items: any[],
+  idPartidaCampo: string,
+): Promise<PartidaItemResponseDto[]> {
+  const idsProducto = [...new Set(items.map((i: any) => i.id_producto as number))];
+  const idsUnidad = [...new Set(items.map((i: any) => i.id_unidad_medida as number))];
+
+  const productos = idsProducto.length
+    ? await db.orm.public.producto.where((p: any) => p.id.in(idsProducto)).all()
+    : [];
+  const unidades = idsUnidad.length
+    ? await db.orm.public.unidad_medida.where((u: any) => u.id.in(idsUnidad)).all()
+    : [];
+  const idsCategoria = [...new Set(productos.map((p: any) => p.id_categoria as number))];
+  const categorias = idsCategoria.length
+    ? await db.orm.public.categoria.where((c: any) => c.id.in(idsCategoria)).all()
+    : [];
+
+  const prodPorId = new Map(productos.map((p: any) => [p.id as number, p]));
+  const uniPorId = new Map(unidades.map((u: any) => [u.id as number, u]));
+  const catPorId = new Map(categorias.map((c: any) => [c.id as number, c]));
+
+  return items.map((i: any) => {
+    const p: any = prodPorId.get(i.id_producto);
+    const u: any = uniPorId.get(i.id_unidad_medida);
+    const c: any = p ? catPorId.get(p.id_categoria) : undefined;
+    return {
+      id: i.id,
+      id_plantilla_categoria: i[idPartidaCampo],
+      Item: (i.Item as string | null) ?? undefined,
+      Orden: i.Orden,
+      id_producto: i.id_producto,
+      producto: p
+        ? {
+            id: p.id,
+            codigo: p.codigo as string,
+            descripcion: p.descripcion as string,
+            tipo_producto: p.tipo_producto,
+            id_categoria: p.id_categoria,
+            categoria: (c?.descripcion as string | null) ?? undefined,
+          }
+        : undefined,
+      id_unidad_medida: i.id_unidad_medida,
+      unidad: u
+        ? {
+            id: u.id,
+            codigo: u.codigo as string,
+            descripcion: u.descripcion as string,
+            simbolo: (u.simbolo as string | null) ?? undefined,
+          }
+        : undefined,
+      Cantidad: Number(i.Cantidad) || 0,
+      CostoUnitario: Number(i.CostoUnitario) || 0,
+      PrecioVenta: Number(i.PrecioVenta) || 0,
+      CostoTotal: Number(i.CostoTotal) || 0,
+      VentaTotal: Number(i.VentaTotal) || 0,
+    };
+  });
+}
+
+/** Todos los productos y unidades referenciados deben existir en el catálogo. */
+export async function validarReferenciasCatalogo(db: Database, idsProducto: number[], idsUnidad: number[]): Promise<void> {
+  const prods = [...new Set(idsProducto)];
+  const unis = [...new Set(idsUnidad)];
+  if (prods.length) {
+    const encontrados = await db.orm.public.producto.where((p: any) => p.id.in(prods)).all();
+    const ok = new Set(encontrados.map((p: any) => p.id as number));
+    const faltan = prods.filter((id) => !ok.has(id));
+    if (faltan.length) throw new BadRequestException(`Productos inexistentes en el catálogo: ${faltan.join(', ')}`);
+  }
+  if (unis.length) {
+    const encontradas = await db.orm.public.unidad_medida.where((u: any) => u.id.in(unis)).all();
+    const ok = new Set(encontradas.map((u: any) => u.id as number));
+    const faltan = unis.filter((id) => !ok.has(id));
+    if (faltan.length) throw new BadRequestException(`Unidades de medida inexistentes: ${faltan.join(', ')}`);
+  }
+}
+
+/**
  * Ítems (productos/servicios del catálogo) de una partida de plantilla
  * (`ppto_Plantillas_Categorias`). El costo referencial de la partida es la suma
  * de los costos totales de sus ítems.
@@ -47,60 +130,7 @@ export class PlantillasItemsHandler {
       .orderBy((i: any) => i.Orden.asc())
       .all();
 
-    const idsProducto = [...new Set(items.map((i: any) => i.id_producto as number))];
-    const idsUnidad = [...new Set(items.map((i: any) => i.id_unidad_medida as number))];
-
-    const productos = idsProducto.length
-      ? await this.db.orm.public.producto.where((p: any) => p.id.in(idsProducto)).all()
-      : [];
-    const unidades = idsUnidad.length
-      ? await this.db.orm.public.unidad_medida.where((u: any) => u.id.in(idsUnidad)).all()
-      : [];
-    const idsCategoria = [...new Set(productos.map((p: any) => p.id_categoria as number))];
-    const categorias = idsCategoria.length
-      ? await this.db.orm.public.categoria.where((c: any) => c.id.in(idsCategoria)).all()
-      : [];
-
-    const prodPorId = new Map(productos.map((p: any) => [p.id as number, p]));
-    const uniPorId = new Map(unidades.map((u: any) => [u.id as number, u]));
-    const catPorId = new Map(categorias.map((c: any) => [c.id as number, c]));
-
-    const resultado: PartidaItemResponseDto[] = items.map((i: any) => {
-      const p: any = prodPorId.get(i.id_producto);
-      const u: any = uniPorId.get(i.id_unidad_medida);
-      const c: any = p ? catPorId.get(p.id_categoria) : undefined;
-      return {
-        id: i.id,
-        id_plantilla_categoria: i.id_plantilla_categoria,
-        Item: (i.Item as string | null) ?? undefined,
-        Orden: i.Orden,
-        id_producto: i.id_producto,
-        producto: p
-          ? {
-              id: p.id,
-              codigo: p.codigo as string,
-              descripcion: p.descripcion as string,
-              tipo_producto: p.tipo_producto,
-              id_categoria: p.id_categoria,
-              categoria: (c?.descripcion as string | null) ?? undefined,
-            }
-          : undefined,
-        id_unidad_medida: i.id_unidad_medida,
-        unidad: u
-          ? {
-              id: u.id,
-              codigo: u.codigo as string,
-              descripcion: u.descripcion as string,
-              simbolo: (u.simbolo as string | null) ?? undefined,
-            }
-          : undefined,
-        Cantidad: Number(i.Cantidad) || 0,
-        CostoUnitario: Number(i.CostoUnitario) || 0,
-        PrecioVenta: Number(i.PrecioVenta) || 0,
-        CostoTotal: Number(i.CostoTotal) || 0,
-        VentaTotal: Number(i.VentaTotal) || 0,
-      };
-    });
+    const resultado = await mapearItemsConCatalogo(this.db, items, 'id_plantilla_categoria');
 
     return { id_plantilla_categoria: idPartida, items: resultado, ...sumarTotales(resultado) };
   }
@@ -167,20 +197,7 @@ export class PlantillasItemsHandler {
   }
 
   /** Todos los productos y unidades referenciados deben existir en el catálogo. */
-  private async validarReferencias(idsProducto: number[], idsUnidad: number[]): Promise<void> {
-    const prods = [...new Set(idsProducto)];
-    const unis = [...new Set(idsUnidad)];
-    if (prods.length) {
-      const encontrados = await this.db.orm.public.producto.where((p: any) => p.id.in(prods)).all();
-      const ok = new Set(encontrados.map((p: any) => p.id as number));
-      const faltan = prods.filter((id) => !ok.has(id));
-      if (faltan.length) throw new BadRequestException(`Productos inexistentes en el catálogo: ${faltan.join(', ')}`);
-    }
-    if (unis.length) {
-      const encontradas = await this.db.orm.public.unidad_medida.where((u: any) => u.id.in(unis)).all();
-      const ok = new Set(encontradas.map((u: any) => u.id as number));
-      const faltan = unis.filter((id) => !ok.has(id));
-      if (faltan.length) throw new BadRequestException(`Unidades de medida inexistentes: ${faltan.join(', ')}`);
-    }
+  private validarReferencias(idsProducto: number[], idsUnidad: number[]): Promise<void> {
+    return validarReferenciasCatalogo(this.db, idsProducto, idsUnidad);
   }
 }
