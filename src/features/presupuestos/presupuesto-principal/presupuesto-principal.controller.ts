@@ -8,6 +8,8 @@ import {
 } from './presupuesto-principal.dto.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal.handler.js';
 import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
+import type { AuthUser } from '../../../platform/auth/auth-user.js';
 
 @ApiTags('presupuestos / principal')
 @Controller('presupuestos')
@@ -40,8 +42,11 @@ export class PresupuestoPrincipalController {
   @Post()
   @ApiOperation({ summary: 'Crear nuevo presupuesto principal vinculado a un Centro de Costos' })
   @ApiCreatedResponse({ type: PresupuestoPrincipalResponseDto })
-  create(@Body() dto: CreatePresupuestoPrincipalDto) {
-    return this.handler.create(dto);
+  create(
+    @Body() dto: CreatePresupuestoPrincipalDto,
+    @CurrentUser() user?: AuthUser,
+  ) {
+    return this.handler.create(dto, user?.usuario);
   }
 
   @Patch(':idOrCode')

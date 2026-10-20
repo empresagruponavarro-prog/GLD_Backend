@@ -107,7 +107,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     };
   }
 
-  async create(dto: CreatePresupuestoPrincipalDto): Promise<PresupuestoPrincipalResponseDto> {
+  async create(dto: CreatePresupuestoPrincipalDto, usuarioAuth?: string): Promise<PresupuestoPrincipalResponseDto> {
     const idCentroCosto = await this.resolveCentroCostoId(dto);
 
     // Obtener el cliente (CodigoAnexo) desde CentroCostos si no viene en el DTO
@@ -149,7 +149,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         Total: toDecimalString(total),
         Estado: toVarchar<50>(dto.Estado ?? 'PENDIENTE'),
         Comentarios: dto.Comentarios,
-        Usuario: toVarchar(dto.Usuario),
+        Usuario: toVarchar(dto.Usuario || usuarioAuth),
         FechaCreacion: toVarchar(new Date().toISOString()),
       });
 
