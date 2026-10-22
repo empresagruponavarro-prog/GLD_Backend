@@ -6,10 +6,16 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../presupuestos.helpers.js';
 import {
   CreatePresupuestoPrincipalDto,
+  FaseFurPreviewDto,
+  FurGeneradoItemDto,
+  GenerarFursPresupuestoDto,
+  GenerarFursPresupuestoResponseDto,
   ListPresupuestoPrincipalQueryDto,
   PresupuestoPrincipalResponseDto,
+  PreviewFursPresupuestoResponseDto,
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
+import type { AuthUser } from '../../../platform/auth/auth-user.js';
 
 @Injectable()
 export class PresupuestoPrincipalHandler {
@@ -313,6 +319,247 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     }
   }
 
+  async previewFursPorFase(idOrCode: string | number): Promise<PreviewFursPresupuestoResponseDto> {
+    const ppto = await this.getById(idOrCode);
+    const idPresupuesto = ppto.IdPresupuesto;
+    if (!idPresupuesto) {
+      throw new BadRequestException(`El presupuesto no tiene un código IdPresupuesto válido`);
+    }
+    if (!ppto.id_centro_costo) {
+      throw new BadRequestException(`El presupuesto debe estar vinculado a un Centro de Costos para generar requerimientos (FURs)`);
+    }
+
+    const [cc, detallesFases, todasCategorias, pptoFases, itemsPresupuesto, todosProductos, todasUnidades, fursExistentes] = await Promise.all([
+      this.db.orm.public.CentroCostos.first({ id: ppto.id_centro_costo }),
+      this.db.orm.public.ppto_DetalleFases.where((d) => d.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
+      this.db.orm.public.ppto_DetalleFasesCate.where((c) => c.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
+      this.db.orm.public.ppto_Fases.all(),
+      this.db.orm.public.ppto_DetalleItems.where((i) => i.IdPresupuesto.eq(toVarchar(idPresupuesto))).all(),
+      this.db.orm.public.producto.all(),
+      this.db.orm.public.unidad_medida.all(),
+      this.db.orm.public.requerimiento.where((r) => r.id_centro_costo.eq(ppto.id_centro_costo!)).all(),
+    ]);
+
+    const prodMap = new Map(todosProductos.map((p) => [p.id, p]));
+    const umMap = new Map(todasUnidades.map((u) => [u.id, u.simbolo || u.codigo || 'UND']));
+    const fasesMap = new Map(pptoFases.map((f) => [f.IdpptoFase, f]));
+    const fasesByNameMap = new Map(pptoFases.map((f) => [f.FaseProyecto?.trim().toUpperCase(), f]));
+
+    const catToDetalleFase = new Map(todasCategorias.map((c) => [c.id, c.IdPresupuestoDetalle]));
+
+    const furPorFaseMap = new Map<number, { id: number; numero: string; estado: string }>();
+    for (const r of fursExistentes) {
+      if (r.id_fase && r.estado !== 'ANULADO') {
+        furPorFaseMap.set(r.id_fase, { id: r.id, numero: String(r.numero), estado: String(r.estado) });
+      }
+    }
+
+    const itemsPorDetalleFase = new Map<string, typeof itemsPresupuesto>();
+    for (const it of itemsPresupuesto) {
+      if (!it.id_producto) continue;
+      const idDetalleFase = catToDetalleFase.get(it.id_detalle_categoria);
+      if (idDetalleFase) {
+        if (!itemsPorDetalleFase.has(idDetalleFase)) itemsPorDetalleFase.set(idDetalleFase, []);
+        itemsPorDetalleFase.get(idDetalleFase)!.push(it);
+      }
+    }
+
+    const fasesPreview: FaseFurPreviewDto[] = [];
+
+    for (const df of detallesFases) {
+      if (!df.IdPresupuestoDetalle) continue;
+      const faseMaestra = (df.IdpptoFase ? fasesMap.get(df.IdpptoFase) : null)
+        ?? (df.IdpptoFase ? fasesByNameMap.get(df.IdpptoFase.trim().toUpperCase()) : null);
+      const idFaseNum = faseMaestra?.id ?? df.id;
+      const nombreFase = faseMaestra?.FaseProyecto || df.IdpptoFase || `Fase #${df.id}`;
+
+      const itemsFase = itemsPorDetalleFase.get(df.IdPresupuestoDetalle) || [];
+      if (itemsFase.length === 0) continue;
+
+      const productosMap = new Map<number, {
+        id_producto: number;
+        cantidadTotal: number;
+        costoUnitario: number;
+      }>();
+
+      for (const it of itemsFase) {
+        const cant = Number(it.Cantidad || 0);
+        const costo = Number(it.CostoUnitario || 0);
+        if (cant <= 0) continue;
+
+        const prev = productosMap.get(it.id_producto);
+        if (prev) {
+          prev.cantidadTotal += cant;
+          prev.costoUnitario = Math.max(prev.costoUnitario, costo);
+        } else {
+          productosMap.set(it.id_producto, {
+            id_producto: it.id_producto,
+            cantidadTotal: cant,
+            costoUnitario: costo,
+          });
+        }
+      }
+
+      const itemsDto: FurGeneradoItemDto[] = [];
+      let totalCantidad = 0;
+      let totalEstimado = 0;
+
+      for (const p of productosMap.values()) {
+        const prod = prodMap.get(p.id_producto);
+        const unidad = prod?.id_unidad_medida ? umMap.get(prod.id_unidad_medida) || 'UND' : 'UND';
+        const subtotal = p.cantidadTotal * p.costoUnitario;
+        totalCantidad += p.cantidadTotal;
+        totalEstimado += subtotal;
+
+        itemsDto.push({
+          id_producto: p.id_producto,
+          codigo: prod?.codigo ? String(prod.codigo) : `PROD-${p.id_producto}`,
+          descripcion: prod?.descripcion ? String(prod.descripcion) : '(Sin descripción)',
+          unidad,
+          cantidad: p.cantidadTotal.toFixed(2),
+          precio_referencial: p.costoUnitario.toFixed(2),
+        });
+      }
+
+      if (itemsDto.length > 0) {
+        fasesPreview.push({
+          id_fase: idFaseNum,
+          nombre_fase: nombreFase,
+          total_productos: itemsDto.length,
+          total_cantidad: Number(totalCantidad.toFixed(2)),
+          total_estimado: Number(totalEstimado.toFixed(2)),
+          fur_existente: furPorFaseMap.get(idFaseNum) ?? null,
+          items: itemsDto,
+        });
+      }
+    }
+
+    return {
+      id_presupuesto: idPresupuesto,
+      proyecto: ppto.Proyecto ? String(ppto.Proyecto) : null,
+      id_centro_costo: ppto.id_centro_costo,
+      centro_costo: cc ? (cc.centro_costo ? String(cc.centro_costo) : null) : null,
+      fases: fasesPreview,
+    };
+  }
+
+  async generarFursPorFase(
+    idOrCode: string | number,
+    dto: GenerarFursPresupuestoDto,
+    user?: AuthUser,
+  ): Promise<GenerarFursPresupuestoResponseDto> {
+    const preview = await this.previewFursPorFase(idOrCode);
+    if (preview.fases.length === 0) {
+      throw new BadRequestException('El presupuesto no tiene fases con ítems de productos para generar requerimientos.');
+    }
+
+    let idSolicitante = dto.id_solicitante;
+    if (idSolicitante) {
+      const anexo = await this.db.orm.public.Anexos.first({ id: idSolicitante });
+      if (!anexo) throw new BadRequestException(`El solicitante ID ${idSolicitante} no existe.`);
+    } else {
+      const trabajador = await this.db.orm.public.Anexos.first({ tipoAnexo: 'Trabajador' });
+      if (trabajador) {
+        idSolicitante = trabajador.id;
+      } else {
+        const primerAnexo = await this.db.orm.public.Anexos.first();
+        if (!primerAnexo) {
+          throw new BadRequestException('No existe ningún Anexo registrado en la base de datos para asignar como solicitante.');
+        }
+        idSolicitante = primerAnexo.id;
+      }
+    }
+
+    const todayISO = new Date().toISOString().slice(0, 10);
+    const fechaReq = dto.fecha_requerida ? dto.fecha_requerida.slice(0, 10) : null;
+
+    return this.db.transaction(async (tx) => {
+      const orm = tx.orm.public;
+      const fursGenerados: Array<{
+        id: number;
+        numero: string;
+        id_fase: number;
+        nombre_fase: string;
+        total_lineas: number;
+      }> = [];
+      const fasesOmitidas: Array<{
+        id_fase: number;
+        nombre_fase: string;
+        motivo: string;
+      }> = [];
+
+      for (const fase of preview.fases) {
+        if (fase.fur_existente && !dto.forzar) {
+          fasesOmitidas.push({
+            id_fase: fase.id_fase,
+            nombre_fase: fase.nombre_fase,
+            motivo: `Ya cuenta con el requerimiento ${fase.fur_existente.numero} en estado ${fase.fur_existente.estado}`,
+          });
+          continue;
+        }
+
+        const cor = await orm.almacen_correlativo.first({ serie: toVarchar<10>('FUR') });
+        let ultimo = 1;
+        if (cor) {
+          ultimo = (cor.ultimo ?? 0) + 1;
+          await orm.almacen_correlativo.where({ serie: toVarchar<10>('FUR') }).update({ ultimo });
+        } else {
+          await orm.almacen_correlativo.create({
+            serie: toVarchar<10>('FUR'),
+            ultimo: 1,
+          });
+        }
+        const numeroFur = toVarchar<20>(`FUR-${String(ultimo).padStart(6, '0')}`);
+
+        const reqData: any = {
+          numero: numeroFur,
+          fecha: todayISO,
+          id_centro_costo: preview.id_centro_costo,
+          id_fase: fase.id_fase,
+          id_solicitante: idSolicitante!,
+          justificacion: `[Auto-Ppto: ${preview.id_presupuesto}] Requerimiento de materiales e insumos para la Fase: ${fase.nombre_fase}`,
+          estado: 'BORRADOR',
+          tipo: 'COMPRA',
+        };
+        if (fechaReq) reqData.fecha_requerida = fechaReq;
+
+        const nuevoFur = await orm.requerimiento.create(reqData);
+
+        for (const item of fase.items) {
+          await orm.requerimiento_detalle.create({
+            id_requerimiento: nuevoFur.id,
+            id_producto: item.id_producto,
+            cantidad: toDecimalString(item.cantidad),
+            precio_referencial: toDecimalString(item.precio_referencial),
+            observaciones: `Ppto: ${preview.id_presupuesto}`,
+          } as any);
+        }
+
+        await orm.requerimiento_evento.create({
+          id_requerimiento: nuevoFur.id,
+          accion: 'CREAR',
+          estado_nuevo: 'BORRADOR',
+          id_anexo: idSolicitante!,
+          comentario: `Generado automáticamente desde presupuesto ${preview.id_presupuesto} por ${user?.usuario ?? 'sistema'}`,
+        } as any);
+
+        fursGenerados.push({
+          id: nuevoFur.id,
+          numero: String(numeroFur),
+          id_fase: fase.id_fase,
+          nombre_fase: fase.nombre_fase,
+          total_lineas: fase.items.length,
+        });
+      }
+
+      return {
+        id_presupuesto: preview.id_presupuesto,
+        furs_generados: fursGenerados,
+        fases_omitidas: fasesOmitidas,
+      };
+    });
+  }
+
   private async resolveCentroCostoId(dto: {
     id_centro_costo?: number;
   }): Promise<number | undefined> {
@@ -322,6 +569,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     return byId.id;
   }
 }
+
 
 function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
   return (

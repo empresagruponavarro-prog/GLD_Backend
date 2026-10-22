@@ -2,8 +2,11 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreatePresupuestoPrincipalDto,
+  GenerarFursPresupuestoDto,
+  GenerarFursPresupuestoResponseDto,
   ListPresupuestoPrincipalQueryDto,
   PresupuestoPrincipalResponseDto,
+  PreviewFursPresupuestoResponseDto,
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal.handler.js';
@@ -37,6 +40,26 @@ export class PresupuestoPrincipalController {
   @ApiParam({ name: 'idOrCode', description: 'ID numérico o código IdPresupuesto' })
   findCompleto(@Param('idOrCode') idOrCode: string) {
     return this.handler.getCompleto(idOrCode);
+  }
+
+  @Get(':idOrCode/furs-preview')
+  @ApiOperation({ summary: 'Vista previa de las fases e ítems listos para generar FURs' })
+  @ApiParam({ name: 'idOrCode', description: 'ID numérico o código IdPresupuesto' })
+  @ApiOkResponse({ type: PreviewFursPresupuestoResponseDto })
+  previewFurs(@Param('idOrCode') idOrCode: string) {
+    return this.handler.previewFursPorFase(idOrCode);
+  }
+
+  @Post(':idOrCode/generar-furs')
+  @ApiOperation({ summary: 'Generar automáticamente FURs (Requerimientos) por cada Fase del presupuesto' })
+  @ApiParam({ name: 'idOrCode', description: 'ID numérico o código IdPresupuesto' })
+  @ApiCreatedResponse({ type: GenerarFursPresupuestoResponseDto })
+  generarFurs(
+    @Param('idOrCode') idOrCode: string,
+    @Body() dto: GenerarFursPresupuestoDto,
+    @CurrentUser() user?: AuthUser,
+  ) {
+    return this.handler.generarFursPorFase(idOrCode, dto, user);
   }
 
   @Post()

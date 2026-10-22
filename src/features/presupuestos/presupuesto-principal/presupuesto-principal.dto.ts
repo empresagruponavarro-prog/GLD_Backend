@@ -1,6 +1,6 @@
-﻿import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 
 export class CreatePresupuestoPrincipalDto {
@@ -263,6 +263,66 @@ export class PresupuestoPrincipalResponseDto {
 
   @ApiPropertyOptional()
   FechaCreacion: string | null;
+}
+
+export class GenerarFursPresupuestoDto {
+  @ApiPropertyOptional({ description: 'ID del Anexo trabajador solicitante' })
+  @IsOptional()
+  @IsInt()
+  id_solicitante?: number;
+
+  @ApiPropertyOptional({ description: 'Fecha requerida para los FURs (YYYY-MM-DD)' })
+  @IsOptional()
+  @IsString()
+  fecha_requerida?: string;
+
+  @ApiPropertyOptional({ description: 'Forzar generación incluso si ya existe FUR para la fase' })
+  @IsOptional()
+  @IsBoolean()
+  forzar?: boolean;
+}
+
+export class FurGeneradoItemDto {
+  @ApiProperty() id_producto: number;
+  @ApiProperty() codigo: string;
+  @ApiProperty() descripcion: string;
+  @ApiProperty() unidad: string;
+  @ApiProperty() cantidad: string;
+  @ApiProperty() precio_referencial: string;
+}
+
+export class FaseFurPreviewDto {
+  @ApiProperty() id_fase: number;
+  @ApiProperty() nombre_fase: string;
+  @ApiProperty() total_productos: number;
+  @ApiProperty() total_cantidad: number;
+  @ApiProperty() total_estimado: number;
+  @ApiPropertyOptional() fur_existente?: { id: number; numero: string; estado: string } | null;
+  @ApiProperty({ type: [FurGeneradoItemDto] }) items: FurGeneradoItemDto[];
+}
+
+export class PreviewFursPresupuestoResponseDto {
+  @ApiProperty() id_presupuesto: string;
+  @ApiProperty() proyecto: string | null;
+  @ApiProperty() id_centro_costo: number;
+  @ApiProperty() centro_costo: string | null;
+  @ApiProperty({ type: [FaseFurPreviewDto] }) fases: FaseFurPreviewDto[];
+}
+
+export class GenerarFursPresupuestoResponseDto {
+  @ApiProperty() id_presupuesto: string;
+  @ApiProperty() furs_generados: Array<{
+    id: number;
+    numero: string;
+    id_fase: number;
+    nombre_fase: string;
+    total_lineas: number;
+  }>;
+  @ApiProperty() fases_omitidas: Array<{
+    id_fase: number;
+    nombre_fase: string;
+    motivo: string;
+  }>;
 }
 
 
