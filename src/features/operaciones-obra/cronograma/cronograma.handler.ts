@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toDecimalString, toVarchar } from '../../presupuestos/presupuestos.helpers.js';
+import { toDecimalString, toVarchar } from '../../../platform/db/valores.js';
 import { assertCentroCosto, compact, etiquetaSemana, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
 import type { CreateLoteSemanasDto, CreateObraSemanaDto, ObraSemanaDto, UpdateAvanceSemanalDto, UpdateObraSemanaDto } from './cronograma.dto.js';
 

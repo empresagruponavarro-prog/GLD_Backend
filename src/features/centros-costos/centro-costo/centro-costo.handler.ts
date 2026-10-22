@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../presupuestos/presupuestos.helpers.js';
+import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../../platform/db/valores.js';
 import {
   CatalogosFiltrosResponseDto,
   CentroCostoMetricasPresupuestoResponseDto,

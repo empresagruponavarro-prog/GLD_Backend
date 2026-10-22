@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toDecimalString, toVarchar } from '../presupuestos.helpers.js';
+import { toDecimalString, toVarchar } from '../../../platform/db/valores.js';
 import type { PartidaItemResponseDto, PartidaItemsResponseDto, SyncPartidaItemsDto } from './plantillas-items.dto.js';
 
 /** Redondeo comercial a 2 decimales (evita 1.005 → 1.00 por coma flotante). */

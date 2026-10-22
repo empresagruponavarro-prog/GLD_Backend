@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toVarchar } from '../../presupuestos/presupuestos.helpers.js';
+import { toVarchar } from '../../../platform/db/valores.js';
 import { assertCentroCosto, compact, whatsappUrl } from '../shared/obra-shared.js';
 import type { CreateObraResidenteDto, ObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
 
