@@ -21,12 +21,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  CreateUsuarioDto,
-  UpdateEstadoUsuarioDto,
-  UpdateUsuarioDto,
-  UsuarioResponseDto,
-} from './usuario.dto.js';
+import { CreateUsuarioDto, UpdateEstadoUsuarioDto, UpdateUsuarioDto, UsuarioResponseDto } from './usuario.dto.js';
 import { UsuarioHandler } from './usuario.handler.js';
 import type { AuthUser } from '../../../platform/auth/auth-user.js';
 import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';

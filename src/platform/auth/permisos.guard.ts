@@ -101,7 +101,7 @@ export class PermisosGuard implements CanActivate, OnModuleInit {
 
     if (this.reflector.getAllAndOverride<boolean | undefined>(LECTURA_COMPARTIDA_KEY, objetivos)) return true;
 
-    const permisos = await this.permisosRol.obtener(user.rol);
+    const permisos = await this.permisosRol.obtenerParaUsuario(user);
     if (permisos.esAdministrador) return true;
 
     const controlador = context.getClass().name;

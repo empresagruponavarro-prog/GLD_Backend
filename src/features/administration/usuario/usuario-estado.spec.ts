@@ -14,6 +14,7 @@ interface UsuarioRow {
   Clave: string | null;
   Rol: string | null;
   activo: boolean;
+  id_area: number | null;
 }
 interface RolRow {
   id: number;
@@ -90,7 +91,15 @@ function crearBd() {
 
   const db = {
     transaction,
-    orm: { public: { Usuarios: usuariosOrm(false), rol: rolOrm } },
+    orm: {
+      public: {
+        Usuarios: usuariosOrm(false),
+        rol: rolOrm,
+        // Estos casos no usan áreas ni excepciones propias (plan 08).
+        area: { first: async () => null },
+        usuario_permiso: { first: async () => null },
+      },
+    },
   } as unknown as Database;
 
   const u = (IdUsuario: string, Rol: string | null, activo = true): UsuarioRow => ({
@@ -100,6 +109,7 @@ function crearBd() {
     Clave: '$argon2id$hash',
     Rol,
     activo,
+    id_area: null,
   });
 
   const sembrar = () => {
@@ -167,6 +177,9 @@ describe('PATCH /administration/usuarios/:id/estado', () => {
       Usuario: 'usr-0002',
       Rol: 'Promotor',
       activo: false,
+      id_area: null,
+      area: null,
+      tiene_permisos_personalizados: false,
     });
     expect(res.body).not.toHaveProperty('Clave');
     expect(fila('USR-0002')?.activo).toBe(false);

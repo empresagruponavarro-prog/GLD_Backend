@@ -1,0 +1,368 @@
+[
+  {
+    "id": "table.usuario_permiso",
+    "label": "Create table \"usuario_permiso\"",
+    "summary": "Creates table \"usuario_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"usuario_permiso\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"usuario_permiso\"",
+        "sql": "CREATE TABLE \"public\".\"usuario_permiso\" (\n  \"anular\" bool DEFAULT false NOT NULL,\n  \"aprobar\" bool DEFAULT false NOT NULL,\n  \"crear\" bool DEFAULT false NOT NULL,\n  \"editar\" bool DEFAULT false NOT NULL,\n  \"eliminar\" bool DEFAULT false NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"modulo_id\" int4 NOT NULL,\n  \"usuario_id\" character varying(255) NOT NULL,\n  \"ver\" bool DEFAULT false NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"usuario_permiso\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.usuarios.id_area",
+    "label": "Add column \"id_area\" to \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_area",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_area\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "id_area"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_area\"",
+        "sql": "ALTER TABLE \"public\".\"usuarios\" ADD COLUMN \"id_area\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_area\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "id_area"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.usuario_permiso.usuario_permiso_usuario_id_modulo_id_key",
+    "label": "Add unique constraint on \"usuario_permiso\" (usuario_id, modulo_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "usuario_permiso_usuario_id_modulo_id_key",
+        "table": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"usuario_permiso_usuario_id_modulo_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_usuario_id_modulo_id_key",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"usuario_permiso_usuario_id_modulo_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"usuario_permiso\" ADD CONSTRAINT \"usuario_permiso_usuario_id_modulo_id_key\" UNIQUE (\"usuario_id\", \"modulo_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"usuario_permiso_usuario_id_modulo_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_usuario_id_modulo_id_key",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.usuario_permiso.usuario_permiso_modulo_id_idx_610f44c7",
+    "label": "Create index \"usuario_permiso_modulo_id_idx_610f44c7\" on \"usuario_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "usuario_permiso_modulo_id_idx_610f44c7",
+        "table": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"usuario_permiso_modulo_id_idx_610f44c7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"usuario_permiso_modulo_id_idx_610f44c7\"",
+        "sql": "CREATE INDEX \"usuario_permiso_modulo_id_idx_610f44c7\" ON \"public\".\"usuario_permiso\" (\"modulo_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"usuario_permiso_modulo_id_idx_610f44c7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.usuario_permiso.usuario_permiso_usuario_id_idx_65b6616a",
+    "label": "Create index \"usuario_permiso_usuario_id_idx_65b6616a\" on \"usuario_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "usuario_permiso_usuario_id_idx_65b6616a",
+        "table": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"usuario_permiso_usuario_id_idx_65b6616a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso_usuario_id_idx_65b6616a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"usuario_permiso_usuario_id_idx_65b6616a\"",
+        "sql": "CREATE INDEX \"usuario_permiso_usuario_id_idx_65b6616a\" ON \"public\".\"usuario_permiso\" (\"usuario_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"usuario_permiso_usuario_id_idx_65b6616a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuario_permiso_usuario_id_idx_65b6616a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.usuarios.usuarios_id_area_idx_2da0f6a6",
+    "label": "Create index \"usuarios_id_area_idx_2da0f6a6\" on \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "usuarios_id_area_idx_2da0f6a6",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"usuarios_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"usuarios_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"usuarios_id_area_idx_2da0f6a6\" ON \"public\".\"usuarios\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"usuarios_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.usuario_permiso.usuario_permiso_usuario_id_fkey",
+    "label": "Add foreign key \"usuario_permiso_usuario_id_fkey\" on \"usuario_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "usuario_permiso_usuario_id_fkey",
+        "table": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"usuario_permiso_usuario_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_usuario_id_fkey",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"usuario_permiso_usuario_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"usuario_permiso\"\nADD CONSTRAINT \"usuario_permiso_usuario_id_fkey\"\nFOREIGN KEY (\"usuario_id\")\nREFERENCES \"public\".\"usuarios\" (\"IdUsuario\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"usuario_permiso_usuario_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_usuario_id_fkey",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.usuario_permiso.usuario_permiso_modulo_id_fkey",
+    "label": "Add foreign key \"usuario_permiso_modulo_id_fkey\" on \"usuario_permiso\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "usuario_permiso_modulo_id_fkey",
+        "table": "usuario_permiso"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"usuario_permiso_modulo_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_modulo_id_fkey",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"usuario_permiso_modulo_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"usuario_permiso\"\nADD CONSTRAINT \"usuario_permiso_modulo_id_fkey\"\nFOREIGN KEY (\"modulo_id\")\nREFERENCES \"public\".\"modulo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"usuario_permiso_modulo_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuario_permiso_modulo_id_fkey",
+          "public",
+          "\"public\".\"usuario_permiso\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.usuarios.usuarios_id_area_fkey",
+    "label": "Add foreign key \"usuarios_id_area_fkey\" on \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "usuarios_id_area_fkey",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"usuarios_id_area_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuarios_id_area_fkey",
+          "public",
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"usuarios_id_area_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"usuarios\"\nADD CONSTRAINT \"usuarios_id_area_fkey\"\nFOREIGN KEY (\"id_area\")\nREFERENCES \"public\".\"area\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"usuarios_id_area_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuarios_id_area_fkey",
+          "public",
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ]
+  }
+]

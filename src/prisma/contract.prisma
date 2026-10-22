@@ -1178,6 +1178,10 @@ model Usuarios {
   Rol       VarChar(255)?
   // Usuario desactivado: no puede iniciar sesion y su sesion abierta se corta (plan 05-roles, D6).
   activo    Boolean       @default(true)
+  id_area   Int?
+  area      area?         @relation(fields: [id_area], references: [id])
+  permisos  usuario_permiso[]
+  @@index([id_area])
   @@map("usuarios")
 }
 
@@ -1204,8 +1208,10 @@ model modulo {
   orden          Int
   admite_aprobar Boolean       @default(false)
   admite_anular  Boolean       @default(false)
-  activo         Boolean       @default(true)
-  permisos       rol_permiso[]
+  activo           Boolean           @default(true)
+  permisos         rol_permiso[]
+  permisos_usuario usuario_permiso[]
+  areas            area_modulo[]
   @@map("modulo")
 }
 
@@ -1225,6 +1231,38 @@ model rol_permiso {
   @@unique([rol_id, modulo_id])
   @@index([modulo_id])
   @@map("rol_permiso")
+}
+
+// Permisos directos por usuario (plan 08-areas-y-cargos - Enfoque B). Override sobre el rol.
+model usuario_permiso {
+  id         Int      @id @default(autoincrement())
+  usuario_id VarChar(255)
+  modulo_id  Int
+  ver        Boolean  @default(false)
+  crear      Boolean  @default(false)
+  editar     Boolean  @default(false)
+  eliminar   Boolean  @default(false)
+  aprobar    Boolean  @default(false)
+  anular     Boolean  @default(false)
+  usuario    Usuarios @relation(fields:[usuario_id], references:[IdUsuario], onDelete: Cascade)
+  modulo     modulo   @relation(fields:[modulo_id], references:[id], onDelete: Cascade)
+  @@unique([usuario_id, modulo_id])
+  @@index([modulo_id])
+  @@map("usuario_permiso")
+}
+
+// Modulos que tiene habilitados cada area (plan 08). Fila = modulo habilitado; `solo_lectura` = el area
+// solo puede VER ese modulo aunque el rol de la persona permita mas. Area sin filas = sin restriccion.
+model area_modulo {
+  id           Int     @id @default(autoincrement())
+  area_id      Int
+  modulo_id    Int
+  solo_lectura Boolean @default(false)
+  area         area    @relation(fields:[area_id], references:[id], onDelete: Cascade)
+  modulo       modulo  @relation(fields:[modulo_id], references:[id], onDelete: Cascade)
+  @@unique([area_id, modulo_id])
+  @@index([modulo_id])
+  @@map("area_modulo")
 }
 
 model UsuariosMenus {
@@ -1615,6 +1653,8 @@ model area {
   estado    Boolean     @default(true)
   requerimientos requerimiento[] @relation("RequerimientoArea")
   documentos OrdenCompra[] @relation("DocumentoOrigenArea")
+  usuarios   Usuarios[]
+  modulos    area_modulo[]
   @@map("area")
 }
 

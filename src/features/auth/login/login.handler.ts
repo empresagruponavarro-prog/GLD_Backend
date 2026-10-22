@@ -9,7 +9,7 @@ import {
 import { usuarioInactivo } from '../../../platform/auth/usuario-inactivo.js';
 import { buscarUsuariosPorLogin } from '../../../platform/auth/usuarios-login.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toUsuarioSesion } from '../shared/usuario-sesion.dto.js';
+import { areaDeSesion, toUsuarioSesion } from '../shared/usuario-sesion.dto.js';
 import { LoginDto, LoginResponseDto } from './login.dto.js';
 
 export const CREDENCIALES_INVALIDAS = 'Usuario o contraseña incorrectos';
@@ -45,7 +45,7 @@ export class LoginHandler {
     // Solo con la clave correcta se revela que el usuario esta desactivado.
     if (!user.activo) throw usuarioInactivo();
 
-    const sesion = toUsuarioSesion(user);
+    const sesion = toUsuarioSesion(user, await areaDeSesion(this.db, user.id_area));
     const payload: JwtPayload = { sub: sesion.id, usuario: sesion.usuario, rol: sesion.rol };
     const token = await this.jwt.signAsync(payload);
     const { exp } = this.jwt.decode<{ exp: number }>(token);

@@ -85,6 +85,9 @@ const MODULOS_BD = [
             modulo: { orderBy: () => ({ all: async () => MODULOS_BD }) },
             // "Usuario" no tiene filas: sin permisos en ningún módulo.
             rol_permiso: { where: () => ({ all: async () => [] }) },
+            // Sin excepciones por usuario ni módulos por área (plan 08).
+            usuario_permiso: { where: () => ({ all: async () => [] }) },
+            area_modulo: { where: () => ({ all: async () => [] }) },
           },
         },
       },

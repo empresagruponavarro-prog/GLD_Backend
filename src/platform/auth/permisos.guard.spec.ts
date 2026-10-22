@@ -99,7 +99,11 @@ const bd = {
     activo: boolean;
   }[],
   permisos: [] as ({ rol_id: number; modulo_id: number } & Fila)[],
-  usuarios: [] as { IdUsuario: string; Rol: string | null; activo: boolean }[],
+  usuarios: [] as { IdUsuario: string; Rol: string | null; activo: boolean; id_area: number | null }[],
+  /** Excepciones por usuario (`usuario_permiso`). */
+  excepciones: [] as ({ usuario_id: string; modulo_id: number } & Fila)[],
+  /** Módulos habilitados por área (`area_modulo`). */
+  areaModulos: [] as { area_id: number; modulo_id: number; solo_lectura: boolean }[],
 };
 
 function sembrar() {
@@ -137,7 +141,9 @@ function sembrar() {
     { rol_id: 5, modulo_id: 11, ...NADA, ver: true },
     { rol_id: 6, modulo_id: 14, ...TODO },
   ];
-  bd.usuarios = [{ IdUsuario: 'U1', Rol: 'Limitado', activo: true }];
+  bd.usuarios = [{ IdUsuario: 'U1', Rol: 'Limitado', activo: true, id_area: null }];
+  bd.excepciones = [];
+  bd.areaModulos = [];
 }
 
 const rolFirst = vi.fn(async ({ nombre }: { nombre: string }) => bd.roles.find((r) => r.nombre === nombre) ?? null);
@@ -153,6 +159,16 @@ const dbFalsa = {
       },
       Usuarios: {
         first: async ({ IdUsuario }: { IdUsuario: string }) => bd.usuarios.find((u) => u.IdUsuario === IdUsuario) ?? null,
+      },
+      usuario_permiso: {
+        where: ({ usuario_id }: { usuario_id: string }) => ({
+          all: async () => bd.excepciones.filter((p) => p.usuario_id === usuario_id).map((p) => ({ ...p })),
+        }),
+      },
+      area_modulo: {
+        where: ({ area_id }: { area_id: number }) => ({
+          all: async () => bd.areaModulos.filter((p) => p.area_id === area_id).map((p) => ({ ...p })),
+        }),
       },
     },
   },
@@ -586,6 +602,133 @@ describe('PermisosGuard', () => {
       bd.usuarios[0].Rol = 'Completo';
       sesiones.invalidar('U1');
       expect(await peticion()).toBe(true);
+    });
+  });
+
+  describe('área y excepciones por usuario (plan 08)', () => {
+    const AREA = 7;
+    const conArea = (rol: string, idArea: number | null, id = 'U-AREA'): AuthUser => ({ ...usuario(rol, id), id_area: idArea });
+    const permitido = async (guard: PermisosGuard, clase: Clase, metodo: string, verbo: string, user: AuthUser) =>
+      (await evaluar(guard, ctx(clase, metodo, verbo, user))) === true;
+
+    it('un área sin módulos configurados no restringe a sus usuarios', async () => {
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Completo', AREA))).toBe(true);
+    });
+
+    it('con el área configurada, un módulo sin fila queda sin acceso aunque el rol lo dé', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 11, solo_lectura: false }];
+      const guard = crearGuard('estricto');
+      const error = await evaluar(guard, ctx(PagosCtl, 'listar', 'GET', conArea('Completo', AREA)));
+      expect(error).toBeInstanceOf(ForbiddenException);
+      expect(registrar).toHaveBeenCalledWith(expect.objectContaining({ modulo: 'tesoreria.pagos', accion: 'ver', aplicado: true }));
+    });
+
+    it('módulo en "solo ver": puede consultar pero no crear, editar ni anular', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 10, solo_lectura: true }];
+      const guard = crearGuard('estricto');
+      const persona = conArea('Completo', AREA);
+      expect(await permitido(guard, PagosCtl, 'listar', 'GET', persona)).toBe(true);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false);
+      expect(await permitido(guard, PagosCtl, 'editar', 'PATCH', persona)).toBe(false);
+      expect(await permitido(guard, PagosCtl, 'anular', 'POST', persona)).toBe(false);
+    });
+
+    it('módulo "completo": rige lo que da el rol', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 10, solo_lectura: false }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Completo', AREA))).toBe(true);
+      // Un rol con menos acciones sigue limitado por su rol, no por el área.
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Parcial', AREA))).toBe(false);
+    });
+
+    it('Administración no depende del área: solo del rol', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 10, solo_lectura: false }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, UsuariosCtl, 'listar', 'GET', conArea('Completo', AREA))).toBe(true);
+    });
+
+    it('sin área (alcance global) no se filtra, aunque otras áreas estén configuradas', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 11, solo_lectura: false }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Completo', null))).toBe(true);
+    });
+
+    it('el Administrador ignora el área y las excepciones', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 11, solo_lectura: false }];
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 10, ...NADA }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Administrador', AREA))).toBe(true);
+    });
+
+    it('excepción que CONCEDE: el usuario accede a lo que su rol no da', async () => {
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 10, ...NADA, ver: true, crear: true }];
+      const guard = crearGuard('estricto');
+      const persona = conArea('Limitado', null);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(true);
+      expect(await permitido(guard, PagosCtl, 'borrar', 'DELETE', persona)).toBe(false);
+      // Otro usuario del mismo rol no la tiene.
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Limitado', null, 'U-OTRO'))).toBe(false);
+    });
+
+    it('excepción que QUITA: reemplaza solo ese módulo y los demás conservan lo del rol', async () => {
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 10, ...NADA, ver: true }];
+      const guard = crearGuard('estricto');
+      const persona = conArea('Completo', null);
+      expect(await permitido(guard, PagosCtl, 'listar', 'GET', persona)).toBe(true);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false);
+      expect(await permitido(guard, UsuariosCtl, 'listar', 'GET', persona)).toBe(true); // otro módulo: sigue el rol
+    });
+
+    it('la excepción gana al área: concede un módulo que el área no tiene', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 11, solo_lectura: false }];
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 10, ...TODO }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', conArea('Completo', AREA))).toBe(true);
+    });
+
+    it('una excepción sobre un módulo de Administración se ignora (nunca da acceso)', async () => {
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 32, ...TODO }];
+      const guard = crearGuard('estricto');
+      expect(await permitido(guard, UsuariosCtl, 'listar', 'GET', conArea('Limitado', null))).toBe(false);
+    });
+
+    it('aprobar/anular de una excepción se recortan a lo que el módulo admite', async () => {
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 14, ...TODO }];
+      const permisos = await permisosRol.obtenerParaUsuario(conArea('Limitado', null));
+      expect(permisos.modulos.get('almacen.stock')?.permisos).toEqual({
+        ver: true, crear: true, editar: true, eliminar: true, aprobar: false, anular: false,
+      });
+    });
+
+    it('cambiar los módulos del área (invalidarArea) se aplica de inmediato', async () => {
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 11, solo_lectura: false }];
+      const guard = crearGuard('estricto');
+      const persona = conArea('Completo', AREA);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false);
+      bd.areaModulos = [{ area_id: AREA, modulo_id: 10, solo_lectura: false }];
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false); // aún en caché (30 s)
+      permisosRol.invalidarArea(AREA);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(true);
+    });
+
+    it('cambiar las excepciones (invalidarUsuario) se aplica de inmediato', async () => {
+      const guard = crearGuard('estricto');
+      const persona = conArea('Limitado', null);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false);
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 10, ...NADA, ver: true, crear: true }];
+      permisosRol.invalidarUsuario('U-AREA');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(true);
+    });
+
+    it('un cambio en la matriz del rol se refleja sin invalidar a los usuarios con excepciones', async () => {
+      bd.excepciones = [{ usuario_id: 'U-AREA', modulo_id: 11, ...NADA, ver: true }];
+      const guard = crearGuard('estricto');
+      const persona = conArea('Limitado', null);
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(false);
+      bd.permisos.push({ rol_id: 2, modulo_id: 10, ...TODO });
+      permisosRol.invalidarRol('Limitado');
+      expect(await permitido(guard, PagosCtl, 'crear', 'POST', persona)).toBe(true);
     });
   });
 });

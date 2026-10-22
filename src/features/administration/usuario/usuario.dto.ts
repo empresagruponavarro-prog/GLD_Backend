@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { CLAVE_MAX, CLAVE_MIN } from '../../../platform/auth/passwords.js';
 
 /** Alta de usuario. El `IdUsuario` lo asigna el backend (correlativo USR-0001, USR-0002…). */
@@ -34,6 +27,11 @@ export class CreateUsuarioDto {
   @IsNotEmpty()
   @MaxLength(50)
   Rol: string;
+
+  @ApiPropertyOptional({ example: 1, nullable: true, description: 'ID del área asignada al usuario' })
+  @IsOptional()
+  @IsInt()
+  id_area?: number | null;
 }
 
 export class UpdateUsuarioDto {
@@ -68,6 +66,22 @@ export class UpdateUsuarioDto {
   @IsNotEmpty()
   @MaxLength(50)
   Rol?: string;
+
+  @ApiPropertyOptional({ example: 1, nullable: true, description: 'ID del área asignada al usuario' })
+  @IsOptional()
+  @IsInt()
+  id_area?: number | null;
+}
+
+export class AreaUsuarioInfo {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'ALM-01' })
+  codigo: string;
+
+  @ApiProperty({ example: 'ALMACÉN' })
+  nombre: string;
 }
 
 /** Respuesta de usuarios: NUNCA incluye `Clave`. */
@@ -86,6 +100,18 @@ export class UsuarioResponseDto {
 
   @ApiProperty({ example: true, description: 'Usuario activo. Uno inactivo no puede iniciar sesión y su sesión abierta se corta' })
   activo: boolean;
+
+  @ApiPropertyOptional({ example: 1, nullable: true, description: 'ID del área del usuario' })
+  id_area?: number | null;
+
+  @ApiPropertyOptional({ type: AreaUsuarioInfo, nullable: true, description: 'Área asignada al usuario' })
+  area?: AreaUsuarioInfo | null;
+
+  @ApiProperty({
+    example: false,
+    description: 'true si el usuario tiene excepciones de permisos propias (`usuario_permiso`) sobre las de su rol y su área',
+  })
+  tiene_permisos_personalizados: boolean;
 }
 
 /** Desactivar / reactivar un usuario (no se borra nada). */

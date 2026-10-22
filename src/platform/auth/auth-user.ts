@@ -11,6 +11,7 @@ export interface AuthUser {
   id: string;
   usuario: string;
   rol: string;
+  id_area?: number | null;
 }
 
 export interface RequestConUsuario {

@@ -4,7 +4,7 @@ import type { AuthUser, RequestConUsuario } from './auth-user.js';
 export function usuarioActual(
   campo: keyof AuthUser | undefined,
   ctx: ExecutionContext,
-): AuthUser | string | undefined {
+): AuthUser | string | number | null | undefined {
   const user = ctx.switchToHttp().getRequest<RequestConUsuario>().user;
   return campo ? user?.[campo] : user;
 }

@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { hashClave } from '../../../platform/auth/passwords.js';
 import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
@@ -17,15 +11,13 @@ import { pgErrorCode } from '../../../platform/db/pg-errors.js';
 import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { ordenarRoles } from '../rol/rol.handler.js';
-import {
-  CreateUsuarioDto,
-  UpdateUsuarioDto,
-  UsuarioResponseDto,
-} from './usuario.dto.js';
+import { AreaUsuarioInfo, CreateUsuarioDto, UpdateUsuarioDto, UsuarioResponseDto } from './usuario.dto.js';
 
 type Varchar255 = Varchar<255>;
 /** Transacción de la ORM (lo que recibe el callback de `db.transaction`). */
 type Tx = Parameters<Parameters<Database['transaction']>[0]>[0];
+/** Fila de `usuarios` con su área. */
+type FilaUsuario = UsuarioFila & { id_area: number | null };
 
 export const NO_DESACTIVARSE = 'No puedes desactivar tu propio usuario';
 export const ULTIMO_ADMINISTRADOR = 'Debe quedar al menos un Administrador activo';
@@ -39,14 +31,23 @@ function v255(valor: string): Varchar255 {
 
 const noEncontrado = (id: string) => new NotFoundException(`Usuario con ID ${id} no encontrado`);
 
+const infoArea = (area: { id: number; codigo: string; nombre: string }): AreaUsuarioInfo => ({
+  id: area.id,
+  codigo: area.codigo,
+  nombre: area.nombre,
+});
+
 /** Mapeo explicito: la clave (hash) nunca sale en una respuesta. */
-function toResponse(row: UsuarioFila): UsuarioResponseDto {
+function toResponse(row: FilaUsuario, area: AreaUsuarioInfo | null, personalizado: boolean): UsuarioResponseDto {
   return {
     IdUsuario: row.IdUsuario,
     Nombres: row.Nombres,
     Usuario: row.Usuario,
     Rol: row.Rol,
     activo: row.activo,
+    id_area: row.id_area,
+    area,
+    tiene_permisos_personalizados: personalizado,
   };
 }
 
@@ -83,21 +84,35 @@ export class UsuarioHandler {
   ) {}
 
   async list(): Promise<UsuarioResponseDto[]> {
-    const rows = await this.db.orm.public.Usuarios.orderBy((u) => u.IdUsuario.asc()).all();
-    return rows.map(toResponse);
+    const [rows, areas, conExcepciones] = await Promise.all([
+      this.db.orm.public.Usuarios.orderBy((u) => u.IdUsuario.asc()).all(),
+      this.db.orm.public.area.all(),
+      this.db.orm.public.usuario_permiso.all(),
+    ]);
+    const areaPorId = new Map(areas.map((a) => [a.id, infoArea(a)]));
+    const personalizados = new Set(conExcepciones.map((p) => p.usuario_id));
+    return rows.map((r) =>
+      toResponse(r, r.id_area === null ? null : (areaPorId.get(r.id_area) ?? null), personalizados.has(r.IdUsuario)),
+    );
   }
 
   async getById(id: string): Promise<UsuarioResponseDto> {
     if (!esVarchar(id, 255)) throw noEncontrado(id);
     const row = await this.db.orm.public.Usuarios.first({ IdUsuario: id });
     if (!row) throw noEncontrado(id);
-    return toResponse(row);
+    const [area, excepcion] = await Promise.all([
+      this.areaInfoDe(row.id_area),
+      this.db.orm.public.usuario_permiso.first({ usuario_id: id }),
+    ]);
+    return toResponse(row, area, excepcion !== null);
   }
 
   /** Crea el usuario (activo) asignándole el siguiente correlativo USR-NNNN. */
   async create(dto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
     await this.assertRolExiste(dto.Rol);
     await this.assertLoginLibre(dto.Usuario);
+    const idArea = dto.id_area ?? null;
+    if (idArea !== null) await this.assertAreaExiste(idArea);
     const clave = await hashClave(dto.Clave);
 
     for (let intento = 1; ; intento++) {
@@ -111,8 +126,10 @@ export class UsuarioHandler {
           Clave: v255(clave),
           Rol: v255(dto.Rol),
           activo: true,
+          id_area: idArea,
         });
-        return toResponse(row);
+        this.sesiones.invalidar(id);
+        return toResponse(row, await this.areaInfoDe(row.id_area), false);
       } catch (error) {
         // Otra alta tomó el mismo número: se recalcula con el siguiente.
         if (pgErrorCode(error) === '23505' && intento < INTENTOS_ID) continue;
@@ -136,6 +153,7 @@ export class UsuarioHandler {
       Usuario?: Varchar255;
       Clave?: Varchar255;
       Rol?: Varchar255;
+      id_area?: number | null;
     } = {};
 
     if (dto.Rol !== undefined) await this.assertRolExiste(dto.Rol);
@@ -146,6 +164,10 @@ export class UsuarioHandler {
     if (dto.Nombres !== undefined) updateData.Nombres = v255(dto.Nombres);
     if (dto.Clave !== undefined) updateData.Clave = v255(await hashClave(dto.Clave));
     if (dto.Rol !== undefined) updateData.Rol = v255(dto.Rol);
+    if (dto.id_area !== undefined) {
+      if (dto.id_area !== null) await this.assertAreaExiste(dto.id_area);
+      updateData.id_area = dto.id_area;
+    }
 
     const nuevoRol = dto.Rol;
     const row =
@@ -160,9 +182,10 @@ export class UsuarioHandler {
             return tx.orm.public.Usuarios.where({ IdUsuario: id }).update(updateData);
           });
     if (!row) throw noEncontrado(id);
-    // El rol vigente lo lee JwtAuthGuard de la BD: se aplica sin volver a entrar.
+    // El rol y el área vigentes los lee JwtAuthGuard de la BD: se aplican sin volver a entrar.
     this.sesiones.invalidar(id);
-    return toResponse(row);
+    const excepcion = await this.db.orm.public.usuario_permiso.first({ usuario_id: id });
+    return toResponse(row, await this.areaInfoDe(row.id_area), excepcion !== null);
   }
 
   /**
@@ -215,6 +238,19 @@ export class UsuarioHandler {
   async getRoles(): Promise<string[]> {
     const rows = await this.db.orm.public.rol.orderBy((r) => r.nombre.asc()).all();
     return ordenarRoles(rows).map((r) => String(r.nombre));
+  }
+
+  /** Datos del área de un usuario; `null` si no tiene área. */
+  private async areaInfoDe(idArea: number | null): Promise<AreaUsuarioInfo | null> {
+    if (idArea === null) return null;
+    const area = await this.db.orm.public.area.first({ id: idArea });
+    return area ? infoArea(area) : null;
+  }
+
+  /** 400 si el área no existe en la tabla `area`. */
+  private async assertAreaExiste(idArea: number): Promise<void> {
+    const area = await this.db.orm.public.area.first({ id: idArea });
+    if (!area) throw new BadRequestException(`El área con ID ${idArea} no existe`);
   }
 
   /** 400 si el rol no existe en la tabla `rol` (comparación exacta del nombre). */

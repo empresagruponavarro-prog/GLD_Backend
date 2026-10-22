@@ -11,6 +11,8 @@ export interface UsuarioFila {
   Rol: string | null;
   /** Usuario desactivado: no puede iniciar sesion (plan 05-roles, D6). */
   activo: boolean;
+  /** Área del usuario (plan 08); `null` = sin área. */
+  id_area: number | null;
 }
 
 /** Login normalizado: sin espacios extremos y en minusculas. */

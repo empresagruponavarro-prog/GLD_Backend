@@ -72,7 +72,12 @@ export class JwtAuthGuard implements CanActivate {
     if (!enBd) throw new UnauthorizedException(SESION_INVALIDA);
     if (!enBd.activo) throw usuarioInactivo();
 
-    req.user = { id: payload.sub, usuario: payload.usuario, rol: enBd.rol };
+    req.user = {
+      id: payload.sub,
+      usuario: payload.usuario,
+      rol: enBd.rol,
+      ...(enBd.id_area != null ? { id_area: enBd.id_area } : {}),
+    };
     return true;
   }
 }

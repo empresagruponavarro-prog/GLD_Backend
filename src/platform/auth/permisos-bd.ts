@@ -1,6 +1,6 @@
 import type { Database } from '../../prisma/prisma.module.js';
 import { esVarchar } from '../db/varchar.js';
-import type { Accion } from './permisos.js';
+import type { Accion, ModulosDeArea } from './permisos.js';
 
 type Db = Pick<Database, 'orm'>;
 
@@ -75,4 +75,31 @@ export async function buscarRolPorNombre(db: Db, nombre: string): Promise<RolFil
   if (buscado === '' || !esVarchar(buscado, 50)) return null;
   const row = await db.orm.public.rol.first({ nombre: buscado });
   return row ? { id: row.id, nombre: row.nombre, es_sistema: row.es_sistema } : null;
+}
+
+/** Filas guardadas de `usuario_permiso` del usuario (sus EXCEPCIONES), indexadas por `modulo_id`. */
+export async function leerFilasPermisoUsuario(
+  db: Db,
+  usuarioId: string,
+): Promise<Map<number, Readonly<Record<Accion, boolean>>>> {
+  const buscado = usuarioId.trim();
+  if (buscado === '' || !esVarchar(buscado, 255)) return new Map();
+  const rows = await db.orm.public.usuario_permiso.where({ usuario_id: buscado }).all();
+  return new Map(
+    rows.map((r) => [
+      r.modulo_id,
+      { ver: r.ver, crear: r.crear, editar: r.editar, eliminar: r.eliminar, aprobar: r.aprobar, anular: r.anular },
+    ]),
+  );
+}
+
+
+/**
+ * Módulos habilitados de un área (`area_modulo`), por `modulo_id`. `null` si el área no tiene ninguno
+ * configurado: se trata como SIN restricción hasta que se configure (plan 08).
+ */
+export async function leerModulosDeArea(db: Db, areaId: number): Promise<ModulosDeArea | null> {
+  const rows = await db.orm.public.area_modulo.where({ area_id: areaId }).all();
+  if (rows.length === 0) return null;
+  return new Map(rows.map((r) => [r.modulo_id, { solo_lectura: r.solo_lectura }]));
 }

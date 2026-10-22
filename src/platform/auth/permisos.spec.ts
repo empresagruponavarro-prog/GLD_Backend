@@ -9,8 +9,15 @@ import {
   esAccion,
   esClaveModulo,
   moduloAdmiteAccion,
+  MODULOS_SIN_FILTRO_DE_AREA,
+  aplicarNivelArea,
+  detallePermisosModulo,
+  esModuloAdministracion,
+  esModuloSinFiltroDeArea,
+  nivelDeArea,
   permisosAdministrador,
   permisosEfectivos,
+  type ModulosDeArea,
 } from './permisos.js';
 
 const OPS_JSON = new URL(
@@ -145,5 +152,71 @@ describe('permisos (tipos y reglas)', () => {
     expect(permisosEfectivos(ninguno, false, todo)).toEqual({ ...todo, aprobar: false, anular: false });
     expect(permisosEfectivos(ambos, false, { ...todo, eliminar: false })).toEqual({ ...todo, eliminar: false });
     expect(Object.isFrozen(SIN_PERMISOS)).toBe(true);
+  });
+});
+
+describe('permisos efectivos de una persona (plan 08)', () => {
+  const rol = { ver: true, crear: true, editar: true, eliminar: false, aprobar: false, anular: false };
+  const pagos = { id: 10, clave: 'tesoreria.pagos', admite_aprobar: false, admite_anular: true };
+  const area = (...filas: [number, boolean][]): ModulosDeArea => new Map(filas.map(([id, solo_lectura]) => [id, { solo_lectura }]));
+
+  it('los módulos que no dependen del área son los de Administración y el menú de módulos', () => {
+    expect([...MODULOS_SIN_FILTRO_DE_AREA].sort()).toEqual([...MODULOS_ADMINISTRACION, 'modulos'].sort());
+    expect(esModuloSinFiltroDeArea('modulos')).toBe(true);
+    expect(esModuloSinFiltroDeArea('tesoreria.pagos')).toBe(false);
+    expect(esModuloAdministracion('admin.roles')).toBe(true);
+    expect(esModuloAdministracion('modulos')).toBe(false);
+  });
+
+  it('nivelDeArea y aplicarNivelArea: sin fila no hay nada, solo ver deja únicamente Ver, completo deja el rol', () => {
+    expect(nivelDeArea(undefined)).toBe('no');
+    expect(nivelDeArea({ solo_lectura: true })).toBe('solo_ver');
+    expect(nivelDeArea({ solo_lectura: false })).toBe('completo');
+    expect(aplicarNivelArea(rol, 'no')).toEqual(SIN_PERMISOS);
+    expect(aplicarNivelArea(rol, 'solo_ver')).toEqual({ ...SIN_PERMISOS, ver: true });
+    expect(aplicarNivelArea({ ...rol, ver: false }, 'solo_ver')).toEqual(SIN_PERMISOS); // el área no da Ver si el rol no lo da
+    expect(aplicarNivelArea(rol, 'completo')).toBe(rol);
+  });
+
+  it('sin área configurada (null) y sin excepción: queda el rol y el origen es el rol', () => {
+    const d = detallePermisosModulo({ modulo: pagos, rol, area: null, excepcion: undefined });
+    expect(d).toEqual({ rol, area: 'sin_restriccion', tras_area: rol, efectivo: rol, origen: 'rol' });
+  });
+
+  it('el área recorta y el origen pasa a ser el área solo si de verdad cambió algo', () => {
+    expect(detallePermisosModulo({ modulo: pagos, rol, area: area([11, false]), excepcion: undefined })).toMatchObject({
+      area: 'no',
+      efectivo: SIN_PERMISOS,
+      origen: 'area',
+    });
+    expect(detallePermisosModulo({ modulo: pagos, rol, area: area([10, true]), excepcion: undefined })).toMatchObject({
+      area: 'solo_ver',
+      efectivo: { ...SIN_PERMISOS, ver: true },
+      origen: 'area',
+    });
+    // Completo no cambia nada: el origen sigue siendo el rol.
+    expect(detallePermisosModulo({ modulo: pagos, rol, area: area([10, false]), excepcion: undefined })).toMatchObject({
+      area: 'completo',
+      efectivo: rol,
+      origen: 'rol',
+    });
+    // Un rol que ya solo ve, en un área de solo lectura: tampoco hay cambio.
+    const soloVer = { ...SIN_PERMISOS, ver: true };
+    expect(detallePermisosModulo({ modulo: pagos, rol: soloVer, area: area([10, true]), excepcion: undefined }).origen).toBe('rol');
+  });
+
+  it('la excepción reemplaza el módulo (gana al rol y al área) y se recorta a lo que admite el módulo', () => {
+    const exc = { ver: true, crear: false, editar: false, eliminar: true, aprobar: true, anular: true };
+    const d = detallePermisosModulo({ modulo: pagos, rol, area: area([11, false]), excepcion: exc });
+    expect(d.origen).toBe('excepcion');
+    expect(d.tras_area).toEqual(SIN_PERMISOS);
+    expect(d.efectivo).toEqual({ ver: true, crear: false, editar: false, eliminar: true, aprobar: false, anular: true });
+  });
+
+  it('las excepciones nunca valen en Administración y el área no la filtra', () => {
+    const admin = { id: 32, clave: 'admin.usuarios', admite_aprobar: false, admite_anular: false };
+    const todo = { ver: true, crear: true, editar: true, eliminar: true, aprobar: false, anular: false };
+    const d = detallePermisosModulo({ modulo: admin, rol: SIN_PERMISOS, area: area([10, false]), excepcion: todo });
+    expect(d).toMatchObject({ area: 'sin_restriccion', efectivo: SIN_PERMISOS, origen: 'rol' });
   });
 });

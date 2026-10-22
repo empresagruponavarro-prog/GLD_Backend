@@ -27,6 +27,7 @@ const MODULOS = [
   { id: 10, clave: 'tesoreria.pagos', nombre: 'Pagos', grupo: 'Tesorería', ruta: '/tp', orden: 10, admite_aprobar: false, admite_anular: true, activo: true },
   { id: 33, clave: 'admin.roles', nombre: 'Roles', grupo: 'Administración', ruta: '/ar', orden: 33, admite_aprobar: false, admite_anular: false, activo: false },
 ];
+const AREAS = [{ id: 7, codigo: 'PROCURA', nombre: 'Procura' }];
 const PERMISOS = [
   { rol_id: 2, modulo_id: 1, ver: true, crear: false, editar: false, eliminar: false, aprobar: false, anular: false },
   { rol_id: 2, modulo_id: 10, ver: true, crear: true, editar: true, eliminar: false, aprobar: false, anular: true },
@@ -42,12 +43,17 @@ const orm = {
     where: ({ activo }: { activo: boolean }) => ({
       orderBy: () => ({ all: async () => MODULOS.filter((m) => m.activo === activo) }),
     }),
+    orderBy: () => ({ all: async () => MODULOS }),
   },
   rol_permiso: {
     where: ({ rol_id }: { rol_id: number }) => ({
       all: async () => PERMISOS.filter((p) => p.rol_id === rol_id),
     }),
   },
+  // Sin excepciones por usuario ni módulos por área (plan 08).
+  usuario_permiso: { where: () => ({ all: async () => [] }) },
+  area_modulo: { where: () => ({ all: async () => [] }) },
+  area: { first: async ({ id }: { id: number }) => AREAS.find((a) => a.id === id) ?? null },
 };
 
 @Module({
@@ -66,6 +72,7 @@ function fila(over: Partial<Record<string, string | boolean | null>> = {}) {
     Clave: hashGuardado,
     Rol: 'Promotor',
     activo: true,
+    id_area: null,
     ...over,
   };
 }
@@ -122,6 +129,12 @@ describe('auth (HTTP)', () => {
   };
 
   describe('POST /auth/login', () => {
+    it('200 con el área del usuario cuando tiene una asignada', async () => {
+      candidatos([fila({ id_area: 7 })]);
+      const res = await login({ usuario: 'jperez', clave: CLAVE }).expect(200);
+      expect(res.body.usuario.area).toEqual({ id: 7, codigo: 'PROCURA', nombre: 'Procura' });
+    });
+
     it('200 con token, expiraEn y usuario (sin clave)', async () => {
       candidatos([fila()]);
       const res = await login({ usuario: 'jperez', clave: CLAVE }).expect(200);
@@ -132,6 +145,7 @@ describe('auth (HTTP)', () => {
         usuario: 'jperez',
         nombres: 'Juan Pérez',
         rol: 'Promotor',
+        area: null,
       });
       expect(JSON.stringify(res.body)).not.toContain(hashGuardado);
 
@@ -236,8 +250,16 @@ describe('auth (HTTP)', () => {
         usuario: 'jperez',
         nombres: 'Juan Pérez',
         rol: 'Supervisor',
+        area: null,
       });
       expect(first).toHaveBeenCalledWith({ IdUsuario: 'U-001' });
+    });
+
+    it('200 con el área del usuario cuando tiene una asignada', async () => {
+      first.mockResolvedValue(fila({ id_area: 7 }));
+      const token = await jwt.signAsync(payload);
+      const res = await me(token).expect(200);
+      expect(res.body.area).toEqual({ id: 7, codigo: 'PROCURA', nombre: 'Procura' });
     });
 
     it('401 sin token', async () => {

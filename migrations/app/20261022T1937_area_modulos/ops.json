@@ -1,0 +1,245 @@
+[
+  {
+    "id": "table.area_modulo",
+    "label": "Create table \"area_modulo\"",
+    "summary": "Creates table \"area_modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"area_modulo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"area_modulo\"",
+        "sql": "CREATE TABLE \"public\".\"area_modulo\" (\n  \"area_id\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"modulo_id\" int4 NOT NULL,\n  \"solo_lectura\" bool DEFAULT false NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"area_modulo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.area_modulo.area_modulo_area_id_modulo_id_key",
+    "label": "Add unique constraint on \"area_modulo\" (area_id, modulo_id)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "area_modulo_area_id_modulo_id_key",
+        "table": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"area_modulo_area_id_modulo_id_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_area_id_modulo_id_key",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"area_modulo_area_id_modulo_id_key\"",
+        "sql": "ALTER TABLE \"public\".\"area_modulo\" ADD CONSTRAINT \"area_modulo_area_id_modulo_id_key\" UNIQUE (\"area_id\", \"modulo_id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"area_modulo_area_id_modulo_id_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_area_id_modulo_id_key",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.area_modulo.area_modulo_area_id_idx_106c7330",
+    "label": "Create index \"area_modulo_area_id_idx_106c7330\" on \"area_modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "area_modulo_area_id_idx_106c7330",
+        "table": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"area_modulo_area_id_idx_106c7330\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo_area_id_idx_106c7330\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"area_modulo_area_id_idx_106c7330\"",
+        "sql": "CREATE INDEX \"area_modulo_area_id_idx_106c7330\" ON \"public\".\"area_modulo\" (\"area_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"area_modulo_area_id_idx_106c7330\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo_area_id_idx_106c7330\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.area_modulo.area_modulo_modulo_id_idx_610f44c7",
+    "label": "Create index \"area_modulo_modulo_id_idx_610f44c7\" on \"area_modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "area_modulo_modulo_id_idx_610f44c7",
+        "table": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"area_modulo_modulo_id_idx_610f44c7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"area_modulo_modulo_id_idx_610f44c7\"",
+        "sql": "CREATE INDEX \"area_modulo_modulo_id_idx_610f44c7\" ON \"public\".\"area_modulo\" (\"modulo_id\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"area_modulo_modulo_id_idx_610f44c7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_modulo_modulo_id_idx_610f44c7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.area_modulo.area_modulo_area_id_fkey",
+    "label": "Add foreign key \"area_modulo_area_id_fkey\" on \"area_modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "area_modulo_area_id_fkey",
+        "table": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"area_modulo_area_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_area_id_fkey",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"area_modulo_area_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"area_modulo\"\nADD CONSTRAINT \"area_modulo_area_id_fkey\"\nFOREIGN KEY (\"area_id\")\nREFERENCES \"public\".\"area\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"area_modulo_area_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_area_id_fkey",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.area_modulo.area_modulo_modulo_id_fkey",
+    "label": "Add foreign key \"area_modulo_modulo_id_fkey\" on \"area_modulo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "area_modulo_modulo_id_fkey",
+        "table": "area_modulo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"area_modulo_modulo_id_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_modulo_id_fkey",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"area_modulo_modulo_id_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"area_modulo\"\nADD CONSTRAINT \"area_modulo_modulo_id_fkey\"\nFOREIGN KEY (\"modulo_id\")\nREFERENCES \"public\".\"modulo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"area_modulo_modulo_id_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_modulo_modulo_id_fkey",
+          "public",
+          "\"public\".\"area_modulo\""
+        ]
+      }
+    ]
+  }
+]

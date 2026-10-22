@@ -32,6 +32,6 @@ export class MisPermisosController {
   @ApiUnauthorizedResponse({ description: 'Token ausente, inválido, expirado o usuario borrado' })
   @ApiForbiddenResponse({ type: UsuarioInactivoErrorDto, description: 'Usuario desactivado' })
   misPermisos(@CurrentUser() user: AuthUser): Promise<MisPermisosDto> {
-    return this.handler.misPermisos(user.rol);
+    return this.handler.misPermisos(user);
   }
 }

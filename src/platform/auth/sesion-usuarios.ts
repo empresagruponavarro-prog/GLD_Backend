@@ -7,6 +7,7 @@ export interface UsuarioSesionBd {
   activo: boolean;
   /** `usuarios.Rol` sin espacios extremos ('' si no tiene). */
   rol: string;
+  id_area?: number | null;
 }
 
 /** Vigencia de la caché por usuario (`sub` del JWT). */
@@ -54,6 +55,10 @@ export class SesionUsuariosService {
     if (!esVarchar(id, 255)) return null;
     const row = await this.db.orm.public.Usuarios.first({ IdUsuario: id });
     if (!row) return null;
-    return { activo: row.activo, rol: (row.Rol ?? '').trim() };
+    const res: UsuarioSesionBd = { activo: row.activo, rol: (row.Rol ?? '').trim() };
+    if (row.id_area !== undefined && row.id_area !== null) {
+      res.id_area = row.id_area;
+    }
+    return res;
   }
 }

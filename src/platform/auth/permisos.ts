@@ -137,3 +137,96 @@ export function moduloAdmiteAccion(clave: ClaveModulo, accion: Accion): boolean 
  * (plan §7.2), porque antes de la etapa C ya estaba restringido al Administrador.
  */
 export const MODULOS_ADMINISTRACION: readonly ClaveModulo[] = ['admin.empresas', 'admin.usuarios', 'admin.roles'];
+
+// ---------------------------------------------------------------------------------------------
+// Permisos efectivos de una PERSONA (plan 08): rol → filtro de área → excepciones del usuario.
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Módulos que NO dependen del área: los de Administración y el menú de módulos (`modulos`).
+ * Solo los gobierna el rol.
+ */
+export const MODULOS_SIN_FILTRO_DE_AREA: readonly ClaveModulo[] = [...MODULOS_ADMINISTRACION, 'modulos'];
+
+export function esModuloSinFiltroDeArea(clave: string): boolean {
+  return MODULOS_SIN_FILTRO_DE_AREA.some((c) => c === clave);
+}
+
+export function esModuloAdministracion(clave: string): boolean {
+  return MODULOS_ADMINISTRACION.some((c) => c === clave);
+}
+
+/** Estado de un módulo en un área: sin fila (`no`), solo lectura o completo (rige el rol). */
+export type NivelArea = 'no' | 'solo_ver' | 'completo';
+
+/** Fila de `area_modulo`: el módulo está habilitado; `solo_lectura` limita al área a Ver. */
+export interface AccesoArea {
+  readonly solo_lectura: boolean;
+}
+
+/** Módulos habilitados de un área, por `modulo_id`. */
+export type ModulosDeArea = ReadonlyMap<number, AccesoArea>;
+
+export function nivelDeArea(acceso: AccesoArea | undefined): NivelArea {
+  if (!acceso) return 'no';
+  return acceso.solo_lectura ? 'solo_ver' : 'completo';
+}
+
+/** Recorta los permisos del rol según el nivel del módulo en el área. */
+export function aplicarNivelArea(rol: Permisos, nivel: NivelArea): Permisos {
+  if (nivel === 'no') return SIN_PERMISOS;
+  if (nivel === 'solo_ver') return { ...SIN_PERMISOS, ver: rol.ver };
+  return rol;
+}
+
+/** Datos del catálogo que hacen falta para combinar permisos de un módulo. */
+export interface ModuloCatalogo extends ModuloAcciones {
+  readonly id: number;
+  readonly clave: string;
+}
+
+export type OrigenPermiso = 'rol' | 'area' | 'excepcion';
+
+export interface EntradaDetallePermisos {
+  modulo: ModuloCatalogo;
+  /** Lo que da el rol en este módulo (ya recortado por `admite_aprobar`/`admite_anular`). */
+  rol: Permisos;
+  /** Módulos habilitados del área del usuario; `null` = sin área o área sin configurar (sin restricción). */
+  area: ModulosDeArea | null;
+  /** Fila de `usuario_permiso` del usuario en este módulo, si la tiene. */
+  excepcion: Readonly<Record<Accion, boolean>> | undefined;
+}
+
+export interface DetallePermisosModulo {
+  rol: Permisos;
+  area: NivelArea | 'sin_restriccion';
+  tras_area: Permisos;
+  efectivo: Permisos;
+  /** De dónde sale el resultado: la excepción gana a todo; si el área lo recortó, `area`; si no, `rol`. */
+  origen: OrigenPermiso;
+}
+
+function mismosPermisos(a: Permisos, b: Permisos): boolean {
+  return ACCIONES.every((accion) => a[accion] === b[accion]);
+}
+
+/**
+ * Combina, para un módulo, lo que da el ROL con el filtro del ÁREA y las EXCEPCIONES del usuario:
+ * 1. base = permisos del rol;
+ * 2. si el usuario tiene área configurada y el módulo no es de Administración ni `modulos`, el área
+ *    lo deja en `no` (sin fila), `solo_ver` o `completo`;
+ * 3. una fila de excepción REEMPLAZA solo este módulo (concede o quita); nunca en Administración.
+ * El Administrador no pasa por aquí (acceso total).
+ */
+export function detallePermisosModulo(entrada: EntradaDetallePermisos): DetallePermisosModulo {
+  const { modulo, rol, area, excepcion } = entrada;
+  const nivel: NivelArea | 'sin_restriccion' =
+    area !== null && !esModuloSinFiltroDeArea(modulo.clave) ? nivelDeArea(area.get(modulo.id)) : 'sin_restriccion';
+  const trasArea = nivel === 'sin_restriccion' ? rol : aplicarNivelArea(rol, nivel);
+  const conExcepcion = excepcion !== undefined && !esModuloAdministracion(modulo.clave);
+  const efectivo = conExcepcion ? permisosEfectivos(modulo, false, excepcion) : trasArea;
+  let origen: OrigenPermiso = 'rol';
+  if (conExcepcion) origen = 'excepcion';
+  else if (!mismosPermisos(rol, trasArea)) origen = 'area';
+  return { rol, area: nivel, tras_area: trasArea, efectivo, origen };
+}

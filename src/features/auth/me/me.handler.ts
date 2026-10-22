@@ -2,7 +2,7 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { SESION_INVALIDA } from '../../../platform/auth/jwt-auth.guard.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toUsuarioSesion, UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
+import { areaDeSesion, toUsuarioSesion, UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
 
 @Injectable()
 export class MeHandler {
@@ -14,6 +14,6 @@ export class MeHandler {
       IdUsuario: id as unknown as Varchar<255>,
     });
     if (!row) throw new UnauthorizedException(SESION_INVALIDA);
-    return toUsuarioSesion(row);
+    return toUsuarioSesion(row, await areaDeSesion(this.db, row.id_area));
   }
 }

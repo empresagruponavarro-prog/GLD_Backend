@@ -72,6 +72,10 @@
       "model": "area",
       "namespace": "public"
     },
+    "area_modulo": {
+      "model": "area_modulo",
+      "namespace": "public"
+    },
     "bancos": {
       "model": "Bancos",
       "namespace": "public"
@@ -338,6 +342,10 @@
     },
     "unidad_medida_equivalencia": {
       "model": "unidad_medida_equivalencia",
+      "namespace": "public"
+    },
+    "usuario_permiso": {
+      "model": "usuario_permiso",
       "namespace": "public"
     },
     "usuarios": {
@@ -8320,9 +8328,47 @@
                   "codecId": "pg/bool@1",
                   "kind": "scalar"
                 }
+              },
+              "id_area": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
               }
             },
-            "relations": {},
+            "relations": {
+              "area": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_area"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "area",
+                  "namespace": "public"
+                }
+              },
+              "permisos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "IdUsuario"
+                  ],
+                  "targetFields": [
+                    "usuario_id"
+                  ]
+                },
+                "to": {
+                  "model": "usuario_permiso",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "Clave": {
@@ -8342,6 +8388,9 @@
                 },
                 "activo": {
                   "column": "activo"
+                },
+                "id_area": {
+                  "column": "id_area"
                 }
               },
               "namespaceId": "public",
@@ -9885,6 +9934,21 @@
                   "namespace": "public"
                 }
               },
+              "modulos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "area_id"
+                  ]
+                },
+                "to": {
+                  "model": "area_modulo",
+                  "namespace": "public"
+                }
+              },
               "requerimientos": {
                 "cardinality": "1:N",
                 "on": {
@@ -9897,6 +9961,21 @@
                 },
                 "to": {
                   "model": "requerimiento",
+                  "namespace": "public"
+                }
+              },
+              "usuarios": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_area"
+                  ]
+                },
+                "to": {
+                  "model": "Usuarios",
                   "namespace": "public"
                 }
               }
@@ -9918,6 +9997,88 @@
               },
               "namespaceId": "public",
               "table": "area"
+            }
+          },
+          "area_modulo": {
+            "fields": {
+              "area_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "modulo_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "solo_lectura": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "area": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "area_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "area",
+                  "namespace": "public"
+                }
+              },
+              "modulo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "modulo_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "modulo",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "area_id": {
+                  "column": "area_id"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "modulo_id": {
+                  "column": "modulo_id"
+                },
+                "solo_lectura": {
+                  "column": "solo_lectura"
+                }
+              },
+              "namespaceId": "public",
+              "table": "area_modulo"
             }
           },
           "categoria": {
@@ -10896,6 +11057,21 @@
               }
             },
             "relations": {
+              "areas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "modulo_id"
+                  ]
+                },
+                "to": {
+                  "model": "area_modulo",
+                  "namespace": "public"
+                }
+              },
               "permisos": {
                 "cardinality": "1:N",
                 "on": {
@@ -10908,6 +11084,21 @@
                 },
                 "to": {
                   "model": "rol_permiso",
+                  "namespace": "public"
+                }
+              },
+              "permisos_usuario": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "modulo_id"
+                  ]
+                },
+                "to": {
+                  "model": "usuario_permiso",
                   "namespace": "public"
                 }
               }
@@ -16301,6 +16492,141 @@
               "namespaceId": "public",
               "table": "unidad_medida_equivalencia"
             }
+          },
+          "usuario_permiso": {
+            "fields": {
+              "anular": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "aprobar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "crear": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "editar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "eliminar": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "modulo_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "usuario_id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "ver": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "modulo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "modulo_id"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "modulo",
+                  "namespace": "public"
+                }
+              },
+              "usuario": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "usuario_id"
+                  ],
+                  "targetFields": [
+                    "IdUsuario"
+                  ]
+                },
+                "to": {
+                  "model": "Usuarios",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "anular": {
+                  "column": "anular"
+                },
+                "aprobar": {
+                  "column": "aprobar"
+                },
+                "crear": {
+                  "column": "crear"
+                },
+                "editar": {
+                  "column": "editar"
+                },
+                "eliminar": {
+                  "column": "eliminar"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "modulo_id": {
+                  "column": "modulo_id"
+                },
+                "usuario_id": {
+                  "column": "usuario_id"
+                },
+                "ver": {
+                  "column": "ver"
+                }
+              },
+              "namespaceId": "public",
+              "table": "usuario_permiso"
+            }
           }
         }
       }
@@ -18358,6 +18684,105 @@
                 {
                   "columns": [
                     "codigo"
+                  ]
+                }
+              ]
+            },
+            "area_modulo": {
+              "columns": {
+                "area_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "modulo_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "solo_lectura": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "area_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area_modulo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "modulo_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area_modulo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "modulo"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "area_id"
+                  ],
+                  "name": "area_modulo_area_id_idx_106c7330",
+                  "prefix": "area_modulo_area_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "modulo_id"
+                  ],
+                  "name": "area_modulo_modulo_id_idx_610f44c7",
+                  "prefix": "area_modulo_modulo_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "area_id",
+                    "modulo_id"
                   ]
                 }
               ]
@@ -27906,6 +28331,153 @@
                 }
               ]
             },
+            "usuario_permiso": {
+              "columns": {
+                "anular": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "aprobar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "crear": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "editar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "eliminar": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "modulo_id": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "usuario_id": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "ver": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "usuario_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuario_permiso"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdUsuario"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "modulo_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuario_permiso"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "modulo"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "modulo_id"
+                  ],
+                  "name": "usuario_permiso_modulo_id_idx_610f44c7",
+                  "prefix": "usuario_permiso_modulo_id_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "usuario_id"
+                  ],
+                  "name": "usuario_permiso_usuario_id_idx_65b6616a",
+                  "prefix": "usuario_permiso_usuario_id_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "usuario_id",
+                    "modulo_id"
+                  ]
+                }
+              ]
+            },
             "usuarios": {
               "columns": {
                 "Clave": {
@@ -27956,10 +28528,41 @@
                   },
                   "nativeType": "bool",
                   "nullable": false
+                },
+                "id_area": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_area"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_area"
+                  ],
+                  "name": "usuarios_id_area_idx_2da0f6a6",
+                  "prefix": "usuarios_id_area_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "IdUsuario"
@@ -28235,7 +28838,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "1a0cd5bcd09a5124f42a9d2d8c6efbb3e8d212c6cd341bee61089fe0cb513814"
+    "storageHash": "e59a77677da880c415725e6ff4129ab549911585f314f497031035b074726084"
   },
   "capabilities": {
     "postgres": {

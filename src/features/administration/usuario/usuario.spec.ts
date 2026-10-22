@@ -16,7 +16,7 @@ import { UsuarioHandler } from './usuario.handler.js';
 const HASH = '$argon2id$v=19$m=19456,t=2,p=1$c2FsdA$aGFzaA';
 
 function makeRow(IdUsuario = 'U-001', over: Record<string, unknown> = {}) {
-  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', activo: true, ...over };
+  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', activo: true, id_area: null, ...over };
 }
 
 const nuevo = {
@@ -25,6 +25,18 @@ const nuevo = {
   Clave: 'secreta123',
   Rol: 'Usuario',
 };
+
+/** Respuesta esperada de un usuario sin área ni excepciones propias. */
+const respuesta = (IdUsuario: string) => ({
+  IdUsuario,
+  Nombres: 'Juan Pérez',
+  Usuario: 'jperez',
+  Rol: 'Usuario',
+  activo: true,
+  id_area: null,
+  area: null,
+  tiene_permisos_personalizados: false,
+});
 
 const pipe = new ValidationPipe({ whitelist: true, transform: true });
 const validar = (metatype: new () => object, value: object) =>
@@ -40,6 +52,10 @@ describe('usuario', () => {
   const remove = vi.fn();
   const rolFirst = vi.fn();
   const rolAll = vi.fn();
+  const areaFirst = vi.fn();
+  const areaAll = vi.fn();
+  const permisoFirst = vi.fn();
+  const permisoAll = vi.fn();
   const sesiones = { invalidar: vi.fn(), invalidarTodo: vi.fn() };
 
   beforeEach(async () => {
@@ -49,6 +65,11 @@ describe('usuario', () => {
     // Por defecto el rol enviado existe en la tabla rol.
     rolFirst.mockImplementation(async ({ nombre }: { nombre: string }) => ({ id: 1, nombre }));
     rolAll.mockResolvedValue([]);
+    // Por defecto el área pedida existe, ninguna otra cosa tiene excepciones propias.
+    areaFirst.mockImplementation(async ({ id }: { id: number }) => ({ id, codigo: 'PROCURA', nombre: 'Procura' }));
+    areaAll.mockResolvedValue([]);
+    permisoFirst.mockResolvedValue(null);
+    permisoAll.mockResolvedValue([]);
 
     const dbMock = {
       // Las operaciones que tocan el rol o borran van en transacción: aquí corre sobre el mismo mock.
@@ -69,6 +90,8 @@ describe('usuario', () => {
             where: vi.fn(() => ({ all: async () => [] })),
             orderBy: vi.fn(() => ({ all: rolAll })),
           },
+          area: { first: areaFirst, all: areaAll },
+          usuario_permiso: { first: permisoFirst, all: permisoAll },
         },
       },
     } as unknown as Database;
@@ -90,8 +113,8 @@ describe('usuario', () => {
       all.mockResolvedValue([makeRow(), makeRow('U-002', { Clave: '123456' })]);
       const res = await controller.list();
       expect(res).toEqual([
-        { IdUsuario: 'U-001', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario', activo: true },
-        { IdUsuario: 'U-002', Nombres: 'Juan Pérez', Usuario: 'jperez', Rol: 'Usuario', activo: true },
+        { ...respuesta('U-001') },
+        { ...respuesta('U-002') },
       ]);
       for (const u of res) expect(u).not.toHaveProperty('Clave');
     });
@@ -323,6 +346,64 @@ describe('usuario', () => {
       ['Usuario vacio', { Usuario: '' }],
     ])('update %s -> 400', async (_caso, body) => {
       await expect(validar(UpdateUsuarioDto, body)).rejects.toBeInstanceOf(BadRequestException);
+    });
+  });
+
+  describe('área del usuario (plan 08)', () => {
+    it('create con área existente la guarda y la devuelve', async () => {
+      first.mockResolvedValue(null);
+      create.mockResolvedValue(makeRow('USR-0001', { id_area: 7 }));
+      const res = await controller.create({ ...nuevo, id_area: 7 });
+      expect(create.mock.calls[0][0]).toMatchObject({ id_area: 7 });
+      expect(res).toMatchObject({ id_area: 7, area: { id: 7, codigo: 'PROCURA', nombre: 'Procura' } });
+    });
+
+    it('create sin área la deja en null (alcance global)', async () => {
+      first.mockResolvedValue(null);
+      create.mockResolvedValue(makeRow('USR-0001'));
+      const res = await controller.create({ ...nuevo });
+      expect(create.mock.calls[0][0]).toMatchObject({ id_area: null });
+      expect(res).toMatchObject({ id_area: null, area: null });
+    });
+
+    it('create con un área que no existe -> 400 y no crea nada', async () => {
+      areaFirst.mockResolvedValue(null);
+      await expect(controller.create({ ...nuevo, id_area: 999 })).rejects.toBeInstanceOf(BadRequestException);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('update cambia el área y descarta la sesión en caché', async () => {
+      update.mockResolvedValue(makeRow('U-001', { id_area: 7 }));
+      const res = await controller.update('U-001', { id_area: 7 });
+      expect(update).toHaveBeenCalledWith({ id_area: 7 });
+      expect(res.area).toEqual({ id: 7, codigo: 'PROCURA', nombre: 'Procura' });
+      expect(sesiones.invalidar).toHaveBeenCalledWith('U-001');
+    });
+
+    it('update con id_area null quita el área', async () => {
+      update.mockResolvedValue(makeRow('U-001'));
+      const res = await controller.update('U-001', { id_area: null });
+      expect(update).toHaveBeenCalledWith({ id_area: null });
+      expect(res).toMatchObject({ id_area: null, area: null });
+    });
+
+    it('update con un área que no existe -> 400', async () => {
+      areaFirst.mockResolvedValue(null);
+      await expect(controller.update('U-001', { id_area: 999 })).rejects.toBeInstanceOf(BadRequestException);
+      expect(update).not.toHaveBeenCalled();
+    });
+
+    it('la lista trae el área de cada usuario y marca a quienes tienen excepciones propias', async () => {
+      all.mockResolvedValue([makeRow('U-001', { id_area: 7 }), makeRow('U-002')]);
+      areaAll.mockResolvedValue([{ id: 7, codigo: 'PROCURA', nombre: 'Procura' }]);
+      permisoAll.mockResolvedValue([{ usuario_id: 'U-002' }]);
+      const res = await controller.list();
+      expect(res[0]).toMatchObject({ IdUsuario: 'U-001', area: { id: 7, nombre: 'Procura' }, tiene_permisos_personalizados: false });
+      expect(res[1]).toMatchObject({ IdUsuario: 'U-002', area: null, tiene_permisos_personalizados: true });
+    });
+
+    it('rechaza un id_area no entero en el DTO', async () => {
+      await expect(validar(CreateUsuarioDto, { ...nuevo, id_area: 'x' })).rejects.toBeInstanceOf(BadRequestException);
     });
   });
 });
