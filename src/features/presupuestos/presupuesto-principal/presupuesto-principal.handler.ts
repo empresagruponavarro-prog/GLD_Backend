@@ -3,7 +3,7 @@ import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../presupuestos.helpers.js';
+import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../../platform/db/varchar-helpers.js';
 import {
   CreatePresupuestoPrincipalDto,
   FaseFurPreviewDto,

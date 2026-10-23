@@ -10,7 +10,7 @@ import {
   FusionarPlantillaDto,
   FusionarPlantillaResultDto,
 } from './plantillas.dto.js';
-import { toVarchar, toDecimalString } from '../presupuestos.helpers.js';
+import { toVarchar, toDecimalString } from '../../../platform/db/varchar-helpers.js';
 import { sumarTotales } from '../plantillas-items/plantillas-items.handler.js';
 
 @Injectable()

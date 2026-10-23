@@ -3,7 +3,7 @@ import { and } from '@prisma/orm-postgres/orm-client';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
+import { toVarchar, type Varchar255 } from '../../../platform/db/varchar-helpers.js';
 import {
   AnexoResponseDto,
   AnexoSelectQueryDto,

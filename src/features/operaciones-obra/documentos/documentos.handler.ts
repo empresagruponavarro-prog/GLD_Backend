@@ -4,7 +4,7 @@ import { readdir, stat, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { toInstantString } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { toVarchar } from '../../presupuestos/presupuestos.helpers.js';
+import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { assertCentroCosto, compact, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
 import type {
   ArchivoDocumentoDto,
