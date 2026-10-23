@@ -11,8 +11,8 @@ import {
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { LoginDto, LoginResponseDto } from './login.dto.js';
 import { LoginHandler } from './login.handler.js';
-import { Public } from '../../../platform/auth/public.decorator.js';
-import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuario-inactivo.js';
+import { Public } from '../../../platform/auth/decorators/public.decorator.js';
+import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuarios/usuario-inactivo.js';
 
 @ApiTags('auth')
 @Controller('auth')

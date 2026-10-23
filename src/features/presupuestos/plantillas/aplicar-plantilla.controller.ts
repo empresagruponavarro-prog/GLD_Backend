@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { AplicarPlantillaDto } from './plantillas.dto.js';
 import { PlantillasHandler } from './plantillas.handler.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 /**
  * Aplicar una plantilla modifica el PRESUPUESTO (módulo `presupuestos`), no la plantilla: va en

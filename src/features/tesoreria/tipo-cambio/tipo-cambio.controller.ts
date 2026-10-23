@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation
 import type { TipoCambioVigente } from '../shared/tipo-cambio.js';
 import { ListTipoCambioQueryDto, TipoCambioResponseDto, UpsertTipoCambioDto } from '../tesoreria.dto.js';
 import { TipoCambioHandler } from './tipo-cambio.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('tesoreria / tipo de cambio')
 @Controller('tesoreria/tipo-cambio')

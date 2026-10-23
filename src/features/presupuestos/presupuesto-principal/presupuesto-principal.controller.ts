@@ -10,9 +10,9 @@ import {
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal.handler.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
-import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 
 @ApiTags('presupuestos / principal')
 @Controller('presupuestos')

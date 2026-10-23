@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
-import { SESION_INVALIDA } from '../../../platform/auth/jwt-auth.guard.js';
+import { SESION_INVALIDA } from '../../../platform/auth/guards/jwt-auth.guard.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { areaDeSesion, toUsuarioSesion, UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
 

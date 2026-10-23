@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { leerModulosActivos } from '../../../../platform/auth/permisos-bd.js';
-import { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
-import { esModuloSinFiltroDeArea } from '../../../../platform/auth/permisos.js';
+import { leerModulosActivos } from '../../../../platform/auth/permisos/permisos-bd.js';
+import { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
+import { esModuloSinFiltroDeArea } from '../../../../platform/auth/permisos/permisos.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import {
   AccesoAreaDto,

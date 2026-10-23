@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { InventarioInicialController } from './inventario-inicial.controller.js';
 import type { DocumentoHandler } from './documento.handler.js';
 import type { DocumentoResponseDto } from './documento.dto.js';
-import { accionDeMetodo, moduloDeClase } from '../../../platform/auth/permisos.decorator.js';
+import { accionDeMetodo, moduloDeClase } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 const DOC = { id: 7, motivo: 'INVENTARIO_INICIAL' } as DocumentoResponseDto;
 

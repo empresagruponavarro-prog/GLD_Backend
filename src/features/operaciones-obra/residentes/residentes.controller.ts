@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from 
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ResidentesHandler } from './residentes.handler.js';
 import { CreateObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/residentes')

@@ -8,7 +8,7 @@ import {
   UpdateProgramacionDto,
 } from '../tesoreria.dto.js';
 import { ProgramacionHandler, type ProgramacionRow } from './programacion.handler.js';
-import { Accion, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('tesoreria / programacion de pagos')
 @Controller('tesoreria/programacion')

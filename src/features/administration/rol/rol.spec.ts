@@ -1,10 +1,10 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { MODULO_KEY } from '../../../platform/auth/permisos.decorator.js';
-import { PermisosRolService } from '../../../platform/auth/permisos-rol.js';
-import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
-import { ROL_ADMINISTRADOR } from '../../../platform/auth/roles.js';
+import { MODULO_KEY } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { PermisosRolService } from '../../../platform/auth/permisos/permisos-rol.js';
+import { SesionUsuariosService } from '../../../platform/auth/usuarios/sesion-usuarios.js';
+import { ROL_ADMINISTRADOR } from '../../../platform/auth/permisos/roles.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { RolController } from './rol.controller.js';
 import { RolHandler } from './rol.handler.js';

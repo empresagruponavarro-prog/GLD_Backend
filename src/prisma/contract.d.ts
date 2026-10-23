@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'e59a77677da880c415725e6ff4129ab549911585f314f497031035b074726084'>;
+  StorageHashBase<'c55847b0f427b2c1fbd6c3b4391354e7a521adf0f1953396ecc9e2cc188ea0ea'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1231,7 +1231,8 @@ export type FieldOutputTypes = {
       readonly imagen_url: CodecTypes['pg/text@1']['output'] | null;
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly id_familia: CodecTypes['pg/int4@1']['output'] | null;
-      readonly clase_inventario: 'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE';
+      readonly clase_inventario:
+        'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE' | 'ACTIVO_FIJO';
       readonly uso_principal: CodecTypes['pg/text@1']['output'] | null;
       readonly stock_minimo: CodecTypes['pg/numeric@1']['output'];
       readonly stock_objetivo: CodecTypes['pg/numeric@1']['output'];
@@ -2429,7 +2430,8 @@ export type FieldInputTypes = {
       readonly imagen_url: CodecTypes['pg/text@1']['input'] | null;
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly id_familia: CodecTypes['pg/int4@1']['input'] | null;
-      readonly clase_inventario: 'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE';
+      readonly clase_inventario:
+        'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE' | 'ACTIVO_FIJO';
       readonly uso_principal: CodecTypes['pg/text@1']['input'] | null;
       readonly stock_minimo: CodecTypes['pg/numeric@1']['input'];
       readonly stock_objetivo: CodecTypes['pg/numeric@1']['input'];
@@ -3616,7 +3618,8 @@ export type StorageColumnTypes = {
       readonly NumVersion: Varchar<255> | null;
     };
     readonly producto: {
-      readonly clase_inventario: 'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE';
+      readonly clase_inventario:
+        'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE' | 'ACTIVO_FIJO';
       readonly codigo: CodecTypes['pg/text@1']['output'];
       readonly comentarios: CodecTypes['pg/text@1']['output'] | null;
       readonly costo_promedio: CodecTypes['pg/numeric@1']['output'];
@@ -4814,7 +4817,8 @@ export type StorageColumnInputTypes = {
       readonly NumVersion: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly producto: {
-      readonly clase_inventario: 'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE';
+      readonly clase_inventario:
+        'CONSUMIBLE' | 'EQUIPO_RETORNABLE' | 'MERCADERIA_CLIENTE' | 'ACTIVO_FIJO';
       readonly codigo: CodecTypes['pg/text@1']['input'];
       readonly comentarios: CodecTypes['pg/text@1']['input'] | null;
       readonly costo_promedio: CodecTypes['pg/numeric@1']['input'];
@@ -14335,7 +14339,12 @@ type ContractBase = Omit<
             };
             readonly clase_inventario: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE'];
+              readonly values: readonly [
+                'CONSUMIBLE',
+                'EQUIPO_RETORNABLE',
+                'MERCADERIA_CLIENTE',
+                'ACTIVO_FIJO',
+              ];
             };
             readonly concepto_pago: {
               readonly kind: 'valueSet';
@@ -25154,6 +25163,7 @@ type ContractBase = Omit<
               { readonly name: 'CONSUMIBLE'; readonly value: 'CONSUMIBLE' },
               { readonly name: 'EQUIPO_RETORNABLE'; readonly value: 'EQUIPO_RETORNABLE' },
               { readonly name: 'MERCADERIA_CLIENTE'; readonly value: 'MERCADERIA_CLIENTE' },
+              { readonly name: 'ACTIVO_FIJO'; readonly value: 'ACTIVO_FIJO' },
             ];
           };
           readonly estado_operativo: {

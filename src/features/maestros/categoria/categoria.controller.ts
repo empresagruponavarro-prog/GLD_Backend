@@ -31,7 +31,7 @@ import {
   ListCategoriaQueryDto,
   UpdateCategoriaDto,
 } from './categoria.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria')

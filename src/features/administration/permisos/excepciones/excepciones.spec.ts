@@ -5,10 +5,10 @@ import {
   NotFoundException,
   ValidationPipe,
 } from '@nestjs/common';
-import type { AuthUser } from '../../../../platform/auth/auth-user.js';
-import { MODULO_KEY } from '../../../../platform/auth/permisos.decorator.js';
-import { CLAVES_MODULO } from '../../../../platform/auth/permisos.js';
-import type { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
+import type { AuthUser } from '../../../../platform/auth/jwt/auth-user.js';
+import { MODULO_KEY } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { CLAVES_MODULO } from '../../../../platform/auth/permisos/permisos.js';
+import type { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
 import type { Database } from '../../../../prisma/prisma.module.js';
 import { ActualizarExcepcionesDto } from './excepciones.dto.js';
 import { ExcepcionesPermisosController } from './excepciones.controller.js';

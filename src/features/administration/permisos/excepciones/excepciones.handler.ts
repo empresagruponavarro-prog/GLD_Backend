@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
-import type { AuthUser } from '../../../../platform/auth/auth-user.js';
+import type { AuthUser } from '../../../../platform/auth/jwt/auth-user.js';
 import {
   buscarRolPorNombre,
   leerFilasPermiso,
@@ -16,8 +16,8 @@ import {
   leerModulosActivos,
   leerModulosDeArea,
   type ModuloFila,
-} from '../../../../platform/auth/permisos-bd.js';
-import { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
+} from '../../../../platform/auth/permisos/permisos-bd.js';
+import { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
 import {
   SIN_PERMISOS,
   detallePermisosModulo,
@@ -26,7 +26,7 @@ import {
   permisosEfectivos,
   type Accion,
   type Permisos,
-} from '../../../../platform/auth/permisos.js';
+} from '../../../../platform/auth/permisos/permisos.js';
 import { esVarchar } from '../../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import type { PermisoEntradaDto } from '../matriz/matriz.dto.js';

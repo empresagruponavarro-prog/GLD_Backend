@@ -1,9 +1,9 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { CLAVES_MODULO } from '../../../../platform/auth/permisos.js';
-import { MODULO_KEY } from '../../../../platform/auth/permisos.decorator.js';
-import { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
+import { CLAVES_MODULO } from '../../../../platform/auth/permisos/permisos.js';
+import { MODULO_KEY } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import { MatrizPermisosController } from './matriz.controller.js';
 import { MatrizPermisosHandler } from './matriz.handler.js';

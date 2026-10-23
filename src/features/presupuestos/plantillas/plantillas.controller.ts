@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { PlantillasHandler } from './plantillas.handler.js';
 import { CreatePlantillaDto, UpdatePlantillaDto, UpsertPlantillaFaseDto, FusionarPlantillaDto } from './plantillas.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @Controller('presupuestos')
 @Modulo('presupuestos.plantillas')

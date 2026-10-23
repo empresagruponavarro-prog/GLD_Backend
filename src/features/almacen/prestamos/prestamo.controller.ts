@@ -11,7 +11,7 @@ import {
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { PrestamoHandler } from './prestamo.handler.js';
 import { CreatePrestamoDto, ListPrestamoQueryDto, PrestamoResponseDto, RegistrarRetornoDto } from './prestamo.dto.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/prestamos')
 @Controller('almacen/prestamos')

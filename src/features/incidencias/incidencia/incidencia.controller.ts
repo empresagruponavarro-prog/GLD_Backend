@@ -30,7 +30,7 @@ import {
   UpdateIncidenciaDto,
 } from './incidencia.dto.js';
 import { IncidenciaHandler } from './incidencia.handler.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('incidencias')
 @Controller('incidencias')

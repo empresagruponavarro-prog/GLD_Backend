@@ -18,7 +18,7 @@ import type { Response } from 'express';
 import { type ArchivoSubido, PlanosHandler } from './planos.handler.js';
 import { CreateObraPlanoDto, NuevaVersionPlanoDto, UpdateObraPlanoDto } from './planos.dto.js';
 import { PLANO_EXTENSIONES, planoMulterOptions } from './planos.storage.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/planos')

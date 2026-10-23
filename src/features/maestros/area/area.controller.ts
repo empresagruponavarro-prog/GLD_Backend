@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '
 import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AreaResponseDto, CreateAreaDto, UpdateAreaDto } from './area.dto.js';
 import { AreaHandler } from './area.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/area')
 @Controller('maestros/area')

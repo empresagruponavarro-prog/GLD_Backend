@@ -1,4 +1,4 @@
-import type { Database } from '../../prisma/prisma.module.js';
+import type { Database } from '../../../prisma/prisma.module.js';
 import { buscarUsuariosPorLogin, normalizarLogin } from './usuarios-login.js';
 
 function fila(IdUsuario: string, Usuario: string | null) {

@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateEmpresaDto, EmpresaResponseDto, UpdateEmpresaDto } from './empresa.dto.js';
 import { EmpresaHandler } from './empresa.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('administration/empresas')
 @Controller('administration/empresas')

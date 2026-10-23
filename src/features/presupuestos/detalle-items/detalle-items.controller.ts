@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Put } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import { PartidaItemsResponseDto, SyncPartidaItemsDto } from '../plantillas-items/plantillas-items.dto.js';
 import { PptoDetalleItemsHandler } from './detalle-items.handler.js';
 

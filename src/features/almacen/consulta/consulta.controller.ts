@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ConsultaHandler } from './consulta.handler.js';
 import { ConsultaQueryDto, ConsultaResponseDto } from './consulta.dto.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/consulta')
 @Controller('almacen/consulta')

@@ -8,7 +8,7 @@ import {
   UpdatePptoDetalleFaseDto,
 } from './detalle-fases.dto.js';
 import { PptoDetalleFasesHandler } from './detalle-fases.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('presupuestos / fases-asignadas')
 @Controller('presupuestos/fases-asignadas')

@@ -7,7 +7,7 @@ import {
   EnviarRequerimientoDto,
 } from './flujo.dto.js';
 import { FlujoHandler } from './flujo.handler.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 /** Acciones del solicitante y de compras sobre el FUR (módulo `requerimientos`). Aprobar/observar/rechazar: `FlujoAprobacionController`. */
 @ApiTags('requerimientos / flujo')

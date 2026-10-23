@@ -22,7 +22,12 @@ import { toBoolean } from '../../../platform/db/transform.js';
 const DECIMAL = /^\d+(\.\d+)?$/;
 export const TIPO_PRODUCTO_VALUES = ['PRODUCTO', 'SERVICIO'] as const;
 export type TipoProducto = (typeof TIPO_PRODUCTO_VALUES)[number];
-export const CLASE_INVENTARIO_VALUES = ['CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE'] as const;
+export const CLASE_INVENTARIO_VALUES = [
+  'CONSUMIBLE',
+  'EQUIPO_RETORNABLE',
+  'MERCADERIA_CLIENTE',
+  'ACTIVO_FIJO',
+] as const;
 export type ClaseInventario = (typeof CLASE_INVENTARIO_VALUES)[number];
 export const ESTADO_OPERATIVO_VALUES = ['NORMAL', 'NO_OPERATIVO', 'DESCONTINUADO'] as const;
 export type EstadoOperativo = (typeof ESTADO_OPERATIVO_VALUES)[number];
@@ -118,7 +123,7 @@ export class CreateProductoDto {
   estado?: boolean;
 }
 
-export class UpdateProductoDto extends PartialType(CreateProductoDto) {}
+export class UpdateProductoDto extends PartialType(CreateProductoDto) { }
 
 export class ListProductoQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ description: 'Filtro por familia de almacén' })

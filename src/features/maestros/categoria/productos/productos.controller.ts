@@ -12,7 +12,7 @@ import {
   type ProductoRow,
 } from '../../producto/producto.dto.js';
 import { CategoriaProductosHandler } from './productos.handler.js';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria/:id/productos')

@@ -1,5 +1,5 @@
-import type { Database } from '../../prisma/prisma.module.js';
-import { esVarchar } from '../db/varchar.js';
+import type { Database } from '../../../prisma/prisma.module.js';
+import { esVarchar } from '../../db/varchar.js';
 import type { Accion, ModulosDeArea } from './permisos.js';
 
 type Db = Pick<Database, 'orm'>;
@@ -92,7 +92,6 @@ export async function leerFilasPermisoUsuario(
     ]),
   );
 }
-
 
 /**
  * Módulos habilitados de un área (`area_modulo`), por `modulo_id`. `null` si el área no tiene ninguno

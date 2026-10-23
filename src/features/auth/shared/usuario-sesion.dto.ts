@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import type { UsuarioFila } from '../../../platform/auth/usuarios-login.js';
+import type { UsuarioFila } from '../../../platform/auth/usuarios/usuarios-login.js';
 import type { Database } from '../../../prisma/prisma.module.js';
 
 /** Área del usuario en sesión (se muestra junto a su rol y decide qué módulos y datos ve). */

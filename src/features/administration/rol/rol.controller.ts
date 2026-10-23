@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateRolDto, RolResponseDto, UpdateRolDto } from './rol.dto.js';
 import { RolHandler } from './rol.handler.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('administration/roles')
 @Controller('administration/roles')

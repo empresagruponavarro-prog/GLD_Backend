@@ -15,7 +15,7 @@ import {
   PreviewFursPresupuestoResponseDto,
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 
 @Injectable()
 export class PresupuestoPrincipalHandler {

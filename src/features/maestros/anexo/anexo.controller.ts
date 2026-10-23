@@ -30,7 +30,7 @@ import {
   ListAnexoQueryDto,
   UpdateAnexoDto,
 } from './anexo.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/anexo')
 @Controller('maestros/anexo')

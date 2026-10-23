@@ -7,7 +7,7 @@ import {
   UpdatePptoFaseDto,
 } from './fases.dto.js';
 import { PptoFasesHandler } from './fases.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('presupuestos / fases-maestras')
 @Controller('presupuestos/fases-maestras')

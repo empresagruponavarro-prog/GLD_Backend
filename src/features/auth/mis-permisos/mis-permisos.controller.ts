@@ -8,12 +8,12 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
-import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
-import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuario-inactivo.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
+import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuarios/usuario-inactivo.js';
 import { MisPermisosDto, PermisosDto } from './mis-permisos.dto.js';
 import { MisPermisosHandler } from './mis-permisos.handler.js';
-import { LecturaCompartida } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('auth')
 @ApiExtraModels(PermisosDto)

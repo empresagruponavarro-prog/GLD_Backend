@@ -8,8 +8,8 @@ import {
   ARCHIVO_AUDITORIA_PERMISOS,
   AuditoriaPermisosService,
   type EntradaAuditoriaPermisos,
-} from '../../../../platform/auth/auditoria-permisos.js';
-import { MODULO_KEY } from '../../../../platform/auth/permisos.decorator.js';
+} from '../../../../platform/auth/permisos/auditoria-permisos.js';
+import { MODULO_KEY } from '../../../../platform/auth/decorators/permisos.decorator.js';
 import { AuditoriaPermisosController } from './auditoria.controller.js';
 import { AuditoriaPermisosHandler } from './auditoria.handler.js';
 

@@ -30,7 +30,7 @@ import {
   UpdateEspecialidadDto,
 } from './especialidad.dto.js';
 import { EspecialidadHandler } from './especialidad.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/especialidad')
 @Controller('maestros/especialidad')

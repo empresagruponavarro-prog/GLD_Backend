@@ -9,9 +9,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import type { AuthUser } from '../../../../platform/auth/auth-user.js';
-import { CurrentUser } from '../../../../platform/auth/current-user.decorator.js';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
+import type { AuthUser } from '../../../../platform/auth/jwt/auth-user.js';
+import { CurrentUser } from '../../../../platform/auth/decorators/current-user.decorator.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 import { ActualizarModulosAreaDto, AreaMatrizDto, MatrizAreasDto } from './areas.dto.js';
 import { AreasPermisosHandler } from './areas.handler.js';
 

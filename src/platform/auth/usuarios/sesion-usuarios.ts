@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Database } from '../../prisma/prisma.module.js';
-import { esVarchar } from '../db/varchar.js';
+import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { esVarchar } from '../../db/varchar.js';
 
 /** Estado vigente en la BD del usuario de una sesión. */
 export interface UsuarioSesionBd {

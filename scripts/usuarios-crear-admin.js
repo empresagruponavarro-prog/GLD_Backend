@@ -142,9 +142,9 @@ async function obtenerClave(CLAVE_MIN, CLAVE_MAX) {
 
 process.env.DOTENV_CONFIG_QUIET ??= 'true';
 const { db } = await import('../src/prisma/db.ts');
-const { hashClave, CLAVE_MIN, CLAVE_MAX } = await import('../src/platform/auth/passwords.ts');
-const { buscarUsuariosPorLogin } = await import('../src/platform/auth/usuarios-login.ts');
-const { siguienteIdUsuario } = await import('../src/platform/auth/usuarios-id.ts');
+const { hashClave, CLAVE_MIN, CLAVE_MAX } = await import('../src/platform/auth/usuarios/passwords.ts');
+const { buscarUsuariosPorLogin } = await import('../src/platform/auth/usuarios/usuarios-login.ts');
+const { siguienteIdUsuario } = await import('../src/platform/auth/usuarios/usuarios-id.ts');
 
 await db.connect();
 try {

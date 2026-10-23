@@ -19,7 +19,7 @@ import {
   ListAlmacenQueryDto,
   UpdateAlmacenDto,
 } from './almacen.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/almacenes')
 @Controller('almacen/almacenes')

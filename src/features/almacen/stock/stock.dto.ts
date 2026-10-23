@@ -5,7 +5,12 @@ import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 import { DECIMAL_REGEX } from '../documentos/documento.dto.js';
 
 export const ALERTAS = ['OK', 'SIN_STOCK', 'BAJO_MINIMO', 'EQUIPO_NO_OPERATIVO'] as const;
-export const CLASES = ['CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE'] as const;
+export const CLASES = [
+  'CONSUMIBLE',
+  'EQUIPO_RETORNABLE',
+  'MERCADERIA_CLIENTE',
+  'ACTIVO_FIJO',
+] as const;
 
 export class ListStockQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ description: 'Si se indica, las cantidades son solo de ese almacén' })

@@ -17,7 +17,7 @@ import {
   ListDocumentosOrigenQueryDto,
   UpdateDocumentoOrigenDto,
 } from './documentos-origen.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('documentos / origen')
 @Controller('documentos/origen')

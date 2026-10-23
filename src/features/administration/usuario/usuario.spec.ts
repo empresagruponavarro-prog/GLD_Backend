@@ -5,12 +5,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { esHashArgon2, verificarClave } from '../../../platform/auth/passwords.js';
-import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
+import { esHashArgon2, verificarClave } from '../../../platform/auth/usuarios/passwords.js';
+import { SesionUsuariosService } from '../../../platform/auth/usuarios/sesion-usuarios.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { UsuarioController } from './usuario.controller.js';
 import { CreateUsuarioDto, UpdateUsuarioDto } from './usuario.dto.js';
-import { siguienteIdUsuario } from '../../../platform/auth/usuarios-id.js';
+import { siguienteIdUsuario } from '../../../platform/auth/usuarios/usuarios-id.js';
 import { UsuarioHandler } from './usuario.handler.js';
 
 const HASH = '$argon2id$v=19$m=19456,t=2,p=1$c2FsdA$aGFzaA';

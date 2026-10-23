@@ -8,15 +8,15 @@ import {
 } from '@nestjs/common';
 import { PATH_METADATA } from '@nestjs/common/constants';
 import { Reflector } from '@nestjs/core';
-import { AuditoriaPermisosService } from './auditoria-permisos.js';
-import type { RequestConUsuario } from './auth-user.js';
+import { AuditoriaPermisosService } from '../permisos/auditoria-permisos.js';
+import type { RequestConUsuario } from '../jwt/auth-user.js';
 import { SESION_INVALIDA } from './jwt-auth.guard.js';
-import { MODULOS_ADMINISTRACION, type Accion } from './permisos.js';
-import { LECTURA_COMPARTIDA_KEY, accionDeMetodo, moduloDeClase, tambienDesdeDeMetodo } from './permisos.decorator.js';
-import { leerModoPermisos, type ModoPermisos } from './permisos-modo.js';
-import { PermisosRolService } from './permisos-rol.js';
-import { IS_PUBLIC_KEY } from './public.decorator.js';
-import { rutaSinModulo, sinPermiso } from './sin-permiso.js';
+import { MODULOS_ADMINISTRACION, type Accion } from '../permisos/permisos.js';
+import { LECTURA_COMPARTIDA_KEY, accionDeMetodo, moduloDeClase, tambienDesdeDeMetodo } from '../decorators/permisos.decorator.js';
+import { leerModoPermisos, type ModoPermisos } from '../permisos/permisos-modo.js';
+import { PermisosRolService } from '../permisos/permisos-rol.js';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
+import { rutaSinModulo, sinPermiso } from '../usuarios/sin-permiso.js';
 
 const ACCION_POR_VERBO: Readonly<Record<string, Accion>> = {
   GET: 'ver',

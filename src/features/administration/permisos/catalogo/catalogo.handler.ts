@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { leerModulosActivos } from '../../../../platform/auth/permisos-bd.js';
+import { leerModulosActivos } from '../../../../platform/auth/permisos/permisos-bd.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import { GrupoCatalogoDto } from './catalogo.dto.js';
 

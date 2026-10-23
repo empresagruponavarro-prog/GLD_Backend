@@ -7,8 +7,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
-import { SinPermisoErrorDto } from '../../../../platform/auth/sin-permiso.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { SinPermisoErrorDto } from '../../../../platform/auth/usuarios/sin-permiso.js';
 import { AuditoriaPermisosQueryDto, ResumenAuditoriaPermisosDto } from './auditoria.dto.js';
 import { AuditoriaPermisosHandler } from './auditoria.handler.js';
 

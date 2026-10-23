@@ -16,7 +16,7 @@ import {
   UpdateDeduccionesDto,
 } from './administracion.dto.js';
 import { AdministracionHandler, type DocumentoDetalle } from './administracion.handler.js';
-import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('documentos / administracion')
 @Controller('administracion/documentos-origen')

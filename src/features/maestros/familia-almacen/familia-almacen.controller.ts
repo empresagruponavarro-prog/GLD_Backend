@@ -7,7 +7,7 @@ import {
   FamiliaAlmacenSelectResponseDto,
   UpdateFamiliaAlmacenDto,
 } from './familia-almacen.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/familia-almacen')
 @Controller('maestros/familia-almacen')

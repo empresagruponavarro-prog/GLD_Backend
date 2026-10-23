@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotF
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { DocumentoHandler } from './documento.handler.js';
 import { CreateDocumentoDto, DocumentoResponseDto, ListDocumentoQueryDto } from './documento.dto.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/salidas')
 @Controller('almacen/salidas')

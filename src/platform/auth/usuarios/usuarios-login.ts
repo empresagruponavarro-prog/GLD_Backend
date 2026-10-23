@@ -1,6 +1,6 @@
 // Solo imports de tipo: este archivo tambien lo cargan los scripts de
 // `scripts/` con el type-stripping de Node (sin compilar).
-import type { Database } from '../../prisma/prisma.module.js';
+import type { Database } from '../../../prisma/prisma.module.js';
 
 /** Fila de `usuarios` (las columnas varchar llegan como string). */
 export interface UsuarioFila {

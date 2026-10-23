@@ -37,7 +37,7 @@ if (opciones.help) {
 
 process.env.DOTENV_CONFIG_QUIET ??= 'true';
 const { db } = await import('../src/prisma/db.ts');
-const { esHashArgon2, hashClave } = await import('../src/platform/auth/passwords.ts');
+const { esHashArgon2, hashClave } = await import('../src/platform/auth/usuarios/passwords.ts');
 
 const dryRun = opciones['dry-run'];
 await db.connect();

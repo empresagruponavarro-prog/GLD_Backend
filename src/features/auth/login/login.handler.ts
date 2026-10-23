@@ -1,13 +1,13 @@
 import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { JwtPayload } from '../../../platform/auth/auth-user.js';
+import type { JwtPayload } from '../../../platform/auth/jwt/auth-user.js';
 import {
   esHashArgon2,
   obtenerHashFicticio,
   verificarClave,
-} from '../../../platform/auth/passwords.js';
-import { usuarioInactivo } from '../../../platform/auth/usuario-inactivo.js';
-import { buscarUsuariosPorLogin } from '../../../platform/auth/usuarios-login.js';
+} from '../../../platform/auth/usuarios/passwords.js';
+import { usuarioInactivo } from '../../../platform/auth/usuarios/usuario-inactivo.js';
+import { buscarUsuariosPorLogin } from '../../../platform/auth/usuarios/usuarios-login.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { areaDeSesion, toUsuarioSesion } from '../shared/usuario-sesion.dto.js';
 import { LoginDto, LoginResponseDto } from './login.dto.js';

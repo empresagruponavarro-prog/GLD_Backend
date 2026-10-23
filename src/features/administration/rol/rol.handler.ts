@@ -6,8 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
-import { PermisosRolService } from '../../../platform/auth/permisos-rol.js';
-import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
+import { PermisosRolService } from '../../../platform/auth/permisos/permisos-rol.js';
+import { SesionUsuariosService } from '../../../platform/auth/usuarios/sesion-usuarios.js';
 import { pgErrorCode } from '../../../platform/db/pg-errors.js';
 import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';

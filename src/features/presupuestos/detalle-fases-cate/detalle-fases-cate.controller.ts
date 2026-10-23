@@ -7,7 +7,7 @@ import {
   UpdatePptoDetalleFaseCateDto,
 } from './detalle-fases-cate.dto.js';
 import { PptoDetalleFasesCateHandler } from './detalle-fases-cate.handler.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('presupuestos / categorias-asignadas')
 @Controller('presupuestos/categorias-asignadas')

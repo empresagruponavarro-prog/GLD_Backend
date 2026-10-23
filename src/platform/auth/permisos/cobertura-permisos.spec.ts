@@ -3,10 +3,10 @@ import { CONTROLLER_WATERMARK, METHOD_METADATA, MODULE_METADATA, PATH_METADATA }
 import { readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { AppModule } from '../../app.module.js';
+import { AppModule } from '../../../app.module.js';
 import { esAccion, esClaveModulo, moduloAdmiteAccion } from './permisos.js';
-import { ACCION_KEY, LECTURA_COMPARTIDA_KEY, MODULO_KEY, TAMBIEN_DESDE_KEY } from './permisos.decorator.js';
-import { IS_PUBLIC_KEY } from './public.decorator.js';
+import { ACCION_KEY, LECTURA_COMPARTIDA_KEY, MODULO_KEY, TAMBIEN_DESDE_KEY } from '../decorators/permisos.decorator.js';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 
 /**
  * C2 (plan 05 §7.3): NINGUNA ruta de la API queda sin clasificar. Recorre por reflexión los
@@ -16,7 +16,7 @@ import { IS_PUBLIC_KEY } from './public.decorator.js';
 
 type Clase = abstract new (...args: never[]) => unknown;
 
-const SRC = fileURLToPath(new URL('../../', import.meta.url));
+const SRC = fileURLToPath(new URL('../../../', import.meta.url));
 
 function archivosController(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {

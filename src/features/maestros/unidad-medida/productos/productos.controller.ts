@@ -6,7 +6,7 @@ import {
   ProductoResponseDto,
 } from '../../producto/producto.dto.js';
 import { UnidadMedidaProductosHandler } from './productos.handler.js';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/unidad-medida')
 @Controller('maestros/unidad-medida/:id/productos')

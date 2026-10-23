@@ -35,7 +35,7 @@ import {
   UpdateObraDocumentoDto,
 } from './documentos.dto.js';
 import { DOCUMENTO_EXTENSIONES, documentoMulterOptions, tipoMime } from './documentos.storage.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
 @Controller('operaciones/obra/:idCentroCosto/documentos')

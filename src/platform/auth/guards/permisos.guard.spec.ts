@@ -12,18 +12,18 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import type { Database } from '../../prisma/prisma.module.js';
-import type { EntradaAuditoriaPermisos } from './auditoria-permisos.js';
-import { AuditoriaPermisosService } from './auditoria-permisos.js';
-import type { AuthUser, RequestConUsuario } from './auth-user.js';
-import { jwtModuleOptions } from './jwt.config.js';
+import type { Database } from '../../../prisma/prisma.module.js';
+import type { EntradaAuditoriaPermisos } from '../permisos/auditoria-permisos.js';
+import { AuditoriaPermisosService } from '../permisos/auditoria-permisos.js';
+import type { AuthUser, RequestConUsuario } from '../jwt/auth-user.js';
+import { jwtModuleOptions } from '../jwt/jwt.config.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { Accion, LecturaCompartida, Modulo, TambienDesde } from './permisos.decorator.js';
+import { Accion, LecturaCompartida, Modulo, TambienDesde } from '../decorators/permisos.decorator.js';
 import { PermisosGuard, accionPorVerbo } from './permisos.guard.js';
-import { leerModoPermisos } from './permisos-modo.js';
-import { PERMISOS_ROL_CACHE_MS, PermisosRolService } from './permisos-rol.js';
-import { Public } from './public.decorator.js';
-import { SesionUsuariosService } from './sesion-usuarios.js';
+import { leerModoPermisos } from '../permisos/permisos-modo.js';
+import { PERMISOS_ROL_CACHE_MS, PermisosRolService } from '../permisos/permisos-rol.js';
+import { Public } from '../decorators/public.decorator.js';
+import { SesionUsuariosService } from '../usuarios/sesion-usuarios.js';
 
 // ---- Controladores de prueba (decorados como los reales) ----
 

@@ -7,7 +7,7 @@ import {
   UpdatePptoHistorialDto,
 } from './presupuesto-historial.dto.js';
 import { PresupuestoHistorialHandler } from './presupuesto-historial.handler.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('presupuestos / historial-versiones')
 @Controller('presupuestos/historial-versiones')

@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException, ValidationPipe } from '@nestjs/common';
-import { MODULO_KEY } from '../../../../platform/auth/permisos.decorator.js';
-import { CLAVES_MODULO } from '../../../../platform/auth/permisos.js';
-import type { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
+import { MODULO_KEY } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { CLAVES_MODULO } from '../../../../platform/auth/permisos/permisos.js';
+import type { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
 import type { Database } from '../../../../prisma/prisma.module.js';
 import { ActualizarModulosAreaDto } from './areas.dto.js';
 import { AreasPermisosController } from './areas.controller.js';

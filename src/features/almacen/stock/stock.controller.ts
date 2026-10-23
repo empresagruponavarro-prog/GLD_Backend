@@ -3,7 +3,7 @@ import { ApiConflictResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation,
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { StockHandler } from './stock.handler.js';
 import { ListStockQueryDto, MarcarOperativoDto, StockResponseDto } from './stock.dto.js';
-import { Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/stock')
 @Controller('almacen/stock')

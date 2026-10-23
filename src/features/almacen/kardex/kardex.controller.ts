@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { type Paginated } from '../../../platform/db/pagination.js';
 import { KardexHandler } from './kardex.handler.js';
 import { KardexResponseDto, ListKardexQueryDto } from './kardex.dto.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('almacen/kardex')
 @Controller('almacen/kardex')

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { ActualizarPermisosDto, MatrizPermisosDto } from './matriz.dto.js';
 import { MatrizPermisosHandler } from './matriz.handler.js';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('administration/permisos')
 @Controller('administration/roles')

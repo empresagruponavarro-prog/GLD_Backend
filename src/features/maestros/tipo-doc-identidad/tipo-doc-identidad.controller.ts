@@ -30,7 +30,7 @@ import {
   UpdateTipoDocIdentidadDto,
 } from './tipo-doc-identidad.dto.js';
 import { TipoDocIdentidadHandler } from './tipo-doc-identidad.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/tipo-doc-identidad')
 @Controller('maestros/tipo-doc-identidad')

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PermisosRolService, type SujetoPermisos } from '../../../platform/auth/permisos-rol.js';
-import { CLAVES_MODULO, SIN_PERMISOS, type ClaveModulo, type Permisos } from '../../../platform/auth/permisos.js';
+import { PermisosRolService, type SujetoPermisos } from '../../../platform/auth/permisos/permisos-rol.js';
+import { CLAVES_MODULO, SIN_PERMISOS, type ClaveModulo, type Permisos } from '../../../platform/auth/permisos/permisos.js';
 import { MisPermisosDto } from './mis-permisos.dto.js';
 
 @Injectable()

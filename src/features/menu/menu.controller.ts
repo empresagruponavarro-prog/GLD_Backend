@@ -2,7 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetMenuQueryDto, MenuSectionResponseDto } from './menu.dto.js';
 import { MenuHandler } from './menu.handler.js';
-import { LecturaCompartida } from '../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida } from '../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('menu')
 @Controller('menu')

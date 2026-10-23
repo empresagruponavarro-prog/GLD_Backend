@@ -29,7 +29,7 @@ import {
   TipoCategoriaResponseDto,
   UpdateTipoCategoriaDto,
 } from './tipo-categoria.dto.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/tipo-categoria')
 @Controller('maestros/tipo-categoria')

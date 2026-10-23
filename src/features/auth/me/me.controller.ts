@@ -6,11 +6,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
-import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
 import { UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
 import { MeHandler } from './me.handler.js';
-import { LecturaCompartida } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('auth')
 @Controller('auth')

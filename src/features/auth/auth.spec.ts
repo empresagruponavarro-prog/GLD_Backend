@@ -2,8 +2,8 @@ import { Module, ValidationPipe, type INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { hashClave } from '../../platform/auth/passwords.js';
-import { CLAVES_MODULO } from '../../platform/auth/permisos.js';
+import { hashClave } from '../../platform/auth/usuarios/passwords.js';
+import { CLAVES_MODULO } from '../../platform/auth/permisos/permisos.js';
 import { DB, PrismaModule } from '../../prisma/prisma.module.js';
 import { AuthModule } from './auth.module.js';
 

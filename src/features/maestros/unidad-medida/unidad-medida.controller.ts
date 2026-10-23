@@ -30,7 +30,7 @@ import {
   UnidadMedidaSelectResponseDto,
   UpdateUnidadMedidaDto,
 } from './unidad-medida.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/unidad-medida')
 @Controller('maestros/unidad-medida')

@@ -9,6 +9,7 @@ enum clase_inventario {
   CONSUMIBLE
   EQUIPO_RETORNABLE
   MERCADERIA_CLIENTE
+  ACTIVO_FIJO
 }
 
 enum estado_operativo {

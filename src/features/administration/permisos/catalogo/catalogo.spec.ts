@@ -1,7 +1,7 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import { MODULO_KEY } from '../../../../platform/auth/permisos.decorator.js';
+import { MODULO_KEY } from '../../../../platform/auth/decorators/permisos.decorator.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import { CatalogoPermisosController } from './catalogo.controller.js';
 import { CatalogoPermisosHandler } from './catalogo.handler.js';

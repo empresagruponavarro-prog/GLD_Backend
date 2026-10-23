@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { readFile } from 'node:fs/promises';
-import { AuditoriaPermisosService, esEntradaAuditoria } from '../../../../platform/auth/auditoria-permisos.js';
+import { AuditoriaPermisosService, esEntradaAuditoria } from '../../../../platform/auth/permisos/auditoria-permisos.js';
 import { ResumenAuditoriaPermisosDto } from './auditoria.dto.js';
 
 function esArchivoInexistente(error: unknown): boolean {

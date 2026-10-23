@@ -16,7 +16,7 @@ import {
   UpdateCotizacionDto,
 } from './cotizacion.dto.js';
 import { CotizacionHandler } from './cotizacion.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('requerimientos / cotizaciones')
 @Controller('requerimientos/:id')

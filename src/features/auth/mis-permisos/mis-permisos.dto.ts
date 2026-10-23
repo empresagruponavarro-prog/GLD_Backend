@@ -1,5 +1,5 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
-import type { ClaveModulo, Permisos } from '../../../platform/auth/permisos.js';
+import type { ClaveModulo, Permisos } from '../../../platform/auth/permisos/permisos.js';
 
 /** Acciones de un módulo (`Permisos`). */
 export class PermisosDto implements Permisos {

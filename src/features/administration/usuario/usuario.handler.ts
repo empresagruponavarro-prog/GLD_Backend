@@ -1,12 +1,12 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
-import { hashClave } from '../../../platform/auth/passwords.js';
-import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
+import { hashClave } from '../../../platform/auth/usuarios/passwords.js';
+import { SesionUsuariosService } from '../../../platform/auth/usuarios/sesion-usuarios.js';
 import {
   buscarUsuariosPorLogin,
   type UsuarioFila,
-} from '../../../platform/auth/usuarios-login.js';
-import { siguienteIdUsuario } from '../../../platform/auth/usuarios-id.js';
+} from '../../../platform/auth/usuarios/usuarios-login.js';
+import { siguienteIdUsuario } from '../../../platform/auth/usuarios/usuarios-id.js';
 import { pgErrorCode } from '../../../platform/db/pg-errors.js';
 import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';

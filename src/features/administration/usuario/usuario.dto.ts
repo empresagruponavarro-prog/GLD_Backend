@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { CLAVE_MAX, CLAVE_MIN } from '../../../platform/auth/passwords.js';
+import { CLAVE_MAX, CLAVE_MIN } from '../../../platform/auth/usuarios/passwords.js';
 
 /** Alta de usuario. El `IdUsuario` lo asigna el backend (correlativo USR-0001, USR-0002…). */
 export class CreateUsuarioDto {

@@ -470,6 +470,10 @@
               {
                 "name": "MERCADERIA_CLIENTE",
                 "value": "MERCADERIA_CLIENTE"
+              },
+              {
+                "name": "ACTIVO_FIJO",
+                "value": "ACTIVO_FIJO"
               }
             ]
           },
@@ -26479,8 +26483,8 @@
             "producto": {
               "checks": [
                 {
-                  "expression": "\"clase_inventario\" IN ('CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE')",
-                  "name": "producto_clase_inventario_check_77c65b6c",
+                  "expression": "\"clase_inventario\" IN ('CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE', 'ACTIVO_FIJO')",
+                  "name": "producto_clase_inventario_check_a0c70268",
                   "prefix": "producto_clase_inventario_check"
                 },
                 {
@@ -28700,7 +28704,8 @@
               "values": [
                 "CONSUMIBLE",
                 "EQUIPO_RETORNABLE",
-                "MERCADERIA_CLIENTE"
+                "MERCADERIA_CLIENTE",
+                "ACTIVO_FIJO"
               ]
             },
             "concepto_pago": {
@@ -28838,7 +28843,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e59a77677da880c415725e6ff4129ab549911585f314f497031035b074726084"
+    "storageHash": "c55847b0f427b2c1fbd6c3b4391354e7a521adf0f1953396ecc9e2cc188ea0ea"
   },
   "capabilities": {
     "postgres": {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Database } from '../../prisma/prisma.module.js';
+import { DB, type Database } from '../../../prisma/prisma.module.js';
 import {
   buscarRolPorNombre,
   leerFilasPermiso,

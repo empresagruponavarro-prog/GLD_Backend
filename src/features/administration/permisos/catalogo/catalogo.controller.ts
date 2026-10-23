@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { GrupoCatalogoDto } from './catalogo.dto.js';
 import { CatalogoPermisosHandler } from './catalogo.handler.js';
-import { Modulo } from '../../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('administration/permisos')
 @Controller('administration/permisos')

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/commo
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObraHandler } from './obra.handler.js';
 import { ObraCockpitDto, ObraDatosGeneralesDto, UpdateObraDatosGeneralesDto } from './obra.dto.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 /**
  * Rutas de cronograma (avance) y residentes viven en sus propios slices:

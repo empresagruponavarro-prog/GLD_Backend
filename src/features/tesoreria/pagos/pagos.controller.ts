@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotF
 import type { Paginated } from '../../../platform/db/pagination.js';
 import { AnularPagoDto, EjecutarPagoDto, ListPagosQueryDto, PagoDirectoDto } from '../tesoreria.dto.js';
 import { PagosHandler, type PagoDetalle } from './pagos.handler.js';
-import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('tesoreria / pagos')
 @Controller('tesoreria/pagos')

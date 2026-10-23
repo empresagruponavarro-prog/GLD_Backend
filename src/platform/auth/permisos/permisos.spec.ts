@@ -21,7 +21,7 @@ import {
 } from './permisos.js';
 
 const OPS_JSON = new URL(
-  '../../../migrations/app/20261015T1659_roles_permisos/ops.json',
+  '../../../../migrations/app/20261015T1659_roles_permisos/ops.json',
   import.meta.url,
 );
 

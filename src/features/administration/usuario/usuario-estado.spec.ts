@@ -1,8 +1,8 @@
 import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
-import { SesionUsuariosService } from '../../../platform/auth/sesion-usuarios.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { SesionUsuariosService } from '../../../platform/auth/usuarios/sesion-usuarios.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { UsuarioController } from './usuario.controller.js';
 import { UsuarioHandler } from './usuario.handler.js';

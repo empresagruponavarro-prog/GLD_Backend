@@ -17,7 +17,7 @@ import {
   RequerimientoResponseDto,
   UpdateRequerimientoDto,
 } from './requerimiento.dto.js';
-import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('requerimientos')
 @Controller('requerimientos')

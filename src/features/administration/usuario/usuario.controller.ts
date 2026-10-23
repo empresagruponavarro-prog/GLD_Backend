@@ -23,9 +23,9 @@ import {
 } from '@nestjs/swagger';
 import { CreateUsuarioDto, UpdateEstadoUsuarioDto, UpdateUsuarioDto, UsuarioResponseDto } from './usuario.dto.js';
 import { UsuarioHandler } from './usuario.handler.js';
-import type { AuthUser } from '../../../platform/auth/auth-user.js';
-import { CurrentUser } from '../../../platform/auth/current-user.decorator.js';
-import { Modulo } from '../../../platform/auth/permisos.decorator.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
+import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('administration/usuarios')
 @Controller('administration/usuarios')

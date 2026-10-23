@@ -1,5 +1,5 @@
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
-import type { AuthUser, RequestConUsuario } from './auth-user.js';
+import type { AuthUser, RequestConUsuario } from '../jwt/auth-user.js';
 
 export function usuarioActual(
   campo: keyof AuthUser | undefined,

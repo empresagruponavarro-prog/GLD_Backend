@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import type { JwtPayload, RequestConUsuario } from './auth-user.js';
-import { IS_PUBLIC_KEY } from './public.decorator.js';
-import { SesionUsuariosService } from './sesion-usuarios.js';
-import { usuarioInactivo } from './usuario-inactivo.js';
+import type { JwtPayload, RequestConUsuario } from '../jwt/auth-user.js';
+import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
+import { SesionUsuariosService } from '../usuarios/sesion-usuarios.js';
+import { usuarioInactivo } from '../usuarios/usuario-inactivo.js';
 
 export const SESION_INVALIDA = 'Sesión inválida o expirada';
 

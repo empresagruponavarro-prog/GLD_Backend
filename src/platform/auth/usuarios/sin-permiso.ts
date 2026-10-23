@@ -1,6 +1,6 @@
 import { ForbiddenException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import type { Accion } from './permisos.js';
+import type { Accion } from '../permisos/permisos.js';
 
 export const CODIGO_SIN_PERMISO = 'SIN_PERMISO';
 export const CODIGO_RUTA_SIN_MODULO = 'RUTA_SIN_MODULO';

@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 import type { Reflector } from '@nestjs/core';
-import { esAccion, esClaveModulo, type Accion as AccionPermiso, type ClaveModulo } from './permisos.js';
+import { esAccion, esClaveModulo, type Accion as AccionPermiso, type ClaveModulo } from '../permisos/permisos.js';
 
 export const MODULO_KEY = 'permisos:modulo';
 export const ACCION_KEY = 'permisos:accion';

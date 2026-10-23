@@ -2,12 +2,12 @@ import { Module, type Provider } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '../../prisma/prisma.module.js';
-import { AuditoriaPermisosService } from './auditoria-permisos.js';
-import { jwtModuleOptions } from './jwt.config.js';
-import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { PermisosGuard } from './permisos.guard.js';
-import { PermisosRolService } from './permisos-rol.js';
-import { SesionUsuariosService } from './sesion-usuarios.js';
+import { AuditoriaPermisosService } from './permisos/auditoria-permisos.js';
+import { jwtModuleOptions } from './jwt/jwt.config.js';
+import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { PermisosGuard } from './guards/permisos.guard.js';
+import { PermisosRolService } from './permisos/permisos-rol.js';
+import { SesionUsuariosService } from './usuarios/sesion-usuarios.js';
 
 /**
  * Guards globales, en este orden: primero se exige un JWT valido (salvo `@Public()`) y despues

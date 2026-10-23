@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import type { Database } from '../../prisma/prisma.module.js';
-import type { RequestConUsuario } from './auth-user.js';
-import { usuarioActual } from './current-user.decorator.js';
-import { jwtModuleOptions } from './jwt.config.js';
+import type { Database } from '../../../prisma/prisma.module.js';
+import type { RequestConUsuario } from '../jwt/auth-user.js';
+import { usuarioActual } from '../decorators/current-user.decorator.js';
+import { jwtModuleOptions } from '../jwt/jwt.config.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
-import { Public } from './public.decorator.js';
-import { SESION_CACHE_MS, SesionUsuariosService } from './sesion-usuarios.js';
-import { CODIGO_USUARIO_INACTIVO, USUARIO_INACTIVO } from './usuario-inactivo.js';
+import { Public } from '../decorators/public.decorator.js';
+import { SESION_CACHE_MS, SesionUsuariosService } from '../usuarios/sesion-usuarios.js';
+import { CODIGO_USUARIO_INACTIVO, USUARIO_INACTIVO } from '../usuarios/usuario-inactivo.js';
 
 class Demo {
   @Public()

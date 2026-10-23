@@ -3,7 +3,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiOkResponse, ApiOperation
 import { RequerimientoResponseDto } from '../requerimiento/requerimiento.dto.js';
 import { AprobarRequerimientoDto, ObservarRequerimientoDto, RechazarRequerimientoDto } from './flujo.dto.js';
 import { FlujoHandler } from './flujo.handler.js';
-import { Accion, Modulo } from '../../../platform/auth/permisos.decorator.js';
+import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 /**
  * Decisiones del aprobador sobre el FUR (módulo `requerimientos.aprobacion`). Separado de

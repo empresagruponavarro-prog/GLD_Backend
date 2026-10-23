@@ -10,9 +10,9 @@ import {
   leerModulosActivos,
   type ModuloFila,
   type RolFila,
-} from '../../../../platform/auth/permisos-bd.js';
-import { ACCIONES, permisosEfectivos, type Accion } from '../../../../platform/auth/permisos.js';
-import { PermisosRolService } from '../../../../platform/auth/permisos-rol.js';
+} from '../../../../platform/auth/permisos/permisos-bd.js';
+import { ACCIONES, permisosEfectivos, type Accion } from '../../../../platform/auth/permisos/permisos.js';
+import { PermisosRolService } from '../../../../platform/auth/permisos/permisos-rol.js';
 import { DB, type Database } from '../../../../prisma/prisma.module.js';
 import { MatrizPermisosDto, PermisoEntradaDto } from './matriz.dto.js';
 

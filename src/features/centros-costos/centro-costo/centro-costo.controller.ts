@@ -14,7 +14,7 @@ import {
   UpdateCentroCostoDto,
 } from './centro-costo.dto.js';
 import { CentroCostoHandler } from './centro-costo.handler.js';
-import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('centros-costos')
 @Controller('centros-costos')
