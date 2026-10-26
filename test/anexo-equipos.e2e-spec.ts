@@ -18,8 +18,6 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
   let proveedorId = 0;
   let codigoBien = '';
   let productoId = 0;
-  /** Características que este test agregó al catálogo (se borran al final). */
-  let caracteristicasSembradas: number[] = [];
   let localId = 0;
   let nivelId = 0;
   let ambienteId = 0;
@@ -39,16 +37,16 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
       await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Proveedor', 'E2E PROVEEDOR', true) returning id`)
     ).rows[0].id;
 
-    const bien = await db.query(`select id, codigo from producto where clase_inventario = 'ACTIVO_FIJO' and estado limit 1`);
-    codigoBien = bien.rows[0]?.codigo ?? '';
-    productoId = bien.rows[0]?.id ?? 0;
-    // El catálogo define Marca, Modelo y RAM del bien; si ya existen, no se tocan.
+    // Bien propio de la prueba: así no se tocan las características del catálogo real.
+    const bien = await db.query(
+      `insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto, clase_inventario)
+       values ('E2E-PC', 'PC DE PRUEBA E2E', (select id from categoria limit 1), (select id from unidad_medida limit 1), 'PRODUCTO', 'ACTIVO_FIJO')
+       returning id, codigo`,
+    );
+    codigoBien = bien.rows[0].codigo;
+    productoId = bien.rows[0].id;
     for (const [nombre, valor] of [['Marca', 'Lenovo'], ['Modelo', 'ThinkPad E14'], ['RAM', '16 GB']]) {
-      const r = await db.query(
-        `insert into producto_caracteristica (id_producto, nombre, valor) values ($1, $2, $3) on conflict do nothing returning id`,
-        [productoId, nombre, valor],
-      );
-      caracteristicasSembradas.push(...r.rows.map((f: { id: number }) => f.id));
+      await db.query(`insert into producto_caracteristica (id_producto, nombre, valor) values ($1, $2, $3)`, [productoId, nombre, valor]);
     }
     const ubicacion = await db.query(`select id_local, id_nivel, id_ambiente from ubicacion where estado limit 1`);
     localId = ubicacion.rows[0]?.id_local ?? 0;
@@ -65,9 +63,9 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
 
   afterAll(async () => {
     await db.query(`delete from activo_fijo where id_responsable in ($1, $2)`, [trabajadorId, proveedorId]);
-    await db.query(`delete from activo_fijo where serie like 'E2E-%'`);
+    await db.query(`delete from activo_fijo where serie like 'E2E-%' or id_producto = $1`, [productoId]);
     await db.query(`delete from anexos where id in ($1, $2)`, [trabajadorId, proveedorId]);
-    await db.query(`delete from producto_caracteristica where id = any($1::int[])`, [caracteristicasSembradas]);
+    await db.query(`delete from producto where id = $1`, [productoId]);
     await borrarUsuarioE2E(db);
     await db.end();
     await app.close();
