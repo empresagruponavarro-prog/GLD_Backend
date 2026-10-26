@@ -8,6 +8,14 @@
       "model": "CentroCostos",
       "namespace": "public"
     },
+    "activo_fijo": {
+      "model": "activo_fijo",
+      "namespace": "public"
+    },
+    "activo_fijo_caracteristica": {
+      "model": "activo_fijo_caracteristica",
+      "namespace": "public"
+    },
     "almacen": {
       "model": "almacen",
       "namespace": "public"
@@ -54,6 +62,10 @@
     },
     "almacenes": {
       "model": "Almacenes",
+      "namespace": "public"
+    },
+    "ambiente": {
+      "model": "ambiente",
       "namespace": "public"
     },
     "anexo_Especialidad": {
@@ -180,6 +192,10 @@
       "model": "Incidencia",
       "namespace": "public"
     },
+    "local": {
+      "model": "local",
+      "namespace": "public"
+    },
     "menu": {
       "model": "Menu",
       "namespace": "public"
@@ -190,6 +206,10 @@
     },
     "monedas": {
       "model": "Monedas",
+      "namespace": "public"
+    },
+    "nivel": {
+      "model": "nivel",
       "namespace": "public"
     },
     "obra_datos_generales": {
@@ -284,6 +304,10 @@
       "model": "producto_alternativa",
       "namespace": "public"
     },
+    "producto_caracteristica": {
+      "model": "producto_caracteristica",
+      "namespace": "public"
+    },
     "productos": {
       "model": "Productos",
       "namespace": "public"
@@ -330,6 +354,10 @@
     },
     "tipo_categoria": {
       "model": "tipo_categoria",
+      "namespace": "public"
+    },
+    "ubicacion": {
+      "model": "ubicacion",
       "namespace": "public"
     },
     "unidadMedida": {
@@ -508,6 +536,23 @@
               {
                 "name": "DANADO",
                 "value": "DANADO"
+              }
+            ]
+          },
+          "estado_activo_fijo": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "OPERATIVO",
+                "value": "OPERATIVO"
+              },
+              {
+                "name": "EN_REPARACION",
+                "value": "EN_REPARACION"
+              },
+              {
+                "name": "DE_BAJA",
+                "value": "DE_BAJA"
               }
             ]
           },
@@ -1448,6 +1493,21 @@
               }
             },
             "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_responsable"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
               "cotizaciones": {
                 "cardinality": "1:N",
                 "on": {
@@ -2933,6 +2993,21 @@
                 },
                 "to": {
                   "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
+              "locales": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "local",
                   "namespace": "public"
                 }
               },
@@ -6066,6 +6141,21 @@
                   "namespace": "public"
                 }
               },
+              "locales": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id_empresa"
+                  ],
+                  "targetFields": [
+                    "id_empresa"
+                  ]
+                },
+                "to": {
+                  "model": "local",
+                  "namespace": "public"
+                }
+              },
               "planillaPagos": {
                 "cardinality": "1:N",
                 "on": {
@@ -8524,6 +8614,253 @@
               "table": "usuariosPermisos"
             }
           },
+          "activo_fijo": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 30
+                  }
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_activo_fijo",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha_asignacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_responsable": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ubicacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "serie": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              }
+            },
+            "relations": {
+              "caracteristicas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_activo_fijo"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo_caracteristica",
+                  "namespace": "public"
+                }
+              },
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              },
+              "responsable": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_responsable"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "ubicacion": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ubicacion"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ubicacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "fecha_asignacion": {
+                  "column": "fecha_asignacion"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "id_responsable": {
+                  "column": "id_responsable"
+                },
+                "id_ubicacion": {
+                  "column": "id_ubicacion"
+                },
+                "serie": {
+                  "column": "serie"
+                }
+              },
+              "namespaceId": "public",
+              "table": "activo_fijo"
+            }
+          },
+          "activo_fijo_caracteristica": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_activo_fijo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 60
+                  }
+                }
+              },
+              "valor": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              }
+            },
+            "relations": {
+              "activoFijo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_activo_fijo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "id_activo_fijo": {
+                  "column": "id_activo_fijo"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "valor": {
+                  "column": "valor"
+                }
+              },
+              "namespaceId": "public",
+              "table": "activo_fijo_caracteristica"
+            }
+          },
           "almacen": {
             "fields": {
               "codigo": {
@@ -9888,6 +10225,79 @@
               "table": "almacen_prestamo_retorno"
             }
           },
+          "ambiente": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "ubicaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ambiente"
+                  ]
+                },
+                "to": {
+                  "model": "ubicacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ambiente"
+            }
+          },
           "area": {
             "fields": {
               "codigo": {
@@ -10982,6 +11392,142 @@
               "table": "familia_almacen"
             }
           },
+          "local": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "direccion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_empresa": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "empresa": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_empresa"
+                  ],
+                  "targetFields": [
+                    "id_empresa"
+                  ]
+                },
+                "to": {
+                  "model": "Empresas",
+                  "namespace": "public"
+                }
+              },
+              "ubicaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_local"
+                  ]
+                },
+                "to": {
+                  "model": "ubicacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "direccion": {
+                  "column": "direccion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_empresa": {
+                  "column": "id_empresa"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "local"
+            }
+          },
           "modulo": {
             "fields": {
               "activo": {
@@ -11139,6 +11685,79 @@
               },
               "namespaceId": "public",
               "table": "modulo"
+            }
+          },
+          "nivel": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "ubicaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_nivel"
+                  ]
+                },
+                "to": {
+                  "model": "ubicacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "nivel"
             }
           },
           "obra_datos_generales": {
@@ -14839,6 +15458,21 @@
               }
             },
             "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_producto"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
               "almacenDefault": {
                 "cardinality": "N:1",
                 "on": {
@@ -14881,6 +15515,21 @@
                 },
                 "to": {
                   "model": "producto_alternativa",
+                  "namespace": "public"
+                }
+              },
+              "caracteristicas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_producto"
+                  ]
+                },
+                "to": {
+                  "model": "producto_caracteristica",
                   "namespace": "public"
                 }
               },
@@ -15161,6 +15810,79 @@
               },
               "namespaceId": "public",
               "table": "producto_alternativa"
+            }
+          },
+          "producto_caracteristica": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_producto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 60
+                  }
+                }
+              },
+              "valor": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              }
+            },
+            "relations": {
+              "producto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_producto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "producto",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "id_producto": {
+                  "column": "id_producto"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "valor": {
+                  "column": "valor"
+                }
+              },
+              "namespaceId": "public",
+              "table": "producto_caracteristica"
             }
           },
           "requerimiento": {
@@ -16313,6 +17035,164 @@
               "table": "tipo_categoria"
             }
           },
+          "ubicacion": {
+            "fields": {
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 50
+                  }
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ambiente": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_area": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_local": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_nivel": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "observaciones": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ubicacion"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
+              "ambiente": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ambiente"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ambiente",
+                  "namespace": "public"
+                }
+              },
+              "local": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_local"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "local",
+                  "namespace": "public"
+                }
+              },
+              "nivel": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_nivel"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "nivel",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "codigo": {
+                  "column": "codigo"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_ambiente": {
+                  "column": "id_ambiente"
+                },
+                "id_area": {
+                  "column": "id_area"
+                },
+                "id_local": {
+                  "column": "id_local"
+                },
+                "id_nivel": {
+                  "column": "id_nivel"
+                },
+                "observaciones": {
+                  "column": "observaciones"
+                }
+              },
+              "namespaceId": "public",
+              "table": "ubicacion"
+            }
+          },
           "unidad_medida": {
             "fields": {
               "codigo": {
@@ -16833,6 +17713,252 @@
                 ]
               },
               "uniques": []
+            },
+            "activo_fijo": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('OPERATIVO', 'EN_REPARACION', 'DE_BAJA')",
+                  "name": "activo_fijo_estado_check_f649baa7",
+                  "prefix": "activo_fijo_estado_check"
+                }
+              ],
+              "columns": {
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 30
+                  }
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "OPERATIVO"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_activo_fijo",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha_asignacion": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_responsable": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_ubicacion": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "serie": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_responsable"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ubicacion"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ubicacion"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "activo_fijo_id_producto_idx_f4d96d2e",
+                  "prefix": "activo_fijo_id_producto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_responsable"
+                  ],
+                  "name": "activo_fijo_id_responsable_idx_f28b2d33",
+                  "prefix": "activo_fijo_id_responsable_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_ubicacion"
+                  ],
+                  "name": "activo_fijo_id_ubicacion_idx_cf0b54d1",
+                  "prefix": "activo_fijo_id_ubicacion_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "activo_fijo_caracteristica": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_activo_fijo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 60
+                  }
+                },
+                "valor": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_activo_fijo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo_caracteristica"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_activo_fijo"
+                  ],
+                  "name": "activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2",
+                  "prefix": "activo_fijo_caracteristica_id_activo_fijo_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_activo_fijo",
+                    "nombre"
+                  ]
+                }
+              ]
             },
             "almacen": {
               "columns": {
@@ -18385,6 +19511,58 @@
                 ]
               },
               "uniques": []
+            },
+            "ambiente": {
+              "columns": {
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
             },
             "anexo_Especialidad": {
               "columns": {
@@ -22898,6 +24076,128 @@
               },
               "uniques": []
             },
+            "local": {
+              "columns": {
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "direccion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_empresa": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "local"
+                  },
+                  "target": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "empresas"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "local"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "local_id_centro_costo_idx_8c84570b",
+                  "prefix": "local_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_empresa"
+                  ],
+                  "name": "local_id_empresa_idx_328936e2",
+                  "prefix": "local_id_empresa_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
             "menu": {
               "columns": {
                 "Imagen": {
@@ -23069,6 +24369,58 @@
                 ]
               },
               "uniques": []
+            },
+            "nivel": {
+              "columns": {
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
             },
             "obra_datos_generales": {
               "columns": {
@@ -26858,6 +28210,82 @@
                 }
               ]
             },
+            "producto_caracteristica": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_producto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 60
+                  }
+                },
+                "valor": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_producto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto_caracteristica"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "producto"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_producto"
+                  ],
+                  "name": "producto_caracteristica_id_producto_idx_f4d96d2e",
+                  "prefix": "producto_caracteristica_id_producto_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_producto",
+                    "nombre"
+                  ]
+                }
+              ]
+            },
             "productos": {
               "checks": [
                 {
@@ -28137,6 +29565,170 @@
                 }
               ]
             },
+            "ubicacion": {
+              "columns": {
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_ambiente": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_area": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_local": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_nivel": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "observaciones": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_local"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ubicacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "local"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_nivel"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ubicacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "nivel"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_ambiente"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ubicacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ambiente"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_ambiente"
+                  ],
+                  "name": "ubicacion_id_ambiente_idx_27009780",
+                  "prefix": "ubicacion_id_ambiente_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_area"
+                  ],
+                  "name": "ubicacion_id_area_idx_2da0f6a6",
+                  "prefix": "ubicacion_id_area_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_local"
+                  ],
+                  "name": "ubicacion_id_local_idx_573613ca",
+                  "prefix": "ubicacion_id_local_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_nivel"
+                  ],
+                  "name": "ubicacion_id_nivel_idx_b90dc345",
+                  "prefix": "ubicacion_id_nivel_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                },
+                {
+                  "columns": [
+                    "id_local",
+                    "id_nivel",
+                    "id_ambiente"
+                  ]
+                }
+              ]
+            },
             "unidadMedida": {
               "columns": {
                 "Descripcion": {
@@ -28724,6 +30316,14 @@
                 "DANADO"
               ]
             },
+            "estado_activo_fijo": {
+              "kind": "valueSet",
+              "values": [
+                "OPERATIVO",
+                "EN_REPARACION",
+                "DE_BAJA"
+              ]
+            },
             "estado_documento": {
               "kind": "valueSet",
               "values": [
@@ -28843,7 +30443,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "c55847b0f427b2c1fbd6c3b4391354e7a521adf0f1953396ecc9e2cc188ea0ea"
+    "storageHash": "aa5a5c8846ad3f5bff430d75b7342eb3cce2ca3ad2f1651836143b4b725f5972"
   },
   "capabilities": {
     "postgres": {

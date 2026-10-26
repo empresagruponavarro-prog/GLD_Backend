@@ -118,6 +118,12 @@ enum estado_documento {
   ANULADO
 }
 
+enum estado_activo_fijo {
+  OPERATIVO
+  EN_REPARACION
+  DE_BAJA
+}
+
 enum estado_prestamo {
   ABIERTO
   PARCIAL
@@ -220,6 +226,8 @@ model producto {
   stocksAlmacen      stock_almacen[]
   documentoDetalles  almacen_documento_detalle[]
   kardex             almacen_kardex[]
+  activosFijos       activo_fijo[]
+  caracteristicas    producto_caracteristica[]
   prestamoDetalles   almacen_prestamo_detalle[]
   requerimientoDetalles requerimiento_detalle[]
   ordenCompraLineas  OrdenCompraDetalle[]
@@ -574,6 +582,7 @@ model Anexos {
   reqAprobador        requerimiento[]     @relation("RequerimientoAprobador")
   reqEventos          requerimiento_evento[] @relation("RequerimientoEventoAnexo")
   prestamosResponsable almacen_prestamo[] @relation("PrestamoResponsable")
+  activosFijos        activo_fijo[]   @relation("ActivoFijoResponsable")
   @@map("anexos")
 }
 
@@ -703,6 +712,7 @@ model CentroCostos {
   almacenDocumentos      almacen_documento[] @relation("DocumentoCentroCosto")
   requerimientos         requerimiento[]     @relation("RequerimientoCentroCosto")
   almacenPrestamos       almacen_prestamo[] @relation("PrestamoCentroCosto")
+  locales                local[]
 
   @@index([id_centro_costos_principal])
   @@map("CentroCostos")
@@ -992,6 +1002,7 @@ model Empresas {
   pptoDetalleFasesCates   ppto_DetalleFasesCate[]
   pptoFases               ppto_Fases[]
   pptoPrincipales         ppto_Principal[]
+  locales                 local[]
 
   @@map("empresas")
 }
@@ -1777,4 +1788,113 @@ model pago {
   programacion        pago_programado? @relation(fields:[id_pago_programado], references:[id])
   @@index([id_documento_origen])
   @@map("pago")
+}
+
+model local {
+  id              Int                      @id @default(autoincrement())
+  codigo          VarChar(20)              @unique
+  nombre          VarChar(150)
+  direccion       VarChar(255)?
+  id_empresa      Int?
+  id_centro_costo Int?
+  estado          Boolean                  @default(true)
+
+  empresa         Empresas?                @relation(fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  centroCosto     CentroCostos?            @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
+
+  ubicaciones     ubicacion[]
+
+  @@index([id_empresa])
+  @@index([id_centro_costo])
+  @@map("local")
+}
+
+model nivel {
+  id          Int         @id @default(autoincrement())
+  codigo      VarChar(20) @unique
+  descripcion VarChar(150)
+  estado      Boolean     @default(true)
+
+  ubicaciones ubicacion[]
+
+  @@map("nivel")
+}
+
+model ambiente {
+  id          Int         @id @default(autoincrement())
+  codigo      VarChar(20) @unique
+  descripcion VarChar(150)
+  estado      Boolean     @default(true)
+
+  ubicaciones ubicacion[]
+
+  @@map("ambiente")
+}
+
+model ubicacion {
+  id            Int           @id @default(autoincrement())
+  codigo        VarChar(50)   @unique
+  id_local      Int
+  id_nivel      Int
+  id_ambiente   Int
+  id_area       Int?
+  observaciones VarChar(255)?
+  estado        Boolean       @default(true)
+
+  local         local         @relation(fields: [id_local], references: [id], onDelete: Restrict)
+  nivel         nivel         @relation(fields: [id_nivel], references: [id], onDelete: Restrict)
+  ambiente      ambiente      @relation(fields: [id_ambiente], references: [id], onDelete: Restrict)
+  activosFijos  activo_fijo[]
+
+  @@unique([id_local, id_nivel, id_ambiente])
+  @@index([id_local])
+  @@index([id_nivel])
+  @@index([id_ambiente])
+  @@index([id_area])
+  @@map("ubicacion")
+}
+
+// ---- Maestro de activos fijos (equipos tecnologicos por trabajador) ----
+model activo_fijo {
+  id               Int               @id @default(autoincrement())
+  codigo           VarChar(30)       @unique
+  id_producto      Int
+  serie            VarChar(100)?
+  estado           estado_activo_fijo @default(OPERATIVO)
+  fecha_asignacion DateString?
+  id_responsable   Int?
+  id_ubicacion     Int?
+  created_at       DateTime          @default(now())
+  producto         producto          @relation(fields: [id_producto], references: [id])
+  responsable      Anexos?           @relation("ActivoFijoResponsable", fields: [id_responsable], references: [id], onDelete: SetNull)
+  ubicacion        ubicacion?        @relation(fields: [id_ubicacion], references: [id], onDelete: SetNull)
+  caracteristicas  activo_fijo_caracteristica[]
+
+  @@index([id_responsable])
+  @@index([id_producto])
+  @@map("activo_fijo")
+}
+
+model activo_fijo_caracteristica {
+  id              Int         @id @default(autoincrement())
+  id_activo_fijo  Int
+  nombre          VarChar(60)
+  valor           VarChar(150)
+  activoFijo      activo_fijo @relation(fields: [id_activo_fijo], references: [id], onDelete: Cascade)
+
+  @@unique([id_activo_fijo, nombre])
+  @@map("activo_fijo_caracteristica")
+}
+
+// Caracteristicas estandar de un bien del catalogo (hija de producto). Cada activo fijo las hereda y
+// solo guarda en activo_fijo_caracteristica las que difieren en esa unidad.
+model producto_caracteristica {
+  id          Int         @id @default(autoincrement())
+  id_producto Int
+  nombre      VarChar(60)
+  valor       VarChar(150)
+  producto    producto    @relation(fields: [id_producto], references: [id], onDelete: Cascade)
+
+  @@unique([id_producto, nombre])
+  @@map("producto_caracteristica")
 }
