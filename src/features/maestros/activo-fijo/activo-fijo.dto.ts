@@ -38,6 +38,13 @@ export class NuevaAsignacionDto {
   @Min(1)
   ambienteId!: number;
 
+  @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  areaId?: number;
+
   @ApiPropertyOptional({
     description:
       'Características de esta unidad (nombre → valor). Se guardan solo las que difieren de las del catálogo.',
@@ -58,6 +65,54 @@ export class ReasignarEquipoDto {
   @ApiProperty({ example: '2026-10-26' })
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   fechaAsignacion!: string;
+
+  @ApiPropertyOptional({ description: 'Nueva ubicación: local, nivel y ambiente van juntos' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  localId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  nivelId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  ambienteId?: number;
+
+  @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  areaId?: number;
+}
+
+export class DevolverEquipoDto {
+  @ApiProperty({ example: '2026-10-26' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  fecha!: string;
+}
+
+export type TipoMovimiento = 'Asignación' | 'Reasignación' | 'Devolución';
+
+export class MovimientoEquipoDto {
+  id!: number;
+  movimiento!: TipoMovimiento;
+  fecha!: string;
+  responsableAnterior!: string | null;
+  responsableNuevo!: string | null;
+  ubicacionAnterior!: string | null;
+  ubicacionNueva!: string | null;
+  areaAnterior!: string | null;
+  areaNueva!: string | null;
 }
 
 export class EquipoAsignadoDto {
@@ -81,6 +136,14 @@ export class EquipoAsignadoDto {
   nivel!: string;
   ambienteId!: number;
   ambiente!: string;
+  areaId!: number | null;
+  area!: string | null;
+}
+
+/** Un equipo del inventario general, con su responsable (si lo tiene). */
+export class EquipoInventarioDto extends EquipoAsignadoDto {
+  responsableId!: number | null;
+  responsable!: string | null;
 }
 
 export class BienCatalogoDto {
@@ -93,6 +156,13 @@ export class BienCatalogoDto {
 }
 
 export class AmbienteOpcionDto {
+  id!: number;
+  nombre!: string;
+  /** Área por defecto de esa ubicación. */
+  areaId!: number | null;
+}
+
+export class AreaOpcionDto {
   id!: number;
   nombre!: string;
 }
@@ -112,4 +182,5 @@ export class LocalOpcionDto {
 export class OpcionesEquipoDto {
   catalogo!: BienCatalogoDto[];
   locales!: LocalOpcionDto[];
+  areas!: AreaOpcionDto[];
 }

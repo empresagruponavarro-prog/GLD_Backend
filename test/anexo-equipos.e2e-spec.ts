@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import JSZip from 'jszip';
 import 'dotenv/config';
 import pg from 'pg';
 import { App } from 'supertest/types';
@@ -22,6 +23,7 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
   let localId = 0;
   let nivelId = 0;
   let ambienteId = 0;
+  let areaId = 0;
 
   const api = () => apiConSesion(app);
 
@@ -31,7 +33,7 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     await crearUsuarioE2E(db);
 
     trabajadorId = (
-      await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Trabajador', 'E2E TRABAJADOR', true) returning id`)
+      await db.query(`insert into anexos ("tipoAnexo", "Anexo", "NumeroDocIde", estado) values ('Trabajador', 'E2E TRABAJADOR', '12345678', true) returning id`)
     ).rows[0].id;
     proveedorId = (
       await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Proveedor', 'E2E PROVEEDOR', true) returning id`)
@@ -52,6 +54,8 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     localId = ubicacion.rows[0]?.id_local ?? 0;
     nivelId = ubicacion.rows[0]?.id_nivel ?? 0;
     ambienteId = ubicacion.rows[0]?.id_ambiente ?? 0;
+
+    areaId = (await db.query(`select id from area where estado limit 1`)).rows[0]?.id ?? 0;
 
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
@@ -76,6 +80,7 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     localId,
     nivelId,
     ambienteId,
+    areaId,
     caracteristicas: { RAM: '32 GB' },
   });
 
@@ -103,8 +108,10 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
       localId,
       nivelId,
       ambienteId,
+      areaId,
       caracteristicas: { RAM: '32 GB' },
     });
+    expect(creado.area).toBeTruthy();
     expect(creado.marca).toBeTruthy();
     expect(creado.codigoActivo).toMatch(/^AF-\d{4,}$/);
 
@@ -118,6 +125,38 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
 
     // La misma serie del mismo bien no se puede repetir.
     await api().post(`/maestros/anexo/${trabajadorId}/equipos`).send({ ...cuerpo(), serie: enviado.serie }).expect(409);
+  });
+
+  it('genera la hoja de entrega (.docx) con el nombre, DNI, fecha y el equipo', async () => {
+    const res = await api()
+      .get(`/maestros/anexo/${trabajadorId}/equipos/entrega?fecha=2026-11-05`)
+      .buffer(true)
+      .parse((r, cb) => {
+        const trozos: Buffer[] = [];
+        r.on('data', (t: Buffer) => trozos.push(t));
+        r.on('end', () => cb(null, Buffer.concat(trozos)));
+      })
+      .expect(200);
+    expect(res.headers['content-disposition']).toContain('attachment');
+    const xml = (await (await JSZip.loadAsync(res.body)).file('word/document.xml')?.async('string')) ?? '';
+    const texto = (xml.match(/<w:t(?: [^>]*)?>[^<]*<\/w:t>/g) ?? []).map((t) => t.replace(/<[^>]+>/g, '')).join('|');
+    expect(texto).toContain('E2E TRABAJADOR');
+    expect(texto).toContain('12345678');
+    expect(texto).toContain('FECHA:|05|/|11|/|2026');
+    expect(texto).toContain('|5| |de |Noviembre| del |2026');
+    expect(texto).not.toContain('xxx');
+    expect(texto).not.toContain('IDEA PAD');
+    expect(texto).not.toContain('Estuche');
+
+    await api().get(`/maestros/anexo/${trabajadorId}/equipos/entrega?ids=999999999`).expect(404);
+    await api().get(`/maestros/anexo/${proveedorId}/equipos/entrega`).expect(400);
+  });
+
+  it('el inventario trae todos los equipos con su responsable', async () => {
+    const { body } = await api().get('/maestros/anexo/equipos/inventario').expect(200);
+    const propio = body.find((e: { responsable: string | null }) => e.responsable === 'E2E TRABAJADOR');
+    expect(propio).toMatchObject({ responsableId: trabajadorId, estado: 'Operativo', cantidad: 1 });
+    expect(body.every((e: { tipo?: string }) => typeof e.tipo === 'string')).toBe(true);
   });
 
   it('rechaza anexos que no son trabajadores y bienes que no están en el catálogo', async () => {
@@ -162,18 +201,29 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
         .patch(`/maestros/anexo/${trabajadorId}/equipos/${equipoId}/reasignar`)
         .send({ anexoDestinoId: proveedorId, fechaAsignacion: '2026-10-27' })
         .expect(400);
+      // La nueva ubicación necesita local, nivel y ambiente juntos.
+      await api()
+        .patch(`/maestros/anexo/${trabajadorId}/equipos/${equipoId}/reasignar`)
+        .send({ anexoDestinoId: otroId, fechaAsignacion: '2026-10-27', localId })
+        .expect(400);
       const { body: movido } = await api()
         .patch(`/maestros/anexo/${trabajadorId}/equipos/${equipoId}/reasignar`)
-        .send({ anexoDestinoId: otroId, fechaAsignacion: '2026-10-27' })
+        .send({ anexoDestinoId: otroId, fechaAsignacion: '2026-10-27', localId, nivelId, ambienteId, areaId })
         .expect(200);
       expect(movido).toMatchObject({ id: equipoId, fechaAsignacion: '2026-10-27' });
       expect((await api().get(`/maestros/anexo/${trabajadorId}/equipos`).expect(200)).body).toEqual([]);
       expect((await api().get(`/maestros/anexo/${otroId}/equipos`).expect(200)).body).toHaveLength(1);
 
       // Ya no es del primer trabajador.
-      await api().patch(`/maestros/anexo/${trabajadorId}/equipos/${equipoId}/devolver`).expect(404);
-      await api().patch(`/maestros/anexo/${otroId}/equipos/${equipoId}/devolver`).expect(200);
+      await api().patch(`/maestros/anexo/${trabajadorId}/equipos/${equipoId}/devolver`).send({ fecha: '2026-10-28' }).expect(404);
+      await api().patch(`/maestros/anexo/${otroId}/equipos/${equipoId}/devolver`).send({ fecha: '2026-10-28' }).expect(200);
       expect((await api().get(`/maestros/anexo/${otroId}/equipos`).expect(200)).body).toEqual([]);
+      // El historial conserva la asignación, la reasignación y la devolución (más reciente primero).
+      const { body: historial } = await api().get(`/maestros/anexo/equipos/${equipoId}/historial`).expect(200);
+      expect(historial.map((m: { movimiento: string }) => m.movimiento)).toEqual(['Devolución', 'Reasignación', 'Asignación']);
+      expect(historial[1]).toMatchObject({ responsableAnterior: 'E2E TRABAJADOR', responsableNuevo: 'E2E TRABAJADOR 2', fecha: '2026-10-27' });
+      expect(historial[1].areaNueva).toBeTruthy();
+      expect(historial[0]).toMatchObject({ responsableAnterior: 'E2E TRABAJADOR 2', responsableNuevo: null, fecha: '2026-10-28' });
       const fila = await db.query(`select id_responsable, fecha_asignacion from activo_fijo where id = $1`, [equipoId]);
       expect(fila.rows[0]).toEqual({ id_responsable: null, fecha_asignacion: null });
     } finally {

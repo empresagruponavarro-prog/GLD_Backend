@@ -16,6 +16,10 @@
       "model": "activo_fijo_caracteristica",
       "namespace": "public"
     },
+    "activo_fijo_historial": {
+      "model": "activo_fijo_historial",
+      "namespace": "public"
+    },
     "almacen": {
       "model": "almacen",
       "namespace": "public"
@@ -745,6 +749,23 @@
               {
                 "name": "TRANSFERENCIA",
                 "value": "TRANSFERENCIA"
+              }
+            ]
+          },
+          "movimiento_activo_fijo": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ASIGNACION",
+                "value": "ASIGNACION"
+              },
+              {
+                "name": "REASIGNACION",
+                "value": "REASIGNACION"
+              },
+              {
+                "name": "DEVOLUCION",
+                "value": "DEVOLUCION"
               }
             ]
           },
@@ -8660,6 +8681,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_area": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": false,
                 "type": {
@@ -8693,6 +8721,21 @@
               }
             },
             "relations": {
+              "area": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_area"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "area",
+                  "namespace": "public"
+                }
+              },
               "caracteristicas": {
                 "cardinality": "1:N",
                 "on": {
@@ -8705,6 +8748,21 @@
                 },
                 "to": {
                   "model": "activo_fijo_caracteristica",
+                  "namespace": "public"
+                }
+              },
+              "historial": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_activo_fijo"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo_historial",
                   "namespace": "public"
                 }
               },
@@ -8770,6 +8828,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "id_area": {
+                  "column": "id_area"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -8859,6 +8920,149 @@
               },
               "namespaceId": "public",
               "table": "activo_fijo_caracteristica"
+            }
+          },
+          "activo_fijo_historial": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_activo_fijo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_area_anterior": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_area_nueva": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_responsable_anterior": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_responsable_nuevo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ubicacion_anterior": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ubicacion_nueva": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "movimiento": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "movimiento_activo_fijo",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "activoFijo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_activo_fijo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "fecha": {
+                  "column": "fecha"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_activo_fijo": {
+                  "column": "id_activo_fijo"
+                },
+                "id_area_anterior": {
+                  "column": "id_area_anterior"
+                },
+                "id_area_nueva": {
+                  "column": "id_area_nueva"
+                },
+                "id_responsable_anterior": {
+                  "column": "id_responsable_anterior"
+                },
+                "id_responsable_nuevo": {
+                  "column": "id_responsable_nuevo"
+                },
+                "id_ubicacion_anterior": {
+                  "column": "id_ubicacion_anterior"
+                },
+                "id_ubicacion_nueva": {
+                  "column": "id_ubicacion_nueva"
+                },
+                "movimiento": {
+                  "column": "movimiento"
+                }
+              },
+              "namespaceId": "public",
+              "table": "activo_fijo_historial"
             }
           },
           "almacen": {
@@ -10333,6 +10537,21 @@
               }
             },
             "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_area"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
               "documentos": {
                 "cardinality": "1:N",
                 "on": {
@@ -17769,6 +17988,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_area": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -17843,9 +18067,34 @@
                     "namespaceId": "public",
                     "tableName": "ubicacion"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_area"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_area"
+                  ],
+                  "name": "activo_fijo_id_area_idx_2da0f6a6",
+                  "prefix": "activo_fijo_id_area_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_producto"
@@ -17959,6 +18208,121 @@
                   ]
                 }
               ]
+            },
+            "activo_fijo_historial": {
+              "checks": [
+                {
+                  "expression": "\"movimiento\" IN ('ASIGNACION', 'REASIGNACION', 'DEVOLUCION')",
+                  "name": "activo_fijo_historial_movimiento_check_95ad28f8",
+                  "prefix": "activo_fijo_historial_movimiento_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fecha": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_activo_fijo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_area_anterior": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_area_nueva": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_responsable_anterior": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_responsable_nuevo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_ubicacion_anterior": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_ubicacion_nueva": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "movimiento": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "movimiento_activo_fijo",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_activo_fijo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo_historial"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_activo_fijo"
+                  ],
+                  "name": "activo_fijo_historial_id_activo_fijo_idx_e14c77d2",
+                  "prefix": "activo_fijo_historial_id_activo_fijo_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             },
             "almacen": {
               "columns": {
@@ -30402,6 +30766,14 @@
                 "TRANSFERENCIA"
               ]
             },
+            "movimiento_activo_fijo": {
+              "kind": "valueSet",
+              "values": [
+                "ASIGNACION",
+                "REASIGNACION",
+                "DEVOLUCION"
+              ]
+            },
             "naturaleza_documento": {
               "kind": "valueSet",
               "values": [
@@ -30443,7 +30815,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "aa5a5c8846ad3f5bff430d75b7342eb3cce2ca3ad2f1651836143b4b725f5972"
+    "storageHash": "a3e1cc2ba2d3dd52384727f71fe4677afd3f4f3d9314f633e78541dbf92be998"
   },
   "capabilities": {
     "postgres": {

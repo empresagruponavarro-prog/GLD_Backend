@@ -41,6 +41,9 @@ describe('LocalController / LocalHandler', () => {
             all: centrosAll,
             first: centroFirst,
           },
+          obra_datos_generales: {
+            first: vi.fn().mockResolvedValue({ direccion: 'Jr. Arquimedes 170' }),
+          },
         },
       },
     } as unknown as Database;

@@ -118,6 +118,12 @@ enum estado_documento {
   ANULADO
 }
 
+enum movimiento_activo_fijo {
+  ASIGNACION
+  REASIGNACION
+  DEVOLUCION
+}
+
 enum estado_activo_fijo {
   OPERATIVO
   EN_REPARACION
@@ -1667,6 +1673,7 @@ model area {
   documentos OrdenCompra[] @relation("DocumentoOrigenArea")
   usuarios   Usuarios[]
   modulos    area_modulo[]
+  activosFijos activo_fijo[]
   @@map("area")
 }
 
@@ -1864,11 +1871,14 @@ model activo_fijo {
   fecha_asignacion DateString?
   id_responsable   Int?
   id_ubicacion     Int?
+  id_area          Int?
   created_at       DateTime          @default(now())
   producto         producto          @relation(fields: [id_producto], references: [id])
   responsable      Anexos?           @relation("ActivoFijoResponsable", fields: [id_responsable], references: [id], onDelete: SetNull)
   ubicacion        ubicacion?        @relation(fields: [id_ubicacion], references: [id], onDelete: SetNull)
+  area             area?             @relation(fields: [id_area], references: [id], onDelete: SetNull)
   caracteristicas  activo_fijo_caracteristica[]
+  historial        activo_fijo_historial[]
 
   @@index([id_responsable])
   @@index([id_producto])
@@ -1897,4 +1907,24 @@ model producto_caracteristica {
 
   @@unique([id_producto, nombre])
   @@map("producto_caracteristica")
+}
+
+// Historial de movimientos de un activo fijo. Responsable y ubicacion se guardan como ids sin FK para
+// que el historial sobreviva si luego se elimina un anexo o una ubicacion.
+model activo_fijo_historial {
+  id                      Int                      @id @default(autoincrement())
+  id_activo_fijo          Int
+  movimiento              movimiento_activo_fijo
+  fecha                   DateString
+  id_responsable_anterior Int?
+  id_responsable_nuevo    Int?
+  id_ubicacion_anterior   Int?
+  id_ubicacion_nueva      Int?
+  id_area_anterior        Int?
+  id_area_nueva           Int?
+  created_at              DateTime                 @default(now())
+  activoFijo              activo_fijo              @relation(fields: [id_activo_fijo], references: [id], onDelete: Cascade)
+
+  @@index([id_activo_fijo])
+  @@map("activo_fijo_historial")
 }

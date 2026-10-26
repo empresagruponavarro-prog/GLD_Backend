@@ -67,17 +67,10 @@ export class LocalHandler {
     this.validarExclusion(dto.id_empresa, dto.id_centro_costo);
     await this.validarExistenciaPadre(dto.id_empresa, dto.id_centro_costo);
 
-    let codigo = dto.codigo;
-    let nombre = dto.nombre;
-    if (dto.id_centro_costo) {
-      const cc = await this.db.orm.public.CentroCostos.first({
-        id: dto.id_centro_costo,
-      });
-      if (cc) {
-        codigo = codigo || `CC-${cc.id}`;
-        nombre = nombre || String(cc.centro_costo ?? '').slice(0, 150);
-      }
-    }
+    const derivado = await this.derivarDatos(dto.id_empresa, dto.id_centro_costo);
+    const codigo = dto.codigo || derivado.codigo;
+    const nombre = dto.nombre || derivado.nombre;
+    const direccion = dto.direccion || derivado.direccion;
     if (!codigo) throw new BadRequestException('El código es obligatorio');
     if (!nombre) throw new BadRequestException('El nombre es obligatorio');
     const codigoFinal: string = codigo;
@@ -86,7 +79,7 @@ export class LocalHandler {
       const created = await this.db.orm.public.local.create({
         codigo: toVarchar<Varchar20>(codigoFinal),
         nombre: toVarchar<Varchar150>(nombre),
-        direccion: dto.direccion ? toVarchar<Varchar255>(dto.direccion) : null,
+        direccion: direccion ? toVarchar<Varchar255>(direccion) : null,
         id_empresa: dto.id_empresa ?? null,
         id_centro_costo: dto.id_centro_costo ?? null,
         estado: dto.estado ?? true,
@@ -119,9 +112,16 @@ export class LocalHandler {
       estado?: boolean;
     } = {};
 
-    if (dto.nombre !== undefined) updateData.nombre = toVarchar<Varchar150>(dto.nombre);
-    if (dto.direccion !== undefined) {
-      updateData.direccion = dto.direccion ? toVarchar<Varchar255>(dto.direccion) : null;
+    const cambiaPadre = dto.id_empresa !== undefined || dto.id_centro_costo !== undefined;
+    const derivado = cambiaPadre
+      ? await this.derivarDatos(nuevoEmpresa, nuevoCentro)
+      : { codigo: undefined, nombre: undefined, direccion: undefined };
+    const nombreNuevo = dto.nombre ?? derivado.nombre;
+    const direccionNueva = dto.direccion ?? derivado.direccion;
+
+    if (nombreNuevo !== undefined) updateData.nombre = toVarchar<Varchar150>(nombreNuevo);
+    if (direccionNueva !== undefined) {
+      updateData.direccion = direccionNueva ? toVarchar<Varchar255>(direccionNueva) : null;
     }
     if (dto.id_empresa !== undefined) updateData.id_empresa = dto.id_empresa;
     if (dto.id_centro_costo !== undefined) updateData.id_centro_costo = dto.id_centro_costo;
@@ -134,6 +134,37 @@ export class LocalHandler {
       throwIfUniqueViolation(error, 'Error de unicidad al actualizar local');
       throw error;
     }
+  }
+
+  /** Código, nombre y dirección del local según la Empresa o el Centro de Costo elegido. */
+  private async derivarDatos(
+    idEmpresa?: number | null,
+    idCentroCosto?: number | null,
+  ): Promise<{ codigo?: string; nombre?: string; direccion?: string }> {
+    if (idEmpresa) {
+      const emp = await this.db.orm.public.Empresas.first({ id_empresa: idEmpresa });
+      if (emp) {
+        return {
+          codigo: `EMP-${emp.id_empresa}`,
+          nombre: String(emp.razon_social ?? '').slice(0, 150),
+          direccion: emp.direccion_entrega ? String(emp.direccion_entrega) : undefined,
+        };
+      }
+    }
+    if (idCentroCosto) {
+      const cc = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
+      if (cc) {
+        const datosObra = await this.db.orm.public.obra_datos_generales.first({
+          id_centro_costo: cc.id,
+        });
+        return {
+          codigo: `CC-${cc.id}`,
+          nombre: String(cc.centro_costo ?? '').slice(0, 150),
+          direccion: datosObra?.direccion ? String(datosObra.direccion).slice(0, 255) : undefined,
+        };
+      }
+    }
+    return {};
   }
 
   async toggleEstado(id: number, estado: boolean): Promise<LocalResponseDto> {
