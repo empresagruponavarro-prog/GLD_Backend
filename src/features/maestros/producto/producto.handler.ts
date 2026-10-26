@@ -235,7 +235,8 @@ export class ProductoHandler {
     };
   }
 
-  private async assertAlmacenExists(id: number): Promise<void> {
+  private async assertAlmacenExists(id: number | null): Promise<void> {
+    if (id === null) throw new BadRequestException('La ubicación habitual (almacén) es obligatoria');
     const q = sqlTag(this.sql);
     const [row] = await q.rows<{ id: number }>({ id: I })`SELECT id FROM almacen WHERE id = ${id}::int`;
     if (!row) throw new BadRequestException(`Almacén ${id} no existe`);

@@ -157,6 +157,19 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     expect(body.every((e: { tipo?: string }) => typeof e.tipo === 'string')).toBe(true);
   });
 
+  it('un bien sin almacén por defecto (null) se rechaza con un 400 claro, no con un 500', async () => {
+    const cuerpo = {
+      codigo: 'E2E-SINALM',
+      descripcion: 'BIEN SIN ALMACEN E2E',
+      id_categoria: (await db.query(`select id from categoria limit 1`)).rows[0].id,
+      id_unidad_medida: (await db.query(`select id from unidad_medida limit 1`)).rows[0].id,
+      id_almacen_default: null,
+    };
+    const { body } = await api().post('/maestros/producto').send(cuerpo).expect(400);
+    expect(body.message).toContain('almacén');
+    await api().patch(`/maestros/producto/${productoId}`).send({ id_almacen_default: null }).expect(400);
+  });
+
   it('rechaza anexos que no son trabajadores y bienes que no están en el catálogo', async () => {
     await api().get(`/maestros/anexo/${proveedorId}/equipos`).expect(400);
     await api().post(`/maestros/anexo/${proveedorId}/equipos`).send(cuerpo()).expect(400);
