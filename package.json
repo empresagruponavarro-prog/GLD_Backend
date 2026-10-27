@@ -24,7 +24,7 @@
     "contract:emit": "prisma contract emit",
     "usuarios:hash-claves": "node scripts/usuarios-hash-claves.js",
     "usuarios:crear-admin": "node scripts/usuarios-crear-admin.js",
-    "inventario-ti:importar": "node scripts/importar-inventario-ti.mjs"
+    "inventario-ti:importar": "node scripts/importar-inventario-ti.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
