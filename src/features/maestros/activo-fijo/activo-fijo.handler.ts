@@ -8,6 +8,7 @@ import {
   BienCatalogoDto,
   EquipoAsignadoDto,
   DevolverEquipoDto,
+  AsignarActivoDto,
   EquipoInventarioDto,
   EstadoEquipo,
   MovimientoEquipoDto,
@@ -16,6 +17,7 @@ import {
   NuevaAsignacionDto,
   OpcionesEquipoDto,
   ReasignarEquipoDto,
+  RegistrarActivoDto,
 } from './activo-fijo.dto.js';
 
 const TIPO_POR_DEFECTO = 'Equipo';
@@ -41,9 +43,21 @@ type ActivoRow = {
   serie: Varchar<100> | null;
   estado: string;
   fecha_asignacion: string | null;
+  id_responsable: number | null;
   id_ubicacion: number | null;
   id_area: number | null;
 };
+
+/** Lo necesario para crear un activo (lo comparten `asignar` y `registrarActivo`). */
+interface DatosActivo {
+  codigoBien: string;
+  serie?: string | null;
+  localId: number;
+  nivelId: number;
+  ambienteId: number;
+  areaId?: number;
+  caracteristicas?: Record<string, string>;
+}
 
 @Injectable()
 export class ActivoFijoHandler {
@@ -100,15 +114,40 @@ export class ActivoFijoHandler {
   /** Todos los equipos (asignados o no) para el tablero de equipos tecnológicos. */
   async inventario(): Promise<EquipoInventarioDto[]> {
     const activos = await this.db.orm.public.activo_fijo.orderBy((a) => a.id.desc()).all();
-    const equipos = await this.armar(activos);
-    const idsAnexo = [...new Set(activos.flatMap((a) => (a.id_responsable === null ? [] : [a.id_responsable])))];
-    const anexos = idsAnexo.length > 0 ? await this.db.orm.public.Anexos.where((a) => a.id.in(idsAnexo)).all() : [];
-    const nombrePorAnexo = new Map(anexos.map((a) => [a.id, String(a.Anexo ?? a.NombreComercial ?? `Anexo ${a.id}`)]));
-    const responsablePorActivo = new Map(activos.map((a) => [a.id, a.id_responsable]));
-    return equipos.map((e) => {
-      const responsableId = responsablePorActivo.get(e.id) ?? null;
-      return { ...e, responsableId, responsable: responsableId === null ? null : (nombrePorAnexo.get(responsableId) ?? null) };
-    });
+    return this.conResponsable(activos);
+  }
+
+  /** Registra un activo en el inventario, con o sin trabajador (sin trabajador queda disponible). */
+  async registrarActivo(dto: RegistrarActivoDto): Promise<EquipoInventarioDto> {
+    let responsable: { anexoId: number; fecha: string } | null = null;
+    if (dto.anexoId !== undefined) {
+      if (!dto.fechaAsignacion) {
+        throw new BadRequestException('La fecha de asignación es obligatoria cuando se indica el trabajador');
+      }
+      await this.asegurarTrabajador(dto.anexoId);
+      responsable = { anexoId: dto.anexoId, fecha: dto.fechaAsignacion };
+    }
+    const creado = await this.crearActivo(dto, responsable);
+    const [equipo] = await this.conResponsable([creado]);
+    if (!equipo) throw new NotFoundException('No se pudo leer el equipo registrado');
+    return equipo;
+  }
+
+  /** Entrega a un trabajador un equipo que está disponible; para cambiarlo de persona se usa reasignar. */
+  async asignarExistente(equipoId: number, dto: AsignarActivoDto): Promise<EquipoInventarioDto> {
+    const activo = await this.db.orm.public.activo_fijo.first({ id: equipoId });
+    if (!activo) throw new NotFoundException(`Equipo ${equipoId} no encontrado`);
+    if (activo.id_responsable !== null) {
+      throw new ConflictException('El equipo ya está asignado a un trabajador; use reasignar para cambiarlo de persona');
+    }
+    await this.asegurarTrabajador(dto.anexoId);
+    const actualizado = await this.db.orm.public.activo_fijo
+      .where({ id: equipoId })
+      .update({ id_responsable: dto.anexoId, fecha_asignacion: dto.fechaAsignacion });
+    await this.registrar(equipoId, 'ASIGNACION', dto.fechaAsignacion, null, dto.anexoId, activo.id_ubicacion, activo.id_ubicacion, activo.id_area, activo.id_area);
+    const [equipo] = actualizado ? await this.conResponsable([actualizado]) : [];
+    if (!equipo) throw new NotFoundException('No se pudo leer el equipo');
+    return equipo;
   }
 
   async listar(anexoId: number): Promise<EquipoAsignadoDto[]> {
@@ -122,7 +161,13 @@ export class ActivoFijoHandler {
 
   async asignar(anexoId: number, dto: NuevaAsignacionDto): Promise<EquipoAsignadoDto> {
     await this.asegurarTrabajador(anexoId);
+    const creado = await this.crearActivo(dto, { anexoId, fecha: dto.fechaAsignacion });
+    const [equipo] = await this.armar([creado]);
+    if (!equipo) throw new NotFoundException('No se pudo leer el equipo asignado');
+    return equipo;
+  }
 
+  private async crearActivo(dto: DatosActivo, responsable: { anexoId: number; fecha: string } | null): Promise<ActivoRow> {
     const bien = await this.db.orm.public.producto.first({ codigo: dto.codigoBien });
     if (!bien || !bien.estado) throw new BadRequestException(`El bien "${dto.codigoBien}" no existe en el catálogo`);
     if (bien.clase_inventario !== 'ACTIVO_FIJO') {
@@ -155,8 +200,8 @@ export class ActivoFijoHandler {
         id_producto: bien.id,
         serie: serie ? toVarchar<100>(serie) : null,
         estado: 'OPERATIVO',
-        fecha_asignacion: dto.fechaAsignacion,
-        id_responsable: anexoId,
+        fecha_asignacion: responsable?.fecha ?? null,
+        id_responsable: responsable?.anexoId ?? null,
         id_ubicacion: idUbicacion,
         id_area: idArea,
       });
@@ -165,7 +210,9 @@ export class ActivoFijoHandler {
       throw error;
     }
 
-    await this.registrar(creado.id, 'ASIGNACION', dto.fechaAsignacion, null, anexoId, null, idUbicacion, null, idArea);
+    if (responsable) {
+      await this.registrar(creado.id, 'ASIGNACION', responsable.fecha, null, responsable.anexoId, null, idUbicacion, null, idArea);
+    }
 
     // Solo se guarda lo que cambia respecto al catálogo; lo demás se hereda.
     const delCatalogo = (await this.caracteristicasDeProductos([bien.id])).get(bien.id) ?? {};
@@ -179,10 +226,19 @@ export class ActivoFijoHandler {
         valor: toVarchar<150>(v),
       });
     }
+    return creado;
+  }
 
-    const [equipo] = await this.armar([creado]);
-    if (!equipo) throw new NotFoundException('No se pudo leer el equipo asignado');
-    return equipo;
+  private async conResponsable(activos: ActivoRow[]): Promise<EquipoInventarioDto[]> {
+    const equipos = await this.armar(activos);
+    const idsAnexo = [...new Set(activos.flatMap((a) => (a.id_responsable === null ? [] : [a.id_responsable])))];
+    const anexos = idsAnexo.length > 0 ? await this.db.orm.public.Anexos.where((a) => a.id.in(idsAnexo)).all() : [];
+    const nombrePorAnexo = new Map(anexos.map((a) => [a.id, String(a.Anexo ?? a.NombreComercial ?? `Anexo ${a.id}`)]));
+    const responsablePorActivo = new Map(activos.map((a) => [a.id, a.id_responsable]));
+    return equipos.map((e) => {
+      const responsableId = responsablePorActivo.get(e.id) ?? null;
+      return { ...e, responsableId, responsable: responsableId === null ? null : (nombrePorAnexo.get(responsableId) ?? null) };
+    });
   }
 
   /**

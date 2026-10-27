@@ -55,6 +55,75 @@ export class NuevaAsignacionDto {
   caracteristicas?: Record<string, string>;
 }
 
+/** Registro de un activo en el inventario; el trabajador es opcional (queda disponible si se omite). */
+export class RegistrarActivoDto {
+  @ApiProperty({ example: 'Laptop01', description: 'Código del bien (catálogo, clase Activo Fijo)' })
+  @IsString()
+  @MaxLength(50)
+  codigoBien!: string;
+
+  @ApiPropertyOptional({ example: 'PF4ABC12' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  serie?: string | null;
+
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  localId!: number;
+
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  nivelId!: number;
+
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  ambienteId!: number;
+
+  @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  areaId?: number;
+
+  @ApiPropertyOptional({ description: 'Características de esta unidad; se guardan solo las que difieren del catálogo' })
+  @IsOptional()
+  @IsObject()
+  caracteristicas?: Record<string, string>;
+
+  @ApiPropertyOptional({ description: 'Trabajador que lo recibe; si se omite el equipo queda disponible' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  anexoId?: number;
+
+  @ApiPropertyOptional({ example: '2026-10-27', description: 'Obligatoria si se indica el trabajador' })
+  @IsOptional()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  fechaAsignacion?: string;
+}
+
+/** Asigna a un trabajador un equipo que está disponible (sin responsable). */
+export class AsignarActivoDto {
+  @ApiProperty({ description: 'ID del anexo (Trabajador) que lo recibe' })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  anexoId!: number;
+
+  @ApiProperty({ example: '2026-10-27' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  fechaAsignacion!: string;
+}
+
 export class ReasignarEquipoDto {
   @ApiProperty({ description: 'ID del anexo (Trabajador) que recibe el equipo' })
   @Type(() => Number)

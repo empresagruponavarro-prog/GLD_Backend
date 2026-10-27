@@ -241,4 +241,33 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
       await db.query(`delete from anexos where id = $1`, [otroId]);
     }
   });
+
+  it('registra un activo disponible (sin trabajador), lo entrega desde el stock y no permite asignarlo dos veces', async () => {
+    const base = { codigoBien, serie: `E2E-REG-${Date.now()}`, localId, nivelId, ambienteId, areaId, caracteristicas: { RAM: '8 GB' } };
+    const { body: libre } = await api().post('/maestros/anexo/equipos').send(base).expect(201);
+    expect(libre).toMatchObject({ responsableId: null, responsable: null, estado: 'Operativo', fechaAsignacion: '' });
+    expect(libre.caracteristicas).toMatchObject({ RAM: '8 GB' });
+
+    // Con trabajador hace falta la fecha; y solo los trabajadores pueden recibirlo.
+    await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-REG2-${Date.now()}`, anexoId: trabajadorId }).expect(400);
+    await api().patch(`/maestros/anexo/equipos/${libre.id}/asignar`).send({ anexoId: proveedorId, fechaAsignacion: '2026-10-28' }).expect(400);
+
+    const { body: asignado } = await api()
+      .patch(`/maestros/anexo/equipos/${libre.id}/asignar`)
+      .send({ anexoId: trabajadorId, fechaAsignacion: '2026-10-28' })
+      .expect(200);
+    expect(asignado).toMatchObject({ responsableId: trabajadorId, fechaAsignacion: '2026-10-28' });
+    await api().patch(`/maestros/anexo/equipos/${libre.id}/asignar`).send({ anexoId: trabajadorId, fechaAsignacion: '2026-10-29' }).expect(409);
+    await api().patch('/maestros/anexo/equipos/999999999/asignar').send({ anexoId: trabajadorId, fechaAsignacion: '2026-10-28' }).expect(404);
+
+    const { body: historial } = await api().get(`/maestros/anexo/equipos/${libre.id}/historial`).expect(200);
+    expect(historial.map((m: { movimiento: string }) => m.movimiento)).toEqual(['Asignación']);
+
+    // Registro directo con trabajador (equivale a asignar un equipo nuevo).
+    const { body: directo } = await api()
+      .post('/maestros/anexo/equipos')
+      .send({ ...base, serie: `E2E-REG3-${Date.now()}`, anexoId: trabajadorId, fechaAsignacion: '2026-10-28' })
+      .expect(201);
+    expect(directo).toMatchObject({ responsableId: trabajadorId, responsable: 'E2E TRABAJADOR' });
+  });
 });

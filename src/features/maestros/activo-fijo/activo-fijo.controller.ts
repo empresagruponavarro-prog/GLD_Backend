@@ -3,6 +3,7 @@ import type { Response } from 'express';
 import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import {
+  AsignarActivoDto,
   DevolverEquipoDto,
   EquipoAsignadoDto,
   EquipoInventarioDto,
@@ -10,6 +11,7 @@ import {
   NuevaAsignacionDto,
   OpcionesEquipoDto,
   ReasignarEquipoDto,
+  RegistrarActivoDto,
 } from './activo-fijo.dto.js';
 import { ActivoFijoHandler } from './activo-fijo.handler.js';
 
@@ -31,6 +33,24 @@ export class ActivoFijoController {
   @ApiOkResponse({ type: EquipoInventarioDto, isArray: true })
   inventario(): Promise<EquipoInventarioDto[]> {
     return this.handler.inventario();
+  }
+
+  @Post('equipos')
+  @ApiOperation({ summary: 'Registrar un activo en el inventario (con o sin trabajador)' })
+  @ApiCreatedResponse({ type: EquipoInventarioDto })
+  registrar(@Body() dto: RegistrarActivoDto): Promise<EquipoInventarioDto> {
+    return this.handler.registrarActivo(dto);
+  }
+
+  @Patch('equipos/:equipoId/asignar')
+  @ApiOperation({ summary: 'Asignar a un trabajador un equipo disponible (sin responsable)' })
+  @ApiParam({ name: 'equipoId', type: Number, description: 'ID del activo fijo' })
+  @ApiOkResponse({ type: EquipoInventarioDto })
+  asignarExistente(
+    @Param('equipoId', ParseIntPipe) equipoId: number,
+    @Body() dto: AsignarActivoDto,
+  ): Promise<EquipoInventarioDto> {
+    return this.handler.asignarExistente(equipoId, dto);
   }
 
   @Get(':id/equipos')
