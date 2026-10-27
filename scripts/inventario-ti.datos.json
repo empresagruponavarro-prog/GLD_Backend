@@ -1,0 +1,1152 @@
+{
+  "generado": "2026-10-27",
+  "empresa": "GLD SERVICIOS GENERALES EIRL",
+  "productosNuevos": [],
+  "catalogo": [
+    {
+      "codigo": "pc-02",
+      "descripcion": "PC TIPO 2 - Ryzen 5 5600GT / 16 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 5 5600GT (12 CPUs - 3.6 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "laptop-02",
+      "descripcion": "LAPTOP TIPO 2 - Ryzen 7 7445HS / 16 GB / Radeon 740M",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "AMD Ryzen 7 7445HS (12 CPUs - 3.2 GHz)",
+        "RAM": "16 GB",
+        "Tarjeta de video": "Radeon 740M Graphics",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "pc-03",
+      "descripcion": "PC TIPO 3 - Core i5 14400F / 16 GB / 500 GB SSD / RX 580",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 14400F (16 CPUs - 2.5 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Tarjeta de video": "AMD Radeon RX 580 (8 GB)",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-04",
+      "descripcion": "PC TIPO 4 - Ryzen 3 5300 / 16 GB / 2 discos de 500 GB",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300",
+        "RAM": "16 GB",
+        "Disco 1": "500 GB (Disco C)",
+        "Disco 2": "500 GB (Disco D)",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-05",
+      "descripcion": "PC TIPO 5 - Ryzen 5 5600G / 16 GB",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 5 5600G",
+        "RAM": "16 GB",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-06",
+      "descripcion": "PC TIPO 6 - Ryzen 3 5300GT / 16 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300GT (8 CPUs - 4 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-08",
+      "descripcion": "PC TIPO 8 - Core i5 7400 / 8 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 7400 (4 CPUs)",
+        "RAM": "8 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-09",
+      "descripcion": "PC TIPO 9 - Core i5 12400 / 16 GB / 1 TB SSD + 500 GB HDD",
+      "caracteristicas": {
+        "Procesador": "Intel Core i5 12400 (12 CPUs - 2.5 GHz)",
+        "Tipo": "PC",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "1 TB SSD NVMe",
+        "Disco 2": "500 GB HDD SATA",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "laptop-03",
+      "descripcion": "LAPTOP TIPO 3 - Core i5 13420H / 16 GB",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 13420H (13va gen - 12 CPUs - 2.0 GHz)",
+        "RAM": "16 GB",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-10",
+      "descripcion": "PC TIPO 10 - Ryzen 5 5600GT / 12 GB / 300 GB HDD + 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 5 5600GT (12 CPUs - 3.6 GHz)",
+        "RAM": "12 GB DDR4",
+        "Disco 1": "300 GB HDD SATA",
+        "Disco 2": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-11",
+      "descripcion": "PC TIPO 11 - Core i5 4400 / 16 GB",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 4400",
+        "RAM": "16 GB DDR4",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-12",
+      "descripcion": "PC TIPO 12 - Core i5 9400F / 24 GB / 3 discos / GTX 1650",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 9400F (6 CPUs)",
+        "RAM": "24 GB",
+        "Disco 1": "1 TB HDD SATA",
+        "Disco 2": "1 TB HDD SATA",
+        "Disco 3": "500 GB SSD NVMe",
+        "Tarjeta de video": "NVIDIA GeForce GTX 1650 (4 GB)",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-07",
+      "descripcion": "PC TIPO 7 - Ryzen 3 5300GT / 16 GB / 500 GB SSD + 1 TB HDD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300GT (8 CPUs - 4 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD SATA",
+        "Disco 2": "1 TB HDD SATA",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "laptop-04",
+      "descripcion": "LAPTOP TIPO 4 - Core i5 1334U / 16 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 1334U (1.3 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "laptop-05",
+      "descripcion": "LAPTOP TIPO 5 - Core i5 13420H / 16 GB (Home)",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 13420H (13va gen)",
+        "RAM": "16 GB",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "CEL - 02",
+      "descripcion": "CELULAR TIPO 2 - Snapdragon 6CG Gen 3 / Android",
+      "caracteristicas": {
+        "Tipo": "Celular",
+        "Procesador": "Snapdragon 6CG de generación 3",
+        "Sistema operativo": "Android"
+      }
+    },
+    {
+      "codigo": "laptop-06",
+      "descripcion": "LAPTOP TIPO 6 - Core i5 10300H / 16 GB",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 10300H (10ma gen)",
+        "RAM": "16 GB",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "Tablet-01",
+      "descripcion": "Tablet TIPO 1",
+      "caracteristicas": {
+        "Tipo": "Tablet",
+        "Marca": "LENOVO",
+        "Modelo": "IMPACT",
+        "RAM": "8"
+      }
+    },
+    {
+      "codigo": "pc-14",
+      "descripcion": "PC TIPO 14 - Ryzen 3 5300G / 16 GB / 2 discos de 500 GB",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300G",
+        "RAM": "16 GB",
+        "Disco 1": "500 GB (Disco C)",
+        "Disco 2": "500 GB (Disco D)",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-15",
+      "descripcion": "PC TIPO 15 - Core i5 10400F / 16 GB / 500 GB SSD / GTX 1650",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 10400F (12 CPUs - 2.9 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD",
+        "Tarjeta de video": "NVIDIA GeForce GTX 1650 (4 GB)",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-16",
+      "descripcion": "PC TIPO 16 - Ryzen 3 5300GT / 16 GB / 500 GB SSD + 500 GB HDD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300GT (8 CPUs - 4 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD SATA",
+        "Disco 2": "500 GB HDD SATA",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-17",
+      "descripcion": "PC TIPO 17 - Core i5 12400 / 16 GB / 500 GB HDD + 1 TB SSD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "Intel Core i5 12400 (12 CPUs - 2.5 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB HDD SATA",
+        "Disco 2": "1 TB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "pc-18",
+      "descripcion": "PC TIPO 18 - Ryzen 3 5300GT / 16 GB / 500 GB SSD + 750 GB HDD",
+      "caracteristicas": {
+        "Tipo": "PC",
+        "Procesador": "AMD Ryzen 3 5300GT (8 CPUs - 4 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD SATA",
+        "Disco 2": "750 GB HDD SATA",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "laptop-07",
+      "descripcion": "LAPTOP TIPO 7 - Core i5 1120U / 16 GB",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 1120U (12 CPUs - 1.4 GHz)",
+        "RAM": "16 GB",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "cel-00",
+      "descripcion": "CELULAR (sin especificar)",
+      "caracteristicas": {
+        "Tipo": "Celular"
+      }
+    },
+    {
+      "codigo": "CEL - 04",
+      "descripcion": "CELULAR TIPO 4 - 8 GB / Magic OS 10",
+      "caracteristicas": {
+        "Tipo": "Celular",
+        "RAM": "8 GB",
+        "Sistema operativo": "Magic OS 10"
+      }
+    },
+    {
+      "codigo": "laptop-08",
+      "descripcion": "LAPTOP TIPO 8 - Core i5 13420H / 16 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 13420H (13va gen)",
+        "RAM": "16 GB",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "CEL - 05",
+      "descripcion": "CELULAR TIPO 5 - 256 GB / Xiaomi HyperOS",
+      "caracteristicas": {
+        "Tipo": "Celular",
+        "Almacenamiento": "256 GB",
+        "Sistema operativo": "Xiaomi HyperOS 2.0.205.0"
+      }
+    },
+    {
+      "codigo": "laptop-09",
+      "descripcion": "LAPTOP TIPO 9 - Ryzen 7 740M / 16 GB / 500 GB",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "AMD Ryzen 7 740M graphic",
+        "RAM": "16 GB",
+        "Disco 1": "500 GB",
+        "Sistema operativo": "Windows Home"
+      }
+    },
+    {
+      "codigo": "CEL - 06",
+      "descripcion": "CELULAR TIPO 6 - 8 GB / 256 GB",
+      "caracteristicas": {
+        "Tipo": "Celular",
+        "RAM": "8 GB",
+        "Almacenamiento": "256 GB"
+      }
+    },
+    {
+      "codigo": "laptop-11",
+      "descripcion": "LAPTOP TIPO 11 - Core i5 120U / 16 GB / 500 GB",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 120U (12 CPUs - 1.4 GHz)",
+        "RAM": "16 GB",
+        "Disco 1": "500 GB",
+        "Sistema operativo": "Windows 11 Pro"
+      }
+    },
+    {
+      "codigo": "CEL - 07",
+      "descripcion": "CELULAR TIPO 7 - SM-A57B6 / 8 GB / 256 GB / Android",
+      "caracteristicas": {
+        "Tipo": "Celular",
+        "Modelo": "SM-A57B6",
+        "RAM": "8 GB",
+        "Almacenamiento": "256 GB",
+        "Sistema operativo": "Android"
+      }
+    },
+    {
+      "codigo": "laptop-12",
+      "descripcion": "LAPTOP TIPO 12 - Core i5 13420H / 16 GB / 500 GB SSD (Home)",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 13420H (12 CPUs - 2.1 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "laptop-13",
+      "descripcion": "LAPTOP TIPO 13 - Core i5 120U / 16 GB / 500 GB SSD (Home)",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 120U (1.4 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "laptop-14",
+      "descripcion": "LAPTOP TIPO 14 - Core i5 13420U / 16 GB / 500 GB SSD",
+      "caracteristicas": {
+        "Tipo": "Laptop",
+        "Procesador": "Intel Core i5 13420U (2.1 GHz)",
+        "RAM": "16 GB DDR4",
+        "Disco 1": "500 GB SSD NVMe",
+        "Sistema operativo": "Windows 11 Home"
+      }
+    },
+    {
+      "codigo": "tv-01",
+      "descripcion": "TV",
+      "caracteristicas": {
+        "Tipo": "TV"
+      }
+    },
+    {
+      "codigo": "imp-01",
+      "descripcion": "IMPRESORA",
+      "caracteristicas": {
+        "Tipo": "Impresora"
+      }
+    },
+    {
+      "codigo": "ups-01",
+      "descripcion": "UPS",
+      "caracteristicas": {
+        "Tipo": "UPS"
+      }
+    },
+    {
+      "codigo": "est-01",
+      "descripcion": "ESTABILIZADOR",
+      "caracteristicas": {
+        "Tipo": "Estabilizador"
+      }
+    },
+    {
+      "codigo": "sw-01",
+      "descripcion": "SWITCH",
+      "caracteristicas": {
+        "Tipo": "Switch"
+      }
+    }
+  ],
+  "areasNuevas": {
+    "Administrativa": "ADMIN",
+    "Finanzas": "FINANZAS",
+    "Contabilidad": "CONTAB",
+    "Proyectos": "PROYECTOS",
+    "Seguridad": "SEGURIDAD",
+    "Operaciones": "OPERACIONES"
+  },
+  "personas": {
+    "57": {
+      "nombre": "ROLAND ENRRIQUE MELENDEZ GONZALES",
+      "crear": false
+    },
+    "59": {
+      "nombre": "CARLOS ALEJANDRO RUIZ SERNAQUE",
+      "crear": false
+    },
+    "62": {
+      "nombre": "JAIME DANIEL ÁVALOS VILLAGOMEZ",
+      "crear": false
+    },
+    "453": {
+      "nombre": "VILLAFANI SALAZAR JOSEPH MAURICIO",
+      "crear": false
+    },
+    "488": {
+      "nombre": "MARICIELO BELLIDO QUISPE",
+      "crear": false
+    },
+    "1043": {
+      "nombre": "BALDEON LOPEZ GUIANELLA XIARA",
+      "crear": false
+    },
+    "1144": {
+      "nombre": "CARMEN ROSA REJAS CARDENA",
+      "crear": false
+    },
+    "1571": {
+      "nombre": "ALEX ZAPANA VARGAS",
+      "crear": false
+    },
+    "1659": {
+      "nombre": "VALESKA YARLETH REYES GALLEGO",
+      "crear": false
+    },
+    "2162": {
+      "nombre": "DAYLA GIANELLA GOYZUETA SEVERINO",
+      "crear": false
+    },
+    "2878": {
+      "nombre": "DAYANA CRISTELL MOTTA DIAZ",
+      "crear": false
+    },
+    "2972": {
+      "nombre": "ARACELLY GRACE GUTARRA BARRIENTOS",
+      "crear": false
+    },
+    "2974": {
+      "nombre": "ALESSANDRO JESUS CUEVA VASQUEZ",
+      "crear": false
+    },
+    "2980": {
+      "nombre": "ANTICONA VALDERRAMA MARIA FERNANDA",
+      "crear": false
+    },
+    "3447": {
+      "nombre": "ZAPATA FAJARDO JORDY SMITH",
+      "crear": false
+    },
+    "3543": {
+      "nombre": "ANDREA MARTINA BALAREZO VEGA",
+      "crear": false
+    },
+    "3710": {
+      "nombre": "AARON VALENTINO GUTIERREZ VEGA",
+      "crear": false
+    },
+    "NATALIA VÁSQUEZ": {
+      "nombre": "NATALIA VÁSQUEZ",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "HARRY CERÓN": {
+      "nombre": "HARRY CERÓN",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "JOANA BARDA": {
+      "nombre": "JOANA BARDA",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "GABRIEL MANOTUPA": {
+      "nombre": "GABRIEL MANOTUPA",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "WILMER HUAMANÍ": {
+      "nombre": "WILMER HUAMANÍ",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "GIANELLA ABIGAIL FAUSTINO HURTADO": {
+      "nombre": "GIANELLA ABIGAIL FAUSTINO HURTADO",
+      "crear": true,
+      "especialidad": null
+    },
+    "ROSA LUZ GUADALUPE LEON TARAZONA": {
+      "nombre": "ROSA LUZ GUADALUPE LEON TARAZONA",
+      "crear": true,
+      "especialidad": null
+    },
+    "DANIELA POZO": {
+      "nombre": "DANIELA POZO",
+      "crear": true,
+      "especialidad": null
+    },
+    "MILAGROS ORNA BALTA": {
+      "nombre": "MILAGROS ORNA BALTA",
+      "crear": true,
+      "especialidad": null
+    },
+    "CARLOS GÓMEZ": {
+      "nombre": "CARLOS GÓMEZ",
+      "crear": true,
+      "especialidad": "JEFE DE PROYECTOS"
+    },
+    "MARCO ANTONIO GUIMOYE MACHICAO": {
+      "nombre": "MARCO ANTONIO GUIMOYE MACHICAO",
+      "crear": true,
+      "especialidad": "COSTOS Y PRESUPUESTOS"
+    },
+    "MANUEL ALEJANDRO TORRES ARROYO": {
+      "nombre": "MANUEL ALEJANDRO TORRES ARROYO",
+      "crear": true,
+      "especialidad": "COSTOS Y PRESUPUESTOS"
+    },
+    "FRANCO LEE ESCOBAR MENDIVIL": {
+      "nombre": "FRANCO LEE ESCOBAR MENDIVIL",
+      "crear": true,
+      "especialidad": "COSTOS Y PRESUPUESTOS"
+    },
+    "JEFFERSON PLETICKOSICH": {
+      "nombre": "JEFFERSON PLETICKOSICH",
+      "crear": true,
+      "especialidad": "G.OPERACIONES"
+    },
+    "JEREMY YERENA URBINA": {
+      "nombre": "JEREMY YERENA URBINA",
+      "crear": true,
+      "especialidad": "ADMINISTRATIVO"
+    },
+    "PÍA QUISPE": {
+      "nombre": "PÍA QUISPE",
+      "crear": true,
+      "especialidad": null
+    },
+    "ENRIQUE JESÚS PAREDES TUESTA": {
+      "nombre": "ENRIQUE JESÚS PAREDES TUESTA",
+      "crear": true,
+      "especialidad": null
+    }
+  },
+  "equipos": [
+    {
+      "fila": 4,
+      "producto": "pc-02",
+      "area": "Sistemas",
+      "responsable": "3710",
+      "nivel": "PISO 2",
+      "ambiente": "SISTEMAS",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 5,
+      "producto": "laptop-02",
+      "area": "Sistemas",
+      "responsable": "3710",
+      "nivel": "PISO 2",
+      "ambiente": "SISTEMAS",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 6,
+      "producto": "pc-03",
+      "area": "Administrativa",
+      "responsable": "59",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 7,
+      "producto": "pc-02",
+      "area": "Administrativa",
+      "responsable": "2972",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 8,
+      "producto": "pc-04",
+      "area": "Administrativa",
+      "responsable": "NATALIA VÁSQUEZ",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 9,
+      "producto": "pc-05",
+      "area": "Administrativa",
+      "responsable": "HARRY CERÓN",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 10,
+      "producto": "pc-06",
+      "area": "Finanzas",
+      "responsable": "1144",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 12,
+      "producto": "pc-08",
+      "area": "LOGISTICA",
+      "responsable": "2974",
+      "nivel": "PISO 1",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 13,
+      "producto": "pc-09",
+      "area": "LOGISTICA",
+      "responsable": "3447",
+      "nivel": "PISO 1",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 14,
+      "producto": "laptop-03",
+      "area": "LOGISTICA",
+      "responsable": "JOANA BARDA",
+      "nivel": "PISO 1",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Lenovo"
+      }
+    },
+    {
+      "fila": 15,
+      "producto": "pc-10",
+      "area": "Contabilidad",
+      "responsable": "GABRIEL MANOTUPA",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 16,
+      "producto": "pc-02",
+      "area": "Contabilidad",
+      "responsable": "488",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 17,
+      "producto": "pc-11",
+      "area": "Contabilidad",
+      "responsable": "WILMER HUAMANÍ",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 18,
+      "producto": "pc-12",
+      "area": "Proyectos",
+      "responsable": "57",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 19,
+      "producto": "pc-07",
+      "area": "Proyectos",
+      "responsable": "453",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 20,
+      "producto": "pc-02",
+      "area": "Oficina Tecnica",
+      "responsable": "GIANELLA ABIGAIL FAUSTINO HURTADO",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 21,
+      "producto": "pc-02",
+      "area": "Oficina Tecnica",
+      "responsable": "ROSA LUZ GUADALUPE LEON TARAZONA",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 22,
+      "producto": "laptop-04",
+      "area": "Oficina Tecnica",
+      "responsable": "1659",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 23,
+      "producto": "pc-02",
+      "area": "Oficina Tecnica",
+      "responsable": "DANIELA POZO",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 24,
+      "producto": "laptop-05",
+      "area": "Proyectos",
+      "responsable": "MILAGROS ORNA BALTA",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Asus",
+        "Modelo": "VivoBook"
+      }
+    },
+    {
+      "fila": 25,
+      "producto": "CEL - 02",
+      "area": "Proyectos",
+      "responsable": "MILAGROS ORNA BALTA",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Honor",
+        "Modelo": "X7T 5G"
+      }
+    },
+    {
+      "fila": 26,
+      "producto": "laptop-06",
+      "area": "Proyectos",
+      "responsable": "CARLOS GÓMEZ",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Lenovo",
+        "Modelo": "IdeaPad Gaming"
+      }
+    },
+    {
+      "fila": 27,
+      "producto": "Tablet-01",
+      "area": "Proyectos",
+      "responsable": "CARLOS GÓMEZ",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Procesador": "MediaTek Dimensity 6300",
+        "Almacenamiento": "128 GB",
+        "Modelo": "IdeaTab"
+      }
+    },
+    {
+      "fila": 28,
+      "producto": "pc-14",
+      "area": "Posventa",
+      "responsable": "1043",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 29,
+      "producto": "laptop-04",
+      "area": "Proyectos",
+      "responsable": "2980",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 30,
+      "producto": "pc-02",
+      "area": "Costos y Presupuesto",
+      "responsable": "MARCO ANTONIO GUIMOYE MACHICAO",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 31,
+      "producto": "pc-15",
+      "area": "Costos y Presupuesto",
+      "responsable": "62",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 32,
+      "producto": "pc-16",
+      "area": "Costos y Presupuesto",
+      "responsable": "1571",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 33,
+      "producto": "pc-16",
+      "area": "Costos y Presupuesto",
+      "responsable": "MANUEL ALEJANDRO TORRES ARROYO",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 34,
+      "producto": "pc-17",
+      "area": "Costos y Presupuesto",
+      "responsable": "FRANCO LEE ESCOBAR MENDIVIL",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 35,
+      "producto": "pc-18",
+      "area": "Costos y Presupuesto",
+      "responsable": "2162",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 36,
+      "producto": "laptop-07",
+      "area": "Operaciones",
+      "responsable": "JEFFERSON PLETICKOSICH",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Asus",
+        "Modelo": "Vivobook 15"
+      }
+    },
+    {
+      "fila": 37,
+      "producto": "cel-00",
+      "area": "Operaciones",
+      "responsable": "JEFFERSON PLETICKOSICH",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Sistema operativo": "Android",
+        "Línea": "1966451657 (Claro)",
+        "Marca": "Samsung",
+        "Modelo": "Galaxy A57 5G (SM-A576B)"
+      }
+    },
+    {
+      "fila": 38,
+      "producto": "CEL - 04",
+      "area": "Procura",
+      "responsable": "2878",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Honor",
+        "Modelo": "X6B"
+      }
+    },
+    {
+      "fila": 39,
+      "producto": "laptop-08",
+      "area": "Procura",
+      "responsable": "2878",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Asus",
+        "Modelo": "Vivobook"
+      }
+    },
+    {
+      "fila": 40,
+      "producto": "pc-02",
+      "area": "Seguridad",
+      "responsable": "2980",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 41,
+      "producto": "CEL - 05",
+      "area": "Seguridad",
+      "responsable": "2980",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Xiaomi",
+        "Modelo": "Redmi Note 14"
+      }
+    },
+    {
+      "fila": 42,
+      "producto": "laptop-09",
+      "area": "Proyectos",
+      "responsable": "3543",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "HP",
+        "Modelo": "Victus Gaming 15\""
+      }
+    },
+    {
+      "fila": 43,
+      "producto": "CEL - 06",
+      "area": "Proyectos",
+      "responsable": "3543",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Línea": "984397893",
+        "Marca": "Samsung",
+        "Modelo": "A57"
+      }
+    },
+    {
+      "fila": 44,
+      "producto": "pc-02",
+      "area": "RR.HH",
+      "responsable": "JEREMY YERENA URBINA",
+      "nivel": "PISO 2",
+      "ambiente": "RRHH",
+      "caracteristicas": {
+        "Procesador": "Intel Core i5 14440 (14va gen)"
+      }
+    },
+    {
+      "fila": 45,
+      "producto": "laptop-08",
+      "area": "RR.HH",
+      "responsable": "PÍA QUISPE",
+      "nivel": "PISO 2",
+      "ambiente": "RRHH",
+      "caracteristicas": {
+        "Marca": "Lenovo",
+        "Modelo": "IdeaPad"
+      }
+    },
+    {
+      "fila": 46,
+      "producto": "laptop-11",
+      "area": "RR.HH",
+      "responsable": "ENRIQUE JESÚS PAREDES TUESTA",
+      "nivel": "PISO 2",
+      "ambiente": "RRHH",
+      "caracteristicas": {
+        "Marca": "Asus",
+        "Modelo": "Vivobook 15"
+      }
+    },
+    {
+      "fila": 47,
+      "producto": "CEL - 07",
+      "area": "RR.HH",
+      "responsable": "ENRIQUE JESÚS PAREDES TUESTA",
+      "nivel": "PISO 2",
+      "ambiente": "RRHH",
+      "caracteristicas": {
+        "Línea": "966451825 (Claro)"
+      }
+    },
+    {
+      "fila": 48,
+      "producto": "laptop-12",
+      "area": "Proyectos",
+      "responsable": "2878",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 49,
+      "producto": "laptop-13",
+      "area": "Operaciones",
+      "responsable": "JEFFERSON PLETICKOSICH",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 56,
+      "producto": "laptop-14",
+      "area": "Proyectos",
+      "responsable": "MILAGROS ORNA BALTA",
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 57,
+      "producto": "laptop-13",
+      "area": "RR.HH",
+      "responsable": "ENRIQUE JESÚS PAREDES TUESTA",
+      "nivel": "PISO 2",
+      "ambiente": "RRHH",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 58,
+      "producto": "tv-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 59,
+      "producto": "imp-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 60,
+      "producto": "tv-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 61,
+      "producto": "tv-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 62,
+      "producto": "imp-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {}
+    },
+    {
+      "fila": 63,
+      "producto": "ups-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "APC",
+        "Modelo": "Back-UPS Pro 1500",
+        "Condición": "Activo"
+      }
+    },
+    {
+      "fila": 64,
+      "producto": "ups-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "Forza",
+        "Modelo": "Interactivo NT-1012U",
+        "Condición": "Inactivo"
+      }
+    },
+    {
+      "fila": 65,
+      "producto": "est-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Modelo": "Estabilizador de voltaje de estado sólido"
+      }
+    },
+    {
+      "fila": 66,
+      "producto": "sw-01",
+      "area": null,
+      "responsable": null,
+      "nivel": "PISO 2",
+      "ambiente": "POR DEFINIR",
+      "caracteristicas": {
+        "Marca": "HPE",
+        "Modelo": "OfficeConnect 1920-24G JG913A"
+      }
+    }
+  ]
+}
