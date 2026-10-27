@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
@@ -11,6 +14,7 @@ import {
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -86,5 +90,15 @@ export class UbicacionController {
     @Body('estado') estado: boolean,
   ): Promise<UbicacionResponseDto> {
     return this.handler.toggleEstado(id, Boolean(estado));
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Eliminar una ubicación (si no tiene equipos)' })
+  @ApiNoContentResponse({ description: 'Ubicación eliminada' })
+  @ApiNotFoundResponse({ description: 'No existe la ubicación' })
+  @ApiConflictResponse({ description: 'La ubicación tiene equipos asignados' })
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.handler.remove(id);
   }
 }

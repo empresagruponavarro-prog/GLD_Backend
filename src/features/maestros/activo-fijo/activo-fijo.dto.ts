@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsObject, IsOptional, IsString, Matches, MaxLength, Min } from 'class-validator';
+import { IsIn, IsInt, IsObject, IsOptional, IsString, Matches, MaxLength, Min } from 'class-validator';
 
 export type EstadoEquipo = 'Operativo' | 'En reparación' | 'De baja';
 
@@ -20,23 +20,26 @@ export class NuevaAsignacionDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   fechaAsignacion!: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  localId!: number;
+  localId?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  nivelId!: number;
+  nivelId?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  ambienteId!: number;
+  ambienteId?: number;
 
   @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
   @IsOptional()
@@ -44,6 +47,18 @@ export class NuevaAsignacionDto {
   @IsInt()
   @Min(1)
   areaId?: number;
+
+  @ApiPropertyOptional({ enum: ['EMPRESA', 'CENTRO_COSTO'], description: 'A qué se asigna el equipo; va con destinoId' })
+  @IsOptional()
+  @IsIn(['EMPRESA', 'CENTRO_COSTO'])
+  destinoTipo?: 'EMPRESA' | 'CENTRO_COSTO';
+
+  @ApiPropertyOptional({ description: 'ID de la empresa o del centro de costo' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  destinoId?: number;
 
   @ApiPropertyOptional({
     description:
@@ -68,23 +83,26 @@ export class RegistrarActivoDto {
   @MaxLength(100)
   serie?: string | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  localId!: number;
+  localId?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  nivelId!: number;
+  nivelId?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  ambienteId!: number;
+  ambienteId?: number;
 
   @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
   @IsOptional()
@@ -92,6 +110,18 @@ export class RegistrarActivoDto {
   @IsInt()
   @Min(1)
   areaId?: number;
+
+  @ApiPropertyOptional({ enum: ['EMPRESA', 'CENTRO_COSTO'], description: 'A qué se asigna el equipo; va con destinoId' })
+  @IsOptional()
+  @IsIn(['EMPRESA', 'CENTRO_COSTO'])
+  destinoTipo?: 'EMPRESA' | 'CENTRO_COSTO';
+
+  @ApiPropertyOptional({ description: 'ID de la empresa o del centro de costo' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  destinoId?: number;
 
   @ApiPropertyOptional({ description: 'Características de esta unidad; se guardan solo las que difieren del catálogo' })
   @IsOptional()
@@ -162,6 +192,18 @@ export class ReasignarEquipoDto {
   @IsInt()
   @Min(1)
   areaId?: number;
+
+  @ApiPropertyOptional({ enum: ['EMPRESA', 'CENTRO_COSTO'], description: 'A qué se asigna el equipo; va con destinoId' })
+  @IsOptional()
+  @IsIn(['EMPRESA', 'CENTRO_COSTO'])
+  destinoTipo?: 'EMPRESA' | 'CENTRO_COSTO';
+
+  @ApiPropertyOptional({ description: 'ID de la empresa o del centro de costo' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  destinoId?: number;
 }
 
 export class DevolverEquipoDto {
@@ -182,6 +224,8 @@ export class MovimientoEquipoDto {
   ubicacionNueva!: string | null;
   areaAnterior!: string | null;
   areaNueva!: string | null;
+  destinoAnterior!: string | null;
+  destinoNuevo!: string | null;
 }
 
 export class EquipoAsignadoDto {
@@ -207,6 +251,10 @@ export class EquipoAsignadoDto {
   ambiente!: string;
   areaId!: number | null;
   area!: string | null;
+  /** A qué pertenece el local: la obra / centro de costo o la empresa (sede). */
+  destino!: string | null;
+  destinoTipo!: 'EMPRESA' | 'CENTRO_COSTO' | null;
+  destinoId!: number | null;
 }
 
 /** Un equipo del inventario general, con su responsable (si lo tiene). */
@@ -245,11 +293,24 @@ export class NivelOpcionDto {
 export class LocalOpcionDto {
   id!: number;
   nombre!: string;
+  /** Obra / centro de costo o empresa a la que pertenece el local. */
+  destino!: string | null;
+  destinoTipo!: 'EMPRESA' | 'CENTRO_COSTO' | null;
+  destinoId!: number | null;
   niveles!: NivelOpcionDto[];
+}
+
+export class OpcionDestinoDto {
+  id!: number;
+  nombre!: string;
 }
 
 export class OpcionesEquipoDto {
   catalogo!: BienCatalogoDto[];
   locales!: LocalOpcionDto[];
   areas!: AreaOpcionDto[];
+  /** Empresas a las que se puede asignar un equipo. */
+  empresas!: OpcionDestinoDto[];
+  /** Centros de costo (obras) a los que se puede asignar un equipo; no incluye los cerrados. */
+  centrosCosto!: OpcionDestinoDto[];
 }

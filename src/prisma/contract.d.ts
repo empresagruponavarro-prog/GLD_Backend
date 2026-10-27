@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a3e1cc2ba2d3dd52384727f71fe4677afd3f4f3d9314f633e78541dbf92be998'>;
+  StorageHashBase<'30ab85448b69c9370b70316d015331154341aac3f05961fa74048ad377d676ac'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -250,6 +250,8 @@ export type FieldOutputTypes = {
       readonly id_responsable: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly activo_fijo_caracteristica: {
@@ -269,6 +271,8 @@ export type FieldOutputTypes = {
       readonly id_ubicacion_nueva: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_area_anterior: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_area_nueva: CodecTypes['pg/int4@1']['output'] | null;
+      readonly destino_anterior: Varchar<255> | null;
+      readonly destino_nuevo: Varchar<255> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly almacen: {
@@ -1517,6 +1521,8 @@ export type FieldInputTypes = {
       readonly id_responsable: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly activo_fijo_caracteristica: {
@@ -1536,6 +1542,8 @@ export type FieldInputTypes = {
       readonly id_ubicacion_nueva: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_area_anterior: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_area_nueva: CodecTypes['pg/int4@1']['input'] | null;
+      readonly destino_anterior: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly destino_nuevo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly almacen: {
@@ -2781,6 +2789,8 @@ export type StorageColumnTypes = {
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['output'];
       readonly id_responsable: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['output'] | null;
@@ -2794,6 +2804,8 @@ export type StorageColumnTypes = {
     };
     readonly activo_fijo_historial: {
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly destino_anterior: Varchar<255> | null;
+      readonly destino_nuevo: Varchar<255> | null;
       readonly fecha: CodecTypes['pg/date-string@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_activo_fijo: CodecTypes['pg/int4@1']['output'];
@@ -4048,6 +4060,8 @@ export type StorageColumnInputTypes = {
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_empresa: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['input'];
       readonly id_responsable: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['input'] | null;
@@ -4061,6 +4075,8 @@ export type StorageColumnInputTypes = {
     };
     readonly activo_fijo_historial: {
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly destino_anterior: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly destino_nuevo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly fecha: CodecTypes['pg/date-string@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_activo_fijo: CodecTypes['pg/int4@1']['input'];
@@ -5381,6 +5397,16 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                 };
+                readonly id_empresa: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-temporal@1';
@@ -5413,6 +5439,18 @@ type ContractBase = Omit<
                   readonly name: 'activo_fijo_id_area_idx_2da0f6a6';
                   readonly prefix: 'activo_fijo_id_area_idx';
                   readonly columns: readonly ['id_area'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'activo_fijo_id_empresa_idx_328936e2';
+                  readonly prefix: 'activo_fijo_id_empresa_idx';
+                  readonly columns: readonly ['id_empresa'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'activo_fijo_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'activo_fijo_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
                   readonly unique: false;
                 },
               ];
@@ -5462,6 +5500,30 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'area';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'activo_fijo';
+                    readonly columns: readonly ['id_empresa'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'empresas';
+                    readonly columns: readonly ['id_empresa'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'activo_fijo';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -5576,6 +5638,18 @@ type ContractBase = Omit<
                   readonly nativeType: 'int4';
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
+                };
+                readonly destino_anterior: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly destino_nuevo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
                 };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
@@ -15732,6 +15806,14 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly id_empresa: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
               readonly created_at: {
                 readonly nullable: false;
                 readonly type: {
@@ -15758,6 +15840,28 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_activo_fijo'];
+                };
+              };
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly empresa: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Empresas';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_empresa'];
+                  readonly targetFields: readonly ['id_empresa'];
                 };
               };
               readonly historial: {
@@ -15818,6 +15922,8 @@ type ContractBase = Omit<
                 readonly id_responsable: { readonly column: 'id_responsable' };
                 readonly id_ubicacion: { readonly column: 'id_ubicacion' };
                 readonly id_area: { readonly column: 'id_area' };
+                readonly id_empresa: { readonly column: 'id_empresa' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
                 readonly created_at: { readonly column: 'created_at' };
               };
             };
@@ -15915,6 +16021,22 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly destino_anterior: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly destino_nuevo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
               readonly created_at: {
                 readonly nullable: false;
                 readonly type: {
@@ -15950,6 +16072,8 @@ type ContractBase = Omit<
                 readonly id_ubicacion_nueva: { readonly column: 'id_ubicacion_nueva' };
                 readonly id_area_anterior: { readonly column: 'id_area_anterior' };
                 readonly id_area_nueva: { readonly column: 'id_area_nueva' };
+                readonly destino_anterior: { readonly column: 'destino_anterior' };
+                readonly destino_nuevo: { readonly column: 'destino_nuevo' };
                 readonly created_at: { readonly column: 'created_at' };
               };
             };
@@ -18487,6 +18611,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly activosFijos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'activo_fijo';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
               readonly almacenDocumentos: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -20954,6 +21089,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly activosFijos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'activo_fijo';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id_empresa'];
+                  readonly targetFields: readonly ['id_empresa'];
+                };
+              };
               readonly almacenMovimientos: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;

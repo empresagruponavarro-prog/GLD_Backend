@@ -16,11 +16,50 @@ import {
   LocalOpcionDto,
   NuevaAsignacionDto,
   OpcionesEquipoDto,
+  OpcionDestinoDto,
   ReasignarEquipoDto,
   RegistrarActivoDto,
 } from './activo-fijo.dto.js';
 
 const TIPO_POR_DEFECTO = 'Equipo';
+
+interface DestinoLocal {
+  destino: string | null;
+  destinoTipo: 'EMPRESA' | 'CENTRO_COSTO' | null;
+  destinoId: number | null;
+}
+
+function porNombre(a: { nombre: string }, b: { nombre: string }): number {
+  return a.nombre.localeCompare(b.nombre, 'es');
+}
+
+/** El destino propio del equipo (empresa o centro de costo); si no lo tiene, el de su local. */
+function destinoDeActivo(
+  activo: { id_empresa: number | null; id_centro_costo: number | null },
+  local: { id_empresa: number | null; id_centro_costo: number | null } | undefined,
+  empresas: Map<number, string>,
+  centros: Map<number, string>,
+): DestinoLocal {
+  if (activo.id_empresa !== null) {
+    return { destino: empresas.get(activo.id_empresa) ?? null, destinoTipo: 'EMPRESA', destinoId: activo.id_empresa };
+  }
+  if (activo.id_centro_costo !== null) {
+    return { destino: centros.get(activo.id_centro_costo) ?? null, destinoTipo: 'CENTRO_COSTO', destinoId: activo.id_centro_costo };
+  }
+  return destinoDeLocal(local, empresas, centros);
+}
+
+/** Un local pertenece a una empresa (sede) o a una obra / centro de costo (XOR): devuelve a cuál. */
+function destinoDeLocal(
+  local: { id_empresa: number | null; id_centro_costo: number | null } | undefined,
+  empresas: Map<number, string>,
+  centros: Map<number, string>,
+): DestinoLocal {
+  if (!local) return { destino: null, destinoTipo: null, destinoId: null };
+  if (local.id_empresa) return { destino: empresas.get(local.id_empresa) ?? null, destinoTipo: 'EMPRESA', destinoId: local.id_empresa };
+  if (local.id_centro_costo) return { destino: centros.get(local.id_centro_costo) ?? null, destinoTipo: 'CENTRO_COSTO', destinoId: local.id_centro_costo };
+  return { destino: null, destinoTipo: null, destinoId: null };
+}
 
 type Movimiento = 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
 
@@ -46,16 +85,20 @@ type ActivoRow = {
   id_responsable: number | null;
   id_ubicacion: number | null;
   id_area: number | null;
+  id_empresa: number | null;
+  id_centro_costo: number | null;
 };
 
 /** Lo necesario para crear un activo (lo comparten `asignar` y `registrarActivo`). */
 interface DatosActivo {
   codigoBien: string;
   serie?: string | null;
-  localId: number;
-  nivelId: number;
-  ambienteId: number;
+  localId?: number;
+  nivelId?: number;
+  ambienteId?: number;
   areaId?: number;
+  destinoTipo?: 'EMPRESA' | 'CENTRO_COSTO';
+  destinoId?: number;
   caracteristicas?: Record<string, string>;
 }
 
@@ -64,7 +107,7 @@ export class ActivoFijoHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
   async opciones(): Promise<OpcionesEquipoDto> {
-    const [productos, ubicaciones, locales, niveles, ambientes, areas] = await Promise.all([
+    const [productos, ubicaciones, locales, niveles, ambientes, areas, empresas, centros] = await Promise.all([
       this.db.orm.public.producto
         .where({ clase_inventario: 'ACTIVO_FIJO', estado: true })
         .orderBy((p) => p.codigo.asc())
@@ -77,6 +120,8 @@ export class ActivoFijoHandler {
         .where({ estado: true })
         .orderBy((a) => a.nombre.asc())
         .all(),
+      this.db.orm.public.Empresas.all(),
+      this.db.orm.public.CentroCostos.all(),
     ]);
 
     const caracteristicasDelCatalogo = await this.caracteristicasDeProductos(productos.map((p) => p.id));
@@ -87,6 +132,9 @@ export class ActivoFijoHandler {
     });
 
     const localPorId = new Map(locales.map((l) => [l.id, String(l.nombre)]));
+    const localFilaPorId = new Map(locales.map((l) => [l.id, l]));
+    const empresaPorId = new Map(empresas.map((e) => [e.id_empresa, String(e.razon_social ?? '')]));
+    const centroPorId = new Map(centros.map((c) => [c.id, String(c.centro_costo ?? '')]));
     const nivelPorId = new Map(niveles.map((n) => [n.id, String(n.descripcion)]));
     const ambientePorId = new Map(ambientes.map((a) => [a.id, String(a.descripcion)]));
     const arbol = new Map<number, LocalOpcionDto>();
@@ -95,7 +143,12 @@ export class ActivoFijoHandler {
       const nombreNivel = nivelPorId.get(u.id_nivel);
       const nombreAmbiente = ambientePorId.get(u.id_ambiente);
       if (nombreLocal === undefined || nombreNivel === undefined || nombreAmbiente === undefined) continue;
-      const local = arbol.get(u.id_local) ?? { id: u.id_local, nombre: nombreLocal, niveles: [] };
+      const local = arbol.get(u.id_local) ?? {
+        id: u.id_local,
+        nombre: nombreLocal,
+        ...destinoDeLocal(localFilaPorId.get(u.id_local), empresaPorId, centroPorId),
+        niveles: [],
+      };
       arbol.set(u.id_local, local);
       let nivel = local.niveles.find((n) => n.id === u.id_nivel);
       if (!nivel) {
@@ -108,6 +161,11 @@ export class ActivoFijoHandler {
       catalogo,
       locales: [...arbol.values()],
       areas: areas.map((a) => ({ id: a.id, nombre: String(a.nombre) })),
+      empresas: [...empresaPorId.entries()].map(([id, nombre]): OpcionDestinoDto => ({ id, nombre })).sort(porNombre),
+      centrosCosto: centros
+        .filter((c) => c.estado?.trim().toUpperCase() !== 'CERRADO' && c.centro_costo)
+        .map((c): OpcionDestinoDto => ({ id: c.id, nombre: String(c.centro_costo) }))
+        .sort(porNombre),
     };
   }
 
@@ -144,7 +202,8 @@ export class ActivoFijoHandler {
     const actualizado = await this.db.orm.public.activo_fijo
       .where({ id: equipoId })
       .update({ id_responsable: dto.anexoId, fecha_asignacion: dto.fechaAsignacion });
-    await this.registrar(equipoId, 'ASIGNACION', dto.fechaAsignacion, null, dto.anexoId, activo.id_ubicacion, activo.id_ubicacion, activo.id_area, activo.id_area);
+    const nombreDestino = await this.nombreDestino(activo.id_empresa, activo.id_centro_costo);
+    await this.registrar(equipoId, 'ASIGNACION', dto.fechaAsignacion, null, dto.anexoId, activo.id_ubicacion, activo.id_ubicacion, activo.id_area, activo.id_area, nombreDestino, nombreDestino);
     const [equipo] = actualizado ? await this.conResponsable([actualizado]) : [];
     if (!equipo) throw new NotFoundException('No se pudo leer el equipo');
     return equipo;
@@ -183,9 +242,7 @@ export class ActivoFijoHandler {
       if (repetida) throw new ConflictException(`La serie "${serie}" ya está registrada para ese equipo`);
     }
 
-    const ubicacion = await this.resolverUbicacion(dto.localId, dto.nivelId, dto.ambienteId);
-    const idUbicacion = ubicacion.id;
-    const idArea = await this.resolverArea(dto.areaId, ubicacion.idArea);
+    const { idUbicacion, idArea, destino } = await this.resolverUbicacionYDestino(dto);
 
     const [ultimo] = await this.db.orm.public.activo_fijo
       .orderBy((a) => a.id.desc())
@@ -204,6 +261,8 @@ export class ActivoFijoHandler {
         id_responsable: responsable?.anexoId ?? null,
         id_ubicacion: idUbicacion,
         id_area: idArea,
+        id_empresa: destino.idEmpresa,
+        id_centro_costo: destino.idCentroCosto,
       });
     } catch (error) {
       throwIfUniqueViolation(error, `El código de activo "${codigoActivo}" ya existe, intente de nuevo`);
@@ -211,7 +270,8 @@ export class ActivoFijoHandler {
     }
 
     if (responsable) {
-      await this.registrar(creado.id, 'ASIGNACION', responsable.fecha, null, responsable.anexoId, null, idUbicacion, null, idArea);
+      const nombre = await this.nombreDestino(destino.idEmpresa, destino.idCentroCosto);
+      await this.registrar(creado.id, 'ASIGNACION', responsable.fecha, null, responsable.anexoId, null, idUbicacion, null, idArea, null, nombre);
     }
 
     // Solo se guarda lo que cambia respecto al catálogo; lo demás se hereda.
@@ -251,17 +311,30 @@ export class ActivoFijoHandler {
     if (dto.anexoDestinoId === anexoId) throw new BadRequestException('El equipo ya está asignado a ese trabajador');
     await this.asegurarTrabajador(dto.anexoDestinoId);
 
-    const cambiaUbicacion = dto.localId !== undefined || dto.nivelId !== undefined || dto.ambienteId !== undefined;
-    if (cambiaUbicacion && (dto.localId === undefined || dto.nivelId === undefined || dto.ambienteId === undefined)) {
-      throw new BadRequestException('La nueva ubicación necesita local, nivel y ambiente');
+    let idUbicacion = antes.id_ubicacion;
+    let idArea = antes.id_area;
+    let destinoNuevo = { idEmpresa: antes.id_empresa, idCentroCosto: antes.id_centro_costo };
+
+    if (dto.destinoTipo !== undefined || dto.destinoId !== undefined) {
+      // Cambia el destino: una empresa lleva ubicación (local, nivel, ambiente); un centro de costo, no.
+      const r = await this.resolverUbicacionYDestino(dto);
+      ({ idUbicacion, idArea, destino: destinoNuevo } = r);
+    } else {
+      const cambiaUbicacion = dto.localId !== undefined || dto.nivelId !== undefined || dto.ambienteId !== undefined;
+      if (cambiaUbicacion && (dto.localId === undefined || dto.nivelId === undefined || dto.ambienteId === undefined)) {
+        throw new BadRequestException('La nueva ubicación necesita local, nivel y ambiente');
+      }
+      const nueva =
+        cambiaUbicacion && dto.localId !== undefined && dto.nivelId !== undefined && dto.ambienteId !== undefined
+          ? await this.resolverUbicacion(dto.localId, dto.nivelId, dto.ambienteId)
+          : null;
+      idUbicacion = nueva ? nueva.id : antes.id_ubicacion;
+      // Sin área explícita: si cambia la ubicación se toma la de esa ubicación; si no, se conserva.
+      idArea = dto.areaId !== undefined || nueva ? await this.resolverArea(dto.areaId, nueva?.idArea ?? null) : antes.id_area;
+      if (nueva) destinoNuevo = await this.resolverDestino(undefined, undefined, dto.localId);
     }
-    const nueva =
-      cambiaUbicacion && dto.localId !== undefined && dto.nivelId !== undefined && dto.ambienteId !== undefined
-        ? await this.resolverUbicacion(dto.localId, dto.nivelId, dto.ambienteId)
-        : null;
-    const idUbicacion = nueva ? nueva.id : antes.id_ubicacion;
-    // Sin área explícita: si cambia la ubicación se toma la de esa ubicación; si no, se conserva.
-    const idArea = dto.areaId !== undefined || nueva ? await this.resolverArea(dto.areaId, nueva?.idArea ?? null) : antes.id_area;
+    const nombreAntes = await this.nombreDestino(antes.id_empresa, antes.id_centro_costo);
+    const nombreDespues = await this.nombreDestino(destinoNuevo.idEmpresa, destinoNuevo.idCentroCosto);
 
     const actualizado = await this.db.orm.public.activo_fijo
       .where({ id: equipoId })
@@ -270,6 +343,8 @@ export class ActivoFijoHandler {
         fecha_asignacion: dto.fechaAsignacion,
         id_ubicacion: idUbicacion,
         id_area: idArea,
+        id_empresa: destinoNuevo.idEmpresa,
+        id_centro_costo: destinoNuevo.idCentroCosto,
       });
     await this.registrar(
       equipoId,
@@ -281,6 +356,8 @@ export class ActivoFijoHandler {
       idUbicacion,
       antes.id_area,
       idArea,
+      nombreAntes,
+      nombreDespues,
     );
     return this.equipoActualizado(actualizado);
   }
@@ -292,7 +369,8 @@ export class ActivoFijoHandler {
     const actualizado = await this.db.orm.public.activo_fijo
       .where({ id: equipoId })
       .update({ id_responsable: null, fecha_asignacion: null });
-    await this.registrar(equipoId, 'DEVOLUCION', dto.fecha, anexoId, null, antes.id_ubicacion, antes.id_ubicacion, antes.id_area, antes.id_area);
+    const nombreDestino = await this.nombreDestino(antes.id_empresa, antes.id_centro_costo);
+    await this.registrar(equipoId, 'DEVOLUCION', dto.fecha, anexoId, null, antes.id_ubicacion, antes.id_ubicacion, antes.id_area, antes.id_area, nombreDestino, nombreDestino);
     return this.equipoActualizado(actualizado);
   }
 
@@ -374,6 +452,8 @@ export class ActivoFijoHandler {
       ubicacionNueva: nombreUbicacion(f.id_ubicacion_nueva),
       areaAnterior: f.id_area_anterior === null ? null : (areaPorId.get(f.id_area_anterior) ?? null),
       areaNueva: f.id_area_nueva === null ? null : (areaPorId.get(f.id_area_nueva) ?? null),
+      destinoAnterior: f.destino_anterior === null ? null : String(f.destino_anterior),
+      destinoNuevo: f.destino_nuevo === null ? null : String(f.destino_nuevo),
     }));
   }
 
@@ -387,6 +467,8 @@ export class ActivoFijoHandler {
     ubicacionNueva: number | null,
     areaAnterior: number | null,
     areaNueva: number | null,
+    destinoAnterior: string | null = null,
+    destinoNuevo: string | null = null,
   ): Promise<void> {
     await this.db.orm.public.activo_fijo_historial.create({
       id_activo_fijo: equipoId,
@@ -398,6 +480,8 @@ export class ActivoFijoHandler {
       id_ubicacion_nueva: ubicacionNueva,
       id_area_anterior: areaAnterior,
       id_area_nueva: areaNueva,
+      destino_anterior: destinoAnterior === null ? null : toVarchar<255>(destinoAnterior),
+      destino_nuevo: destinoNuevo === null ? null : toVarchar<255>(destinoNuevo),
     });
   }
 
@@ -437,6 +521,68 @@ export class ActivoFijoHandler {
       throw new BadRequestException('Solo los anexos de tipo Trabajador pueden tener equipos asignados');
     }
     return anexo;
+  }
+
+  /**
+   * Resuelve a dónde va el equipo. Centro de costo: se asigna al centro y no lleva ubicación física.
+   * Empresa (o sin tipo, tomando el de su local): exige local, nivel y ambiente, y el local debe ser de esa empresa.
+   */
+  private async resolverUbicacionYDestino(dto: {
+    localId?: number;
+    nivelId?: number;
+    ambienteId?: number;
+    areaId?: number;
+    destinoTipo?: 'EMPRESA' | 'CENTRO_COSTO';
+    destinoId?: number;
+  }): Promise<{ idUbicacion: number | null; idArea: number | null; destino: { idEmpresa: number | null; idCentroCosto: number | null } }> {
+    if ((dto.destinoTipo === undefined) !== (dto.destinoId === undefined)) {
+      throw new BadRequestException('El destino necesita el tipo (empresa o centro de costo) y su id');
+    }
+    if (dto.destinoTipo === 'CENTRO_COSTO' && dto.destinoId !== undefined) {
+      const centro = await this.db.orm.public.CentroCostos.first({ id: dto.destinoId });
+      if (!centro) throw new BadRequestException(`El centro de costo ${dto.destinoId} no existe`);
+      const idArea = dto.areaId === undefined ? null : await this.resolverArea(dto.areaId, null);
+      return { idUbicacion: null, idArea, destino: { idEmpresa: null, idCentroCosto: dto.destinoId } };
+    }
+    if (dto.localId === undefined || dto.nivelId === undefined || dto.ambienteId === undefined) {
+      throw new BadRequestException('Selecciona local, nivel y ambiente');
+    }
+    const local = await this.db.orm.public.local.first({ id: dto.localId });
+    if (!local) throw new BadRequestException('Local, nivel o ambiente inexistente');
+    let destino = { idEmpresa: local.id_empresa, idCentroCosto: local.id_centro_costo };
+    if (dto.destinoTipo === 'EMPRESA' && dto.destinoId !== undefined) {
+      const empresa = await this.db.orm.public.Empresas.first({ id_empresa: dto.destinoId });
+      if (!empresa) throw new BadRequestException(`La empresa ${dto.destinoId} no existe`);
+      if (local.id_empresa !== dto.destinoId) throw new BadRequestException('El local no pertenece a la empresa elegida');
+      destino = { idEmpresa: dto.destinoId, idCentroCosto: null };
+    }
+    const ubicacion = await this.resolverUbicacion(dto.localId, dto.nivelId, dto.ambienteId);
+    const idArea = await this.resolverArea(dto.areaId, ubicacion.idArea);
+    return { idUbicacion: ubicacion.id, idArea, destino };
+  }
+
+  private async resolverDestino(
+    tipo: 'EMPRESA' | 'CENTRO_COSTO' | undefined,
+    id: number | undefined,
+    localId: number | undefined,
+  ): Promise<{ idEmpresa: number | null; idCentroCosto: number | null }> {
+    if (tipo !== undefined && id !== undefined) {
+      return tipo === 'EMPRESA' ? { idEmpresa: id, idCentroCosto: null } : { idEmpresa: null, idCentroCosto: id };
+    }
+    const local = localId === undefined ? null : await this.db.orm.public.local.first({ id: localId });
+    return { idEmpresa: local?.id_empresa ?? null, idCentroCosto: local?.id_centro_costo ?? null };
+  }
+
+  private async nombreDestino(idEmpresa: number | null, idCentroCosto: number | null): Promise<string | null> {
+    if (idEmpresa !== null) {
+      const empresa = await this.db.orm.public.Empresas.first({ id_empresa: idEmpresa });
+      return empresa ? `Empresa: ${String(empresa.razon_social ?? '')}` : null;
+    }
+    if (idCentroCosto !== null) {
+      const centro = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
+      return centro ? `Centro de costo: ${String(centro.centro_costo ?? '')}` : null;
+    }
+    return null;
   }
 
   /** El área indicada (o, si no hay, la de la ubicación); debe existir. */
@@ -486,7 +632,7 @@ export class ActivoFijoHandler {
     const idsProducto = [...new Set(activos.map((a) => a.id_producto))];
     const idsUbicacion = [...new Set(activos.flatMap((a) => (a.id_ubicacion === null ? [] : [a.id_ubicacion])))];
 
-    const [productos, propias, ubicaciones, locales, niveles, ambientes, areas] =
+    const [productos, propias, ubicaciones, locales, niveles, ambientes, areas, empresas, centros] =
       await Promise.all([
         this.db.orm.public.producto.where((p) => p.id.in(idsProducto)).all(),
         this.db.orm.public.activo_fijo_caracteristica
@@ -500,8 +646,13 @@ export class ActivoFijoHandler {
         this.db.orm.public.nivel.all(),
         this.db.orm.public.ambiente.all(),
         this.db.orm.public.area.all(),
+        this.db.orm.public.Empresas.all(),
+        this.db.orm.public.CentroCostos.all(),
       ]);
 
+    const empresaPorId = new Map(empresas.map((e) => [e.id_empresa, String(e.razon_social ?? '')]));
+    const centroPorId = new Map(centros.map((c) => [c.id, String(c.centro_costo ?? '')]));
+    const localFilaPorId = new Map(locales.map((l) => [l.id, l]));
     const areaPorId = new Map(areas.map((a) => [a.id, String(a.nombre)]));
     const productoPorId = new Map(productos.map((p) => [p.id, p]));
     const ubicacionPorId = new Map(ubicaciones.map((u) => [u.id, u]));
@@ -544,6 +695,7 @@ export class ActivoFijoHandler {
         ambiente: ubicacion ? (ambientePorId.get(ubicacion.id_ambiente) ?? '') : '',
         areaId: a.id_area,
         area: a.id_area === null ? null : (areaPorId.get(a.id_area) ?? null),
+        ...destinoDeActivo(a, ubicacion ? localFilaPorId.get(ubicacion.id_local) : undefined, empresaPorId, centroPorId),
       };
     });
   }

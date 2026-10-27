@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
@@ -248,5 +248,19 @@ export class UbicacionHandler {
 
     await this.db.orm.public.ubicacion.where({ id }).update({ estado });
     return this.getById(id);
+  }
+
+  /** Borra la ubicación; si hay equipos en ella se rechaza (para no dejarlos sin ubicación sin avisar). */
+  async remove(id: number): Promise<void> {
+    const actual = await this.db.orm.public.ubicacion.first({ id });
+    if (!actual) throw new NotFoundException(`Ubicación con id ${id} no encontrada`);
+
+    const equipos = await this.db.orm.public.activo_fijo.where({ id_ubicacion: id }).all();
+    if (equipos.length > 0) {
+      throw new ConflictException(
+        `La ubicación tiene ${equipos.length} equipo(s) asignados; cámbialos de ubicación o desactívala en lugar de borrarla`,
+      );
+    }
+    await this.db.orm.public.ubicacion.where({ id }).delete();
   }
 }

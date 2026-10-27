@@ -719,6 +719,7 @@ model CentroCostos {
   requerimientos         requerimiento[]     @relation("RequerimientoCentroCosto")
   almacenPrestamos       almacen_prestamo[] @relation("PrestamoCentroCosto")
   locales                local[]
+  activosFijos           activo_fijo[] @relation("ActivoFijoCentroCosto")
 
   @@index([id_centro_costos_principal])
   @@map("CentroCostos")
@@ -1009,6 +1010,8 @@ model Empresas {
   pptoFases               ppto_Fases[]
   pptoPrincipales         ppto_Principal[]
   locales                 local[]
+
+  activosFijos            activo_fijo[] @relation("ActivoFijoEmpresa")
 
   @@map("empresas")
 }
@@ -1872,11 +1875,15 @@ model activo_fijo {
   id_responsable   Int?
   id_ubicacion     Int?
   id_area          Int?
+  id_empresa       Int?
+  id_centro_costo  Int?
   created_at       DateTime          @default(now())
   producto         producto          @relation(fields: [id_producto], references: [id])
   responsable      Anexos?           @relation("ActivoFijoResponsable", fields: [id_responsable], references: [id], onDelete: SetNull)
   ubicacion        ubicacion?        @relation(fields: [id_ubicacion], references: [id], onDelete: SetNull)
   area             area?             @relation(fields: [id_area], references: [id], onDelete: SetNull)
+  empresa          Empresas?         @relation("ActivoFijoEmpresa", fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
+  centroCosto      CentroCostos?     @relation("ActivoFijoCentroCosto", fields: [id_centro_costo], references: [id], onDelete: SetNull)
   caracteristicas  activo_fijo_caracteristica[]
   historial        activo_fijo_historial[]
 
@@ -1922,6 +1929,8 @@ model activo_fijo_historial {
   id_ubicacion_nueva      Int?
   id_area_anterior        Int?
   id_area_nueva           Int?
+  destino_anterior        VarChar(255)?
+  destino_nuevo           VarChar(255)?
   created_at              DateTime                 @default(now())
   activoFijo              activo_fijo              @relation(fields: [id_activo_fijo], references: [id], onDelete: Cascade)
 

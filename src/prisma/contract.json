@@ -2822,6 +2822,21 @@
               }
             },
             "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
               "almacenDocumentos": {
                 "cardinality": "1:N",
                 "on": {
@@ -5937,6 +5952,21 @@
               }
             },
             "relations": {
+              "activosFijos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id_empresa"
+                  ],
+                  "targetFields": [
+                    "id_empresa"
+                  ]
+                },
+                "to": {
+                  "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
               "almacenMovimientos": {
                 "cardinality": "1:N",
                 "on": {
@@ -8688,6 +8718,20 @@
                   "kind": "scalar"
                 }
               },
+              "id_centro_costo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_empresa": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": false,
                 "type": {
@@ -8748,6 +8792,36 @@
                 },
                 "to": {
                   "model": "activo_fijo_caracteristica",
+                  "namespace": "public"
+                }
+              },
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "empresa": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_empresa"
+                  ],
+                  "targetFields": [
+                    "id_empresa"
+                  ]
+                },
+                "to": {
+                  "model": "Empresas",
                   "namespace": "public"
                 }
               },
@@ -8831,6 +8905,12 @@
                 },
                 "id_area": {
                   "column": "id_area"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_empresa": {
+                  "column": "id_empresa"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -8931,6 +9011,26 @@
                   "kind": "scalar"
                 }
               },
+              "destino_anterior": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "destino_nuevo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
               "fecha": {
                 "nullable": false,
                 "type": {
@@ -9029,6 +9129,12 @@
               "fields": {
                 "created_at": {
                   "column": "created_at"
+                },
+                "destino_anterior": {
+                  "column": "destino_anterior"
+                },
+                "destino_nuevo": {
+                  "column": "destino_nuevo"
                 },
                 "fecha": {
                   "column": "fecha"
@@ -17993,6 +18099,16 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_empresa": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -18084,6 +18200,40 @@
                     "namespaceId": "public",
                     "tableName": "area"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id_empresa"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "empresas"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "activo_fijo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
                 }
               ],
               "indexes": [
@@ -18093,6 +18243,22 @@
                   ],
                   "name": "activo_fijo_id_area_idx_2da0f6a6",
                   "prefix": "activo_fijo_id_area_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "activo_fijo_id_centro_costo_idx_8c84570b",
+                  "prefix": "activo_fijo_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_empresa"
+                  ],
+                  "name": "activo_fijo_id_empresa_idx_328936e2",
+                  "prefix": "activo_fijo_id_empresa_idx",
                   "unique": false
                 },
                 {
@@ -18226,6 +18392,22 @@
                   },
                   "nativeType": "timestamptz",
                   "nullable": false
+                },
+                "destino_anterior": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "destino_nuevo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
                 },
                 "fecha": {
                   "codecId": "pg/date-string@1",
@@ -30815,7 +30997,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a3e1cc2ba2d3dd52384727f71fe4677afd3f4f3d9314f633e78541dbf92be998"
+    "storageHash": "30ab85448b69c9370b70316d015331154341aac3f05961fa74048ad377d676ac"
   },
   "capabilities": {
     "postgres": {

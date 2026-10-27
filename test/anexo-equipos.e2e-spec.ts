@@ -270,4 +270,98 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
       .expect(201);
     expect(directo).toMatchObject({ responsableId: trabajadorId, responsable: 'E2E TRABAJADOR' });
   });
+
+  it('indica a qué obra / centro de costo o empresa pertenece el local del equipo', async () => {
+    const { body: opciones } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
+    for (const local of opciones.locales) expect(local).toHaveProperty('destinoTipo');
+
+    // Un local de obra (con centro de costo); si no tiene ubicación, la prueba crea una y la borra.
+    const obra = await db.query(
+      `select l.id, cc.centro_costo from local l join "CentroCostos" cc on cc.id = l.id_centro_costo
+        where l.id_centro_costo is not null and l.estado limit 1`,
+    );
+    if (obra.rowCount === 0) return;
+    const localObra: number = obra.rows[0].id;
+    const nombreObra: string = obra.rows[0].centro_costo;
+    const propia = await db.query(
+      `insert into ubicacion (codigo, id_local, id_nivel, id_ambiente, estado)
+       select 'E2E-OBRA', $1, $2, $3, true
+        where not exists (select 1 from ubicacion where id_local = $1 and id_nivel = $2 and id_ambiente = $3)
+       returning id`,
+      [localObra, nivelId, ambienteId],
+    );
+    try {
+      const { body: conObra } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
+      expect(conObra.locales.find((l: { id: number }) => l.id === localObra)).toMatchObject({
+        destinoTipo: 'CENTRO_COSTO',
+        destino: nombreObra,
+      });
+      const { body: equipo } = await api()
+        .post('/maestros/anexo/equipos')
+        .send({ codigoBien, serie: `E2E-OBRA-${Date.now()}`, localId: localObra, nivelId, ambienteId })
+        .expect(201);
+      expect(equipo).toMatchObject({ destinoTipo: 'CENTRO_COSTO', destino: nombreObra });
+    } finally {
+      if (propia.rowCount) {
+        await db.query(`delete from activo_fijo where id_ubicacion = $1`, [propia.rows[0].id]);
+        await db.query(`delete from ubicacion where id = $1`, [propia.rows[0].id]);
+      }
+    }
+  });
+
+  it('asigna a una empresa (con ubicación) o a un centro de costo (sin ubicación) y lo deja en el historial', async () => {
+    const { body: opciones } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
+    expect(opciones.empresas.length).toBeGreaterThan(0);
+    expect(opciones.centrosCosto.length).toBeGreaterThan(0);
+    const centro = opciones.centrosCosto[0];
+    const base = { codigoBien, serie: `E2E-DEST-${Date.now()}` };
+
+    // Centro de costo: solo se elige el centro; no lleva ubicación física.
+    const { body: enObra } = await api()
+      .post('/maestros/anexo/equipos')
+      .send({ ...base, destinoTipo: 'CENTRO_COSTO', destinoId: centro.id })
+      .expect(201);
+    expect(enObra).toMatchObject({ destinoTipo: 'CENTRO_COSTO', destinoId: centro.id, destino: centro.nombre, localId: 0, local: '' });
+
+    // Datos inválidos: tipo sin id, centro inexistente, empresa sin ubicación o con un local ajeno.
+    await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-D2-${Date.now()}`, destinoTipo: 'CENTRO_COSTO' }).expect(400);
+    await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-D3-${Date.now()}`, destinoTipo: 'CENTRO_COSTO', destinoId: 999999999 }).expect(400);
+    await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-D4-${Date.now()}`, destinoTipo: 'EMPRESA', destinoId: opciones.empresas[0].id }).expect(400);
+
+    // Empresa: con el local de esa empresa, nivel y ambiente.
+    const localDeEmpresa = opciones.locales.find((l: { destinoTipo: string }) => l.destinoTipo === 'EMPRESA');
+    if (localDeEmpresa) {
+      const nivel = localDeEmpresa.niveles[0];
+      const ambiente = nivel.ambientes[0];
+      const { body: enEmpresa } = await api()
+        .post('/maestros/anexo/equipos')
+        .send({ ...base, serie: `E2E-D5-${Date.now()}`, destinoTipo: 'EMPRESA', destinoId: localDeEmpresa.destinoId, localId: localDeEmpresa.id, nivelId: nivel.id, ambienteId: ambiente.id })
+        .expect(201);
+      expect(enEmpresa).toMatchObject({ destinoTipo: 'EMPRESA', destinoId: localDeEmpresa.destinoId, localId: localDeEmpresa.id });
+      await api()
+        .post('/maestros/anexo/equipos')
+        .send({ ...base, serie: `E2E-D6-${Date.now()}`, destinoTipo: 'EMPRESA', destinoId: 999999999, localId: localDeEmpresa.id, nivelId: nivel.id, ambienteId: ambiente.id })
+        .expect(400);
+
+      // Reasignar a un trabajador llevándolo a un centro de costo: queda sin ubicación y el historial lo registra.
+      const { body: propio } = await api()
+        .post(`/maestros/anexo/${trabajadorId}/equipos`)
+        .send({ codigoBien, serie: `E2E-D7-${Date.now()}`, fechaAsignacion: '2026-10-28', destinoTipo: 'EMPRESA', destinoId: localDeEmpresa.destinoId, localId: localDeEmpresa.id, nivelId: nivel.id, ambienteId: ambiente.id })
+        .expect(201);
+      const otro = (await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Trabajador', 'E2E TRABAJADOR 3', true) returning id`)).rows[0].id;
+      try {
+        const { body: movido } = await api()
+          .patch(`/maestros/anexo/${trabajadorId}/equipos/${propio.id}/reasignar`)
+          .send({ anexoDestinoId: otro, fechaAsignacion: '2026-10-29', destinoTipo: 'CENTRO_COSTO', destinoId: centro.id })
+          .expect(200);
+        expect(movido).toMatchObject({ destinoTipo: 'CENTRO_COSTO', destino: centro.nombre, localId: 0 });
+        const { body: historial } = await api().get(`/maestros/anexo/equipos/${propio.id}/historial`).expect(200);
+        expect(historial[0]).toMatchObject({ movimiento: 'Reasignación', destinoNuevo: `Centro de costo: ${centro.nombre}` });
+        expect(historial[0].destinoAnterior).toMatch(/^Empresa: /);
+      } finally {
+        await db.query(`delete from activo_fijo where id_responsable = $1`, [otro]);
+        await db.query(`delete from anexos where id = $1`, [otro]);
+      }
+    }
+  });
 });
