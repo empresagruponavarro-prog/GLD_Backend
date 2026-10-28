@@ -2,7 +2,17 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsObject, IsOptional, IsString, Matches, MaxLength, Min } from 'class-validator';
 
-export type EstadoEquipo = 'Operativo' | 'En reparación' | 'De baja';
+export type EstadoEquipo = 'Operativo' | 'No operativo' | 'En reparación';
+
+export const ESTADOS_ACTIVO = ['OPERATIVO', 'NO_OPERATIVO', 'EN_REPARACION'] as const;
+export type EstadoActivo = (typeof ESTADOS_ACTIVO)[number];
+
+/** Cambia el estado de un equipo (operativo, no operativo o en reparación). */
+export class CambiarEstadoDto {
+  @ApiProperty({ enum: ESTADOS_ACTIVO, example: 'EN_REPARACION' })
+  @IsIn(ESTADOS_ACTIVO)
+  estado!: EstadoActivo;
+}
 
 export class NuevaAsignacionDto {
   @ApiProperty({ example: 'Laptop01', description: 'Código del bien (catálogo, clase Activo Fijo)' })
@@ -82,6 +92,11 @@ export class RegistrarActivoDto {
   @IsString()
   @MaxLength(100)
   serie?: string | null;
+
+  @ApiPropertyOptional({ enum: ESTADOS_ACTIVO, default: 'OPERATIVO', description: 'Estado del equipo al registrarlo' })
+  @IsOptional()
+  @IsIn(ESTADOS_ACTIVO)
+  estado?: EstadoActivo;
 
   @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
   @IsOptional()
@@ -212,7 +227,52 @@ export class DevolverEquipoDto {
   fecha!: string;
 }
 
-export type TipoMovimiento = 'Asignación' | 'Reasignación' | 'Devolución';
+/** Cambia al equipo de empresa / centro de costo, ambiente o área, con o sin responsable. */
+export class MoverEquipoDto {
+  @ApiProperty({ example: '2026-10-28' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  fecha!: string;
+
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  localId?: number;
+
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  nivelId?: number;
+
+  @ApiPropertyOptional({ description: 'Obligatorio si el destino es una empresa' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  ambienteId?: number;
+
+  @ApiPropertyOptional({ description: 'Área del equipo; si se omite se usa la de la ubicación' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  areaId?: number;
+
+  @ApiProperty({ enum: ['EMPRESA', 'CENTRO_COSTO'], description: 'A qué va el equipo; con destinoId' })
+  @IsIn(['EMPRESA', 'CENTRO_COSTO'])
+  destinoTipo!: 'EMPRESA' | 'CENTRO_COSTO';
+
+  @ApiProperty({ description: 'ID de la empresa o del centro de costo' })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  destinoId!: number;
+}
+
+export type TipoMovimiento = 'Asignación' | 'Reasignación' | 'Devolución' | 'Traslado';
 
 export class MovimientoEquipoDto {
   id!: number;

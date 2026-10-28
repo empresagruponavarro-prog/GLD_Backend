@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'30ab85448b69c9370b70316d015331154341aac3f05961fa74048ad377d676ac'>;
+  StorageHashBase<'bf4c8d176845184481328c4d6f75af576bf144d3dc4531ca678d65b21b05a7ac'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -245,7 +245,7 @@ export type FieldOutputTypes = {
       readonly codigo: Varchar<30>;
       readonly id_producto: CodecTypes['pg/int4@1']['output'];
       readonly serie: Varchar<100> | null;
-      readonly estado: 'OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
+      readonly estado: 'OPERATIVO' | 'NO_OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['output'] | null;
       readonly id_responsable: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['output'] | null;
@@ -263,7 +263,7 @@ export type FieldOutputTypes = {
     readonly activo_fijo_historial: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_activo_fijo: CodecTypes['pg/int4@1']['output'];
-      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
+      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION' | 'TRASLADO';
       readonly fecha: CodecTypes['pg/date-string@1']['output'];
       readonly id_responsable_anterior: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_responsable_nuevo: CodecTypes['pg/int4@1']['output'] | null;
@@ -1516,7 +1516,7 @@ export type FieldInputTypes = {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
       readonly id_producto: CodecTypes['pg/int4@1']['input'];
       readonly serie: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly estado: 'OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
+      readonly estado: 'OPERATIVO' | 'NO_OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['input'] | null;
       readonly id_responsable: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ubicacion: CodecTypes['pg/int4@1']['input'] | null;
@@ -1534,7 +1534,7 @@ export type FieldInputTypes = {
     readonly activo_fijo_historial: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_activo_fijo: CodecTypes['pg/int4@1']['input'];
-      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
+      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION' | 'TRASLADO';
       readonly fecha: CodecTypes['pg/date-string@1']['input'];
       readonly id_responsable_anterior: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_responsable_nuevo: CodecTypes['pg/int4@1']['input'] | null;
@@ -2785,7 +2785,7 @@ export type StorageColumnTypes = {
     readonly activo_fijo: {
       readonly codigo: Varchar<30>;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly estado: 'OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
+      readonly estado: 'OPERATIVO' | 'NO_OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
@@ -2815,7 +2815,7 @@ export type StorageColumnTypes = {
       readonly id_responsable_nuevo: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ubicacion_anterior: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ubicacion_nueva: CodecTypes['pg/int4@1']['output'] | null;
-      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
+      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION' | 'TRASLADO';
     };
     readonly almacen: {
       readonly codigo: Varchar<20>;
@@ -4056,7 +4056,7 @@ export type StorageColumnInputTypes = {
     readonly activo_fijo: {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly estado: 'OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
+      readonly estado: 'OPERATIVO' | 'NO_OPERATIVO' | 'EN_REPARACION' | 'DE_BAJA';
       readonly fecha_asignacion: CodecTypes['pg/date-string@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
@@ -4086,7 +4086,7 @@ export type StorageColumnInputTypes = {
       readonly id_responsable_nuevo: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ubicacion_anterior: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ubicacion_nueva: CodecTypes['pg/int4@1']['input'] | null;
-      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
+      readonly movimiento: 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION' | 'TRASLADO';
     };
     readonly almacen: {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
@@ -15332,7 +15332,7 @@ type ContractBase = Omit<
             };
             readonly estado_activo_fijo: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['OPERATIVO', 'EN_REPARACION', 'DE_BAJA'];
+              readonly values: readonly ['OPERATIVO', 'NO_OPERATIVO', 'EN_REPARACION', 'DE_BAJA'];
             };
             readonly estado_documento: {
               readonly kind: 'valueSet';
@@ -15395,7 +15395,7 @@ type ContractBase = Omit<
             };
             readonly movimiento_activo_fijo: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['ASIGNACION', 'REASIGNACION', 'DEVOLUCION'];
+              readonly values: readonly ['ASIGNACION', 'REASIGNACION', 'DEVOLUCION', 'TRASLADO'];
             };
             readonly naturaleza_documento: {
               readonly kind: 'valueSet';
@@ -27061,12 +27061,14 @@ type ContractBase = Omit<
               { readonly name: 'ASIGNACION'; readonly value: 'ASIGNACION' },
               { readonly name: 'REASIGNACION'; readonly value: 'REASIGNACION' },
               { readonly name: 'DEVOLUCION'; readonly value: 'DEVOLUCION' },
+              { readonly name: 'TRASLADO'; readonly value: 'TRASLADO' },
             ];
           };
           readonly estado_activo_fijo: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
               { readonly name: 'OPERATIVO'; readonly value: 'OPERATIVO' },
+              { readonly name: 'NO_OPERATIVO'; readonly value: 'NO_OPERATIVO' },
               { readonly name: 'EN_REPARACION'; readonly value: 'EN_REPARACION' },
               { readonly name: 'DE_BAJA'; readonly value: 'DE_BAJA' },
             ];

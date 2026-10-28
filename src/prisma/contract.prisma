@@ -122,10 +122,12 @@ enum movimiento_activo_fijo {
   ASIGNACION
   REASIGNACION
   DEVOLUCION
+  TRASLADO
 }
 
 enum estado_activo_fijo {
   OPERATIVO
+  NO_OPERATIVO
   EN_REPARACION
   DE_BAJA
 }

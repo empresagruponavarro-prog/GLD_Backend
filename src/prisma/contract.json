@@ -551,6 +551,10 @@
                 "value": "OPERATIVO"
               },
               {
+                "name": "NO_OPERATIVO",
+                "value": "NO_OPERATIVO"
+              },
+              {
                 "name": "EN_REPARACION",
                 "value": "EN_REPARACION"
               },
@@ -766,6 +770,10 @@
               {
                 "name": "DEVOLUCION",
                 "value": "DEVOLUCION"
+              },
+              {
+                "name": "TRASLADO",
+                "value": "TRASLADO"
               }
             ]
           },
@@ -18042,8 +18050,8 @@
             "activo_fijo": {
               "checks": [
                 {
-                  "expression": "\"estado\" IN ('OPERATIVO', 'EN_REPARACION', 'DE_BAJA')",
-                  "name": "activo_fijo_estado_check_f649baa7",
+                  "expression": "\"estado\" IN ('OPERATIVO', 'NO_OPERATIVO', 'EN_REPARACION', 'DE_BAJA')",
+                  "name": "activo_fijo_estado_check_4c09dba9",
                   "prefix": "activo_fijo_estado_check"
                 }
               ],
@@ -18378,8 +18386,8 @@
             "activo_fijo_historial": {
               "checks": [
                 {
-                  "expression": "\"movimiento\" IN ('ASIGNACION', 'REASIGNACION', 'DEVOLUCION')",
-                  "name": "activo_fijo_historial_movimiento_check_95ad28f8",
+                  "expression": "\"movimiento\" IN ('ASIGNACION', 'REASIGNACION', 'DEVOLUCION', 'TRASLADO')",
+                  "name": "activo_fijo_historial_movimiento_check_014b4982",
                   "prefix": "activo_fijo_historial_movimiento_check"
                 }
               ],
@@ -30866,6 +30874,7 @@
               "kind": "valueSet",
               "values": [
                 "OPERATIVO",
+                "NO_OPERATIVO",
                 "EN_REPARACION",
                 "DE_BAJA"
               ]
@@ -30953,7 +30962,8 @@
               "values": [
                 "ASIGNACION",
                 "REASIGNACION",
-                "DEVOLUCION"
+                "DEVOLUCION",
+                "TRASLADO"
               ]
             },
             "naturaleza_documento": {
@@ -30997,7 +31007,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "30ab85448b69c9370b70316d015331154341aac3f05961fa74048ad377d676ac"
+    "storageHash": "bf4c8d176845184481328c4d6f75af576bf144d3dc4531ca678d65b21b05a7ac"
   },
   "capabilities": {
     "postgres": {

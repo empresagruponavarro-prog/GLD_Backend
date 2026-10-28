@@ -271,6 +271,36 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     expect(directo).toMatchObject({ responsableId: trabajadorId, responsable: 'E2E TRABAJADOR' });
   });
 
+  it('registra un equipo con su estado y permite cambiarlo; rechaza estados que no existen', async () => {
+    const base = { codigoBien, serie: `E2E-EST-${Date.now()}`, localId, nivelId, ambienteId, areaId, estado: 'NO_OPERATIVO' };
+    const { body: equipo } = await api().post('/maestros/anexo/equipos').send(base).expect(201);
+    expect(equipo.estado).toBe('No operativo');
+    const { body: enReparacion } = await api().patch(`/maestros/anexo/equipos/${equipo.id}/estado`).send({ estado: 'EN_REPARACION' }).expect(200);
+    expect(enReparacion.estado).toBe('En reparación');
+    await api().patch(`/maestros/anexo/equipos/${equipo.id}/estado`).send({ estado: 'DE_BAJA' }).expect(400);
+    await api().patch('/maestros/anexo/equipos/999999999/estado').send({ estado: 'OPERATIVO' }).expect(404);
+    await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-EST2-${Date.now()}`, estado: 'ROTO' }).expect(400);
+  });
+
+  it('mueve un equipo sin responsable a un centro de costo y deja el traslado en el historial', async () => {
+    const { body: opciones } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
+    const { body: equipo } = await api()
+      .post('/maestros/anexo/equipos')
+      .send({ codigoBien, serie: `E2E-MOV-${Date.now()}`, localId, nivelId, ambienteId, areaId })
+      .expect(201);
+    expect(equipo.responsableId).toBeNull();
+    const centroId = opciones.centrosCosto[0].id;
+    const { body: movido } = await api()
+      .patch(`/maestros/anexo/equipos/${equipo.id}/mover`)
+      .send({ fecha: '2026-10-28', destinoTipo: 'CENTRO_COSTO', destinoId: centroId })
+      .expect(200);
+    expect(movido).toMatchObject({ destinoTipo: 'CENTRO_COSTO', destinoId: centroId, local: '' });
+    const { body: historial } = await api().get(`/maestros/anexo/equipos/${equipo.id}/historial`).expect(200);
+    expect(historial[0]).toMatchObject({ movimiento: 'Traslado' });
+    await api().patch(`/maestros/anexo/equipos/${equipo.id}/mover`).send({ fecha: '2026-10-28', destinoTipo: 'EMPRESA', destinoId: opciones.empresas[0].id }).expect(400);
+    await api().patch('/maestros/anexo/equipos/999999999/mover').send({ fecha: '2026-10-28', destinoTipo: 'CENTRO_COSTO', destinoId: centroId }).expect(404);
+  });
+
   it('indica a qué obra / centro de costo o empresa pertenece el local del equipo', async () => {
     const { body: opciones } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
     for (const local of opciones.locales) expect(local).toHaveProperty('destinoTipo');

@@ -4,10 +4,12 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, Ap
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import {
   AsignarActivoDto,
+  CambiarEstadoDto,
   DevolverEquipoDto,
   EquipoAsignadoDto,
   EquipoInventarioDto,
   MovimientoEquipoDto,
+  MoverEquipoDto,
   NuevaAsignacionDto,
   OpcionesEquipoDto,
   ReasignarEquipoDto,
@@ -40,6 +42,22 @@ export class ActivoFijoController {
   @ApiCreatedResponse({ type: EquipoInventarioDto })
   registrar(@Body() dto: RegistrarActivoDto): Promise<EquipoInventarioDto> {
     return this.handler.registrarActivo(dto);
+  }
+
+  @Patch('equipos/:equipoId/mover')
+  @ApiOperation({ summary: 'Cambiar un equipo de empresa / centro de costo, ambiente o área (con o sin responsable)' })
+  @ApiParam({ name: 'equipoId', type: Number, description: 'ID del activo fijo' })
+  @ApiOkResponse({ type: EquipoInventarioDto })
+  mover(@Param('equipoId', ParseIntPipe) equipoId: number, @Body() dto: MoverEquipoDto): Promise<EquipoInventarioDto> {
+    return this.handler.mover(equipoId, dto);
+  }
+
+  @Patch('equipos/:equipoId/estado')
+  @ApiOperation({ summary: 'Cambiar el estado de un equipo (operativo, no operativo, en reparación)' })
+  @ApiParam({ name: 'equipoId', type: Number, description: 'ID del activo fijo' })
+  @ApiOkResponse({ type: EquipoInventarioDto })
+  cambiarEstado(@Param('equipoId', ParseIntPipe) equipoId: number, @Body() dto: CambiarEstadoDto): Promise<EquipoInventarioDto> {
+    return this.handler.cambiarEstado(equipoId, dto);
   }
 
   @Patch('equipos/:equipoId/asignar')

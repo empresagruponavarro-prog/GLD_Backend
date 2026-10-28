@@ -10,10 +10,13 @@ import {
   DevolverEquipoDto,
   AsignarActivoDto,
   EquipoInventarioDto,
+  CambiarEstadoDto,
+  EstadoActivo,
   EstadoEquipo,
   MovimientoEquipoDto,
   TipoMovimiento,
   LocalOpcionDto,
+  MoverEquipoDto,
   NuevaAsignacionDto,
   OpcionesEquipoDto,
   OpcionDestinoDto,
@@ -61,18 +64,19 @@ function destinoDeLocal(
   return { destino: null, destinoTipo: null, destinoId: null };
 }
 
-type Movimiento = 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION';
+type Movimiento = 'ASIGNACION' | 'REASIGNACION' | 'DEVOLUCION' | 'TRASLADO';
 
 const ETIQUETA_MOVIMIENTO: Record<Movimiento, TipoMovimiento> = {
   ASIGNACION: 'Asignación',
   REASIGNACION: 'Reasignación',
   DEVOLUCION: 'Devolución',
+  TRASLADO: 'Traslado',
 };
 
 const ETIQUETA_ESTADO: Record<string, EstadoEquipo> = {
   OPERATIVO: 'Operativo',
+  NO_OPERATIVO: 'No operativo',
   EN_REPARACION: 'En reparación',
-  DE_BAJA: 'De baja',
 };
 
 type ActivoRow = {
@@ -93,6 +97,7 @@ type ActivoRow = {
 interface DatosActivo {
   codigoBien: string;
   serie?: string | null;
+  estado?: EstadoActivo;
   localId?: number;
   nivelId?: number;
   ambienteId?: number;
@@ -191,6 +196,35 @@ export class ActivoFijoHandler {
     return equipo;
   }
 
+  /** Cambia el estado del equipo (operativo, no operativo o en reparación). */
+  async cambiarEstado(equipoId: number, dto: CambiarEstadoDto): Promise<EquipoInventarioDto> {
+    const activo = await this.db.orm.public.activo_fijo.first({ id: equipoId });
+    if (!activo) throw new NotFoundException(`Equipo ${equipoId} no encontrado`);
+    const actualizado = await this.db.orm.public.activo_fijo.where({ id: equipoId }).update({ estado: dto.estado });
+    const [equipo] = actualizado ? await this.conResponsable([actualizado]) : [];
+    if (!equipo) throw new NotFoundException('No se pudo leer el equipo');
+    return equipo;
+  }
+
+  /** Cambia al equipo de empresa / centro de costo, ambiente o área (con o sin responsable); queda en el historial. */
+  async mover(equipoId: number, dto: MoverEquipoDto): Promise<EquipoInventarioDto> {
+    const antes = await this.db.orm.public.activo_fijo.first({ id: equipoId });
+    if (!antes) throw new NotFoundException(`Equipo ${equipoId} no encontrado`);
+    const { idUbicacion, idArea, destino } = await this.resolverUbicacionYDestino(dto);
+    const nombreAntes = await this.nombreDestino(antes.id_empresa, antes.id_centro_costo);
+    const nombreDespues = await this.nombreDestino(destino.idEmpresa, destino.idCentroCosto);
+    const actualizado = await this.db.orm.public.activo_fijo.where({ id: equipoId }).update({
+      id_ubicacion: idUbicacion,
+      id_area: idArea,
+      id_empresa: destino.idEmpresa,
+      id_centro_costo: destino.idCentroCosto,
+    });
+    await this.registrar(equipoId, 'TRASLADO', dto.fecha, antes.id_responsable, antes.id_responsable, antes.id_ubicacion, idUbicacion, antes.id_area, idArea, nombreAntes, nombreDespues);
+    const [equipo] = actualizado ? await this.conResponsable([actualizado]) : [];
+    if (!equipo) throw new NotFoundException('No se pudo leer el equipo');
+    return equipo;
+  }
+
   /** Entrega a un trabajador un equipo que está disponible; para cambiarlo de persona se usa reasignar. */
   async asignarExistente(equipoId: number, dto: AsignarActivoDto): Promise<EquipoInventarioDto> {
     const activo = await this.db.orm.public.activo_fijo.first({ id: equipoId });
@@ -256,7 +290,7 @@ export class ActivoFijoHandler {
         codigo: toVarchar<30>(codigoActivo),
         id_producto: bien.id,
         serie: serie ? toVarchar<100>(serie) : null,
-        estado: 'OPERATIVO',
+        estado: dto.estado ?? 'OPERATIVO',
         fecha_asignacion: responsable?.fecha ?? null,
         id_responsable: responsable?.anexoId ?? null,
         id_ubicacion: idUbicacion,
