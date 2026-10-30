@@ -1,0 +1,1907 @@
+[
+  {
+    "id": "dropCheckConstraint.producto.producto_clase_inventario_check_77c65b6c",
+    "label": "Drop check constraint \"producto_clase_inventario_check_77c65b6c\" on \"producto\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "producto_clase_inventario_check_77c65b6c",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_clase_inventario_check_77c65b6c\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_77c65b6c",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"producto_clase_inventario_check_77c65b6c\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" DROP CONSTRAINT \"producto_clase_inventario_check_77c65b6c\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_clase_inventario_check_77c65b6c\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_77c65b6c",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.activo_fijo",
+    "label": "Create table \"activo_fijo\"",
+    "summary": "Creates table \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"activo_fijo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"activo_fijo\"",
+        "sql": "CREATE TABLE \"public\".\"activo_fijo\" (\n  \"codigo\" character varying(30) NOT NULL,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"estado\" text DEFAULT 'OPERATIVO' NOT NULL,\n  \"fecha_asignacion\" date,\n  \"id\" SERIAL NOT NULL,\n  \"id_area\" int4,\n  \"id_centro_costo\" int4,\n  \"id_empresa\" int4,\n  \"id_producto\" int4 NOT NULL,\n  \"id_responsable\" int4,\n  \"id_ubicacion\" int4,\n  \"serie\" character varying(100),\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"activo_fijo_estado_check_4c09dba9\" CHECK (\"estado\" IN ('OPERATIVO', 'NO_OPERATIVO', 'EN_REPARACION', 'DE_BAJA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"activo_fijo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.activo_fijo_caracteristica",
+    "label": "Create table \"activo_fijo_caracteristica\"",
+    "summary": "Creates table \"activo_fijo_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "activo_fijo_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"activo_fijo_caracteristica\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"activo_fijo_caracteristica\"",
+        "sql": "CREATE TABLE \"public\".\"activo_fijo_caracteristica\" (\n  \"id\" SERIAL NOT NULL,\n  \"id_activo_fijo\" int4 NOT NULL,\n  \"nombre\" character varying(60) NOT NULL,\n  \"valor\" character varying(150) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"activo_fijo_caracteristica\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.activo_fijo_historial",
+    "label": "Create table \"activo_fijo_historial\"",
+    "summary": "Creates table \"activo_fijo_historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "activo_fijo_historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"activo_fijo_historial\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_historial\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"activo_fijo_historial\"",
+        "sql": "CREATE TABLE \"public\".\"activo_fijo_historial\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"destino_anterior\" character varying(255),\n  \"destino_nuevo\" character varying(255),\n  \"fecha\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_activo_fijo\" int4 NOT NULL,\n  \"id_area_anterior\" int4,\n  \"id_area_nueva\" int4,\n  \"id_responsable_anterior\" int4,\n  \"id_responsable_nuevo\" int4,\n  \"id_ubicacion_anterior\" int4,\n  \"id_ubicacion_nueva\" int4,\n  \"movimiento\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"activo_fijo_historial_movimiento_check_014b4982\" CHECK (\"movimiento\" IN ('ASIGNACION', 'REASIGNACION', 'DEVOLUCION', 'TRASLADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"activo_fijo_historial\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_historial\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ambiente",
+    "label": "Create table \"ambiente\"",
+    "summary": "Creates table \"ambiente\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ambiente"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ambiente\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ambiente\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ambiente\"",
+        "sql": "CREATE TABLE \"public\".\"ambiente\" (\n  \"codigo\" character varying(20) NOT NULL,\n  \"descripcion\" character varying(150) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ambiente\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ambiente\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.local",
+    "label": "Create table \"local\"",
+    "summary": "Creates table \"local\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"local\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"local\"",
+        "sql": "CREATE TABLE \"public\".\"local\" (\n  \"codigo\" character varying(20) NOT NULL,\n  \"direccion\" character varying(255),\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4,\n  \"id_empresa\" int4,\n  \"nombre\" character varying(150) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"local\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.nivel",
+    "label": "Create table \"nivel\"",
+    "summary": "Creates table \"nivel\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "nivel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"nivel\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"nivel\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"nivel\"",
+        "sql": "CREATE TABLE \"public\".\"nivel\" (\n  \"codigo\" character varying(20) NOT NULL,\n  \"descripcion\" character varying(150) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"nivel\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"nivel\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.producto_caracteristica",
+    "label": "Create table \"producto_caracteristica\"",
+    "summary": "Creates table \"producto_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "producto_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"producto_caracteristica\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"producto_caracteristica\"",
+        "sql": "CREATE TABLE \"public\".\"producto_caracteristica\" (\n  \"id\" SERIAL NOT NULL,\n  \"id_producto\" int4 NOT NULL,\n  \"nombre\" character varying(60) NOT NULL,\n  \"valor\" character varying(150) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"producto_caracteristica\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ubicacion",
+    "label": "Create table \"ubicacion\"",
+    "summary": "Creates table \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ubicacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ubicacion\"",
+        "sql": "CREATE TABLE \"public\".\"ubicacion\" (\n  \"codigo\" character varying(50) NOT NULL,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_ambiente\" int4 NOT NULL,\n  \"id_area\" int4,\n  \"id_local\" int4 NOT NULL,\n  \"id_nivel\" int4 NOT NULL,\n  \"observaciones\" character varying(255),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ubicacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.activo_fijo.activo_fijo_codigo_key",
+    "label": "Add unique constraint on \"activo_fijo\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "activo_fijo_codigo_key",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"activo_fijo_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_codigo_key",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"activo_fijo_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\" ADD CONSTRAINT \"activo_fijo_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"activo_fijo_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_codigo_key",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.activo_fijo_caracteristica.activo_fijo_caracteristica_id_activo_fijo_nombre_key",
+    "label": "Add unique constraint on \"activo_fijo_caracteristica\" (id_activo_fijo, nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "activo_fijo_caracteristica_id_activo_fijo_nombre_key",
+        "table": "activo_fijo_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"activo_fijo_caracteristica_id_activo_fijo_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_caracteristica_id_activo_fijo_nombre_key",
+          "public",
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"activo_fijo_caracteristica_id_activo_fijo_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo_caracteristica\" ADD CONSTRAINT \"activo_fijo_caracteristica_id_activo_fijo_nombre_key\" UNIQUE (\"id_activo_fijo\", \"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"activo_fijo_caracteristica_id_activo_fijo_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_caracteristica_id_activo_fijo_nombre_key",
+          "public",
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ambiente.ambiente_codigo_key",
+    "label": "Add unique constraint on \"ambiente\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ambiente_codigo_key",
+        "table": "ambiente"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ambiente_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ambiente_codigo_key",
+          "public",
+          "\"public\".\"ambiente\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ambiente_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"ambiente\" ADD CONSTRAINT \"ambiente_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ambiente_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ambiente_codigo_key",
+          "public",
+          "\"public\".\"ambiente\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.local.local_codigo_key",
+    "label": "Add unique constraint on \"local\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "local_codigo_key",
+        "table": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"local_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_codigo_key",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"local_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"local\" ADD CONSTRAINT \"local_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"local_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_codigo_key",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.nivel.nivel_codigo_key",
+    "label": "Add unique constraint on \"nivel\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "nivel_codigo_key",
+        "table": "nivel"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"nivel_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "nivel_codigo_key",
+          "public",
+          "\"public\".\"nivel\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"nivel_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"nivel\" ADD CONSTRAINT \"nivel_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"nivel_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "nivel_codigo_key",
+          "public",
+          "\"public\".\"nivel\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.producto.producto_clase_inventario_check_a0c70268",
+    "label": "Add check constraint \"producto_clase_inventario_check_a0c70268\" on \"producto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "producto_clase_inventario_check_a0c70268",
+        "table": "producto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_clase_inventario_check_a0c70268\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_a0c70268",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"producto_clase_inventario_check_a0c70268\"",
+        "sql": "ALTER TABLE \"public\".\"producto\" ADD CONSTRAINT \"producto_clase_inventario_check_a0c70268\" CHECK (\"clase_inventario\" IN ('CONSUMIBLE', 'EQUIPO_RETORNABLE', 'MERCADERIA_CLIENTE', 'ACTIVO_FIJO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_clase_inventario_check_a0c70268\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_clase_inventario_check_a0c70268",
+          "public",
+          "\"public\".\"producto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.producto_caracteristica.producto_caracteristica_id_producto_nombre_key",
+    "label": "Add unique constraint on \"producto_caracteristica\" (id_producto, nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "producto_caracteristica_id_producto_nombre_key",
+        "table": "producto_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"producto_caracteristica_id_producto_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_caracteristica_id_producto_nombre_key",
+          "public",
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"producto_caracteristica_id_producto_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"producto_caracteristica\" ADD CONSTRAINT \"producto_caracteristica_id_producto_nombre_key\" UNIQUE (\"id_producto\", \"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"producto_caracteristica_id_producto_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_caracteristica_id_producto_nombre_key",
+          "public",
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ubicacion.ubicacion_codigo_key",
+    "label": "Add unique constraint on \"ubicacion\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ubicacion_codigo_key",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ubicacion_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_codigo_key",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ubicacion_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"ubicacion\" ADD CONSTRAINT \"ubicacion_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ubicacion_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_codigo_key",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ubicacion.ubicacion_id_local_id_nivel_id_ambiente_key",
+    "label": "Add unique constraint on \"ubicacion\" (id_local, id_nivel, id_ambiente)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ubicacion_id_local_id_nivel_id_ambiente_key",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ubicacion_id_local_id_nivel_id_ambiente_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_local_id_nivel_id_ambiente_key",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ubicacion_id_local_id_nivel_id_ambiente_key\"",
+        "sql": "ALTER TABLE \"public\".\"ubicacion\" ADD CONSTRAINT \"ubicacion_id_local_id_nivel_id_ambiente_key\" UNIQUE (\"id_local\", \"id_nivel\", \"id_ambiente\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ubicacion_id_local_id_nivel_id_ambiente_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_local_id_nivel_id_ambiente_key",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_area_idx_2da0f6a6",
+    "label": "Create index \"activo_fijo_id_area_idx_2da0f6a6\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_area_idx_2da0f6a6",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_area_idx_2da0f6a6\" ON \"public\".\"activo_fijo\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"activo_fijo_id_centro_costo_idx_8c84570b\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_centro_costo_idx_8c84570b",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_centro_costo_idx_8c84570b\" ON \"public\".\"activo_fijo\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_empresa_idx_328936e2",
+    "label": "Create index \"activo_fijo_id_empresa_idx_328936e2\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_empresa_idx_328936e2",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_empresa_idx_328936e2\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_empresa_idx_328936e2\" ON \"public\".\"activo_fijo\" (\"id_empresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_producto_idx_f4d96d2e",
+    "label": "Create index \"activo_fijo_id_producto_idx_f4d96d2e\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_producto_idx_f4d96d2e",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_producto_idx_f4d96d2e\" ON \"public\".\"activo_fijo\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_responsable_idx_f28b2d33",
+    "label": "Create index \"activo_fijo_id_responsable_idx_f28b2d33\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_responsable_idx_f28b2d33",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_responsable_idx_f28b2d33\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_responsable_idx_f28b2d33\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_responsable_idx_f28b2d33\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_responsable_idx_f28b2d33\" ON \"public\".\"activo_fijo\" (\"id_responsable\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_responsable_idx_f28b2d33\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_responsable_idx_f28b2d33\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo.activo_fijo_id_ubicacion_idx_cf0b54d1",
+    "label": "Create index \"activo_fijo_id_ubicacion_idx_cf0b54d1\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_id_ubicacion_idx_cf0b54d1",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_id_ubicacion_idx_cf0b54d1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_ubicacion_idx_cf0b54d1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_id_ubicacion_idx_cf0b54d1\"",
+        "sql": "CREATE INDEX \"activo_fijo_id_ubicacion_idx_cf0b54d1\" ON \"public\".\"activo_fijo\" (\"id_ubicacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_id_ubicacion_idx_cf0b54d1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_id_ubicacion_idx_cf0b54d1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo_caracteristica.activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2",
+    "label": "Create index \"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\" on \"activo_fijo_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2",
+        "table": "activo_fijo_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\"",
+        "sql": "CREATE INDEX \"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\" ON \"public\".\"activo_fijo_caracteristica\" (\"id_activo_fijo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_caracteristica_id_activo_fijo_idx_e14c77d2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.activo_fijo_historial.activo_fijo_historial_id_activo_fijo_idx_e14c77d2",
+    "label": "Create index \"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\" on \"activo_fijo_historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "activo_fijo_historial_id_activo_fijo_idx_e14c77d2",
+        "table": "activo_fijo_historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\"",
+        "sql": "CREATE INDEX \"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\" ON \"public\".\"activo_fijo_historial\" (\"id_activo_fijo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"activo_fijo_historial_id_activo_fijo_idx_e14c77d2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.local.local_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"local_id_centro_costo_idx_8c84570b\" on \"local\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "local_id_centro_costo_idx_8c84570b",
+        "table": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"local_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"local_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"local_id_centro_costo_idx_8c84570b\" ON \"public\".\"local\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"local_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.local.local_id_empresa_idx_328936e2",
+    "label": "Create index \"local_id_empresa_idx_328936e2\" on \"local\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "local_id_empresa_idx_328936e2",
+        "table": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"local_id_empresa_idx_328936e2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local_id_empresa_idx_328936e2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"local_id_empresa_idx_328936e2\"",
+        "sql": "CREATE INDEX \"local_id_empresa_idx_328936e2\" ON \"public\".\"local\" (\"id_empresa\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"local_id_empresa_idx_328936e2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"local_id_empresa_idx_328936e2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.producto_caracteristica.producto_caracteristica_id_producto_idx_f4d96d2e",
+    "label": "Create index \"producto_caracteristica_id_producto_idx_f4d96d2e\" on \"producto_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "producto_caracteristica_id_producto_idx_f4d96d2e",
+        "table": "producto_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"producto_caracteristica_id_producto_idx_f4d96d2e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_caracteristica_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"producto_caracteristica_id_producto_idx_f4d96d2e\"",
+        "sql": "CREATE INDEX \"producto_caracteristica_id_producto_idx_f4d96d2e\" ON \"public\".\"producto_caracteristica\" (\"id_producto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"producto_caracteristica_id_producto_idx_f4d96d2e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"producto_caracteristica_id_producto_idx_f4d96d2e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ubicacion.ubicacion_id_ambiente_idx_27009780",
+    "label": "Create index \"ubicacion_id_ambiente_idx_27009780\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ubicacion_id_ambiente_idx_27009780",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ubicacion_id_ambiente_idx_27009780\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_ambiente_idx_27009780\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ubicacion_id_ambiente_idx_27009780\"",
+        "sql": "CREATE INDEX \"ubicacion_id_ambiente_idx_27009780\" ON \"public\".\"ubicacion\" (\"id_ambiente\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ubicacion_id_ambiente_idx_27009780\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_ambiente_idx_27009780\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ubicacion.ubicacion_id_area_idx_2da0f6a6",
+    "label": "Create index \"ubicacion_id_area_idx_2da0f6a6\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ubicacion_id_area_idx_2da0f6a6",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ubicacion_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ubicacion_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"ubicacion_id_area_idx_2da0f6a6\" ON \"public\".\"ubicacion\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ubicacion_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ubicacion.ubicacion_id_local_idx_573613ca",
+    "label": "Create index \"ubicacion_id_local_idx_573613ca\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ubicacion_id_local_idx_573613ca",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ubicacion_id_local_idx_573613ca\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_local_idx_573613ca\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ubicacion_id_local_idx_573613ca\"",
+        "sql": "CREATE INDEX \"ubicacion_id_local_idx_573613ca\" ON \"public\".\"ubicacion\" (\"id_local\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ubicacion_id_local_idx_573613ca\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_local_idx_573613ca\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ubicacion.ubicacion_id_nivel_idx_b90dc345",
+    "label": "Create index \"ubicacion_id_nivel_idx_b90dc345\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ubicacion_id_nivel_idx_b90dc345",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ubicacion_id_nivel_idx_b90dc345\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_nivel_idx_b90dc345\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ubicacion_id_nivel_idx_b90dc345\"",
+        "sql": "CREATE INDEX \"ubicacion_id_nivel_idx_b90dc345\" ON \"public\".\"ubicacion\" (\"id_nivel\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ubicacion_id_nivel_idx_b90dc345\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ubicacion_id_nivel_idx_b90dc345\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_producto_fkey",
+    "label": "Add foreign key \"activo_fijo_id_producto_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_producto_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_producto_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_producto_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_responsable_fkey",
+    "label": "Add foreign key \"activo_fijo_id_responsable_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_responsable_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_responsable_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_responsable_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_responsable_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_responsable_fkey\"\nFOREIGN KEY (\"id_responsable\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_responsable_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_responsable_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_ubicacion_fkey",
+    "label": "Add foreign key \"activo_fijo_id_ubicacion_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_ubicacion_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_ubicacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_ubicacion_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_ubicacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_ubicacion_fkey\"\nFOREIGN KEY (\"id_ubicacion\")\nREFERENCES \"public\".\"ubicacion\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_ubicacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_ubicacion_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_area_fkey",
+    "label": "Add foreign key \"activo_fijo_id_area_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_area_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_area_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_area_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_area_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_area_fkey\"\nFOREIGN KEY (\"id_area\")\nREFERENCES \"public\".\"area\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_area_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_area_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_empresa_fkey",
+    "label": "Add foreign key \"activo_fijo_id_empresa_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_empresa_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_empresa_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_empresa_fkey\"\nFOREIGN KEY (\"id_empresa\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_empresa_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo.activo_fijo_id_centro_costo_fkey",
+    "label": "Add foreign key \"activo_fijo_id_centro_costo_fkey\" on \"activo_fijo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_id_centro_costo_fkey",
+        "table": "activo_fijo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo\"\nADD CONSTRAINT \"activo_fijo_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"activo_fijo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo_caracteristica.activo_fijo_caracteristica_id_activo_fijo_fkey",
+    "label": "Add foreign key \"activo_fijo_caracteristica_id_activo_fijo_fkey\" on \"activo_fijo_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_caracteristica_id_activo_fijo_fkey",
+        "table": "activo_fijo_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_caracteristica_id_activo_fijo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_caracteristica_id_activo_fijo_fkey",
+          "public",
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_caracteristica_id_activo_fijo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo_caracteristica\"\nADD CONSTRAINT \"activo_fijo_caracteristica_id_activo_fijo_fkey\"\nFOREIGN KEY (\"id_activo_fijo\")\nREFERENCES \"public\".\"activo_fijo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_caracteristica_id_activo_fijo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_caracteristica_id_activo_fijo_fkey",
+          "public",
+          "\"public\".\"activo_fijo_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.activo_fijo_historial.activo_fijo_historial_id_activo_fijo_fkey",
+    "label": "Add foreign key \"activo_fijo_historial_id_activo_fijo_fkey\" on \"activo_fijo_historial\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "activo_fijo_historial_id_activo_fijo_fkey",
+        "table": "activo_fijo_historial"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"activo_fijo_historial_id_activo_fijo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_historial_id_activo_fijo_fkey",
+          "public",
+          "\"public\".\"activo_fijo_historial\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"activo_fijo_historial_id_activo_fijo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"activo_fijo_historial\"\nADD CONSTRAINT \"activo_fijo_historial_id_activo_fijo_fkey\"\nFOREIGN KEY (\"id_activo_fijo\")\nREFERENCES \"public\".\"activo_fijo\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"activo_fijo_historial_id_activo_fijo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "activo_fijo_historial_id_activo_fijo_fkey",
+          "public",
+          "\"public\".\"activo_fijo_historial\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.local.local_id_empresa_fkey",
+    "label": "Add foreign key \"local_id_empresa_fkey\" on \"local\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "local_id_empresa_fkey",
+        "table": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"local_id_empresa_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_id_empresa_fkey",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"local_id_empresa_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"local\"\nADD CONSTRAINT \"local_id_empresa_fkey\"\nFOREIGN KEY (\"id_empresa\")\nREFERENCES \"public\".\"empresas\" (\"id_empresa\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"local_id_empresa_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_id_empresa_fkey",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.local.local_id_centro_costo_fkey",
+    "label": "Add foreign key \"local_id_centro_costo_fkey\" on \"local\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "local_id_centro_costo_fkey",
+        "table": "local"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"local_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"local_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"local\"\nADD CONSTRAINT \"local_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"local_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "local_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"local\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.producto_caracteristica.producto_caracteristica_id_producto_fkey",
+    "label": "Add foreign key \"producto_caracteristica_id_producto_fkey\" on \"producto_caracteristica\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "producto_caracteristica_id_producto_fkey",
+        "table": "producto_caracteristica"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"producto_caracteristica_id_producto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_caracteristica_id_producto_fkey",
+          "public",
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"producto_caracteristica_id_producto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"producto_caracteristica\"\nADD CONSTRAINT \"producto_caracteristica_id_producto_fkey\"\nFOREIGN KEY (\"id_producto\")\nREFERENCES \"public\".\"producto\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"producto_caracteristica_id_producto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "producto_caracteristica_id_producto_fkey",
+          "public",
+          "\"public\".\"producto_caracteristica\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ubicacion.ubicacion_id_local_fkey",
+    "label": "Add foreign key \"ubicacion_id_local_fkey\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ubicacion_id_local_fkey",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ubicacion_id_local_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_local_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ubicacion_id_local_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ubicacion\"\nADD CONSTRAINT \"ubicacion_id_local_fkey\"\nFOREIGN KEY (\"id_local\")\nREFERENCES \"public\".\"local\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ubicacion_id_local_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_local_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ubicacion.ubicacion_id_nivel_fkey",
+    "label": "Add foreign key \"ubicacion_id_nivel_fkey\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ubicacion_id_nivel_fkey",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ubicacion_id_nivel_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_nivel_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ubicacion_id_nivel_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ubicacion\"\nADD CONSTRAINT \"ubicacion_id_nivel_fkey\"\nFOREIGN KEY (\"id_nivel\")\nREFERENCES \"public\".\"nivel\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ubicacion_id_nivel_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_nivel_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ubicacion.ubicacion_id_ambiente_fkey",
+    "label": "Add foreign key \"ubicacion_id_ambiente_fkey\" on \"ubicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ubicacion_id_ambiente_fkey",
+        "table": "ubicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ubicacion_id_ambiente_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_ambiente_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ubicacion_id_ambiente_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ubicacion\"\nADD CONSTRAINT \"ubicacion_id_ambiente_fkey\"\nFOREIGN KEY (\"id_ambiente\")\nREFERENCES \"public\".\"ambiente\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ubicacion_id_ambiente_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ubicacion_id_ambiente_fkey",
+          "public",
+          "\"public\".\"ubicacion\""
+        ]
+      }
+    ]
+  }
+]
