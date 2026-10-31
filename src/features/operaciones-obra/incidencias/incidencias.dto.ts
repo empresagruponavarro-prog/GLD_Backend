@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { ESTADOS_INCIDENCIA, PRIORIDADES_INCIDENCIA } from '../shared/obra-shared.js';
 
 export class ObraIncidenciaDto {
@@ -14,6 +15,8 @@ export class ObraIncidenciaDto {
   @ApiProperty({ enum: ESTADOS_INCIDENCIA }) estado: string;
   @ApiProperty() fecha_reporte: string;
   @ApiPropertyOptional() fecha_resolucion?: string;
+  /** Subpartida a la que se atribuye el retraso o el problema (motivo del atraso). */
+  @ApiPropertyOptional({ nullable: true }) id_subpartida?: number;
 }
 
 export class CreateObraIncidenciaDto {
@@ -23,6 +26,7 @@ export class CreateObraIncidenciaDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) responsable?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(1000) accion_solicitada_o_ejecutada?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) plazo_resolucion?: string;
+  @ApiPropertyOptional({ nullable: true, description: 'Subpartida de esta obra a la que se atribuye' }) @IsOptional() @IsInt() @Type(() => Number) id_subpartida?: number | null;
 }
 
 export class UpdateObraIncidenciaDto {
@@ -33,4 +37,5 @@ export class UpdateObraIncidenciaDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(1000) accion_solicitada_o_ejecutada?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) plazo_resolucion?: string;
   @ApiPropertyOptional({ enum: ESTADOS_INCIDENCIA }) @IsOptional() @IsIn(ESTADOS_INCIDENCIA) estado?: string;
+  @ApiPropertyOptional({ nullable: true, description: 'Subpartida de esta obra a la que se atribuye' }) @IsOptional() @IsInt() @Type(() => Number) id_subpartida?: number | null;
 }

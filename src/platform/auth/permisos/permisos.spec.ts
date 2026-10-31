@@ -24,6 +24,10 @@ const OPS_JSON = new URL(
   '../../../../migrations/app/20261015T1659_roles_permisos/ops.json',
   import.meta.url,
 );
+/** Migraciones posteriores que agregan módulos al catálogo (en orden). */
+const OPS_JSON_MODULOS_NUEVOS = [
+  new URL('../../../../migrations/app/20261030T0435_operaciones_control/ops.json', import.meta.url),
+];
 
 interface Operacion {
   id: string;
@@ -31,8 +35,8 @@ interface Operacion {
 }
 
 /** SQL de una operación de la migración, leído del `ops.json` canónico (lo que se aplica). */
-function sqlDe(id: string): string {
-  const ops: Operacion[] = JSON.parse(readFileSync(OPS_JSON, 'utf8'));
+function sqlDe(id: string, archivo: URL = OPS_JSON): string {
+  const ops: Operacion[] = JSON.parse(readFileSync(archivo, 'utf8'));
   const op = ops.find((o) => o.id === id);
   if (!op) throw new Error(`No existe la operación ${id}`);
   return op.execute.map((e) => e.sql).join('\n');
@@ -41,7 +45,8 @@ function sqlDe(id: string): string {
 /** Filas de la semilla: ('clave', 'nombre', 'grupo', 'ruta', orden, aprobar, anular). */
 function semillaModulos() {
   const patron = /\('((?:[^']|'')*)', '((?:[^']|'')*)', '((?:[^']|'')*)', '((?:[^']|'')*)', (\d+), (true|false), (true|false)\)/g;
-  return [...sqlDe('data.modulo.semilla').matchAll(patron)].map((m) => ({
+  const sqls = [sqlDe('data.modulo.semilla'), sqlDe('data.modulo.operaciones', OPS_JSON_MODULOS_NUEVOS[0])];
+  return sqls.flatMap((sql) => [...sql.matchAll(patron)]).map((m) => ({
     clave: m[1],
     nombre: m[2],
     grupo: m[3],
@@ -55,8 +60,8 @@ function semillaModulos() {
 describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   const semilla = semillaModulos();
 
-  it('la semilla trae los 33 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..33', () => {
-    expect(CLAVES_MODULO).toHaveLength(33);
+  it('las semillas traen los 34 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..34', () => {
+    expect(CLAVES_MODULO).toHaveLength(34);
     expect(semilla.map((m) => m.clave)).toEqual([...CLAVES_MODULO]);
     expect(semilla.map((m) => m.orden)).toEqual(CLAVES_MODULO.map((_c, i) => i + 1));
     expect(new Set(CLAVES_MODULO).size).toBe(CLAVES_MODULO.length);

@@ -19,6 +19,41 @@ enum estado_operativo {
 }
 
 // ---- Requerimientos FUR (plan 05) ----
+// ---- Control de avance de obra / Dashboard de Operaciones (plan_implementacion_sdd_operaciones) ----
+enum estado_obra {
+  PROXIMO
+  EN_EJECUCION
+  POST_VENTA
+  CULMINADO
+  SUSPENDIDA
+  CANCELADA
+}
+
+enum tipo_partida_obra {
+  CONTRACTUAL
+  ADICIONAL
+}
+
+enum motivo_reprogramacion {
+  CLIENTE
+  PERMISO_LICENCIA
+  PROVEEDOR_CLIENTE
+  FUERZA_MAYOR
+  INTERNO
+}
+
+enum tipo_evento_obra {
+  ALTA
+  ESTADO
+  AVANCE
+  PLAZO
+  EQUIPO
+  REPROGRAMACION
+  SITUACION
+  VENCIDO
+  SOBRECARGA
+}
+
 enum estado_requerimiento {
   BORRADOR
   ENVIADO
@@ -591,6 +626,11 @@ model Anexos {
   reqEventos          requerimiento_evento[] @relation("RequerimientoEventoAnexo")
   prestamosResponsable almacen_prestamo[] @relation("PrestamoResponsable")
   activosFijos        activo_fijo[]   @relation("ActivoFijoResponsable")
+  obraComoJefe        obra_datos_generales[] @relation("ObraJefeProyecto")
+  obraComoCoordinador obra_datos_generales[] @relation("ObraCoordinador")
+  obraComoResidente   obra_datos_generales[] @relation("ObraResidenteFicha")
+  obraComoRespPpto    obra_datos_generales[] @relation("ObraRespPresupuesto")
+  obraComoRespProcura obra_datos_generales[] @relation("ObraRespProcura")
   @@map("anexos")
 }
 
@@ -722,6 +762,10 @@ model CentroCostos {
   almacenPrestamos       almacen_prestamo[] @relation("PrestamoCentroCosto")
   locales                local[]
   activosFijos           activo_fijo[] @relation("ActivoFijoCentroCosto")
+  obraPartidas           obra_partida[]
+  obraSubpartidas        obra_subpartida[]
+  obraReprogramaciones   obra_reprogramacion[]
+  obraEventos            obra_evento[]
 
   @@index([id_centro_costos_principal])
   @@map("CentroCostos")
@@ -1204,6 +1248,7 @@ model Usuarios {
   id_area   Int?
   area      area?         @relation(fields: [id_area], references: [id])
   permisos  usuario_permiso[]
+  avisoObra obra_aviso_usuario?
   @@index([id_area])
   @@map("usuarios")
 }
@@ -1368,6 +1413,7 @@ model ppto_DetalleFases {
   categorias            ppto_DetalleFasesCate[]
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
+  obraPartidas obra_partida[] @relation("ObraPartidaOrigen")
   @@map("ppto_DetalleFases")
 }
 
@@ -1392,6 +1438,7 @@ model ppto_DetalleFasesCate {
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   items        ppto_DetalleItems[]
+  obraSubpartidas obra_subpartida[] @relation("ObraSubpartidaOrigen")
   @@map("ppto_DetalleFasesCate")
 }
 
@@ -1456,6 +1503,7 @@ model ppto_Principal {
   detallesFases         ppto_DetalleFases[]
   detallesFasesCate     ppto_DetalleFasesCate[]
   historial             ppto_Principal_Historial[]
+  obraOrigen            obra_datos_generales[] @relation("ObraPresupuestoOrigen")
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_Principal")
@@ -1492,7 +1540,137 @@ model obra_datos_generales {
   contacto_cliente_correo   VarChar(150)?
   created_at                DateTime? @default(now())
   updated_at                DateTime? @default(now())
+
+  // Ficha operativa (Dashboard de Operaciones). `estado_obra` nulo = el CC no participa del Dashboard.
+  codigo_obra               VarChar(30)? @unique
+  tienda                    VarChar(80)?
+  estado_obra               estado_obra?
+  id_jefe_proyecto          Int?
+  id_coordinador            Int?
+  id_residente              Int?
+  id_resp_presupuesto       Int?
+  id_resp_procura           Int?
+  avance_general            Decimal?
+  comentario                VarChar(200)?
+  fecha_cierre_postventa    DateString?
+  plazo_postventa_dias      Int?
+  observaciones_postventa   VarChar(200)?
+  id_presupuesto_origen     Int?
+  actualizado_por           VarChar(255)?
+  jefeProyecto              Anexos?        @relation("ObraJefeProyecto", fields: [id_jefe_proyecto], references: [id], onDelete: SetNull)
+  coordinador               Anexos?        @relation("ObraCoordinador", fields: [id_coordinador], references: [id], onDelete: SetNull)
+  residente                 Anexos?        @relation("ObraResidenteFicha", fields: [id_residente], references: [id], onDelete: SetNull)
+  respPresupuesto           Anexos?        @relation("ObraRespPresupuesto", fields: [id_resp_presupuesto], references: [id], onDelete: SetNull)
+  respProcura               Anexos?        @relation("ObraRespProcura", fields: [id_resp_procura], references: [id], onDelete: SetNull)
+  presupuestoOrigen         ppto_Principal? @relation("ObraPresupuestoOrigen", fields: [id_presupuesto_origen], references: [id], onDelete: SetNull)
+  @@index([estado_obra])
+  @@index([id_jefe_proyecto])
+  @@index([id_coordinador])
   @@map("obra_datos_generales")
+}
+
+// Partidas y subpartidas de la obra: unidad de control del avance. Programado, real y situación se calculan.
+model obra_partida {
+  id                   Int               @id @default(autoincrement())
+  id_centro_costo      Int
+  item                 VarChar(20)
+  nombre               VarChar(150)
+  tipo                 tipo_partida_obra @default(CONTRACTUAL)
+  orden                Int               @default(0)
+  id_ppto_detalle_fase Int?
+  created_at           DateTime          @default(now())
+  updated_at           DateTime          @default(now())
+  centroCosto          CentroCostos      @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  pptoDetalleFase      ppto_DetalleFases? @relation("ObraPartidaOrigen", fields: [id_ppto_detalle_fase], references: [id], onDelete: SetNull)
+  subpartidas          obra_subpartida[]
+  @@unique([id_centro_costo, item])
+  @@index([id_centro_costo, orden])
+  @@map("obra_partida")
+}
+
+model obra_subpartida {
+  id                        Int                @id @default(autoincrement())
+  id_partida                Int
+  id_centro_costo           Int
+  item                      VarChar(20)
+  nombre                    VarChar(150)
+  tipo                      tipo_partida_obra?
+  fecha_inicio              DateString
+  fecha_fin                 DateString
+  orden                     Int                @default(0)
+  observacion               VarChar(200)?
+  id_ppto_detalle_categoria Int?
+  created_at                DateTime           @default(now())
+  updated_at                DateTime           @default(now())
+  partida                   obra_partida       @relation(fields: [id_partida], references: [id], onDelete: Cascade)
+  centroCosto               CentroCostos       @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  pptoDetalleCategoria      ppto_DetalleFasesCate? @relation("ObraSubpartidaOrigen", fields: [id_ppto_detalle_categoria], references: [id], onDelete: SetNull)
+  semanas                   obra_subpartida_semana[]
+  incidencias               obra_incidencias_rfi[]
+  @@unique([id_centro_costo, item])
+  @@index([id_partida])
+  @@map("obra_subpartida")
+}
+
+// Meta (semanas 1-10) y avance de la semana (semanas 1-16) de cada subpartida. Sin fila = sin dato.
+model obra_subpartida_semana {
+  id             Int             @id @default(autoincrement())
+  id_subpartida  Int
+  numero_semana  Int
+  meta           Decimal?
+  avance         Decimal?
+  registrado_por VarChar(255)?
+  registrado_en  DateTime?
+  subpartida     obra_subpartida @relation(fields: [id_subpartida], references: [id], onDelete: Cascade)
+  @@unique([id_subpartida, numero_semana])
+  @@map("obra_subpartida_semana")
+}
+
+// Pausas de plazo aprobadas. No tocan las fechas de las subpartidas (la línea base se conserva).
+model obra_reprogramacion {
+  id              Int                   @id @default(autoincrement())
+  id_centro_costo Int
+  desde           DateString
+  dias            Int
+  motivo          motivo_reprogramacion
+  detalle         VarChar(160)?
+  item_aplica     VarChar(20)?
+  aprobado_por    VarChar(255)?
+  registrado_por  VarChar(255)?
+  created_at      DateTime              @default(now())
+  centroCosto     CentroCostos          @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  @@index([id_centro_costo, desde])
+  @@map("obra_reprogramacion")
+}
+
+// Historial de cambios y avisos de la obra.
+model obra_evento {
+  id              Int              @id @default(autoincrement())
+  id_centro_costo Int
+  tipo            tipo_evento_obra
+  titulo          VarChar(200)
+  detalle         VarChar(1000)?
+  valor_antes     VarChar(200)?
+  valor_despues   VarChar(200)?
+  severidad       VarChar(10)      @default("info")
+  usuario         VarChar(255)?
+  created_at      DateTime         @default(now())
+  centroCosto     CentroCostos     @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  @@index([id_centro_costo, created_at])
+  @@index([created_at])
+  @@map("obra_evento")
+}
+
+// Estado de lectura y preferencias de la campana de avisos del Dashboard de Operaciones (una fila por usuario).
+model obra_aviso_usuario {
+  id_usuario        VarChar(255) @id
+  // Los avisos creados hasta este instante ya se leyeron; nulo = nunca marcó como leído.
+  visto_hasta       DateTime?
+  // Tipos de evento que importan (CSV); nulo = todos.
+  tipos_importantes VarChar(200)?
+  updated_at        DateTime     @default(now())
+  usuario           Usuarios     @relation(fields: [id_usuario], references: [IdUsuario], onDelete: Cascade)
+  @@map("obra_aviso_usuario")
 }
 
 model obra_residentes {
@@ -1581,6 +1759,9 @@ model obra_incidencias_rfi {
   estado                        VarChar(50)? @default("PENDIENTE")
   fecha_reporte                 DateTime? @default(now())
   fecha_resolucion              DateTime?
+  id_subpartida                 Int?
+  subpartida                    obra_subpartida? @relation(fields: [id_subpartida], references: [id], onDelete: SetNull)
+  @@index([id_subpartida])
   @@map("obra_incidencias_rfi")
 }
 

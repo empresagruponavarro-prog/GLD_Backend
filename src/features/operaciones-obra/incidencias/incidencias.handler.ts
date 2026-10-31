@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { nowInstant, toInstantString } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
@@ -20,6 +20,7 @@ export function mapIncidencia(i: IncidenciaRow): ObraIncidenciaDto {
     estado: i.estado ?? 'PENDIENTE',
     fecha_reporte: toInstantString(i.fecha_reporte),
     fecha_resolucion: i.fecha_resolucion ? toInstantString(i.fecha_resolucion) : undefined,
+    id_subpartida: i.id_subpartida ?? undefined,
   };
 }
 
@@ -37,6 +38,7 @@ export class ObraIncidenciasHandler {
 
   async create(idCentroCosto: number, dto: CreateObraIncidenciaDto): Promise<ObraIncidenciaDto> {
     await assertCentroCosto(this.db, idCentroCosto);
+    await this.validarSubpartida(idCentroCosto, dto.id_subpartida);
     const existentes = await this.db.orm.public.obra_incidencias_rfi.where({ id_centro_costo: idCentroCosto }).all();
     const correlativo =
       existentes.reduce((max, i) => {
@@ -56,12 +58,14 @@ export class ObraIncidenciasHandler {
       plazo_resolucion: toVarchar<100>(dto.plazo_resolucion),
       estado: toVarchar<50>('PENDIENTE'),
       fecha_reporte: nowInstant(),
+      id_subpartida: dto.id_subpartida ?? null,
     });
     return mapIncidencia(row);
   }
 
   async update(idCentroCosto: number, idIncidencia: number, dto: UpdateObraIncidenciaDto): Promise<ObraIncidenciaDto> {
     const actual = await this.findOrFail(idCentroCosto, idIncidencia);
+    await this.validarSubpartida(idCentroCosto, dto.id_subpartida);
     // Al pasar a RESUELTA se registra la fecha; si se reabre se limpia.
     let fechaResolucion: Temporal.Instant | null | undefined;
     if (dto.estado === 'RESUELTA' && actual.estado !== 'RESUELTA') fechaResolucion = nowInstant();
@@ -77,6 +81,7 @@ export class ObraIncidenciasHandler {
         plazo_resolucion: toVarchar<100>(dto.plazo_resolucion),
         estado: toVarchar<50>(dto.estado),
         fecha_resolucion: fechaResolucion,
+        id_subpartida: dto.id_subpartida,
       }),
     );
     if (!row) throw new NotFoundException(`Incidencia ${idIncidencia} no encontrada`);
@@ -87,6 +92,13 @@ export class ObraIncidenciasHandler {
     await this.findOrFail(idCentroCosto, idIncidencia);
     await this.db.orm.public.obra_incidencias_rfi.where({ id: idIncidencia }).delete();
     return { deleted: true, id: idIncidencia };
+  }
+
+  /** La subpartida (si se indica) debe ser de esta misma obra. */
+  private async validarSubpartida(idCentroCosto: number, idSubpartida: number | null | undefined): Promise<void> {
+    if (idSubpartida == null) return;
+    const sub = await this.db.orm.public.obra_subpartida.first({ id: idSubpartida, id_centro_costo: idCentroCosto });
+    if (!sub) throw new BadRequestException(`La subpartida ${idSubpartida} no pertenece a esta obra`);
   }
 
   private async findOrFail(idCentroCosto: number, idIncidencia: number) {

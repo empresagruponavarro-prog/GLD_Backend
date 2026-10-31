@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'bf4c8d176845184481328c4d6f75af576bf144d3dc4531ca678d65b21b05a7ac'>;
+  StorageHashBase<'26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -915,6 +915,12 @@ export type FieldOutputTypes = {
       readonly descripcion: Varchar<150>;
       readonly estado: CodecTypes['pg/bool@1']['output'];
     };
+    readonly obra_aviso_usuario: {
+      readonly id_usuario: Varchar<255>;
+      readonly visto_hasta: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly tipos_importantes: Varchar<200> | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
     readonly obra_datos_generales: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
@@ -934,6 +940,22 @@ export type FieldOutputTypes = {
       readonly contacto_cliente_correo: Varchar<150> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly codigo_obra: Varchar<30> | null;
+      readonly tienda: Varchar<80> | null;
+      readonly estado_obra:
+        'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
+      readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_coordinador: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_residente: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_resp_presupuesto: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_resp_procura: CodecTypes['pg/int4@1']['output'] | null;
+      readonly avance_general: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly comentario: Varchar<200> | null;
+      readonly fecha_cierre_postventa: CodecTypes['pg/date-string@1']['output'] | null;
+      readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly observaciones_postventa: Varchar<200> | null;
+      readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['output'] | null;
+      readonly actualizado_por: Varchar<255> | null;
     };
     readonly obra_documentos_actas: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -948,6 +970,27 @@ export type FieldOutputTypes = {
       readonly archivo_url: Varchar<1000> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     };
+    readonly obra_evento: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly tipo:
+        | 'ALTA'
+        | 'ESTADO'
+        | 'AVANCE'
+        | 'PLAZO'
+        | 'EQUIPO'
+        | 'REPROGRAMACION'
+        | 'SITUACION'
+        | 'VENCIDO'
+        | 'SOBRECARGA';
+      readonly titulo: Varchar<200>;
+      readonly detalle: Varchar<1000> | null;
+      readonly valor_antes: Varchar<200> | null;
+      readonly valor_despues: Varchar<200> | null;
+      readonly severidad: Varchar<10>;
+      readonly usuario: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
     readonly obra_incidencias_rfi: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
@@ -961,6 +1004,18 @@ export type FieldOutputTypes = {
       readonly estado: Varchar<50> | null;
       readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly id_subpartida: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly obra_partida: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly item: Varchar<20>;
+      readonly nombre: Varchar<150>;
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL';
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_detalle_fase: CodecTypes['pg/int4@1']['output'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly obra_planos: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -977,6 +1032,19 @@ export type FieldOutputTypes = {
       readonly archivo_url: Varchar<1000> | null;
       readonly emitido_por: Varchar<150> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
+    readonly obra_reprogramacion: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly desde: CodecTypes['pg/date-string@1']['output'];
+      readonly dias: CodecTypes['pg/int4@1']['output'];
+      readonly motivo:
+        'CLIENTE' | 'PERMISO_LICENCIA' | 'PROVEEDOR_CLIENTE' | 'FUERZA_MAYOR' | 'INTERNO';
+      readonly detalle: Varchar<160> | null;
+      readonly item_aplica: Varchar<20> | null;
+      readonly aprobado_por: Varchar<255> | null;
+      readonly registrado_por: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly obra_residentes: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1007,6 +1075,30 @@ export type FieldOutputTypes = {
       readonly porcentaje_real: CodecTypes['pg/numeric@1']['output'] | null;
       readonly estado: Varchar<50> | null;
       readonly orden: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly obra_subpartida: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_partida: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly item: Varchar<20>;
+      readonly nombre: Varchar<150>;
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL' | null;
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['output'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['output'];
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly observacion: Varchar<200> | null;
+      readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
+    readonly obra_subpartida_semana: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['output'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['output'];
+      readonly meta: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly avance: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly registrado_por: Varchar<255> | null;
+      readonly registrado_en: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     };
     readonly OrdenCompra: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2186,6 +2278,12 @@ export type FieldInputTypes = {
       readonly descripcion: CodecTypes['sql/varchar@1']['input'];
       readonly estado: CodecTypes['pg/bool@1']['input'];
     };
+    readonly obra_aviso_usuario: {
+      readonly id_usuario: CodecTypes['sql/varchar@1']['input'];
+      readonly visto_hasta: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly tipos_importantes: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
     readonly obra_datos_generales: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
@@ -2205,6 +2303,22 @@ export type FieldInputTypes = {
       readonly contacto_cliente_correo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly codigo_obra: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly tienda: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado_obra:
+        'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
+      readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_coordinador: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_residente: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_resp_presupuesto: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_resp_procura: CodecTypes['pg/int4@1']['input'] | null;
+      readonly avance_general: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly comentario: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_cierre_postventa: CodecTypes['pg/date-string@1']['input'] | null;
+      readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly observaciones_postventa: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['input'] | null;
+      readonly actualizado_por: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly obra_documentos_actas: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2219,6 +2333,27 @@ export type FieldInputTypes = {
       readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
     };
+    readonly obra_evento: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly tipo:
+        | 'ALTA'
+        | 'ESTADO'
+        | 'AVANCE'
+        | 'PLAZO'
+        | 'EQUIPO'
+        | 'REPROGRAMACION'
+        | 'SITUACION'
+        | 'VENCIDO'
+        | 'SOBRECARGA';
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+      readonly detalle: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly valor_antes: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly valor_despues: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly severidad: CodecTypes['sql/varchar@1']['input'];
+      readonly usuario: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
     readonly obra_incidencias_rfi: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
@@ -2232,6 +2367,18 @@ export type FieldInputTypes = {
       readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
       readonly fecha_reporte: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly id_subpartida: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly obra_partida: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly item: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL';
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_detalle_fase: CodecTypes['pg/int4@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly obra_planos: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2248,6 +2395,19 @@ export type FieldInputTypes = {
       readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
       readonly emitido_por: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly obra_reprogramacion: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly desde: CodecTypes['pg/date-string@1']['input'];
+      readonly dias: CodecTypes['pg/int4@1']['input'];
+      readonly motivo:
+        'CLIENTE' | 'PERMISO_LICENCIA' | 'PROVEEDOR_CLIENTE' | 'FUERZA_MAYOR' | 'INTERNO';
+      readonly detalle: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly item_aplica: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly aprobado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly obra_residentes: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2278,6 +2438,30 @@ export type FieldInputTypes = {
       readonly porcentaje_real: CodecTypes['pg/numeric@1']['input'] | null;
       readonly estado: CodecTypes['sql/varchar@1']['input'] | null;
       readonly orden: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly obra_subpartida: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_partida: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly item: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL' | null;
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['input'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly observacion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
+    readonly obra_subpartida_semana: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['input'];
+      readonly numero_semana: CodecTypes['pg/int4@1']['input'];
+      readonly meta: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly avance: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly registrado_en: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
     };
     readonly OrdenCompra: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3510,7 +3694,17 @@ export type StorageColumnTypes = {
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
     };
+    readonly obra_aviso_usuario: {
+      readonly id_usuario: Varchar<255>;
+      readonly tipos_importantes: Varchar<200> | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly visto_hasta: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    };
     readonly obra_datos_generales: {
+      readonly actualizado_por: Varchar<255> | null;
+      readonly avance_general: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly codigo_obra: Varchar<30> | null;
+      readonly comentario: Varchar<200> | null;
       readonly contacto_cliente_correo: Varchar<150> | null;
       readonly contacto_cliente_nombre: Varchar<150> | null;
       readonly contacto_cliente_telefono: Varchar<50> | null;
@@ -3518,14 +3712,26 @@ export type StorageColumnTypes = {
       readonly departamento: Varchar<100> | null;
       readonly direccion: Varchar<1000> | null;
       readonly distrito: Varchar<100> | null;
+      readonly estado_obra:
+        'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
       readonly expediente_codigo: Varchar<100> | null;
+      readonly fecha_cierre_postventa: CodecTypes['pg/date-string@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_coordinador: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_residente: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_resp_presupuesto: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_resp_procura: CodecTypes['pg/int4@1']['output'] | null;
       readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
       readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly observaciones_postventa: Varchar<200> | null;
       readonly personal_activo_promedio: CodecTypes['pg/int4@1']['output'] | null;
+      readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['output'] | null;
       readonly provincia: Varchar<100> | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['output'] | null;
+      readonly tienda: Varchar<80> | null;
       readonly turno_trabajo: Varchar<50> | null;
       readonly ubigeo_cod: Varchar<10> | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -3543,6 +3749,27 @@ export type StorageColumnTypes = {
       readonly titulo: Varchar<255>;
       readonly vigencia_texto: Varchar<100> | null;
     };
+    readonly obra_evento: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly detalle: Varchar<1000> | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly severidad: Varchar<10>;
+      readonly tipo:
+        | 'ALTA'
+        | 'ESTADO'
+        | 'AVANCE'
+        | 'PLAZO'
+        | 'EQUIPO'
+        | 'REPROGRAMACION'
+        | 'SITUACION'
+        | 'VENCIDO'
+        | 'SOBRECARGA';
+      readonly titulo: Varchar<200>;
+      readonly usuario: Varchar<255> | null;
+      readonly valor_antes: Varchar<200> | null;
+      readonly valor_despues: Varchar<200> | null;
+    };
     readonly obra_incidencias_rfi: {
       readonly accion_solicitada_o_ejecutada: Varchar<1000> | null;
       readonly codigo_incidencia: Varchar<50>;
@@ -3552,10 +3779,22 @@ export type StorageColumnTypes = {
       readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['output'] | null;
       readonly plazo_resolucion: Varchar<100> | null;
       readonly prioridad: Varchar<50> | null;
       readonly responsable: Varchar<150> | null;
       readonly titulo: Varchar<255>;
+    };
+    readonly obra_partida: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_detalle_fase: CodecTypes['pg/int4@1']['output'] | null;
+      readonly item: Varchar<20>;
+      readonly nombre: Varchar<150>;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL';
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly obra_planos: {
       readonly archivo_url: Varchar<1000> | null;
@@ -3572,6 +3811,19 @@ export type StorageColumnTypes = {
       readonly id_plano_anterior: CodecTypes['pg/int4@1']['output'] | null;
       readonly nombre_plano: Varchar<255>;
       readonly version: Varchar<20> | null;
+    };
+    readonly obra_reprogramacion: {
+      readonly aprobado_por: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly desde: CodecTypes['pg/date-string@1']['output'];
+      readonly detalle: Varchar<160> | null;
+      readonly dias: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly item_aplica: Varchar<20> | null;
+      readonly motivo:
+        'CLIENTE' | 'PERMISO_LICENCIA' | 'PROVEEDOR_CLIENTE' | 'FUERZA_MAYOR' | 'INTERNO';
+      readonly registrado_por: Varchar<255> | null;
     };
     readonly obra_residentes: {
       readonly correo: Varchar<150> | null;
@@ -3602,6 +3854,30 @@ export type StorageColumnTypes = {
       readonly porcentaje_meta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly porcentaje_real: CodecTypes['pg/numeric@1']['output'] | null;
       readonly responsable_nombre: Varchar<150> | null;
+    };
+    readonly obra_subpartida: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['output'];
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
+      readonly id_partida: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
+      readonly item: Varchar<20>;
+      readonly nombre: Varchar<150>;
+      readonly observacion: Varchar<200> | null;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL' | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
+    readonly obra_subpartida_semana: {
+      readonly avance: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['output'];
+      readonly meta: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly numero_semana: CodecTypes['pg/int4@1']['output'];
+      readonly registrado_en: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly registrado_por: Varchar<255> | null;
     };
     readonly ordenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'] | null;
@@ -4781,7 +5057,17 @@ export type StorageColumnInputTypes = {
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
     };
+    readonly obra_aviso_usuario: {
+      readonly id_usuario: CodecTypes['sql/varchar@1']['input'];
+      readonly tipos_importantes: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly visto_hasta: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
     readonly obra_datos_generales: {
+      readonly actualizado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly avance_general: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly codigo_obra: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly comentario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly contacto_cliente_correo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly contacto_cliente_nombre: CodecTypes['sql/varchar@1']['input'] | null;
       readonly contacto_cliente_telefono: CodecTypes['sql/varchar@1']['input'] | null;
@@ -4789,14 +5075,26 @@ export type StorageColumnInputTypes = {
       readonly departamento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly direccion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly distrito: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly estado_obra:
+        'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
       readonly expediente_codigo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_cierre_postventa: CodecTypes['pg/date-string@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_coordinador: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_residente: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_resp_presupuesto: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_resp_procura: CodecTypes['pg/int4@1']['input'] | null;
       readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
       readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly observaciones_postventa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly personal_activo_promedio: CodecTypes['pg/int4@1']['input'] | null;
+      readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['input'] | null;
       readonly provincia: CodecTypes['sql/varchar@1']['input'] | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['input'] | null;
+      readonly tienda: CodecTypes['sql/varchar@1']['input'] | null;
       readonly turno_trabajo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly ubigeo_cod: CodecTypes['sql/varchar@1']['input'] | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -4814,6 +5112,27 @@ export type StorageColumnInputTypes = {
       readonly titulo: CodecTypes['sql/varchar@1']['input'];
       readonly vigencia_texto: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly obra_evento: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly detalle: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly severidad: CodecTypes['sql/varchar@1']['input'];
+      readonly tipo:
+        | 'ALTA'
+        | 'ESTADO'
+        | 'AVANCE'
+        | 'PLAZO'
+        | 'EQUIPO'
+        | 'REPROGRAMACION'
+        | 'SITUACION'
+        | 'VENCIDO'
+        | 'SOBRECARGA';
+      readonly titulo: CodecTypes['sql/varchar@1']['input'];
+      readonly usuario: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly valor_antes: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly valor_despues: CodecTypes['sql/varchar@1']['input'] | null;
+    };
     readonly obra_incidencias_rfi: {
       readonly accion_solicitada_o_ejecutada: CodecTypes['sql/varchar@1']['input'] | null;
       readonly codigo_incidencia: CodecTypes['sql/varchar@1']['input'];
@@ -4823,10 +5142,22 @@ export type StorageColumnInputTypes = {
       readonly fecha_resolucion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['input'] | null;
       readonly plazo_resolucion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly prioridad: CodecTypes['sql/varchar@1']['input'] | null;
       readonly responsable: CodecTypes['sql/varchar@1']['input'] | null;
       readonly titulo: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly obra_partida: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_detalle_fase: CodecTypes['pg/int4@1']['input'] | null;
+      readonly item: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL';
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly obra_planos: {
       readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
@@ -4843,6 +5174,19 @@ export type StorageColumnInputTypes = {
       readonly id_plano_anterior: CodecTypes['pg/int4@1']['input'] | null;
       readonly nombre_plano: CodecTypes['sql/varchar@1']['input'];
       readonly version: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_reprogramacion: {
+      readonly aprobado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly desde: CodecTypes['pg/date-string@1']['input'];
+      readonly detalle: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly dias: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly item_aplica: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly motivo:
+        'CLIENTE' | 'PERMISO_LICENCIA' | 'PROVEEDOR_CLIENTE' | 'FUERZA_MAYOR' | 'INTERNO';
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly obra_residentes: {
       readonly correo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -4873,6 +5217,30 @@ export type StorageColumnInputTypes = {
       readonly porcentaje_meta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly porcentaje_real: CodecTypes['pg/numeric@1']['input'] | null;
       readonly responsable_nombre: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly obra_subpartida: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly fecha_fin: CodecTypes['pg/date-string@1']['input'];
+      readonly fecha_inicio: CodecTypes['pg/date-string@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
+      readonly id_partida: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
+      readonly item: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly observacion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+      readonly tipo: 'CONTRACTUAL' | 'ADICIONAL' | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
+    readonly obra_subpartida_semana: {
+      readonly avance: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_subpartida: CodecTypes['pg/int4@1']['input'];
+      readonly meta: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly numero_semana: CodecTypes['pg/int4@1']['input'];
+      readonly registrado_en: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly ordenCompraDetalle: {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'] | null;
@@ -10813,6 +11181,50 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly obra_aviso_usuario: {
+              columns: {
+                readonly id_usuario: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly visto_hasta: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+                readonly tipos_importantes: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly updated_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id_usuario'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_aviso_usuario';
+                    readonly columns: readonly ['id_usuario'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'usuarios';
+                    readonly columns: readonly ['IdUsuario'];
+                  };
+                },
+              ];
+            };
             readonly obra_datos_generales: {
               columns: {
                 readonly id: {
@@ -10945,10 +11357,136 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
+                readonly codigo_obra: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 30 };
+                };
+                readonly tienda: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 80 };
+                };
+                readonly estado_obra: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly id_jefe_proyecto: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_coordinador: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_residente: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_resp_presupuesto: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_resp_procura: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly avance_general: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly comentario: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly fecha_cierre_postventa: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: true;
+                };
+                readonly plazo_postventa_dias: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly observaciones_postventa: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly id_presupuesto_origen: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly actualizado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['id_centro_costo'] }];
-              indexes: readonly [];
+              uniques: readonly [
+                { readonly columns: readonly ['id_centro_costo'] },
+                { readonly columns: readonly ['codigo_obra'] },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_datos_generales_estado_obra_idx_785b105f';
+                  readonly prefix: 'obra_datos_generales_estado_obra_idx';
+                  readonly columns: readonly ['estado_obra'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_jefe_proyecto_idx_2a4e762a';
+                  readonly prefix: 'obra_datos_generales_id_jefe_proyecto_idx';
+                  readonly columns: readonly ['id_jefe_proyecto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_coordinador_idx_3bc51f7a';
+                  readonly prefix: 'obra_datos_generales_id_coordinador_idx';
+                  readonly columns: readonly ['id_coordinador'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_residente_idx_1562a6cf';
+                  readonly prefix: 'obra_datos_generales_id_residente_idx';
+                  readonly columns: readonly ['id_residente'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3';
+                  readonly prefix: 'obra_datos_generales_id_resp_presupuesto_idx';
+                  readonly columns: readonly ['id_resp_presupuesto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_resp_procura_idx_cc407465';
+                  readonly prefix: 'obra_datos_generales_id_resp_procura_idx';
+                  readonly columns: readonly ['id_resp_procura'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe';
+                  readonly prefix: 'obra_datos_generales_id_presupuesto_origen_idx';
+                  readonly columns: readonly ['id_presupuesto_origen'];
+                  readonly unique: false;
+                },
+              ];
               foreignKeys: readonly [
                 {
                   readonly source: {
@@ -10959,6 +11497,78 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_jefe_proyecto'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_coordinador'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_residente'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_resp_presupuesto'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_resp_procura'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_presupuesto_origen'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Principal';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -11063,6 +11673,111 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly obra_evento: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly tipo: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly titulo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly detalle: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 1000 };
+                };
+                readonly valor_antes: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly valor_despues: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly severidad: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'info'>;
+                  };
+                  readonly typeParams: { readonly length: 10 };
+                };
+                readonly usuario: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_evento_id_centro_costo_created_at_idx_3daaebdb';
+                  readonly prefix: 'obra_evento_id_centro_costo_created_at_idx';
+                  readonly columns: readonly ['id_centro_costo', 'created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_evento_created_at_idx_225d8c0f';
+                  readonly prefix: 'obra_evento_created_at_idx';
+                  readonly columns: readonly ['created_at'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_evento_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_evento_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_evento';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly obra_incidencias_rfi: {
               columns: {
                 readonly id: {
@@ -11146,10 +11861,21 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: true;
                 };
+                readonly id_subpartida: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
               indexes: readonly [
+                {
+                  readonly name: 'obra_incidencias_rfi_id_subpartida_idx_934aed61';
+                  readonly prefix: 'obra_incidencias_rfi_id_subpartida_idx';
+                  readonly columns: readonly ['id_subpartida'];
+                  readonly unique: false;
+                },
                 {
                   readonly name: 'obra_incidencias_rfi_id_centro_costo_idx_8c84570b';
                   readonly prefix: 'obra_incidencias_rfi_id_centro_costo_idx';
@@ -11167,6 +11893,131 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_incidencias_rfi';
+                    readonly columns: readonly ['id_subpartida'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_partida: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly item: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly tipo: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'CONTRACTUAL'>;
+                  };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly id_ppto_detalle_fase: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updated_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['id_centro_costo', 'item'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_partida_id_centro_costo_orden_idx_183e9e95';
+                  readonly prefix: 'obra_partida_id_centro_costo_orden_idx';
+                  readonly columns: readonly ['id_centro_costo', 'orden'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_partida_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_partida_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_partida_id_ppto_detalle_fase_idx_28f6cf4d';
+                  readonly prefix: 'obra_partida_id_ppto_detalle_fase_idx';
+                  readonly columns: readonly ['id_ppto_detalle_fase'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_partida';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_partida';
+                    readonly columns: readonly ['id_ppto_detalle_fase'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleFases';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -11285,6 +12136,99 @@ type ContractBase = Omit<
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'obra_planos';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_reprogramacion: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly desde: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly dias: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly motivo: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly detalle: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 160 };
+                };
+                readonly item_aplica: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly aprobado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly registrado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_reprogramacion_id_centro_costo_desde_idx_981a070f';
+                  readonly prefix: 'obra_reprogramacion_id_centro_costo_desde_idx';
+                  readonly columns: readonly ['id_centro_costo', 'desde'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_reprogramacion_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_reprogramacion_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_reprogramacion';
                     readonly columns: readonly ['id_centro_costo'];
                   };
                   readonly target: {
@@ -11528,6 +12472,216 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_subpartida: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_partida: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_centro_costo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly item: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 150 };
+                };
+                readonly tipo: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly fecha_inicio: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly fecha_fin: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly observacion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 200 };
+                };
+                readonly id_ppto_detalle_categoria: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updated_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['id_centro_costo', 'item'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_subpartida_id_partida_idx_e759d756';
+                  readonly prefix: 'obra_subpartida_id_partida_idx';
+                  readonly columns: readonly ['id_partida'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_subpartida_id_centro_costo_idx_8c84570b';
+                  readonly prefix: 'obra_subpartida_id_centro_costo_idx';
+                  readonly columns: readonly ['id_centro_costo'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86';
+                  readonly prefix: 'obra_subpartida_id_ppto_detalle_categoria_idx';
+                  readonly columns: readonly ['id_ppto_detalle_categoria'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida';
+                    readonly columns: readonly ['id_partida'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_partida';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida';
+                    readonly columns: readonly ['id_centro_costo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida';
+                    readonly columns: readonly ['id_ppto_detalle_categoria'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleFasesCate';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly obra_subpartida_semana: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_subpartida: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly numero_semana: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly meta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly avance: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly registrado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly registrado_en: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['id_subpartida', 'numero_semana'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'obra_subpartida_semana_id_subpartida_idx_934aed61';
+                  readonly prefix: 'obra_subpartida_semana_id_subpartida_idx';
+                  readonly columns: readonly ['id_subpartida'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida_semana';
+                    readonly columns: readonly ['id_subpartida'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_subpartida';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -15342,6 +16496,17 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['REGISTRADO', 'ANULADO'];
             };
+            readonly estado_obra: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'PROXIMO',
+                'EN_EJECUCION',
+                'POST_VENTA',
+                'CULMINADO',
+                'SUSPENDIDA',
+                'CANCELADA',
+              ];
+            };
             readonly estado_operativo: {
               readonly kind: 'valueSet';
               readonly values: readonly ['NORMAL', 'NO_OPERATIVO', 'DESCONTINUADO'];
@@ -15393,6 +16558,16 @@ type ContractBase = Omit<
                 'TRANSFERENCIA',
               ];
             };
+            readonly motivo_reprogramacion: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'CLIENTE',
+                'PERMISO_LICENCIA',
+                'PROVEEDOR_CLIENTE',
+                'FUERZA_MAYOR',
+                'INTERNO',
+              ];
+            };
             readonly movimiento_activo_fijo: {
               readonly kind: 'valueSet';
               readonly values: readonly ['ASIGNACION', 'REASIGNACION', 'DEVOLUCION', 'TRASLADO'];
@@ -15405,9 +16580,27 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['CAJA', 'BANCO', 'BILLETERA'];
             };
+            readonly tipo_evento_obra: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'ALTA',
+                'ESTADO',
+                'AVANCE',
+                'PLAZO',
+                'EQUIPO',
+                'REPROGRAMACION',
+                'SITUACION',
+                'VENCIDO',
+                'SOBRECARGA',
+              ];
+            };
             readonly tipo_item: {
               readonly kind: 'valueSet';
               readonly values: readonly ['PRODUCTO', 'SERVICIO'];
+            };
+            readonly tipo_partida_obra: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['CONTRACTUAL', 'ADICIONAL'];
             };
             readonly tipo_requerimiento: {
               readonly kind: 'valueSet';
@@ -15672,6 +16865,30 @@ type ContractBase = Omit<
     readonly obra_datos_generales: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'obra_datos_generales';
+    };
+    readonly obra_partida: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_partida';
+    };
+    readonly obra_subpartida: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_subpartida';
+    };
+    readonly obra_subpartida_semana: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_subpartida_semana';
+    };
+    readonly obra_reprogramacion: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_reprogramacion';
+    };
+    readonly obra_evento: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_evento';
+    };
+    readonly obra_aviso_usuario: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'obra_aviso_usuario';
     };
     readonly obra_residentes: {
       readonly namespace: 'public' & NamespaceId;
@@ -17525,6 +18742,61 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly obraComoCoordinador: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_coordinador'];
+                };
+              };
+              readonly obraComoJefe: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_jefe_proyecto'];
+                };
+              };
+              readonly obraComoResidente: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_residente'];
+                };
+              };
+              readonly obraComoRespPpto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_resp_presupuesto'];
+                };
+              };
+              readonly obraComoRespProcura: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_resp_procura'];
+                };
+              };
               readonly ordenCompras: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -18769,6 +20041,50 @@ type ContractBase = Omit<
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'local';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
+              readonly obraEventos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_evento';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
+              readonly obraPartidas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_partida';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
+              readonly obraReprogramaciones: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_reprogramacion';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_centro_costo'];
+                };
+              };
+              readonly obraSubpartidas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -21998,6 +23314,63 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly obra_aviso_usuario: {
+            readonly fields: {
+              readonly id_usuario: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly visto_hasta: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly tipos_importantes: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly updated_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly usuario: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Usuarios';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_usuario'];
+                  readonly targetFields: readonly ['IdUsuario'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_aviso_usuario';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id_usuario: { readonly column: 'id_usuario' };
+                readonly visto_hasta: { readonly column: 'visto_hasta' };
+                readonly tipos_importantes: { readonly column: 'tipos_importantes' };
+                readonly updated_at: { readonly column: 'updated_at' };
+              };
+            };
+          };
           readonly obra_datos_generales: {
             readonly fields: {
               readonly id: {
@@ -22118,6 +23491,86 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
+              readonly codigo_obra: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 30 };
+                };
+              };
+              readonly tienda: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 80 };
+                };
+              };
+              readonly estado_obra: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id_jefe_proyecto: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_coordinador: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_residente: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_resp_presupuesto: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_resp_procura: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly avance_general: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly comentario: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly fecha_cierre_postventa: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly plazo_postventa_dias: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly observaciones_postventa: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly id_presupuesto_origen: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly actualizado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
             };
             readonly relations: {
               readonly centroCosto: {
@@ -22128,6 +23581,72 @@ type ContractBase = Omit<
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly coordinador: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_coordinador'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly jefeProyecto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_jefe_proyecto'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly presupuestoOrigen: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Principal';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_presupuesto_origen'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly residente: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_residente'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly respPresupuesto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_resp_presupuesto'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly respProcura: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_resp_procura'];
                   readonly targetFields: readonly ['id'];
                 };
               };
@@ -22156,6 +23675,21 @@ type ContractBase = Omit<
                 readonly contacto_cliente_correo: { readonly column: 'contacto_cliente_correo' };
                 readonly created_at: { readonly column: 'created_at' };
                 readonly updated_at: { readonly column: 'updated_at' };
+                readonly codigo_obra: { readonly column: 'codigo_obra' };
+                readonly tienda: { readonly column: 'tienda' };
+                readonly estado_obra: { readonly column: 'estado_obra' };
+                readonly id_jefe_proyecto: { readonly column: 'id_jefe_proyecto' };
+                readonly id_coordinador: { readonly column: 'id_coordinador' };
+                readonly id_residente: { readonly column: 'id_residente' };
+                readonly id_resp_presupuesto: { readonly column: 'id_resp_presupuesto' };
+                readonly id_resp_procura: { readonly column: 'id_resp_procura' };
+                readonly avance_general: { readonly column: 'avance_general' };
+                readonly comentario: { readonly column: 'comentario' };
+                readonly fecha_cierre_postventa: { readonly column: 'fecha_cierre_postventa' };
+                readonly plazo_postventa_dias: { readonly column: 'plazo_postventa_dias' };
+                readonly observaciones_postventa: { readonly column: 'observaciones_postventa' };
+                readonly id_presupuesto_origen: { readonly column: 'id_presupuesto_origen' };
+                readonly actualizado_por: { readonly column: 'actualizado_por' };
               };
             };
           };
@@ -22268,6 +23802,106 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly obra_evento: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly tipo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly titulo: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly detalle: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 1000 };
+                };
+              };
+              readonly valor_antes: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly valor_despues: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly severidad: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 10 };
+                };
+              };
+              readonly usuario: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_evento';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly tipo: { readonly column: 'tipo' };
+                readonly titulo: { readonly column: 'titulo' };
+                readonly detalle: { readonly column: 'detalle' };
+                readonly valor_antes: { readonly column: 'valor_antes' };
+                readonly valor_despues: { readonly column: 'valor_despues' };
+                readonly severidad: { readonly column: 'severidad' };
+                readonly usuario: { readonly column: 'usuario' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
           readonly obra_incidencias_rfi: {
             readonly fields: {
               readonly id: {
@@ -22356,6 +23990,10 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
+              readonly id_subpartida: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly centroCosto: {
@@ -22366,6 +24004,17 @@ type ContractBase = Omit<
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly subpartida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_subpartida'];
                   readonly targetFields: readonly ['id'];
                 };
               };
@@ -22388,6 +24037,111 @@ type ContractBase = Omit<
                 readonly estado: { readonly column: 'estado' };
                 readonly fecha_reporte: { readonly column: 'fecha_reporte' };
                 readonly fecha_resolucion: { readonly column: 'fecha_resolucion' };
+                readonly id_subpartida: { readonly column: 'id_subpartida' };
+              };
+            };
+          };
+          readonly obra_partida: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly item: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly tipo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_ppto_detalle_fase: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly updated_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly pptoDetalleFase: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleFases';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_detalle_fase'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly subpartidas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_partida'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_partida';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly item: { readonly column: 'item' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly tipo: { readonly column: 'tipo' };
+                readonly orden: { readonly column: 'orden' };
+                readonly id_ppto_detalle_fase: { readonly column: 'id_ppto_detalle_fase' };
+                readonly created_at: { readonly column: 'created_at' };
+                readonly updated_at: { readonly column: 'updated_at' };
               };
             };
           };
@@ -22515,6 +24269,98 @@ type ContractBase = Omit<
                 readonly formato_peso: { readonly column: 'formato_peso' };
                 readonly archivo_url: { readonly column: 'archivo_url' };
                 readonly emitido_por: { readonly column: 'emitido_por' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly obra_reprogramacion: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly desde: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly dias: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly motivo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly detalle: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 160 };
+                };
+              };
+              readonly item_aplica: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly aprobado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly registrado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_reprogramacion';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly desde: { readonly column: 'desde' };
+                readonly dias: { readonly column: 'dias' };
+                readonly motivo: { readonly column: 'motivo' };
+                readonly detalle: { readonly column: 'detalle' };
+                readonly item_aplica: { readonly column: 'item_aplica' };
+                readonly aprobado_por: { readonly column: 'aprobado_por' };
+                readonly registrado_por: { readonly column: 'registrado_por' };
                 readonly created_at: { readonly column: 'created_at' };
               };
             };
@@ -22747,6 +24593,223 @@ type ContractBase = Omit<
                 readonly porcentaje_real: { readonly column: 'porcentaje_real' };
                 readonly estado: { readonly column: 'estado' };
                 readonly orden: { readonly column: 'orden' };
+              };
+            };
+          };
+          readonly obra_subpartida: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_partida: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_centro_costo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly item: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 150 };
+                };
+              };
+              readonly tipo: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly fecha_inicio: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly fecha_fin: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly observacion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 200 };
+                };
+              };
+              readonly id_ppto_detalle_categoria: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly updated_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly centroCosto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CentroCostos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_centro_costo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly incidencias: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_incidencias_rfi';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_subpartida'];
+                };
+              };
+              readonly partida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_partida';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_partida'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly pptoDetalleCategoria: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleFasesCate';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_detalle_categoria'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly semanas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida_semana';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_subpartida'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_subpartida';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_partida: { readonly column: 'id_partida' };
+                readonly id_centro_costo: { readonly column: 'id_centro_costo' };
+                readonly item: { readonly column: 'item' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly tipo: { readonly column: 'tipo' };
+                readonly fecha_inicio: { readonly column: 'fecha_inicio' };
+                readonly fecha_fin: { readonly column: 'fecha_fin' };
+                readonly orden: { readonly column: 'orden' };
+                readonly observacion: { readonly column: 'observacion' };
+                readonly id_ppto_detalle_categoria: {
+                  readonly column: 'id_ppto_detalle_categoria';
+                };
+                readonly created_at: { readonly column: 'created_at' };
+                readonly updated_at: { readonly column: 'updated_at' };
+              };
+            };
+          };
+          readonly obra_subpartida_semana: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_subpartida: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly numero_semana: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly meta: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly avance: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly registrado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly registrado_en: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly subpartida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_subpartida'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'obra_subpartida_semana';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_subpartida: { readonly column: 'id_subpartida' };
+                readonly numero_semana: { readonly column: 'numero_semana' };
+                readonly meta: { readonly column: 'meta' };
+                readonly avance: { readonly column: 'avance' };
+                readonly registrado_por: { readonly column: 'registrado_por' };
+                readonly registrado_en: { readonly column: 'registrado_en' };
               };
             };
           };
@@ -23900,6 +25963,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['IdpptoFase'];
                 };
               };
+              readonly obraPartidas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_partida';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_detalle_fase'];
+                };
+              };
               readonly presupuesto: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -24080,6 +26154,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_detalle_categoria'];
+                };
+              };
+              readonly obraSubpartidas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_subpartida';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_detalle_categoria'];
                 };
               };
               readonly presupuesto: {
@@ -24975,6 +27060,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['IdPresupuesto'];
                   readonly targetFields: readonly ['IdPresupuesto'];
+                };
+              };
+              readonly obraOrigen: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_presupuesto_origen'];
                 };
               };
             };
@@ -26791,6 +28887,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly avisoObra: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_aviso_usuario';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['IdUsuario'];
+                  readonly targetFields: readonly ['id_usuario'];
+                };
+              };
               readonly permisos: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -26931,6 +29038,48 @@ type ContractBase = Omit<
               { readonly name: 'NORMAL'; readonly value: 'NORMAL' },
               { readonly name: 'NO_OPERATIVO'; readonly value: 'NO_OPERATIVO' },
               { readonly name: 'DESCONTINUADO'; readonly value: 'DESCONTINUADO' },
+            ];
+          };
+          readonly estado_obra: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'PROXIMO'; readonly value: 'PROXIMO' },
+              { readonly name: 'EN_EJECUCION'; readonly value: 'EN_EJECUCION' },
+              { readonly name: 'POST_VENTA'; readonly value: 'POST_VENTA' },
+              { readonly name: 'CULMINADO'; readonly value: 'CULMINADO' },
+              { readonly name: 'SUSPENDIDA'; readonly value: 'SUSPENDIDA' },
+              { readonly name: 'CANCELADA'; readonly value: 'CANCELADA' },
+            ];
+          };
+          readonly tipo_partida_obra: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'CONTRACTUAL'; readonly value: 'CONTRACTUAL' },
+              { readonly name: 'ADICIONAL'; readonly value: 'ADICIONAL' },
+            ];
+          };
+          readonly motivo_reprogramacion: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'CLIENTE'; readonly value: 'CLIENTE' },
+              { readonly name: 'PERMISO_LICENCIA'; readonly value: 'PERMISO_LICENCIA' },
+              { readonly name: 'PROVEEDOR_CLIENTE'; readonly value: 'PROVEEDOR_CLIENTE' },
+              { readonly name: 'FUERZA_MAYOR'; readonly value: 'FUERZA_MAYOR' },
+              { readonly name: 'INTERNO'; readonly value: 'INTERNO' },
+            ];
+          };
+          readonly tipo_evento_obra: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ALTA'; readonly value: 'ALTA' },
+              { readonly name: 'ESTADO'; readonly value: 'ESTADO' },
+              { readonly name: 'AVANCE'; readonly value: 'AVANCE' },
+              { readonly name: 'PLAZO'; readonly value: 'PLAZO' },
+              { readonly name: 'EQUIPO'; readonly value: 'EQUIPO' },
+              { readonly name: 'REPROGRAMACION'; readonly value: 'REPROGRAMACION' },
+              { readonly name: 'SITUACION'; readonly value: 'SITUACION' },
+              { readonly name: 'VENCIDO'; readonly value: 'VENCIDO' },
+              { readonly name: 'SOBRECARGA'; readonly value: 'SOBRECARGA' },
             ];
           };
           readonly estado_requerimiento: {

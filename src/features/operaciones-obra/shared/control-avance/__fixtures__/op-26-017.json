@@ -1,0 +1,1260 @@
+{
+  "_origen": "Proyectos_42_obras_19oct_v2/Jefe_Melissa_G/OP-26-017_Tambo_Pacasmayo_Callao.xlsx",
+  "_nota": "Entradas = celdas que llena la gente. 'esperado' = valores en caché que Excel calculó al guardar el archivo.",
+  "hoySugerido": "2026-10-19",
+  "ficha": {
+    "codigo": "OP-26-017",
+    "cliente": "Tambo",
+    "tienda": "Pacasmayo Callao",
+    "departamento": "Callao",
+    "jefe": "Melissa G.",
+    "coordinador": "Abel Narvaez",
+    "estado": "En ejecución",
+    "inicio": "2026-09-17",
+    "fin": "2026-10-26",
+    "avanceGeneral": null,
+    "fechaActualizacion": "2026-10-19",
+    "entregaReal": null,
+    "cierrePostVenta": null,
+    "residente": "Yudith Peña",
+    "respPresupuesto": "Jorge Salas",
+    "respProcura": "Daniel Paredes"
+  },
+  "reprogramaciones": [],
+  "partidas": [
+    {
+      "item": "01",
+      "nombre": "Obras preliminares",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "01.01",
+          "nombre": "Movilización e instalación de obra",
+          "tipo": null,
+          "inicio": "2026-09-17",
+          "fin": "2026-09-18",
+          "metas": [
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 2,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 2
+          }
+        },
+        {
+          "item": "01.02",
+          "nombre": "Cerco y protección de áreas",
+          "tipo": null,
+          "inicio": "2026-09-18",
+          "fin": "2026-09-19",
+          "metas": [
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 2,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 2
+          }
+        },
+        {
+          "item": "01.03",
+          "nombre": "Trazo y replanteo",
+          "tipo": null,
+          "inicio": "2026-09-19",
+          "fin": "2026-09-19",
+          "metas": [
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 1,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 1
+          }
+        }
+      ]
+    },
+    {
+      "item": "02",
+      "nombre": "Desmontajes y demoliciones",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "02.01",
+          "nombre": "Desmontaje de mobiliario y góndolas existentes",
+          "tipo": null,
+          "inicio": "2026-09-19",
+          "fin": "2026-09-22",
+          "metas": [
+            33.3,
+            66.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            33.3,
+            66.7
+          ],
+          "esperado": {
+            "diasLab": 3,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 3
+          }
+        },
+        {
+          "item": "02.02",
+          "nombre": "Demolición de tabiques y pisos",
+          "tipo": null,
+          "inicio": "2026-09-21",
+          "fin": "2026-09-23",
+          "metas": [
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 3,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 3
+          }
+        },
+        {
+          "item": "02.03",
+          "nombre": "Eliminación de desmonte",
+          "tipo": null,
+          "inicio": "2026-09-22",
+          "fin": "2026-09-25",
+          "metas": [
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 4,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 4
+          }
+        }
+      ]
+    },
+    {
+      "item": "03",
+      "nombre": "Obras civiles",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "03.01",
+          "nombre": "Tabiquería de ladrillo",
+          "tipo": null,
+          "inicio": "2026-09-23",
+          "fin": "2026-09-28",
+          "metas": [
+            0.0,
+            80.0,
+            20.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            80.0,
+            20.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "03.02",
+          "nombre": "Contrapiso y nivelación",
+          "tipo": null,
+          "inicio": "2026-09-26",
+          "fin": "2026-10-01",
+          "metas": [
+            0.0,
+            20.0,
+            80.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            20.0,
+            80.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "03.03",
+          "nombre": "Tarrajeo y resanes",
+          "tipo": null,
+          "inicio": "2026-09-29",
+          "fin": "2026-10-05",
+          "metas": [
+            0.0,
+            0.0,
+            83.3,
+            16.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            83.3,
+            16.7
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        }
+      ]
+    },
+    {
+      "item": "04",
+      "nombre": "Drywall y cielo raso",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "04.01",
+          "nombre": "Tabiques de drywall",
+          "tipo": null,
+          "inicio": "2026-09-29",
+          "fin": "2026-10-03",
+          "metas": [
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "04.02",
+          "nombre": "Cielo raso de baldosas",
+          "tipo": null,
+          "inicio": "2026-10-03",
+          "fin": "2026-10-08",
+          "metas": [
+            0.0,
+            0.0,
+            20.0,
+            80.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            20.0,
+            80.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "04.03",
+          "nombre": "Cajuelas y bajadas de drywall",
+          "tipo": null,
+          "inicio": "2026-10-05",
+          "fin": "2026-10-10",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        }
+      ]
+    },
+    {
+      "item": "05",
+      "nombre": "Instalaciones eléctricas",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "05.01",
+          "nombre": "Canalización y cableado",
+          "tipo": null,
+          "inicio": "2026-09-26",
+          "fin": "2026-10-05",
+          "metas": [
+            0.0,
+            12.5,
+            75.0,
+            12.5,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            12.5,
+            75.0,
+            12.5
+          ],
+          "esperado": {
+            "diasLab": 8,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 8
+          }
+        },
+        {
+          "item": "05.02",
+          "nombre": "Tableros eléctricos",
+          "tipo": null,
+          "inicio": "2026-10-02",
+          "fin": "2026-10-10",
+          "metas": [
+            0.0,
+            0.0,
+            25.0,
+            75.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            25.0,
+            75.0
+          ],
+          "esperado": {
+            "diasLab": 8,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 8
+          }
+        },
+        {
+          "item": "05.03",
+          "nombre": "Luminarias LED",
+          "tipo": null,
+          "inicio": "2026-10-08",
+          "fin": "2026-10-17",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            33.3,
+            66.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            33.3,
+            66.7
+          ],
+          "esperado": {
+            "diasLab": 9,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 9
+          }
+        }
+      ]
+    },
+    {
+      "item": "06",
+      "nombre": "Instalaciones sanitarias",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "06.01",
+          "nombre": "Red de agua fría",
+          "tipo": null,
+          "inicio": "2026-09-28",
+          "fin": "2026-10-02",
+          "metas": [
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "06.02",
+          "nombre": "Red de desagüe",
+          "tipo": null,
+          "inicio": "2026-10-01",
+          "fin": "2026-10-07",
+          "metas": [
+            0.0,
+            0.0,
+            50.0,
+            50.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            50.0,
+            50.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        },
+        {
+          "item": "06.03",
+          "nombre": "Aparatos sanitarios",
+          "tipo": null,
+          "inicio": "2026-10-05",
+          "fin": "2026-10-10",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        }
+      ]
+    },
+    {
+      "item": "07",
+      "nombre": "Climatización",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "07.01",
+          "nombre": "Ductos y rejillas",
+          "tipo": null,
+          "inicio": "2026-10-05",
+          "fin": "2026-10-10",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        },
+        {
+          "item": "07.02",
+          "nombre": "Equipos de aire acondicionado",
+          "tipo": null,
+          "inicio": "2026-10-09",
+          "fin": "2026-10-14",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            40.0,
+            60.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            40.0,
+            60.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "07.03",
+          "nombre": "Pruebas y balanceo",
+          "tipo": null,
+          "inicio": "2026-10-13",
+          "fin": "2026-10-17",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        }
+      ]
+    },
+    {
+      "item": "08",
+      "nombre": "Acabados",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "08.01",
+          "nombre": "Piso porcelanato",
+          "tipo": null,
+          "inicio": "2026-10-08",
+          "fin": "2026-10-14",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            50.0,
+            50.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            50.0,
+            50.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        },
+        {
+          "item": "08.02",
+          "nombre": "Pintura de muros y cielo raso",
+          "tipo": null,
+          "inicio": "2026-10-12",
+          "fin": "2026-10-17",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 6
+          }
+        },
+        {
+          "item": "08.03",
+          "nombre": "Carpintería metálica y vidrios",
+          "tipo": null,
+          "inicio": "2026-10-16",
+          "fin": "2026-10-22",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            33.3,
+            66.7,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            33.3
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 33.3,
+            "real": 33.3,
+            "desviacion": 0.0,
+            "situacion": "Al día · Sem 6 en curso",
+            "revision": "OK",
+            "peso": 6
+          }
+        }
+      ]
+    },
+    {
+      "item": "09",
+      "nombre": "Refrigeración comercial",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "09.01",
+          "nombre": "Cámara de frío",
+          "tipo": null,
+          "inicio": "2026-10-12",
+          "fin": "2026-10-16",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            100.0
+          ],
+          "esperado": {
+            "diasLab": 5,
+            "programado": 100.0,
+            "real": 100.0,
+            "desviacion": 0.0,
+            "situacion": "Completada",
+            "revision": "OK",
+            "peso": 5
+          }
+        },
+        {
+          "item": "09.02",
+          "nombre": "Exhibidoras refrigeradas",
+          "tipo": null,
+          "inicio": "2026-10-14",
+          "fin": "2026-10-20",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            66.7,
+            33.3,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            66.7
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 66.7,
+            "real": 66.7,
+            "desviacion": 0.0,
+            "situacion": "Al día · Sem 6 en curso",
+            "revision": "OK",
+            "peso": 6
+          }
+        },
+        {
+          "item": "09.03",
+          "nombre": "Pruebas de temperatura",
+          "tipo": null,
+          "inicio": "2026-10-17",
+          "fin": "2026-10-23",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            16.7,
+            83.3,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [
+            null,
+            null,
+            null,
+            null,
+            16.7
+          ],
+          "esperado": {
+            "diasLab": 6,
+            "programado": 16.7,
+            "real": 16.7,
+            "desviacion": 0.0,
+            "situacion": "Al día · Sem 6 en curso",
+            "revision": "OK",
+            "peso": 6
+          }
+        }
+      ]
+    },
+    {
+      "item": "10",
+      "nombre": "Mobiliario y señalética",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "10.01",
+          "nombre": "Góndolas y mobiliario de tienda",
+          "tipo": null,
+          "inicio": "2026-10-19",
+          "fin": "2026-10-21",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 3,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Al día · Sem 6 en curso",
+            "revision": "OK",
+            "peso": 3
+          }
+        },
+        {
+          "item": "10.02",
+          "nombre": "Letrero luminoso de fachada",
+          "tipo": null,
+          "inicio": "2026-10-20",
+          "fin": "2026-10-23",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 4,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Por iniciar",
+            "revision": "OK",
+            "peso": 4
+          }
+        },
+        {
+          "item": "10.03",
+          "nombre": "Señalética de seguridad",
+          "tipo": null,
+          "inicio": "2026-10-22",
+          "fin": "2026-10-24",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 3,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Por iniciar",
+            "revision": "OK",
+            "peso": 3
+          }
+        }
+      ]
+    },
+    {
+      "item": "11",
+      "nombre": "Limpieza y entrega",
+      "tipo": null,
+      "subpartidas": [
+        {
+          "item": "11.01",
+          "nombre": "Limpieza final de obra",
+          "tipo": null,
+          "inicio": "2026-10-23",
+          "fin": "2026-10-24",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 2,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Por iniciar",
+            "revision": "OK",
+            "peso": 2
+          }
+        },
+        {
+          "item": "11.02",
+          "nombre": "Levantamiento de observaciones",
+          "tipo": null,
+          "inicio": "2026-10-24",
+          "fin": "2026-10-24",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 1,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Por iniciar",
+            "revision": "OK",
+            "peso": 1
+          }
+        },
+        {
+          "item": "11.03",
+          "nombre": "Acta de entrega",
+          "tipo": null,
+          "inicio": "2026-10-26",
+          "fin": "2026-10-26",
+          "metas": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            100.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "avance": [],
+          "esperado": {
+            "diasLab": 1,
+            "programado": 0.0,
+            "real": null,
+            "desviacion": null,
+            "situacion": "Por iniciar",
+            "revision": "OK",
+            "peso": 1
+          }
+        }
+      ]
+    }
+  ],
+  "esperadoObra": {
+    "plazo": "17/09/2026 – 26/10/2026",
+    "realPct": 83,
+    "programadoPct": 83,
+    "situacion": "Al día · Sem 6 en curso",
+    "revisionFicha": "OK",
+    "adicionales": "Sin adicionales",
+    "reprogramacion": "Sin reprogramación",
+    "semanaEnCurso": 6,
+    "corte": "2026-10-18",
+    "cierreSemanaEnCurso": "2026-10-25",
+    "finOriginal": "2026-10-26",
+    "diasReprogramados": 0,
+    "externos": 0,
+    "internos": 0,
+    "finVigente": "2026-10-26"
+  },
+  "esperadoCurvaS": [
+    {
+      "semana": "Sem 1",
+      "rango": "14/09 – 20/09",
+      "pactadoAcum": 3.9,
+      "realAcum": 3.9,
+      "desviacion": 0.0,
+      "situacion": "A tiempo"
+    },
+    {
+      "semana": "Sem 2",
+      "rango": "21/09 – 27/09",
+      "pactadoAcum": 13.6,
+      "realAcum": 13.6,
+      "desviacion": 0.0,
+      "situacion": "A tiempo"
+    },
+    {
+      "semana": "Sem 3",
+      "rango": "28/09 – 04/10",
+      "pactadoAcum": 34.4,
+      "realAcum": 34.4,
+      "desviacion": 0.0,
+      "situacion": "A tiempo"
+    },
+    {
+      "semana": "Sem 4",
+      "rango": "05/10 – 11/10",
+      "pactadoAcum": 61.0,
+      "realAcum": 61.0,
+      "desviacion": 0.0,
+      "situacion": "A tiempo"
+    },
+    {
+      "semana": "Sem 5",
+      "rango": "12/10 – 18/10",
+      "pactadoAcum": 83.8,
+      "realAcum": 83.8,
+      "desviacion": 0.0,
+      "situacion": "A tiempo"
+    },
+    {
+      "semana": "Sem 6",
+      "rango": "19/10 – 25/10",
+      "pactadoAcum": 99.4,
+      "realAcum": 83.8,
+      "desviacion": -15.6,
+      "situacion": "En curso"
+    },
+    {
+      "semana": "Sem 7",
+      "rango": "26/10 – 01/11",
+      "pactadoAcum": 100.0,
+      "realAcum": null,
+      "desviacion": null,
+      "situacion": "Por venir"
+    }
+  ]
+}

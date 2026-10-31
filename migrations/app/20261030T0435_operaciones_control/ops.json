@@ -1,0 +1,2750 @@
+[
+  {
+    "id": "table.obra_evento",
+    "label": "Create table \"obra_evento\"",
+    "summary": "Creates table \"obra_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_evento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_evento\"",
+        "sql": "CREATE TABLE \"public\".\"obra_evento\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"detalle\" character varying(1000),\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"severidad\" character varying(10) DEFAULT 'info' NOT NULL,\n  \"tipo\" text NOT NULL,\n  \"titulo\" character varying(200) NOT NULL,\n  \"usuario\" character varying(255),\n  \"valor_antes\" character varying(200),\n  \"valor_despues\" character varying(200),\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"obra_evento_tipo_check_c24c3323\" CHECK (\"tipo\" IN ('ALTA', 'ESTADO', 'AVANCE', 'PLAZO', 'EQUIPO', 'REPROGRAMACION', 'SITUACION', 'VENCIDO', 'SOBRECARGA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_evento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_partida",
+    "label": "Create table \"obra_partida\"",
+    "summary": "Creates table \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_partida\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_partida\"",
+        "sql": "CREATE TABLE \"public\".\"obra_partida\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"id_ppto_detalle_fase\" int4,\n  \"item\" character varying(20) NOT NULL,\n  \"nombre\" character varying(150) NOT NULL,\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  \"tipo\" text DEFAULT 'CONTRACTUAL' NOT NULL,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"obra_partida_tipo_check_5f1b516a\" CHECK (\"tipo\" IN ('CONTRACTUAL', 'ADICIONAL'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_partida\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_reprogramacion",
+    "label": "Create table \"obra_reprogramacion\"",
+    "summary": "Creates table \"obra_reprogramacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_reprogramacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_reprogramacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_reprogramacion\"",
+        "sql": "CREATE TABLE \"public\".\"obra_reprogramacion\" (\n  \"aprobado_por\" character varying(255),\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"desde\" date NOT NULL,\n  \"detalle\" character varying(160),\n  \"dias\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"item_aplica\" character varying(20),\n  \"motivo\" text NOT NULL,\n  \"registrado_por\" character varying(255),\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"obra_reprogramacion_motivo_check_e44a3b71\" CHECK (\"motivo\" IN ('CLIENTE', 'PERMISO_LICENCIA', 'PROVEEDOR_CLIENTE', 'FUERZA_MAYOR', 'INTERNO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_reprogramacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_subpartida",
+    "label": "Create table \"obra_subpartida\"",
+    "summary": "Creates table \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_subpartida\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_subpartida\"",
+        "sql": "CREATE TABLE \"public\".\"obra_subpartida\" (\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"fecha_fin\" date NOT NULL,\n  \"fecha_inicio\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"id_partida\" int4 NOT NULL,\n  \"id_ppto_detalle_categoria\" int4,\n  \"item\" character varying(20) NOT NULL,\n  \"nombre\" character varying(150) NOT NULL,\n  \"observacion\" character varying(200),\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  \"tipo\" text,\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"obra_subpartida_tipo_check_5f1b516a\" CHECK (\"tipo\" IN ('CONTRACTUAL', 'ADICIONAL'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_subpartida\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.obra_subpartida_semana",
+    "label": "Create table \"obra_subpartida_semana\"",
+    "summary": "Creates table \"obra_subpartida_semana\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_subpartida_semana\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_subpartida_semana\"",
+        "sql": "CREATE TABLE \"public\".\"obra_subpartida_semana\" (\n  \"avance\" numeric,\n  \"id\" SERIAL NOT NULL,\n  \"id_subpartida\" int4 NOT NULL,\n  \"meta\" numeric,\n  \"numero_semana\" int4 NOT NULL,\n  \"registrado_en\" timestamptz,\n  \"registrado_por\" character varying(255),\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_subpartida_semana\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.actualizado_por",
+    "label": "Add column \"actualizado_por\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "actualizado_por",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"actualizado_por\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "actualizado_por"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"actualizado_por\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"actualizado_por\" character varying(255)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"actualizado_por\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "actualizado_por"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.avance_general",
+    "label": "Add column \"avance_general\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "avance_general",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"avance_general\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "avance_general"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"avance_general\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"avance_general\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"avance_general\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "avance_general"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.codigo_obra",
+    "label": "Add column \"codigo_obra\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "codigo_obra",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"codigo_obra\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "codigo_obra"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"codigo_obra\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"codigo_obra\" character varying(30)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"codigo_obra\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "codigo_obra"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.comentario",
+    "label": "Add column \"comentario\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "comentario",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"comentario\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "comentario"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"comentario\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"comentario\" character varying(200)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"comentario\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "comentario"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.estado_obra",
+    "label": "Add column \"estado_obra\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "estado_obra",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"estado_obra\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "estado_obra"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"estado_obra\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"estado_obra\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"estado_obra\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "estado_obra"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.fecha_cierre_postventa",
+    "label": "Add column \"fecha_cierre_postventa\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_cierre_postventa",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_cierre_postventa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "fecha_cierre_postventa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_cierre_postventa\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"fecha_cierre_postventa\" date"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_cierre_postventa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "fecha_cierre_postventa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_coordinador",
+    "label": "Add column \"id_coordinador\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_coordinador",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_coordinador\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_coordinador"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_coordinador\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_coordinador\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_coordinador\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_coordinador"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_jefe_proyecto",
+    "label": "Add column \"id_jefe_proyecto\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_jefe_proyecto",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_jefe_proyecto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_jefe_proyecto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_jefe_proyecto\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_jefe_proyecto\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_jefe_proyecto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_jefe_proyecto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_presupuesto_origen",
+    "label": "Add column \"id_presupuesto_origen\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_presupuesto_origen",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_presupuesto_origen\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_presupuesto_origen"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_presupuesto_origen\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_presupuesto_origen\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_presupuesto_origen\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_presupuesto_origen"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_residente",
+    "label": "Add column \"id_residente\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_residente",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_residente\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_residente"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_residente\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_residente\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_residente\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_residente"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_resp_presupuesto",
+    "label": "Add column \"id_resp_presupuesto\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_resp_presupuesto",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_resp_presupuesto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_resp_presupuesto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_resp_presupuesto\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_resp_presupuesto\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_resp_presupuesto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_resp_presupuesto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.id_resp_procura",
+    "label": "Add column \"id_resp_procura\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_resp_procura",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_resp_procura\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_resp_procura"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_resp_procura\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"id_resp_procura\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_resp_procura\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "id_resp_procura"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.observaciones_postventa",
+    "label": "Add column \"observaciones_postventa\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "observaciones_postventa",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"observaciones_postventa\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "observaciones_postventa"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"observaciones_postventa\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"observaciones_postventa\" character varying(200)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"observaciones_postventa\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "observaciones_postventa"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.plazo_postventa_dias",
+    "label": "Add column \"plazo_postventa_dias\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "plazo_postventa_dias",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"plazo_postventa_dias\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "plazo_postventa_dias"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"plazo_postventa_dias\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"plazo_postventa_dias\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"plazo_postventa_dias\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "plazo_postventa_dias"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_datos_generales.tienda",
+    "label": "Add column \"tienda\" to \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "tienda",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"tienda\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "tienda"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"tienda\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD COLUMN \"tienda\" character varying(80)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"tienda\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_datos_generales",
+          "tienda"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_incidencias_rfi.id_subpartida",
+    "label": "Add column \"id_subpartida\" to \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_subpartida",
+        "table": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_subpartida\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_incidencias_rfi",
+          "id_subpartida"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_subpartida\"",
+        "sql": "ALTER TABLE \"public\".\"obra_incidencias_rfi\" ADD COLUMN \"id_subpartida\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_subpartida\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_incidencias_rfi",
+          "id_subpartida"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.obra_datos_generales.obra_datos_generales_estado_obra_check_39c92be1",
+    "label": "Add check constraint \"obra_datos_generales_estado_obra_check_39c92be1\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "obra_datos_generales_estado_obra_check_39c92be1",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_datos_generales_estado_obra_check_39c92be1\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_estado_obra_check_39c92be1",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"obra_datos_generales_estado_obra_check_39c92be1\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_estado_obra_check_39c92be1\" CHECK (\"estado_obra\" IN ('PROXIMO', 'EN_EJECUCION', 'POST_VENTA', 'CULMINADO', 'SUSPENDIDA', 'CANCELADA'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_datos_generales_estado_obra_check_39c92be1\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_estado_obra_check_39c92be1",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_datos_generales.obra_datos_generales_codigo_obra_key",
+    "label": "Add unique constraint on \"obra_datos_generales\" (codigo_obra)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_datos_generales_codigo_obra_key",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_datos_generales_codigo_obra_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_codigo_obra_key",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_datos_generales_codigo_obra_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_codigo_obra_key\" UNIQUE (\"codigo_obra\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_datos_generales_codigo_obra_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_codigo_obra_key",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_partida.obra_partida_id_centro_costo_item_key",
+    "label": "Add unique constraint on \"obra_partida\" (id_centro_costo, item)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_partida_id_centro_costo_item_key",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_partida_id_centro_costo_item_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_centro_costo_item_key",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_partida_id_centro_costo_item_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_partida\" ADD CONSTRAINT \"obra_partida_id_centro_costo_item_key\" UNIQUE (\"id_centro_costo\", \"item\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_partida_id_centro_costo_item_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_centro_costo_item_key",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_subpartida.obra_subpartida_id_centro_costo_item_key",
+    "label": "Add unique constraint on \"obra_subpartida\" (id_centro_costo, item)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_subpartida_id_centro_costo_item_key",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_subpartida_id_centro_costo_item_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_centro_costo_item_key",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_subpartida_id_centro_costo_item_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\" ADD CONSTRAINT \"obra_subpartida_id_centro_costo_item_key\" UNIQUE (\"id_centro_costo\", \"item\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_subpartida_id_centro_costo_item_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_centro_costo_item_key",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_subpartida_semana.obra_subpartida_semana_id_subpartida_numero_semana_key",
+    "label": "Add unique constraint on \"obra_subpartida_semana\" (id_subpartida, numero_semana)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_subpartida_semana_id_subpartida_numero_semana_key",
+        "table": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_subpartida_semana_id_subpartida_numero_semana_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_semana_id_subpartida_numero_semana_key",
+          "public",
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_subpartida_semana_id_subpartida_numero_semana_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_id_subpartida_numero_semana_key\" UNIQUE (\"id_subpartida\", \"numero_semana\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_subpartida_semana_id_subpartida_numero_semana_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_semana_id_subpartida_numero_semana_key",
+          "public",
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_estado_obra_idx_785b105f",
+    "label": "Create index \"obra_datos_generales_estado_obra_idx_785b105f\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_estado_obra_idx_785b105f",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_estado_obra_idx_785b105f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_estado_obra_idx_785b105f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_estado_obra_idx_785b105f\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_estado_obra_idx_785b105f\" ON \"public\".\"obra_datos_generales\" (\"estado_obra\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_estado_obra_idx_785b105f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_estado_obra_idx_785b105f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_coordinador_idx_3bc51f7a",
+    "label": "Create index \"obra_datos_generales_id_coordinador_idx_3bc51f7a\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_coordinador_idx_3bc51f7a",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_coordinador_idx_3bc51f7a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_coordinador_idx_3bc51f7a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_coordinador_idx_3bc51f7a\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_coordinador_idx_3bc51f7a\" ON \"public\".\"obra_datos_generales\" (\"id_coordinador\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_coordinador_idx_3bc51f7a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_coordinador_idx_3bc51f7a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_jefe_proyecto_idx_2a4e762a",
+    "label": "Create index \"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_jefe_proyecto_idx_2a4e762a",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\" ON \"public\".\"obra_datos_generales\" (\"id_jefe_proyecto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_jefe_proyecto_idx_2a4e762a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe",
+    "label": "Create index \"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\" ON \"public\".\"obra_datos_generales\" (\"id_presupuesto_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_residente_idx_1562a6cf",
+    "label": "Create index \"obra_datos_generales_id_residente_idx_1562a6cf\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_residente_idx_1562a6cf",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_residente_idx_1562a6cf\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_residente_idx_1562a6cf\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_residente_idx_1562a6cf\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_residente_idx_1562a6cf\" ON \"public\".\"obra_datos_generales\" (\"id_residente\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_residente_idx_1562a6cf\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_residente_idx_1562a6cf\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3",
+    "label": "Create index \"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\" ON \"public\".\"obra_datos_generales\" (\"id_resp_presupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_datos_generales.obra_datos_generales_id_resp_procura_idx_cc407465",
+    "label": "Create index \"obra_datos_generales_id_resp_procura_idx_cc407465\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_datos_generales_id_resp_procura_idx_cc407465",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_datos_generales_id_resp_procura_idx_cc407465\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_resp_procura_idx_cc407465\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_datos_generales_id_resp_procura_idx_cc407465\"",
+        "sql": "CREATE INDEX \"obra_datos_generales_id_resp_procura_idx_cc407465\" ON \"public\".\"obra_datos_generales\" (\"id_resp_procura\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_datos_generales_id_resp_procura_idx_cc407465\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_datos_generales_id_resp_procura_idx_cc407465\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_evento.obra_evento_created_at_idx_225d8c0f",
+    "label": "Create index \"obra_evento_created_at_idx_225d8c0f\" on \"obra_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_evento_created_at_idx_225d8c0f",
+        "table": "obra_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_evento_created_at_idx_225d8c0f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_created_at_idx_225d8c0f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_evento_created_at_idx_225d8c0f\"",
+        "sql": "CREATE INDEX \"obra_evento_created_at_idx_225d8c0f\" ON \"public\".\"obra_evento\" (\"created_at\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_evento_created_at_idx_225d8c0f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_created_at_idx_225d8c0f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_evento.obra_evento_id_centro_costo_created_at_idx_3daaebdb",
+    "label": "Create index \"obra_evento_id_centro_costo_created_at_idx_3daaebdb\" on \"obra_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_evento_id_centro_costo_created_at_idx_3daaebdb",
+        "table": "obra_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_evento_id_centro_costo_created_at_idx_3daaebdb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_id_centro_costo_created_at_idx_3daaebdb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_evento_id_centro_costo_created_at_idx_3daaebdb\"",
+        "sql": "CREATE INDEX \"obra_evento_id_centro_costo_created_at_idx_3daaebdb\" ON \"public\".\"obra_evento\" (\"id_centro_costo\", \"created_at\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_evento_id_centro_costo_created_at_idx_3daaebdb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_id_centro_costo_created_at_idx_3daaebdb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_evento.obra_evento_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_evento_id_centro_costo_idx_8c84570b\" on \"obra_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_evento_id_centro_costo_idx_8c84570b",
+        "table": "obra_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_evento_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_evento_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_evento_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_evento\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_evento_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_evento_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_incidencias_rfi.obra_incidencias_rfi_id_subpartida_idx_934aed61",
+    "label": "Create index \"obra_incidencias_rfi_id_subpartida_idx_934aed61\" on \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_incidencias_rfi_id_subpartida_idx_934aed61",
+        "table": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_incidencias_rfi_id_subpartida_idx_934aed61\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi_id_subpartida_idx_934aed61\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_incidencias_rfi_id_subpartida_idx_934aed61\"",
+        "sql": "CREATE INDEX \"obra_incidencias_rfi_id_subpartida_idx_934aed61\" ON \"public\".\"obra_incidencias_rfi\" (\"id_subpartida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_incidencias_rfi_id_subpartida_idx_934aed61\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_incidencias_rfi_id_subpartida_idx_934aed61\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_partida.obra_partida_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_partida_id_centro_costo_idx_8c84570b\" on \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_partida_id_centro_costo_idx_8c84570b",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_partida_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_partida_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_partida_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_partida\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_partida_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_partida.obra_partida_id_centro_costo_orden_idx_183e9e95",
+    "label": "Create index \"obra_partida_id_centro_costo_orden_idx_183e9e95\" on \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_partida_id_centro_costo_orden_idx_183e9e95",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_partida_id_centro_costo_orden_idx_183e9e95\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_centro_costo_orden_idx_183e9e95\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_partida_id_centro_costo_orden_idx_183e9e95\"",
+        "sql": "CREATE INDEX \"obra_partida_id_centro_costo_orden_idx_183e9e95\" ON \"public\".\"obra_partida\" (\"id_centro_costo\", \"orden\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_partida_id_centro_costo_orden_idx_183e9e95\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_centro_costo_orden_idx_183e9e95\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_partida.obra_partida_id_ppto_detalle_fase_idx_28f6cf4d",
+    "label": "Create index \"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\" on \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_partida_id_ppto_detalle_fase_idx_28f6cf4d",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\"",
+        "sql": "CREATE INDEX \"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\" ON \"public\".\"obra_partida\" (\"id_ppto_detalle_fase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_partida_id_ppto_detalle_fase_idx_28f6cf4d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_reprogramacion.obra_reprogramacion_id_centro_costo_desde_idx_981a070f",
+    "label": "Create index \"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\" on \"obra_reprogramacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_reprogramacion_id_centro_costo_desde_idx_981a070f",
+        "table": "obra_reprogramacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\"",
+        "sql": "CREATE INDEX \"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\" ON \"public\".\"obra_reprogramacion\" (\"id_centro_costo\", \"desde\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion_id_centro_costo_desde_idx_981a070f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_reprogramacion.obra_reprogramacion_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_reprogramacion_id_centro_costo_idx_8c84570b\" on \"obra_reprogramacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_reprogramacion_id_centro_costo_idx_8c84570b",
+        "table": "obra_reprogramacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_reprogramacion_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_reprogramacion_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_reprogramacion_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_reprogramacion\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_reprogramacion_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_reprogramacion_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_subpartida.obra_subpartida_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_subpartida_id_centro_costo_idx_8c84570b\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_subpartida_id_centro_costo_idx_8c84570b",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_subpartida_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_subpartida_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_subpartida_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_subpartida\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_subpartida_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_subpartida.obra_subpartida_id_partida_idx_e759d756",
+    "label": "Create index \"obra_subpartida_id_partida_idx_e759d756\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_subpartida_id_partida_idx_e759d756",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_subpartida_id_partida_idx_e759d756\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_partida_idx_e759d756\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_subpartida_id_partida_idx_e759d756\"",
+        "sql": "CREATE INDEX \"obra_subpartida_id_partida_idx_e759d756\" ON \"public\".\"obra_subpartida\" (\"id_partida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_subpartida_id_partida_idx_e759d756\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_partida_idx_e759d756\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_subpartida.obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86",
+    "label": "Create index \"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\"",
+        "sql": "CREATE INDEX \"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\" ON \"public\".\"obra_subpartida\" (\"id_ppto_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_subpartida_semana.obra_subpartida_semana_id_subpartida_idx_934aed61",
+    "label": "Create index \"obra_subpartida_semana_id_subpartida_idx_934aed61\" on \"obra_subpartida_semana\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_subpartida_semana_id_subpartida_idx_934aed61",
+        "table": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_subpartida_semana_id_subpartida_idx_934aed61\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_semana_id_subpartida_idx_934aed61\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_subpartida_semana_id_subpartida_idx_934aed61\"",
+        "sql": "CREATE INDEX \"obra_subpartida_semana_id_subpartida_idx_934aed61\" ON \"public\".\"obra_subpartida_semana\" (\"id_subpartida\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_subpartida_semana_id_subpartida_idx_934aed61\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_subpartida_semana_id_subpartida_idx_934aed61\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_coordinador_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_coordinador_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_coordinador_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_coordinador_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_coordinador_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_coordinador_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_coordinador_fkey\"\nFOREIGN KEY (\"id_coordinador\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_coordinador_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_coordinador_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_jefe_proyecto_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_jefe_proyecto_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_jefe_proyecto_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_jefe_proyecto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_jefe_proyecto_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_jefe_proyecto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_jefe_proyecto_fkey\"\nFOREIGN KEY (\"id_jefe_proyecto\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_jefe_proyecto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_jefe_proyecto_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_presupuesto_origen_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_presupuesto_origen_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_presupuesto_origen_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_presupuesto_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_presupuesto_origen_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_presupuesto_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_presupuesto_origen_fkey\"\nFOREIGN KEY (\"id_presupuesto_origen\")\nREFERENCES \"public\".\"ppto_Principal\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_presupuesto_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_presupuesto_origen_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_residente_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_residente_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_residente_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_residente_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_residente_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_residente_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_residente_fkey\"\nFOREIGN KEY (\"id_residente\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_residente_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_residente_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_resp_presupuesto_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_resp_presupuesto_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_resp_presupuesto_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_resp_presupuesto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_resp_presupuesto_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_resp_presupuesto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_resp_presupuesto_fkey\"\nFOREIGN KEY (\"id_resp_presupuesto\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_resp_presupuesto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_resp_presupuesto_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_datos_generales.obra_datos_generales_id_resp_procura_fkey",
+    "label": "Add foreign key \"obra_datos_generales_id_resp_procura_fkey\" on \"obra_datos_generales\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_datos_generales_id_resp_procura_fkey",
+        "table": "obra_datos_generales"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_datos_generales_id_resp_procura_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_resp_procura_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_datos_generales_id_resp_procura_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\"\nADD CONSTRAINT \"obra_datos_generales_id_resp_procura_fkey\"\nFOREIGN KEY (\"id_resp_procura\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_datos_generales_id_resp_procura_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_datos_generales_id_resp_procura_fkey",
+          "public",
+          "\"public\".\"obra_datos_generales\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_evento.obra_evento_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_evento_id_centro_costo_fkey\" on \"obra_evento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_evento_id_centro_costo_fkey",
+        "table": "obra_evento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_evento_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_evento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_evento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_evento_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_evento\"\nADD CONSTRAINT \"obra_evento_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_evento_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_evento_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_evento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_partida.obra_partida_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_partida_id_centro_costo_fkey\" on \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_partida_id_centro_costo_fkey",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_partida_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_partida_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_partida\"\nADD CONSTRAINT \"obra_partida_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_partida_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_partida.obra_partida_id_ppto_detalle_fase_fkey",
+    "label": "Add foreign key \"obra_partida_id_ppto_detalle_fase_fkey\" on \"obra_partida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_partida_id_ppto_detalle_fase_fkey",
+        "table": "obra_partida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_partida_id_ppto_detalle_fase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_ppto_detalle_fase_fkey",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_partida_id_ppto_detalle_fase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_partida\"\nADD CONSTRAINT \"obra_partida_id_ppto_detalle_fase_fkey\"\nFOREIGN KEY (\"id_ppto_detalle_fase\")\nREFERENCES \"public\".\"ppto_DetalleFases\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_partida_id_ppto_detalle_fase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_partida_id_ppto_detalle_fase_fkey",
+          "public",
+          "\"public\".\"obra_partida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_reprogramacion.obra_reprogramacion_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_reprogramacion_id_centro_costo_fkey\" on \"obra_reprogramacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_reprogramacion_id_centro_costo_fkey",
+        "table": "obra_reprogramacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_reprogramacion_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_reprogramacion_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_reprogramacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_reprogramacion_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_reprogramacion\"\nADD CONSTRAINT \"obra_reprogramacion_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_reprogramacion_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_reprogramacion_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_reprogramacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_subpartida.obra_subpartida_id_partida_fkey",
+    "label": "Add foreign key \"obra_subpartida_id_partida_fkey\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_subpartida_id_partida_fkey",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_subpartida_id_partida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_partida_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_subpartida_id_partida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\"\nADD CONSTRAINT \"obra_subpartida_id_partida_fkey\"\nFOREIGN KEY (\"id_partida\")\nREFERENCES \"public\".\"obra_partida\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_subpartida_id_partida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_partida_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_subpartida.obra_subpartida_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_subpartida_id_centro_costo_fkey\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_subpartida_id_centro_costo_fkey",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_subpartida_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_subpartida_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\"\nADD CONSTRAINT \"obra_subpartida_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_subpartida_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_subpartida.obra_subpartida_id_ppto_detalle_categoria_fkey",
+    "label": "Add foreign key \"obra_subpartida_id_ppto_detalle_categoria_fkey\" on \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_subpartida_id_ppto_detalle_categoria_fkey",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_subpartida_id_ppto_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_subpartida_id_ppto_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\"\nADD CONSTRAINT \"obra_subpartida_id_ppto_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_ppto_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_subpartida_id_ppto_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"obra_subpartida\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_incidencias_rfi.obra_incidencias_rfi_id_subpartida_fkey",
+    "label": "Add foreign key \"obra_incidencias_rfi_id_subpartida_fkey\" on \"obra_incidencias_rfi\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_incidencias_rfi_id_subpartida_fkey",
+        "table": "obra_incidencias_rfi"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_incidencias_rfi_id_subpartida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_incidencias_rfi_id_subpartida_fkey",
+          "public",
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_incidencias_rfi_id_subpartida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_incidencias_rfi\"\nADD CONSTRAINT \"obra_incidencias_rfi_id_subpartida_fkey\"\nFOREIGN KEY (\"id_subpartida\")\nREFERENCES \"public\".\"obra_subpartida\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_incidencias_rfi_id_subpartida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_incidencias_rfi_id_subpartida_fkey",
+          "public",
+          "\"public\".\"obra_incidencias_rfi\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_subpartida_semana.obra_subpartida_semana_id_subpartida_fkey",
+    "label": "Add foreign key \"obra_subpartida_semana_id_subpartida_fkey\" on \"obra_subpartida_semana\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_subpartida_semana_id_subpartida_fkey",
+        "table": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_subpartida_semana_id_subpartida_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_semana_id_subpartida_fkey",
+          "public",
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_subpartida_semana_id_subpartida_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida_semana\"\nADD CONSTRAINT \"obra_subpartida_semana_id_subpartida_fkey\"\nFOREIGN KEY (\"id_subpartida\")\nREFERENCES \"public\".\"obra_subpartida\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_subpartida_semana_id_subpartida_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_subpartida_semana_id_subpartida_fkey",
+          "public",
+          "\"public\".\"obra_subpartida_semana\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "check.obra_subpartida.obra_subpartida_fechas_check",
+    "label": "Check obra_subpartida_fechas_check en obra_subpartida",
+    "summary": "Agrega la restricción obra_subpartida_fechas_check (\"fecha_fin\" >= \"fecha_inicio\")",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_subpartida_fechas_check",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\" ADD CONSTRAINT \"obra_subpartida_fechas_check\" CHECK (\"fecha_fin\" >= \"fecha_inicio\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_subpartida_fechas_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_fechas_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_subpartida_semana.obra_subpartida_semana_numero_check",
+    "label": "Check obra_subpartida_semana_numero_check en obra_subpartida_semana",
+    "summary": "Agrega la restricción obra_subpartida_semana_numero_check (\"numero_semana\" BETWEEN 1 AND 16)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_subpartida_semana_numero_check",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_numero_check\" CHECK (\"numero_semana\" BETWEEN 1 AND 16)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_subpartida_semana_numero_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_numero_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_subpartida_semana.obra_subpartida_semana_meta_check",
+    "label": "Check obra_subpartida_semana_meta_check en obra_subpartida_semana",
+    "summary": "Agrega la restricción obra_subpartida_semana_meta_check (\"meta\" IS NULL OR (\"meta\" BETWEEN 0 AND 100 AND \"numero_semana\" <= 10))",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_subpartida_semana_meta_check",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_meta_check\" CHECK (\"meta\" IS NULL OR (\"meta\" BETWEEN 0 AND 100 AND \"numero_semana\" <= 10))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_subpartida_semana_meta_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_meta_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_subpartida_semana.obra_subpartida_semana_avance_check",
+    "label": "Check obra_subpartida_semana_avance_check en obra_subpartida_semana",
+    "summary": "Agrega la restricción obra_subpartida_semana_avance_check (\"avance\" IS NULL OR \"avance\" BETWEEN 0 AND 100)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida_semana"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_subpartida_semana_avance_check",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_avance_check\" CHECK (\"avance\" IS NULL OR \"avance\" BETWEEN 0 AND 100)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_subpartida_semana_avance_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_avance_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_reprogramacion.obra_reprogramacion_dias_check",
+    "label": "Check obra_reprogramacion_dias_check en obra_reprogramacion",
+    "summary": "Agrega la restricción obra_reprogramacion_dias_check (\"dias\" BETWEEN 1 AND 60)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_reprogramacion"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_reprogramacion_dias_check",
+        "sql": "ALTER TABLE \"public\".\"obra_reprogramacion\" ADD CONSTRAINT \"obra_reprogramacion_dias_check\" CHECK (\"dias\" BETWEEN 1 AND 60)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_reprogramacion_dias_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_reprogramacion_dias_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_evento.obra_evento_severidad_check",
+    "label": "Check obra_evento_severidad_check en obra_evento",
+    "summary": "Agrega la restricción obra_evento_severidad_check (\"severidad\" IN ('info', 'good', 'warn', 'crit'))",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_evento"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_evento_severidad_check",
+        "sql": "ALTER TABLE \"public\".\"obra_evento\" ADD CONSTRAINT \"obra_evento_severidad_check\" CHECK (\"severidad\" IN ('info', 'good', 'warn', 'crit'))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_evento_severidad_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_evento_severidad_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_datos_generales.obra_datos_generales_avance_check",
+    "label": "Check obra_datos_generales_avance_check en obra_datos_generales",
+    "summary": "Agrega la restricción obra_datos_generales_avance_check (\"avance_general\" IS NULL OR \"avance_general\" BETWEEN 0 AND 100)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_datos_generales"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_datos_generales_avance_check",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_avance_check\" CHECK (\"avance_general\" IS NULL OR \"avance_general\" BETWEEN 0 AND 100)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_datos_generales_avance_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_datos_generales_avance_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "check.obra_datos_generales.obra_datos_generales_postventa_check",
+    "label": "Check obra_datos_generales_postventa_check en obra_datos_generales",
+    "summary": "Agrega la restricción obra_datos_generales_postventa_check (\"plazo_postventa_dias\" IS NULL OR \"plazo_postventa_dias\" BETWEEN 1 AND 365)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_datos_generales"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "add obra_datos_generales_postventa_check",
+        "sql": "ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_postventa_check\" CHECK (\"plazo_postventa_dias\" IS NULL OR \"plazo_postventa_dias\" BETWEEN 1 AND 365)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify obra_datos_generales_postventa_check",
+        "sql": "SELECT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_datos_generales_postventa_check') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.modulo.operaciones",
+    "label": "Semilla del módulo operaciones",
+    "summary": "Inserta el módulo operaciones (Dashboard de Operaciones) si no existe; no concede permisos a ningún rol",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulo operaciones",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('operaciones', 'Dashboard de operaciones', 'Proyectos', '/operaciones', 34, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify modulo operaciones",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE clave = 'operaciones') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

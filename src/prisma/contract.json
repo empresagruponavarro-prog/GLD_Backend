@@ -216,6 +216,10 @@
       "model": "nivel",
       "namespace": "public"
     },
+    "obra_aviso_usuario": {
+      "model": "obra_aviso_usuario",
+      "namespace": "public"
+    },
     "obra_datos_generales": {
       "model": "obra_datos_generales",
       "namespace": "public"
@@ -224,12 +228,24 @@
       "model": "obra_documentos_actas",
       "namespace": "public"
     },
+    "obra_evento": {
+      "model": "obra_evento",
+      "namespace": "public"
+    },
     "obra_incidencias_rfi": {
       "model": "obra_incidencias_rfi",
       "namespace": "public"
     },
+    "obra_partida": {
+      "model": "obra_partida",
+      "namespace": "public"
+    },
     "obra_planos": {
       "model": "obra_planos",
+      "namespace": "public"
+    },
+    "obra_reprogramacion": {
+      "model": "obra_reprogramacion",
       "namespace": "public"
     },
     "obra_residentes": {
@@ -238,6 +254,14 @@
     },
     "obra_semanas_cronograma": {
       "model": "obra_semanas_cronograma",
+      "namespace": "public"
+    },
+    "obra_subpartida": {
+      "model": "obra_subpartida",
+      "namespace": "public"
+    },
+    "obra_subpartida_semana": {
+      "model": "obra_subpartida_semana",
       "namespace": "public"
     },
     "ordenCompraDetalle": {
@@ -590,6 +614,35 @@
               }
             ]
           },
+          "estado_obra": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PROXIMO",
+                "value": "PROXIMO"
+              },
+              {
+                "name": "EN_EJECUCION",
+                "value": "EN_EJECUCION"
+              },
+              {
+                "name": "POST_VENTA",
+                "value": "POST_VENTA"
+              },
+              {
+                "name": "CULMINADO",
+                "value": "CULMINADO"
+              },
+              {
+                "name": "SUSPENDIDA",
+                "value": "SUSPENDIDA"
+              },
+              {
+                "name": "CANCELADA",
+                "value": "CANCELADA"
+              }
+            ]
+          },
           "estado_operativo": {
             "codecId": "pg/text@1",
             "members": [
@@ -756,6 +809,31 @@
               }
             ]
           },
+          "motivo_reprogramacion": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "CLIENTE",
+                "value": "CLIENTE"
+              },
+              {
+                "name": "PERMISO_LICENCIA",
+                "value": "PERMISO_LICENCIA"
+              },
+              {
+                "name": "PROVEEDOR_CLIENTE",
+                "value": "PROVEEDOR_CLIENTE"
+              },
+              {
+                "name": "FUERZA_MAYOR",
+                "value": "FUERZA_MAYOR"
+              },
+              {
+                "name": "INTERNO",
+                "value": "INTERNO"
+              }
+            ]
+          },
           "movimiento_activo_fijo": {
             "codecId": "pg/text@1",
             "members": [
@@ -811,6 +889,47 @@
               }
             ]
           },
+          "tipo_evento_obra": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ALTA",
+                "value": "ALTA"
+              },
+              {
+                "name": "ESTADO",
+                "value": "ESTADO"
+              },
+              {
+                "name": "AVANCE",
+                "value": "AVANCE"
+              },
+              {
+                "name": "PLAZO",
+                "value": "PLAZO"
+              },
+              {
+                "name": "EQUIPO",
+                "value": "EQUIPO"
+              },
+              {
+                "name": "REPROGRAMACION",
+                "value": "REPROGRAMACION"
+              },
+              {
+                "name": "SITUACION",
+                "value": "SITUACION"
+              },
+              {
+                "name": "VENCIDO",
+                "value": "VENCIDO"
+              },
+              {
+                "name": "SOBRECARGA",
+                "value": "SOBRECARGA"
+              }
+            ]
+          },
           "tipo_item": {
             "codecId": "pg/text@1",
             "members": [
@@ -821,6 +940,19 @@
               {
                 "name": "SERVICIO",
                 "value": "SERVICIO"
+              }
+            ]
+          },
+          "tipo_partida_obra": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "CONTRACTUAL",
+                "value": "CONTRACTUAL"
+              },
+              {
+                "name": "ADICIONAL",
+                "value": "ADICIONAL"
               }
             ]
           },
@@ -1624,6 +1756,81 @@
                 },
                 "to": {
                   "model": "Anexo_Especialidad",
+                  "namespace": "public"
+                }
+              },
+              "obraComoCoordinador": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_coordinador"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
+                  "namespace": "public"
+                }
+              },
+              "obraComoJefe": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_jefe_proyecto"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
+                  "namespace": "public"
+                }
+              },
+              "obraComoResidente": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_residente"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
+                  "namespace": "public"
+                }
+              },
+              "obraComoRespPpto": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_resp_presupuesto"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
+                  "namespace": "public"
+                }
+              },
+              "obraComoRespProcura": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_resp_procura"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
                   "namespace": "public"
                 }
               },
@@ -3052,6 +3259,66 @@
                 },
                 "to": {
                   "model": "local",
+                  "namespace": "public"
+                }
+              },
+              "obraEventos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "obra_evento",
+                  "namespace": "public"
+                }
+              },
+              "obraPartidas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "obra_partida",
+                  "namespace": "public"
+                }
+              },
+              "obraReprogramaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "obra_reprogramacion",
+                  "namespace": "public"
+                }
+              },
+              "obraSubpartidas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida",
                   "namespace": "public"
                 }
               },
@@ -8506,6 +8773,21 @@
                   "namespace": "public"
                 }
               },
+              "avisoObra": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "IdUsuario"
+                  ],
+                  "targetFields": [
+                    "id_usuario"
+                  ]
+                },
+                "to": {
+                  "model": "obra_aviso_usuario",
+                  "namespace": "public"
+                }
+              },
               "permisos": {
                 "cardinality": "1:N",
                 "on": {
@@ -12093,8 +12375,118 @@
               "table": "nivel"
             }
           },
+          "obra_aviso_usuario": {
+            "fields": {
+              "id_usuario": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "tipos_importantes": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
+              "updated_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "visto_hasta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "usuario": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_usuario"
+                  ],
+                  "targetFields": [
+                    "IdUsuario"
+                  ]
+                },
+                "to": {
+                  "model": "Usuarios",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id_usuario": {
+                  "column": "id_usuario"
+                },
+                "tipos_importantes": {
+                  "column": "tipos_importantes"
+                },
+                "updated_at": {
+                  "column": "updated_at"
+                },
+                "visto_hasta": {
+                  "column": "visto_hasta"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_aviso_usuario"
+            }
+          },
           "obra_datos_generales": {
             "fields": {
+              "actualizado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "avance_general": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "codigo_obra": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 30
+                  }
+                }
+              },
+              "comentario": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
               "contacto_cliente_correo": {
                 "nullable": true,
                 "type": {
@@ -12162,6 +12554,19 @@
                   }
                 }
               },
+              "estado_obra": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_obra",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "expediente_codigo": {
                 "nullable": true,
                 "type": {
@@ -12170,6 +12575,13 @@
                   "typeParams": {
                     "length": 100
                   }
+                }
+              },
+              "fecha_cierre_postventa": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
                 }
               },
               "id": {
@@ -12181,6 +12593,48 @@
               },
               "id_centro_costo": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_coordinador": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_jefe_proyecto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_presupuesto_origen": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_residente": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_resp_presupuesto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_resp_procura": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -12200,7 +12654,24 @@
                   "kind": "scalar"
                 }
               },
+              "observaciones_postventa": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
               "personal_activo_promedio": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "plazo_postventa_dias": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
@@ -12222,6 +12693,16 @@
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
+                }
+              },
+              "tienda": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 80
+                  }
                 }
               },
               "turno_trabajo": {
@@ -12267,10 +12748,112 @@
                   "model": "CentroCostos",
                   "namespace": "public"
                 }
+              },
+              "coordinador": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_coordinador"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "jefeProyecto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_jefe_proyecto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "presupuestoOrigen": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_presupuesto_origen"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              },
+              "residente": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_residente"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "respPresupuesto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_resp_presupuesto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "respProcura": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_resp_procura"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
               "fields": {
+                "actualizado_por": {
+                  "column": "actualizado_por"
+                },
+                "avance_general": {
+                  "column": "avance_general"
+                },
+                "codigo_obra": {
+                  "column": "codigo_obra"
+                },
+                "comentario": {
+                  "column": "comentario"
+                },
                 "contacto_cliente_correo": {
                   "column": "contacto_cliente_correo"
                 },
@@ -12292,8 +12875,14 @@
                 "distrito": {
                   "column": "distrito"
                 },
+                "estado_obra": {
+                  "column": "estado_obra"
+                },
                 "expediente_codigo": {
                   "column": "expediente_codigo"
+                },
+                "fecha_cierre_postventa": {
+                  "column": "fecha_cierre_postventa"
                 },
                 "id": {
                   "column": "id"
@@ -12301,20 +12890,47 @@
                 "id_centro_costo": {
                   "column": "id_centro_costo"
                 },
+                "id_coordinador": {
+                  "column": "id_coordinador"
+                },
+                "id_jefe_proyecto": {
+                  "column": "id_jefe_proyecto"
+                },
+                "id_presupuesto_origen": {
+                  "column": "id_presupuesto_origen"
+                },
+                "id_residente": {
+                  "column": "id_residente"
+                },
+                "id_resp_presupuesto": {
+                  "column": "id_resp_presupuesto"
+                },
+                "id_resp_procura": {
+                  "column": "id_resp_procura"
+                },
                 "latitud": {
                   "column": "latitud"
                 },
                 "longitud": {
                   "column": "longitud"
                 },
+                "observaciones_postventa": {
+                  "column": "observaciones_postventa"
+                },
                 "personal_activo_promedio": {
                   "column": "personal_activo_promedio"
+                },
+                "plazo_postventa_dias": {
+                  "column": "plazo_postventa_dias"
                 },
                 "provincia": {
                   "column": "provincia"
                 },
                 "semanas_totales": {
                   "column": "semanas_totales"
+                },
+                "tienda": {
+                  "column": "tienda"
                 },
                 "turno_trabajo": {
                   "column": "turno_trabajo"
@@ -12488,6 +13104,157 @@
               "table": "obra_documentos_actas"
             }
           },
+          "obra_evento": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "detalle": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 1000
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "severidad": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 10
+                  }
+                }
+              },
+              "tipo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "tipo_evento_obra",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "titulo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
+              "usuario": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "valor_antes": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
+              "valor_despues": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "detalle": {
+                  "column": "detalle"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "severidad": {
+                  "column": "severidad"
+                },
+                "tipo": {
+                  "column": "tipo"
+                },
+                "titulo": {
+                  "column": "titulo"
+                },
+                "usuario": {
+                  "column": "usuario"
+                },
+                "valor_antes": {
+                  "column": "valor_antes"
+                },
+                "valor_despues": {
+                  "column": "valor_despues"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_evento"
+            }
+          },
           "obra_incidencias_rfi": {
             "fields": {
               "accion_solicitada_o_ejecutada": {
@@ -12558,6 +13325,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_subpartida": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "plazo_resolucion": {
                 "nullable": true,
                 "type": {
@@ -12614,6 +13388,21 @@
                   "model": "CentroCostos",
                   "namespace": "public"
                 }
+              },
+              "subpartida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_subpartida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -12642,6 +13431,9 @@
                 "id_centro_costo": {
                   "column": "id_centro_costo"
                 },
+                "id_subpartida": {
+                  "column": "id_subpartida"
+                },
                 "plazo_resolucion": {
                   "column": "plazo_resolucion"
                 },
@@ -12657,6 +13449,165 @@
               },
               "namespaceId": "public",
               "table": "obra_incidencias_rfi"
+            }
+          },
+          "obra_partida": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ppto_detalle_fase": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "item": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "tipo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "tipo_partida_obra",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "updated_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "pptoDetalleFase": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ppto_detalle_fase"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFases",
+                  "namespace": "public"
+                }
+              },
+              "subpartidas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_partida"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_ppto_detalle_fase": {
+                  "column": "id_ppto_detalle_fase"
+                },
+                "item": {
+                  "column": "item"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                },
+                "tipo": {
+                  "column": "tipo"
+                },
+                "updated_at": {
+                  "column": "updated_at"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_partida"
             }
           },
           "obra_planos": {
@@ -12848,6 +13799,151 @@
               },
               "namespaceId": "public",
               "table": "obra_planos"
+            }
+          },
+          "obra_reprogramacion": {
+            "fields": {
+              "aprobado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "desde": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "detalle": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 160
+                  }
+                }
+              },
+              "dias": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "item_aplica": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "motivo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "motivo_reprogramacion",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "registrado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "aprobado_por": {
+                  "column": "aprobado_por"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "desde": {
+                  "column": "desde"
+                },
+                "detalle": {
+                  "column": "detalle"
+                },
+                "dias": {
+                  "column": "dias"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "item_aplica": {
+                  "column": "item_aplica"
+                },
+                "motivo": {
+                  "column": "motivo"
+                },
+                "registrado_por": {
+                  "column": "registrado_por"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_reprogramacion"
             }
           },
           "obra_residentes": {
@@ -13201,6 +14297,338 @@
               },
               "namespaceId": "public",
               "table": "obra_semanas_cronograma"
+            }
+          },
+          "obra_subpartida": {
+            "fields": {
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_fin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_inicio": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_partida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_ppto_detalle_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "item": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 150
+                  }
+                }
+              },
+              "observacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "tipo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "tipo_partida_obra",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "updated_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "incidencias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_subpartida"
+                  ]
+                },
+                "to": {
+                  "model": "obra_incidencias_rfi",
+                  "namespace": "public"
+                }
+              },
+              "partida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_partida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "obra_partida",
+                  "namespace": "public"
+                }
+              },
+              "pptoDetalleCategoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
+              "semanas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_subpartida"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida_semana",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "created_at": {
+                  "column": "created_at"
+                },
+                "fecha_fin": {
+                  "column": "fecha_fin"
+                },
+                "fecha_inicio": {
+                  "column": "fecha_inicio"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_partida": {
+                  "column": "id_partida"
+                },
+                "id_ppto_detalle_categoria": {
+                  "column": "id_ppto_detalle_categoria"
+                },
+                "item": {
+                  "column": "item"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "observacion": {
+                  "column": "observacion"
+                },
+                "orden": {
+                  "column": "orden"
+                },
+                "tipo": {
+                  "column": "tipo"
+                },
+                "updated_at": {
+                  "column": "updated_at"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_subpartida"
+            }
+          },
+          "obra_subpartida_semana": {
+            "fields": {
+              "avance": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_subpartida": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "meta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero_semana": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "registrado_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "registrado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "subpartida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_subpartida"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "avance": {
+                  "column": "avance"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_subpartida": {
+                  "column": "id_subpartida"
+                },
+                "meta": {
+                  "column": "meta"
+                },
+                "numero_semana": {
+                  "column": "numero_semana"
+                },
+                "registrado_en": {
+                  "column": "registrado_en"
+                },
+                "registrado_por": {
+                  "column": "registrado_por"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_subpartida_semana"
             }
           },
           "pago": {
@@ -13849,6 +15277,21 @@
                   "namespace": "public"
                 }
               },
+              "obraPartidas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ppto_detalle_fase"
+                  ]
+                },
+                "to": {
+                  "model": "obra_partida",
+                  "namespace": "public"
+                }
+              },
               "presupuesto": {
                 "cardinality": "N:1",
                 "on": {
@@ -14109,6 +15552,21 @@
                 },
                 "to": {
                   "model": "ppto_DetalleItems",
+                  "namespace": "public"
+                }
+              },
+              "obraSubpartidas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ppto_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "obra_subpartida",
                   "namespace": "public"
                 }
               },
@@ -15434,6 +16892,21 @@
                 },
                 "to": {
                   "model": "ppto_Principal_Historial",
+                  "namespace": "public"
+                }
+              },
+              "obraOrigen": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_presupuesto_origen"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
                   "namespace": "public"
                 }
               }
@@ -24976,8 +26449,104 @@
                 }
               ]
             },
-            "obra_datos_generales": {
+            "obra_aviso_usuario": {
               "columns": {
+                "id_usuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "tipos_importantes": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
+                "updated_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "visto_hasta": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_usuario"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_aviso_usuario"
+                  },
+                  "target": {
+                    "columns": [
+                      "IdUsuario"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "usuarios"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id_usuario"
+                ]
+              },
+              "uniques": []
+            },
+            "obra_datos_generales": {
+              "checks": [
+                {
+                  "expression": "\"estado_obra\" IN ('PROXIMO', 'EN_EJECUCION', 'POST_VENTA', 'CULMINADO', 'SUSPENDIDA', 'CANCELADA')",
+                  "name": "obra_datos_generales_estado_obra_check_39c92be1",
+                  "prefix": "obra_datos_generales_estado_obra_check"
+                }
+              ],
+              "columns": {
+                "actualizado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "avance_general": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "codigo_obra": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 30
+                  }
+                },
+                "comentario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
                 "contacto_cliente_correo": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -25043,6 +26612,17 @@
                     "length": 100
                   }
                 },
+                "estado_obra": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_obra",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
                 "expediente_codigo": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -25050,6 +26630,11 @@
                   "typeParams": {
                     "length": 100
                   }
+                },
+                "fecha_cierre_postventa": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -25065,6 +26650,36 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_coordinador": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_jefe_proyecto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_presupuesto_origen": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_residente": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_resp_presupuesto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_resp_procura": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "latitud": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
@@ -25075,12 +26690,25 @@
                   "nativeType": "numeric",
                   "nullable": true
                 },
+                "observaciones_postventa": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
                 "personal_activo_promedio": {
                   "codecId": "pg/int4@1",
                   "default": {
                     "kind": "literal",
                     "value": 0
                   },
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "plazo_postventa_dias": {
+                  "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
                 },
@@ -25104,6 +26732,14 @@
                   },
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "tienda": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 80
+                  }
                 },
                 "turno_trabajo": {
                   "codecId": "sql/varchar@1",
@@ -25152,9 +26788,168 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_jefe_proyecto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_coordinador"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_residente"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_resp_presupuesto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_resp_procura"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_presupuesto_origen"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
                 }
               ],
-              "indexes": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "estado_obra"
+                  ],
+                  "name": "obra_datos_generales_estado_obra_idx_785b105f",
+                  "prefix": "obra_datos_generales_estado_obra_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_coordinador"
+                  ],
+                  "name": "obra_datos_generales_id_coordinador_idx_3bc51f7a",
+                  "prefix": "obra_datos_generales_id_coordinador_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_jefe_proyecto"
+                  ],
+                  "name": "obra_datos_generales_id_jefe_proyecto_idx_2a4e762a",
+                  "prefix": "obra_datos_generales_id_jefe_proyecto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_presupuesto_origen"
+                  ],
+                  "name": "obra_datos_generales_id_presupuesto_origen_idx_fcbfb5fe",
+                  "prefix": "obra_datos_generales_id_presupuesto_origen_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_residente"
+                  ],
+                  "name": "obra_datos_generales_id_residente_idx_1562a6cf",
+                  "prefix": "obra_datos_generales_id_residente_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_resp_presupuesto"
+                  ],
+                  "name": "obra_datos_generales_id_resp_presupuesto_idx_a1ae10e3",
+                  "prefix": "obra_datos_generales_id_resp_presupuesto_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_resp_procura"
+                  ],
+                  "name": "obra_datos_generales_id_resp_procura_idx_cc407465",
+                  "prefix": "obra_datos_generales_id_resp_procura_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -25164,6 +26959,11 @@
                 {
                   "columns": [
                     "id_centro_costo"
+                  ]
+                },
+                {
+                  "columns": [
+                    "codigo_obra"
                   ]
                 }
               ]
@@ -25295,6 +27095,155 @@
               },
               "uniques": []
             },
+            "obra_evento": {
+              "checks": [
+                {
+                  "expression": "\"tipo\" IN ('ALTA', 'ESTADO', 'AVANCE', 'PLAZO', 'EQUIPO', 'REPROGRAMACION', 'SITUACION', 'VENCIDO', 'SOBRECARGA')",
+                  "name": "obra_evento_tipo_check_c24c3323",
+                  "prefix": "obra_evento_tipo_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "detalle": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 1000
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "severidad": {
+                  "codecId": "sql/varchar@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "info"
+                  },
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 10
+                  }
+                },
+                "tipo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_evento_obra",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "titulo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
+                "usuario": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "valor_antes": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
+                "valor_despues": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_evento"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "created_at"
+                  ],
+                  "name": "obra_evento_created_at_idx_225d8c0f",
+                  "prefix": "obra_evento_created_at_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "created_at"
+                  ],
+                  "name": "obra_evento_id_centro_costo_created_at_idx_3daaebdb",
+                  "prefix": "obra_evento_id_centro_costo_created_at_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "obra_evento_id_centro_costo_idx_8c84570b",
+                  "prefix": "obra_evento_id_centro_costo_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "obra_incidencias_rfi": {
               "columns": {
                 "accion_solicitada_o_ejecutada": {
@@ -25361,6 +27310,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_subpartida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "plazo_resolucion": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -25415,6 +27369,23 @@
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_subpartida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_incidencias_rfi"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida"
+                  }
                 }
               ],
               "indexes": [
@@ -25425,6 +27396,14 @@
                   "name": "obra_incidencias_rfi_id_centro_costo_idx_8c84570b",
                   "prefix": "obra_incidencias_rfi_id_centro_costo_idx",
                   "unique": false
+                },
+                {
+                  "columns": [
+                    "id_subpartida"
+                  ],
+                  "name": "obra_incidencias_rfi_id_subpartida_idx_934aed61",
+                  "prefix": "obra_incidencias_rfi_id_subpartida_idx",
+                  "unique": false
                 }
               ],
               "primaryKey": {
@@ -25433,6 +27412,170 @@
                 ]
               },
               "uniques": []
+            },
+            "obra_partida": {
+              "checks": [
+                {
+                  "expression": "\"tipo\" IN ('CONTRACTUAL', 'ADICIONAL')",
+                  "name": "obra_partida_tipo_check_5f1b516a",
+                  "prefix": "obra_partida_tipo_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_ppto_detalle_fase": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "item": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "tipo": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "CONTRACTUAL"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_partida_obra",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "updated_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_partida"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ppto_detalle_fase"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_partida"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFases"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "obra_partida_id_centro_costo_idx_8c84570b",
+                  "prefix": "obra_partida_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "orden"
+                  ],
+                  "name": "obra_partida_id_centro_costo_orden_idx_183e9e95",
+                  "prefix": "obra_partida_id_centro_costo_orden_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_ppto_detalle_fase"
+                  ],
+                  "name": "obra_partida_id_ppto_detalle_fase_idx_28f6cf4d",
+                  "prefix": "obra_partida_id_ppto_detalle_fase_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "item"
+                  ]
+                }
+              ]
             },
             "obra_planos": {
               "columns": {
@@ -25577,6 +27720,137 @@
                   ],
                   "name": "obra_planos_id_centro_costo_idx_8c84570b",
                   "prefix": "obra_planos_id_centro_costo_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "obra_reprogramacion": {
+              "checks": [
+                {
+                  "expression": "\"motivo\" IN ('CLIENTE', 'PERMISO_LICENCIA', 'PROVEEDOR_CLIENTE', 'FUERZA_MAYOR', 'INTERNO')",
+                  "name": "obra_reprogramacion_motivo_check_e44a3b71",
+                  "prefix": "obra_reprogramacion_motivo_check"
+                }
+              ],
+              "columns": {
+                "aprobado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "desde": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "detalle": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 160
+                  }
+                },
+                "dias": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "item_aplica": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "motivo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "motivo_reprogramacion",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "registrado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_reprogramacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "desde"
+                  ],
+                  "name": "obra_reprogramacion_id_centro_costo_desde_idx_981a070f",
+                  "prefix": "obra_reprogramacion_id_centro_costo_desde_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "obra_reprogramacion_id_centro_costo_idx_8c84570b",
+                  "prefix": "obra_reprogramacion_id_centro_costo_idx",
                   "unique": false
                 }
               ],
@@ -25876,6 +28150,293 @@
                 {
                   "columns": [
                     "id_centro_costo",
+                    "numero_semana"
+                  ]
+                }
+              ]
+            },
+            "obra_subpartida": {
+              "checks": [
+                {
+                  "expression": "\"tipo\" IN ('CONTRACTUAL', 'ADICIONAL')",
+                  "name": "obra_subpartida_tipo_check_5f1b516a",
+                  "prefix": "obra_subpartida_tipo_check"
+                }
+              ],
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "fecha_fin": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "fecha_inicio": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_partida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_ppto_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "item": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 150
+                  }
+                },
+                "observacion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 200
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "tipo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_partida_obra",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "updated_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_partida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_partida"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ppto_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "obra_subpartida_id_centro_costo_idx_8c84570b",
+                  "prefix": "obra_subpartida_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_partida"
+                  ],
+                  "name": "obra_subpartida_id_partida_idx_e759d756",
+                  "prefix": "obra_subpartida_id_partida_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "name": "obra_subpartida_id_ppto_detalle_categoria_idx_5963aa86",
+                  "prefix": "obra_subpartida_id_ppto_detalle_categoria_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "item"
+                  ]
+                }
+              ]
+            },
+            "obra_subpartida_semana": {
+              "columns": {
+                "avance": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_subpartida": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "meta": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "numero_semana": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "registrado_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "registrado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_subpartida"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida_semana"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_subpartida"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_subpartida"
+                  ],
+                  "name": "obra_subpartida_semana_id_subpartida_idx_934aed61",
+                  "prefix": "obra_subpartida_semana_id_subpartida_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_subpartida",
                     "numero_semana"
                   ]
                 }
@@ -30893,6 +33454,17 @@
                 "ANULADO"
               ]
             },
+            "estado_obra": {
+              "kind": "valueSet",
+              "values": [
+                "PROXIMO",
+                "EN_EJECUCION",
+                "POST_VENTA",
+                "CULMINADO",
+                "SUSPENDIDA",
+                "CANCELADA"
+              ]
+            },
             "estado_operativo": {
               "kind": "valueSet",
               "values": [
@@ -30957,6 +33529,16 @@
                 "TRANSFERENCIA"
               ]
             },
+            "motivo_reprogramacion": {
+              "kind": "valueSet",
+              "values": [
+                "CLIENTE",
+                "PERMISO_LICENCIA",
+                "PROVEEDOR_CLIENTE",
+                "FUERZA_MAYOR",
+                "INTERNO"
+              ]
+            },
             "movimiento_activo_fijo": {
               "kind": "valueSet",
               "values": [
@@ -30982,11 +33564,32 @@
                 "BILLETERA"
               ]
             },
+            "tipo_evento_obra": {
+              "kind": "valueSet",
+              "values": [
+                "ALTA",
+                "ESTADO",
+                "AVANCE",
+                "PLAZO",
+                "EQUIPO",
+                "REPROGRAMACION",
+                "SITUACION",
+                "VENCIDO",
+                "SOBRECARGA"
+              ]
+            },
             "tipo_item": {
               "kind": "valueSet",
               "values": [
                 "PRODUCTO",
                 "SERVICIO"
+              ]
+            },
+            "tipo_partida_obra": {
+              "kind": "valueSet",
+              "values": [
+                "CONTRACTUAL",
+                "ADICIONAL"
               ]
             },
             "tipo_requerimiento": {
@@ -31007,7 +33610,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bf4c8d176845184481328c4d6f75af576bf144d3dc4531ca678d65b21b05a7ac"
+    "storageHash": "26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753"
   },
   "capabilities": {
     "postgres": {

@@ -217,14 +217,14 @@ describe('matriz de permisos (/administration/roles/:id/permisos)', () => {
 
     it('rol sin filas: todo false', async () => {
       const res = await http().get('/administration/roles/5/permisos').expect(200);
-      expect(res.body.permisos).toHaveLength(33);
+      expect(res.body.permisos).toHaveLength(CLAVES_MODULO.length);
       for (const p of res.body.permisos) expect(p).toEqual({ moduloId: p.moduloId, clave: p.clave, ...NADA });
     });
 
     it('omite los módulos inactivos', async () => {
       bd.estado.modulos[0].activo = false;
       const res = await http().get('/administration/roles/2/permisos').expect(200);
-      expect(res.body.permisos).toHaveLength(32);
+      expect(res.body.permisos).toHaveLength(CLAVES_MODULO.length - 1);
       expect(res.body.permisos[0].clave).toBe('modulos');
     });
 

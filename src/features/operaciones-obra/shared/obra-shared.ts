@@ -46,3 +46,15 @@ export function whatsappUrl(telefono: string | null | undefined): string | undef
   // Si es un celular peruano de 9 dígitos sin prefijo, anteponer 51
   return `https://wa.me/${digits.length === 9 ? `51${digits}` : digits}`;
 }
+
+/** Fecha de hoy (`YYYY-MM-DD`) en la zona horaria de Lima. Todo el control de avance se juzga con esta fecha. */
+export function hoyLima(ahora: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Lima' }).format(ahora);
+}
+
+/** `YYYY-MM-DD` válido (también rechaza fechas imposibles como 2026-02-30). */
+export function esFechaIso(valor: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(valor)) return false;
+  const d = new Date(`${valor}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === valor;
+}
