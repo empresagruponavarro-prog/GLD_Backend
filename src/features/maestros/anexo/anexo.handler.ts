@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
@@ -13,6 +13,9 @@ import {
   TipoAnexo,
   UpdateAnexoDto,
 } from './anexo.dto.js';
+
+/** Los trabajadores se gestionan en RR.HH. › Trabajadores (`/rrhh/trabajadores`), no en Anexos. */
+const SOLO_EN_RRHH = 'Los trabajadores se registran y editan en RR.HH. › Trabajadores';
 
 type AnexoRow = {
   id: number;
@@ -95,6 +98,7 @@ export class AnexoHandler {
   }
 
   async create(dto: CreateAnexoDto): Promise<AnexoResponseDto> {
+    if (dto.tipoAnexo === TipoAnexo.Trabajador) throw new BadRequestException(SOLO_EN_RRHH);
     const row = await this.db.orm.public.Anexos.create({
       tipoAnexo: dto.tipoAnexo,
       AnexoEspecialidadId: dto.AnexoEspecialidadId,
@@ -114,6 +118,8 @@ export class AnexoHandler {
   }
 
   async update(id: number, dto: UpdateAnexoDto): Promise<AnexoResponseDto> {
+    await this.noEsTrabajador(id);
+    if (dto.tipoAnexo === TipoAnexo.Trabajador) throw new BadRequestException(SOLO_EN_RRHH);
     const data: AnexoUpdateData = {};
     if (dto.tipoAnexo !== undefined) data.tipoAnexo = dto.tipoAnexo;
     if (dto.AnexoEspecialidadId !== undefined) data.AnexoEspecialidadId = dto.AnexoEspecialidadId;
@@ -135,8 +141,15 @@ export class AnexoHandler {
   }
 
   async remove(id: number): Promise<void> {
+    await this.noEsTrabajador(id);
     const row = await this.db.orm.public.Anexos.where({ id }).delete();
     if (!row) throw new NotFoundException(`Anexo ${id} no encontrado`);
+  }
+
+  /** Un trabajador no se edita ni se borra desde Anexos. Si el anexo no existe, lo dice el UPDATE/DELETE. */
+  private async noEsTrabajador(id: number): Promise<void> {
+    const actual = await this.db.orm.public.Anexos.first({ id });
+    if (actual?.tipoAnexo === TipoAnexo.Trabajador) throw new BadRequestException(SOLO_EN_RRHH);
   }
 }
 

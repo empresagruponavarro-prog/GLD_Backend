@@ -13,6 +13,7 @@ import { RequerimientosModule } from './features/requerimientos/requerimientos.m
 import { OperacionesObraModule } from './features/operaciones-obra/operaciones-obra.module.js';
 import { TesoreriaModule } from './features/tesoreria/tesoreria.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { RrhhModule } from './features/rrhh/rrhh.module.js';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     PresupuestosModule,
     IncidenciasModule,
     OperacionesObraModule,
+    RrhhModule,
   ],
   controllers: [AppController],
   providers: [AppService],

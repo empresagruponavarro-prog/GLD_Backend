@@ -30,15 +30,18 @@ import {
   ListAnexoQueryDto,
   UpdateAnexoDto,
 } from './anexo.dto.js';
-import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
+/**
+ * Proveedores y clientes. Los trabajadores se registran y editan en RR.HH. › Trabajadores
+ * (`/rrhh/trabajadores`); aquí solo se listan y se leen.
+ */
 @ApiTags('maestros/anexo')
 @Controller('maestros/anexo')
 @Modulo('maestros.anexos')
 export class AnexoController {
   constructor(private readonly handler: AnexoHandler) {}
 
-  @TambienDesde('tecnologia.personas')
   @Get()
   @ApiOperation({ summary: 'Listar anexos' })
   @ApiOkResponse({ description: 'Lista paginada de anexos' })
@@ -68,7 +71,6 @@ export class AnexoController {
     return this.handler.getById(id);
   }
 
-  @TambienDesde('tecnologia.personas')
   @Post()
   @ApiOperation({ summary: 'Crear un anexo' })
   @ApiCreatedResponse({ type: AnexoResponseDto })
@@ -76,7 +78,6 @@ export class AnexoController {
     return this.handler.create(dto);
   }
 
-  @TambienDesde('tecnologia.personas')
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar un anexo' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo' })
@@ -89,7 +90,6 @@ export class AnexoController {
     return this.handler.update(id, dto);
   }
 
-  @TambienDesde('tecnologia.personas')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar un anexo' })

@@ -19,13 +19,12 @@ import { ActivoFijoHandler } from './activo-fijo.handler.js';
 
 @ApiTags('maestros/anexo')
 @Controller('maestros/anexo')
-// Los equipos tienen módulos propios (Inv. Tecnología). La ficha de un trabajador en Anexos sigue usando
-// los endpoints marcados con TambienDesde('maestros.anexos').
+// Los equipos tienen módulos propios (Inv. Tecnología). «Ver equipos» de RR.HH. › Trabajadores solo se
+// muestra a quien tiene este módulo, así que no hace falta abrirlos a otros.
 @Modulo('tecnologia.mantenimiento')
 export class ActivoFijoController {
   constructor(private readonly handler: ActivoFijoHandler) {}
 
-  @TambienDesde('maestros.anexos')
   @Get('equipos/opciones')
   @ApiOperation({ summary: 'Catálogo de activos fijos y árbol Local → Nivel → Ambiente para asignar equipos' })
   @ApiOkResponse({ type: OpcionesEquipoDto })
@@ -84,7 +83,6 @@ export class ActivoFijoController {
     return this.handler.asignarExistente(equipoId, dto);
   }
 
-  @TambienDesde('maestros.anexos')
   @Get(':id/equipos')
   @ApiOperation({ summary: 'Equipos tecnológicos asignados a un trabajador' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo (Trabajador)' })
@@ -93,7 +91,6 @@ export class ActivoFijoController {
     return this.handler.listar(id);
   }
 
-  @TambienDesde('maestros.anexos')
   @Post(':id/equipos')
   @ApiOperation({ summary: 'Asignar un equipo (activo fijo) a un trabajador' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo (Trabajador)' })
@@ -102,7 +99,6 @@ export class ActivoFijoController {
     return this.handler.asignar(id, dto);
   }
 
-  @TambienDesde('maestros.anexos')
   @Patch(':id/equipos/:equipoId/reasignar')
   @ApiOperation({ summary: 'Reasignar un equipo a otro trabajador' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo (Trabajador) que lo tiene hoy' })
@@ -116,7 +112,6 @@ export class ActivoFijoController {
     return this.handler.reasignar(id, equipoId, dto);
   }
 
-  @TambienDesde('maestros.anexos')
   @Patch(':id/equipos/:equipoId/devolver')
   @ApiOperation({ summary: 'Devolver un equipo (queda sin responsable)' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo (Trabajador) que lo devuelve' })
@@ -130,7 +125,6 @@ export class ActivoFijoController {
     return this.handler.devolver(id, equipoId, dto);
   }
 
-  @TambienDesde('maestros.anexos')
   @Get(':id/equipos/entrega')
   @ApiOperation({ summary: 'Hoja «Entrega de equipos» (.docx) con nombre, DNI, fecha y equipos del trabajador' })
   @ApiParam({ name: 'id', type: Number, description: 'ID del anexo (Trabajador) que recibe' })
@@ -155,7 +149,6 @@ export class ActivoFijoController {
     return new StreamableFile(archivo);
   }
 
-  @TambienDesde('maestros.anexos')
   @Get('equipos/:equipoId/historial')
   @ApiOperation({ summary: 'Historial de movimientos (asignación, reasignación, devolución) de un equipo' })
   @ApiParam({ name: 'equipoId', type: Number, description: 'ID del activo fijo' })

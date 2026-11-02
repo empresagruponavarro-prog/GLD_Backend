@@ -1,0 +1,9 @@
+{
+  "from": "73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29",
+  "to": "73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29",
+  "providedInvariants": [
+    "rrhh-trabajadores"
+  ],
+  "createdAt": "2026-11-02T21:19:16.598Z",
+  "migrationHash": "a77b2f537f8f19f9518209c5dca18cb05eeeb800f0b7db8c499e7e3bffbc3fb6"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "data.modulo.rrhh.catalogos",
+    "label": "Semilla del módulo RR.HH. › Catálogos de RR.HH.",
+    "summary": "Inserta el módulo rrhh.catalogos si no existe; no concede permisos a ningún rol",
+    "operationClass": "data",
+    "invariantId": "rrhh-catalogos-modulo",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulo rrhh.catalogos",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('rrhh.catalogos', 'Catálogos de RR.HH.', 'RR.HH.', '/rrhh/catalogos', 40, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify modulo rrhh.catalogos",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE clave = 'rrhh.catalogos') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

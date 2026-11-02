@@ -360,6 +360,14 @@
       "model": "rol_permiso",
       "namespace": "public"
     },
+    "rrhh_modalidad_contrato": {
+      "model": "rrhh_modalidad_contrato",
+      "namespace": "public"
+    },
+    "rrhh_tipo_trabajador": {
+      "model": "rrhh_tipo_trabajador",
+      "namespace": "public"
+    },
     "semana": {
       "model": "Semana",
       "namespace": "public"
@@ -382,6 +390,10 @@
     },
     "tipo_categoria": {
       "model": "tipo_categoria",
+      "namespace": "public"
+    },
+    "trabajador": {
+      "model": "trabajador",
       "namespace": "public"
     },
     "ubicacion": {
@@ -1771,6 +1783,21 @@
                 },
                 "to": {
                   "model": "Anexo_Especialidad",
+                  "namespace": "public"
+                }
+              },
+              "fichaTrabajador": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_anexo"
+                  ]
+                },
+                "to": {
+                  "model": "trabajador",
                   "namespace": "public"
                 }
               },
@@ -11067,6 +11094,21 @@
                   "namespace": "public"
                 }
               },
+              "trabajadores": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_area"
+                  ]
+                },
+                "to": {
+                  "model": "trabajador",
+                  "namespace": "public"
+                }
+              },
               "usuarios": {
                 "cardinality": "1:N",
                 "on": {
@@ -18678,6 +18720,146 @@
               "table": "rol_permiso"
             }
           },
+          "rrhh_modalidad_contrato": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 80
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "trabajadores": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_modalidad_contrato"
+                  ]
+                },
+                "to": {
+                  "model": "trabajador",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                }
+              },
+              "namespaceId": "public",
+              "table": "rrhh_modalidad_contrato"
+            }
+          },
+          "rrhh_tipo_trabajador": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 80
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "trabajadores": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_trabajador"
+                  ]
+                },
+                "to": {
+                  "model": "trabajador",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                }
+              },
+              "namespaceId": "public",
+              "table": "rrhh_tipo_trabajador"
+            }
+          },
           "stock_almacen": {
             "fields": {
               "cantidad": {
@@ -18919,6 +19101,177 @@
               },
               "namespaceId": "public",
               "table": "tipo_categoria"
+            }
+          },
+          "trabajador": {
+            "fields": {
+              "correo_institucional": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "direccion_institucional": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "id_anexo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_area": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_modalidad_contrato": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_tipo_trabajador": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "telefono_institucional": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 60
+                  }
+                }
+              },
+              "updated_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "anexo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_anexo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "area": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_area"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "area",
+                  "namespace": "public"
+                }
+              },
+              "modalidad": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_modalidad_contrato"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "rrhh_modalidad_contrato",
+                  "namespace": "public"
+                }
+              },
+              "tipo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_trabajador"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "rrhh_tipo_trabajador",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "correo_institucional": {
+                  "column": "correo_institucional"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "direccion_institucional": {
+                  "column": "direccion_institucional"
+                },
+                "id_anexo": {
+                  "column": "id_anexo"
+                },
+                "id_area": {
+                  "column": "id_area"
+                },
+                "id_modalidad_contrato": {
+                  "column": "id_modalidad_contrato"
+                },
+                "id_tipo_trabajador": {
+                  "column": "id_tipo_trabajador"
+                },
+                "telefono_institucional": {
+                  "column": "telefono_institucional"
+                },
+                "updated_at": {
+                  "column": "updated_at"
+                }
+              },
+              "namespaceId": "public",
+              "table": "trabajador"
             }
           },
           "ubicacion": {
@@ -32445,6 +32798,112 @@
                 }
               ]
             },
+            "rrhh_modalidad_contrato": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 80
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "nombre"
+                  ]
+                }
+              ]
+            },
+            "rrhh_tipo_trabajador": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 80
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "nombre"
+                  ]
+                }
+              ]
+            },
             "semana": {
               "columns": {
                 "CodSemana": {
@@ -32821,6 +33280,174 @@
                   ]
                 }
               ]
+            },
+            "trabajador": {
+              "columns": {
+                "correo_institucional": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "direccion_institucional": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id_anexo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_area": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_modalidad_contrato": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_tipo_trabajador": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "telefono_institucional": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 60
+                  }
+                },
+                "updated_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_anexo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "trabajador"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_tipo_trabajador"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "trabajador"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "rrhh_tipo_trabajador"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_modalidad_contrato"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "trabajador"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "rrhh_modalidad_contrato"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_area"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "trabajador"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_area"
+                  ],
+                  "name": "trabajador_id_area_idx_2da0f6a6",
+                  "prefix": "trabajador_id_area_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_modalidad_contrato"
+                  ],
+                  "name": "trabajador_id_modalidad_contrato_idx_ecd05a98",
+                  "prefix": "trabajador_id_modalidad_contrato_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_tipo_trabajador"
+                  ],
+                  "name": "trabajador_id_tipo_trabajador_idx_ff5bb98d",
+                  "prefix": "trabajador_id_tipo_trabajador_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id_anexo"
+                ]
+              },
+              "uniques": []
             },
             "ubicacion": {
               "columns": {
@@ -33752,7 +34379,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29"
+    "storageHash": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539"
   },
   "capabilities": {
     "postgres": {

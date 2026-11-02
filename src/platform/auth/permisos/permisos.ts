@@ -44,6 +44,11 @@ export const CLAVES_MODULO = [
   'tecnologia.mantenimiento',
   'tecnologia.personas',
   'tecnologia.ambientes',
+  // 39.º: RR.HH. › Trabajadores (migración 20261102T2119_rrhh_trabajadores); reemplaza a tecnologia.personas,
+  // que queda inactivo en la tabla `modulo` pero conserva su posición en el catálogo.
+  'rrhh.trabajadores',
+  // 40.º: RR.HH. › Catálogos de RR.HH. (migración 20261102T2142_rrhh_catalogos_modulo).
+  'rrhh.catalogos',
 ] as const;
 
 export type ClaveModulo = (typeof CLAVES_MODULO)[number];

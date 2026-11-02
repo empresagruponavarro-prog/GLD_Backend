@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29'>;
+  StorageHashBase<'f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1496,6 +1496,18 @@ export type FieldOutputTypes = {
       readonly aprobar: CodecTypes['pg/bool@1']['output'];
       readonly anular: CodecTypes['pg/bool@1']['output'];
     };
+    readonly rrhh_modalidad_contrato: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<80>;
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly rrhh_tipo_trabajador: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<80>;
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+    };
     readonly Semana: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly CodSemana: Varchar<255> | null;
@@ -1538,6 +1550,17 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly CodDocSunat: Varchar<255> | null;
       readonly DocumentoSunat: Varchar<255> | null;
+    };
+    readonly trabajador: {
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'];
+      readonly id_tipo_trabajador: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_modalidad_contrato: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly direccion_institucional: Varchar<255> | null;
+      readonly telefono_institucional: Varchar<60> | null;
+      readonly correo_institucional: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly ubicacion: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2861,6 +2884,18 @@ export type FieldInputTypes = {
       readonly aprobar: CodecTypes['pg/bool@1']['input'];
       readonly anular: CodecTypes['pg/bool@1']['input'];
     };
+    readonly rrhh_modalidad_contrato: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly rrhh_tipo_trabajador: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+    };
     readonly Semana: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2903,6 +2938,17 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly DocumentoSunat: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly trabajador: {
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'];
+      readonly id_tipo_trabajador: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_modalidad_contrato: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly direccion_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly telefono_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly correo_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly ubicacion: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -4226,6 +4272,18 @@ export type StorageColumnTypes = {
       readonly rol_id: CodecTypes['pg/int4@1']['output'];
       readonly ver: CodecTypes['pg/bool@1']['output'];
     };
+    readonly rrhh_modalidad_contrato: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<80>;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly rrhh_tipo_trabajador: {
+      readonly activo: CodecTypes['pg/bool@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly nombre: Varchar<80>;
+      readonly orden: CodecTypes['pg/int4@1']['output'];
+    };
     readonly semana: {
       readonly CodSemana: Varchar<255> | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -4268,6 +4326,17 @@ export type StorageColumnTypes = {
       readonly CodDocSunat: Varchar<255> | null;
       readonly DocumentoSunat: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly trabajador: {
+      readonly correo_institucional: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly direccion_institucional: Varchar<255> | null;
+      readonly id_anexo: CodecTypes['pg/int4@1']['output'];
+      readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_modalidad_contrato: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_tipo_trabajador: CodecTypes['pg/int4@1']['output'] | null;
+      readonly telefono_institucional: Varchar<60> | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly ubicacion: {
       readonly codigo: Varchar<50>;
@@ -5591,6 +5660,18 @@ export type StorageColumnInputTypes = {
       readonly rol_id: CodecTypes['pg/int4@1']['input'];
       readonly ver: CodecTypes['pg/bool@1']['input'];
     };
+    readonly rrhh_modalidad_contrato: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly rrhh_tipo_trabajador: {
+      readonly activo: CodecTypes['pg/bool@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly orden: CodecTypes['pg/int4@1']['input'];
+    };
     readonly semana: {
       readonly CodSemana: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaFinal: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -5633,6 +5714,17 @@ export type StorageColumnInputTypes = {
       readonly CodDocSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly DocumentoSunat: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly trabajador: {
+      readonly correo_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly direccion_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_anexo: CodecTypes['pg/int4@1']['input'];
+      readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_modalidad_contrato: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_tipo_trabajador: CodecTypes['pg/int4@1']['input'] | null;
+      readonly telefono_institucional: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly ubicacion: {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
@@ -15662,6 +15754,88 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly rrhh_modalidad_contrato: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 80 };
+                };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['nombre'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly rrhh_tipo_trabajador: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 80 };
+                };
+                readonly activo: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly orden: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['nombre'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
             readonly semana: {
               columns: {
                 readonly id: {
@@ -15955,6 +16129,132 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+            readonly trabajador: {
+              columns: {
+                readonly id_anexo: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_tipo_trabajador: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_modalidad_contrato: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly id_area: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly direccion_institucional: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly telefono_institucional: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 60 };
+                };
+                readonly correo_institucional: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updated_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id_anexo'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'trabajador_id_tipo_trabajador_idx_ff5bb98d';
+                  readonly prefix: 'trabajador_id_tipo_trabajador_idx';
+                  readonly columns: readonly ['id_tipo_trabajador'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'trabajador_id_modalidad_contrato_idx_ecd05a98';
+                  readonly prefix: 'trabajador_id_modalidad_contrato_idx';
+                  readonly columns: readonly ['id_modalidad_contrato'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'trabajador_id_area_idx_2da0f6a6';
+                  readonly prefix: 'trabajador_id_area_idx';
+                  readonly columns: readonly ['id_area'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trabajador';
+                    readonly columns: readonly ['id_anexo'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trabajador';
+                    readonly columns: readonly ['id_tipo_trabajador'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'rrhh_tipo_trabajador';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trabajador';
+                    readonly columns: readonly ['id_modalidad_contrato'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'rrhh_modalidad_contrato';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trabajador';
+                    readonly columns: readonly ['id_area'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'area';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly ubicacion: {
               columns: {
@@ -17027,6 +17327,18 @@ type ContractBase = Omit<
     readonly activo_fijo_historial: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'activo_fijo_historial';
+    };
+    readonly rrhh_tipo_trabajador: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'rrhh_tipo_trabajador';
+    };
+    readonly rrhh_modalidad_contrato: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'rrhh_modalidad_contrato';
+    };
+    readonly trabajador: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'trabajador';
     };
   };
   readonly domain: {
@@ -18806,6 +19118,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly fichaTrabajador: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'trabajador';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_anexo'];
+                };
+              };
               readonly obraComoCoordinador: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -19067,6 +19390,17 @@ type ContractBase = Omit<
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'requerimiento';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_area'];
+                };
+              };
+              readonly trabajadores: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'trabajador';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -28273,6 +28607,100 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly rrhh_modalidad_contrato: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 80 };
+                };
+              };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly trabajadores: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'trabajador';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_modalidad_contrato'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'rrhh_modalidad_contrato';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly activo: { readonly column: 'activo' };
+                readonly orden: { readonly column: 'orden' };
+              };
+            };
+          };
+          readonly rrhh_tipo_trabajador: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 80 };
+                };
+              };
+              readonly activo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly orden: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly trabajadores: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'trabajador';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_tipo_trabajador'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'rrhh_tipo_trabajador';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly activo: { readonly column: 'activo' };
+                readonly orden: { readonly column: 'orden' };
+              };
+            };
+          };
           readonly Semana: {
             readonly fields: {
               readonly id: {
@@ -28577,6 +29005,122 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly CodDocSunat: { readonly column: 'CodDocSunat' };
                 readonly DocumentoSunat: { readonly column: 'DocumentoSunat' };
+              };
+            };
+          };
+          readonly trabajador: {
+            readonly fields: {
+              readonly id_anexo: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_tipo_trabajador: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_modalidad_contrato: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_area: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly direccion_institucional: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly telefono_institucional: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 60 };
+                };
+              };
+              readonly correo_institucional: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly updated_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly anexo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_anexo'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly area: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_area'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly modalidad: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'rrhh_modalidad_contrato';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_modalidad_contrato'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly tipo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'rrhh_tipo_trabajador';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_tipo_trabajador'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'trabajador';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id_anexo: { readonly column: 'id_anexo' };
+                readonly id_tipo_trabajador: { readonly column: 'id_tipo_trabajador' };
+                readonly id_modalidad_contrato: { readonly column: 'id_modalidad_contrato' };
+                readonly id_area: { readonly column: 'id_area' };
+                readonly direccion_institucional: { readonly column: 'direccion_institucional' };
+                readonly telefono_institucional: { readonly column: 'telefono_institucional' };
+                readonly correo_institucional: { readonly column: 'correo_institucional' };
+                readonly created_at: { readonly column: 'created_at' };
+                readonly updated_at: { readonly column: 'updated_at' };
               };
             };
           };

@@ -1,0 +1,9 @@
+{
+  "from": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "to": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "providedInvariants": [
+    "rrhh-catalogos-iniciales"
+  ],
+  "createdAt": "2026-11-02T21:31:54.143Z",
+  "migrationHash": "8cb8a4f074dbe11ff586d45fdec8c5b4d51c869cbba1623a4dd131abacfd0c14"
+}

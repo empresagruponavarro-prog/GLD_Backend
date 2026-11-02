@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AnexoController } from './anexo.controller.js';
@@ -131,6 +131,22 @@ describe('anexo', () => {
   it('responde 404 al actualizar uno inexistente', async () => {
     update.mockResolvedValue(null);
     await expect(controller.update(99, { Anexo: 'X' })).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('no crea, no edita ni borra trabajadores: eso es de RR.HH. › Trabajadores', async () => {
+    await expect(controller.create({ tipoAnexo: TipoAnexo.Trabajador, Anexo: 'JUAN' })).rejects.toBeInstanceOf(BadRequestException);
+    expect(create).not.toHaveBeenCalled();
+    first.mockResolvedValue({ ...row, tipoAnexo: TipoAnexo.Trabajador });
+    await expect(controller.update(1, { Anexo: 'OTRO' })).rejects.toBeInstanceOf(BadRequestException);
+    await expect(controller.remove(1)).rejects.toBeInstanceOf(BadRequestException);
+    expect(update).not.toHaveBeenCalled();
+    expect(deleteRow).not.toHaveBeenCalled();
+  });
+
+  it('no convierte un proveedor en trabajador', async () => {
+    first.mockResolvedValue(row);
+    await expect(controller.update(1, { tipoAnexo: TipoAnexo.Trabajador })).rejects.toBeInstanceOf(BadRequestException);
+    expect(update).not.toHaveBeenCalled();
   });
 
   it('elimina el anexo', async () => {

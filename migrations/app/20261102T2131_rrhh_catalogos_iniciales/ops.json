@@ -1,0 +1,61 @@
+[
+  {
+    "id": "data.rrhh_tipo_trabajador.semilla",
+    "label": "Tipos de trabajador iniciales",
+    "summary": "Inserta los tipos de trabajador iniciales si no existen",
+    "operationClass": "data",
+    "invariantId": "rrhh-catalogos-iniciales",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rrhh_tipo_trabajador"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed rrhh_tipo_trabajador",
+        "sql": "INSERT INTO \"public\".\"rrhh_tipo_trabajador\" (nombre, orden) VALUES ('EMPLEADO', 1), ('OBRERO', 2), ('PRACTICANTE', 3), ('LOCADOR DE SERVICIOS', 4) ON CONFLICT (nombre) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify rrhh_tipo_trabajador",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"rrhh_tipo_trabajador\") >= 4 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.rrhh_modalidad_contrato.semilla",
+    "label": "Modalidades de contrato iniciales",
+    "summary": "Inserta las modalidades de contrato iniciales si no existen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rrhh_modalidad_contrato"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed rrhh_modalidad_contrato",
+        "sql": "INSERT INTO \"public\".\"rrhh_modalidad_contrato\" (nombre, orden) VALUES ('PLAZO INDETERMINADO', 1), ('PLAZO FIJO (OBRA O SERVICIO ESPECÍFICO)', 2), ('PLAZO FIJO (INICIO O INCREMENTO DE ACTIVIDAD)', 3), ('PART TIME', 4), ('LOCACIÓN DE SERVICIOS', 5), ('PRÁCTICAS PRE-PROFESIONALES', 6), ('PRÁCTICAS PROFESIONALES', 7) ON CONFLICT (nombre) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify rrhh_modalidad_contrato",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"rrhh_modalidad_contrato\") >= 7 AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

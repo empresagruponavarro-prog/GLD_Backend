@@ -1,0 +1,488 @@
+[
+  {
+    "id": "table.rrhh_modalidad_contrato",
+    "label": "Create table \"rrhh_modalidad_contrato\"",
+    "summary": "Creates table \"rrhh_modalidad_contrato\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rrhh_modalidad_contrato"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"rrhh_modalidad_contrato\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rrhh_modalidad_contrato\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"rrhh_modalidad_contrato\"",
+        "sql": "CREATE TABLE \"public\".\"rrhh_modalidad_contrato\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(80) NOT NULL,\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"rrhh_modalidad_contrato\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rrhh_modalidad_contrato\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.rrhh_tipo_trabajador",
+    "label": "Create table \"rrhh_tipo_trabajador\"",
+    "summary": "Creates table \"rrhh_tipo_trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rrhh_tipo_trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"rrhh_tipo_trabajador\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rrhh_tipo_trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"rrhh_tipo_trabajador\"",
+        "sql": "CREATE TABLE \"public\".\"rrhh_tipo_trabajador\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(80) NOT NULL,\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"rrhh_tipo_trabajador\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"rrhh_tipo_trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.trabajador",
+    "label": "Create table \"trabajador\"",
+    "summary": "Creates table \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"trabajador\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"trabajador\"",
+        "sql": "CREATE TABLE \"public\".\"trabajador\" (\n  \"correo_institucional\" character varying(255),\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"direccion_institucional\" character varying(255),\n  \"id_anexo\" int4 NOT NULL,\n  \"id_area\" int4,\n  \"id_modalidad_contrato\" int4,\n  \"id_tipo_trabajador\" int4,\n  \"telefono_institucional\" character varying(60),\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id_anexo\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"trabajador\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rrhh_modalidad_contrato.rrhh_modalidad_contrato_nombre_key",
+    "label": "Add unique constraint on \"rrhh_modalidad_contrato\" (nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rrhh_modalidad_contrato_nombre_key",
+        "table": "rrhh_modalidad_contrato"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rrhh_modalidad_contrato_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rrhh_modalidad_contrato_nombre_key",
+          "public",
+          "\"public\".\"rrhh_modalidad_contrato\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rrhh_modalidad_contrato_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"rrhh_modalidad_contrato\" ADD CONSTRAINT \"rrhh_modalidad_contrato_nombre_key\" UNIQUE (\"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rrhh_modalidad_contrato_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rrhh_modalidad_contrato_nombre_key",
+          "public",
+          "\"public\".\"rrhh_modalidad_contrato\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rrhh_tipo_trabajador.rrhh_tipo_trabajador_nombre_key",
+    "label": "Add unique constraint on \"rrhh_tipo_trabajador\" (nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rrhh_tipo_trabajador_nombre_key",
+        "table": "rrhh_tipo_trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rrhh_tipo_trabajador_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rrhh_tipo_trabajador_nombre_key",
+          "public",
+          "\"public\".\"rrhh_tipo_trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rrhh_tipo_trabajador_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"rrhh_tipo_trabajador\" ADD CONSTRAINT \"rrhh_tipo_trabajador_nombre_key\" UNIQUE (\"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rrhh_tipo_trabajador_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rrhh_tipo_trabajador_nombre_key",
+          "public",
+          "\"public\".\"rrhh_tipo_trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.trabajador.trabajador_id_area_idx_2da0f6a6",
+    "label": "Create index \"trabajador_id_area_idx_2da0f6a6\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "trabajador_id_area_idx_2da0f6a6",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"trabajador_id_area_idx_2da0f6a6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"trabajador_id_area_idx_2da0f6a6\"",
+        "sql": "CREATE INDEX \"trabajador_id_area_idx_2da0f6a6\" ON \"public\".\"trabajador\" (\"id_area\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"trabajador_id_area_idx_2da0f6a6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_area_idx_2da0f6a6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.trabajador.trabajador_id_modalidad_contrato_idx_ecd05a98",
+    "label": "Create index \"trabajador_id_modalidad_contrato_idx_ecd05a98\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "trabajador_id_modalidad_contrato_idx_ecd05a98",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"trabajador_id_modalidad_contrato_idx_ecd05a98\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_modalidad_contrato_idx_ecd05a98\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"trabajador_id_modalidad_contrato_idx_ecd05a98\"",
+        "sql": "CREATE INDEX \"trabajador_id_modalidad_contrato_idx_ecd05a98\" ON \"public\".\"trabajador\" (\"id_modalidad_contrato\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"trabajador_id_modalidad_contrato_idx_ecd05a98\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_modalidad_contrato_idx_ecd05a98\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.trabajador.trabajador_id_tipo_trabajador_idx_ff5bb98d",
+    "label": "Create index \"trabajador_id_tipo_trabajador_idx_ff5bb98d\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "trabajador_id_tipo_trabajador_idx_ff5bb98d",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"trabajador_id_tipo_trabajador_idx_ff5bb98d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_tipo_trabajador_idx_ff5bb98d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"trabajador_id_tipo_trabajador_idx_ff5bb98d\"",
+        "sql": "CREATE INDEX \"trabajador_id_tipo_trabajador_idx_ff5bb98d\" ON \"public\".\"trabajador\" (\"id_tipo_trabajador\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"trabajador_id_tipo_trabajador_idx_ff5bb98d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"trabajador_id_tipo_trabajador_idx_ff5bb98d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.trabajador.trabajador_id_anexo_fkey",
+    "label": "Add foreign key \"trabajador_id_anexo_fkey\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "trabajador_id_anexo_fkey",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"trabajador_id_anexo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_anexo_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"trabajador_id_anexo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"trabajador\"\nADD CONSTRAINT \"trabajador_id_anexo_fkey\"\nFOREIGN KEY (\"id_anexo\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"trabajador_id_anexo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_anexo_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.trabajador.trabajador_id_tipo_trabajador_fkey",
+    "label": "Add foreign key \"trabajador_id_tipo_trabajador_fkey\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "trabajador_id_tipo_trabajador_fkey",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"trabajador_id_tipo_trabajador_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_tipo_trabajador_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"trabajador_id_tipo_trabajador_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"trabajador\"\nADD CONSTRAINT \"trabajador_id_tipo_trabajador_fkey\"\nFOREIGN KEY (\"id_tipo_trabajador\")\nREFERENCES \"public\".\"rrhh_tipo_trabajador\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"trabajador_id_tipo_trabajador_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_tipo_trabajador_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.trabajador.trabajador_id_modalidad_contrato_fkey",
+    "label": "Add foreign key \"trabajador_id_modalidad_contrato_fkey\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "trabajador_id_modalidad_contrato_fkey",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"trabajador_id_modalidad_contrato_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_modalidad_contrato_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"trabajador_id_modalidad_contrato_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"trabajador\"\nADD CONSTRAINT \"trabajador_id_modalidad_contrato_fkey\"\nFOREIGN KEY (\"id_modalidad_contrato\")\nREFERENCES \"public\".\"rrhh_modalidad_contrato\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"trabajador_id_modalidad_contrato_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_modalidad_contrato_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.trabajador.trabajador_id_area_fkey",
+    "label": "Add foreign key \"trabajador_id_area_fkey\" on \"trabajador\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "trabajador_id_area_fkey",
+        "table": "trabajador"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"trabajador_id_area_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_area_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"trabajador_id_area_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"trabajador\"\nADD CONSTRAINT \"trabajador_id_area_fkey\"\nFOREIGN KEY (\"id_area\")\nREFERENCES \"public\".\"area\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"trabajador_id_area_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "trabajador_id_area_fkey",
+          "public",
+          "\"public\".\"trabajador\""
+        ]
+      }
+    ]
+  }
+]

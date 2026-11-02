@@ -1,0 +1,124 @@
+[
+  {
+    "id": "data.modulo.rrhh.trabajadores",
+    "label": "Semilla del módulo RR.HH. › Trabajadores",
+    "summary": "Inserta el módulo rrhh.trabajadores si no existe",
+    "operationClass": "data",
+    "invariantId": "rrhh-trabajadores",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulo rrhh.trabajadores",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('rrhh.trabajadores', 'Trabajadores', 'RR.HH.', '/rrhh/trabajadores', 39, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify modulo rrhh.trabajadores",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE clave = 'rrhh.trabajadores') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.rol_permiso.rrhh.trabajadores",
+    "label": "Permisos de roles en RR.HH. › Trabajadores",
+    "summary": "Copia a rrhh.trabajadores lo que cada rol tenía en tecnologia.personas",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol_permiso"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar rol_permiso de tecnologia.personas",
+        "sql": "INSERT INTO \"public\".\"rol_permiso\" (rol_id, modulo_id, ver, crear, editar, eliminar, aprobar, anular) SELECT rp.rol_id, (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'rrhh.trabajadores'), rp.ver, rp.crear, rp.editar, rp.eliminar, false, false FROM \"public\".\"rol_permiso\" rp WHERE rp.modulo_id = (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'tecnologia.personas') ON CONFLICT (rol_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.usuario_permiso.rrhh.trabajadores",
+    "label": "Excepciones personales en RR.HH. › Trabajadores",
+    "summary": "Copia a rrhh.trabajadores las excepciones que cada persona tenía en tecnologia.personas",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuario_permiso"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar usuario_permiso de tecnologia.personas",
+        "sql": "INSERT INTO \"public\".\"usuario_permiso\" (usuario_id, modulo_id, ver, crear, editar, eliminar, aprobar, anular) SELECT up.usuario_id, (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'rrhh.trabajadores'), up.ver, up.crear, up.editar, up.eliminar, false, false FROM \"public\".\"usuario_permiso\" up WHERE up.modulo_id = (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'tecnologia.personas') ON CONFLICT (usuario_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.area_modulo.rrhh.trabajadores",
+    "label": "RR.HH. › Trabajadores habilitado por área",
+    "summary": "Habilita rrhh.trabajadores en las áreas que tenían habilitado tecnologia.personas",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "area_modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar area_modulo de tecnologia.personas",
+        "sql": "INSERT INTO \"public\".\"area_modulo\" (area_id, modulo_id, solo_lectura) SELECT am.area_id, (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'rrhh.trabajadores'), am.solo_lectura FROM \"public\".\"area_modulo\" am WHERE am.modulo_id = (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'tecnologia.personas') ON CONFLICT (area_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.modulo.tecnologia.personas.desactivar",
+    "label": "Desactivar Inv. Tecnología › Personas",
+    "summary": "tecnologia.personas deja de mostrarse en Roles y permisos (lo reemplaza rrhh.trabajadores)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "desactivar tecnologia.personas",
+        "sql": "UPDATE \"public\".\"modulo\" SET activo = false WHERE clave = 'tecnologia.personas'",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]

@@ -1,4 +1,8 @@
 {
-  "hash": "73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29",
-  "invariants": []
+  "hash": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "invariants": [
+    "rrhh-trabajadores",
+    "rrhh-catalogos-iniciales",
+    "rrhh-catalogos-modulo"
+  ]
 }

@@ -632,6 +632,7 @@ model Anexos {
   obraComoResidente   obra_datos_generales[] @relation("ObraResidenteFicha")
   obraComoRespPpto    obra_datos_generales[] @relation("ObraRespPresupuesto")
   obraComoRespProcura obra_datos_generales[] @relation("ObraRespProcura")
+  fichaTrabajador     trabajador?
   @@map("anexos")
 }
 
@@ -1863,6 +1864,7 @@ model area {
   usuarios   Usuarios[]
   modulos    area_modulo[]
   activosFijos activo_fijo[]
+  trabajadores trabajador[]
   // Organigrama: area de la que depende (su jefe superior es el jefe de esa area). Sin dependencia = area superior.
   id_area_padre Int?
   padre         area?  @relation("AreaDependencia", fields: [id_area_padre], references: [id], onDelete: Restrict)
@@ -2127,4 +2129,45 @@ model activo_fijo_historial {
 
   @@index([id_activo_fijo])
   @@map("activo_fijo_historial")
+}
+
+// RR.HH.: catalogos que mantiene RR.HH. (se desactivan, no se borran si alguien los usa).
+model rrhh_tipo_trabajador {
+  id           Int          @id @default(autoincrement())
+  nombre       VarChar(80)  @unique
+  activo       Boolean      @default(true)
+  orden        Int          @default(0)
+  trabajadores trabajador[]
+  @@map("rrhh_tipo_trabajador")
+}
+
+model rrhh_modalidad_contrato {
+  id           Int          @id @default(autoincrement())
+  nombre       VarChar(80)  @unique
+  activo       Boolean      @default(true)
+  orden        Int          @default(0)
+  trabajadores trabajador[]
+  @@map("rrhh_modalidad_contrato")
+}
+
+// Ficha de RR.HH. de un trabajador (anexo de tipo Trabajador), 1 a 1. El contacto personal sigue en anexos.
+// Se crea la primera vez que RR.HH. guarda al trabajador; los trabajadores antiguos no tienen fila hasta entonces.
+model trabajador {
+  id_anexo                Int                      @id
+  id_tipo_trabajador      Int?
+  id_modalidad_contrato   Int?
+  id_area                 Int?
+  direccion_institucional VarChar(255)?
+  telefono_institucional  VarChar(60)?
+  correo_institucional    VarChar(255)?
+  created_at              DateTime                 @default(now())
+  updated_at              DateTime                 @default(now())
+  anexo                   Anexos                   @relation(fields: [id_anexo], references: [id], onDelete: Cascade)
+  tipo                    rrhh_tipo_trabajador?    @relation(fields: [id_tipo_trabajador], references: [id], onDelete: Restrict)
+  modalidad               rrhh_modalidad_contrato? @relation(fields: [id_modalidad_contrato], references: [id], onDelete: Restrict)
+  area                    area?                    @relation(fields: [id_area], references: [id], onDelete: SetNull)
+  @@index([id_tipo_trabajador])
+  @@index([id_modalidad_contrato])
+  @@index([id_area])
+  @@map("trabajador")
 }
