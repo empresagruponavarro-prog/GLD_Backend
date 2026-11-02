@@ -1,0 +1,101 @@
+[
+  {
+    "id": "data.modulo.tecnologia.final",
+    "label": "Semilla de los 4 módulos de Inv. Tecnología",
+    "summary": "Inserta tecnologia.dashboard, .mantenimiento, .personas y .ambientes si no existen",
+    "operationClass": "data",
+    "invariantId": "tecnologia-modulos-final",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulos tecnologia",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('tecnologia.dashboard', 'Dashboard de tecnología', 'Inv. Tecnología', '/equipos-tecnologicos', 35, false, false), ('tecnologia.mantenimiento', 'Mantenimiento de equipos', 'Inv. Tecnología', '/equipos-mantenimiento', 36, false, false), ('tecnologia.personas', 'Personas', 'Inv. Tecnología', '/personas', 37, false, false), ('tecnologia.ambientes', 'Ambientes y ubicaciones', 'Inv. Tecnología', '/maestros-generales/locales', 38, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify modulos tecnologia",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"modulo\" WHERE clave IN ('tecnologia.dashboard', 'tecnologia.mantenimiento', 'tecnologia.personas', 'tecnologia.ambientes')) = 4 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.rol_permiso.tecnologia.final",
+    "label": "Permisos de roles en los módulos de Inv. Tecnología",
+    "summary": "Copia a los módulos nuevos lo que cada rol ya tiene en el módulo del que salen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "rol_permiso"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar rol_permiso",
+        "sql": "INSERT INTO \"public\".\"rol_permiso\" (rol_id, modulo_id, ver, crear, editar, eliminar, aprobar, anular) SELECT rp.rol_id, m.id, rp.ver, (rp.crear AND NOT (m.clave = 'tecnologia.dashboard')), (rp.editar AND NOT (m.clave = 'tecnologia.dashboard')), (rp.eliminar AND NOT (m.clave = 'tecnologia.dashboard')), false, false FROM \"public\".\"modulo\" m JOIN \"public\".\"modulo\" origen ON origen.clave = CASE m.clave WHEN 'tecnologia.ambientes' THEN 'maestros.generales' ELSE 'maestros.anexos' END JOIN \"public\".\"rol_permiso\" rp ON rp.modulo_id = origen.id WHERE m.clave IN ('tecnologia.dashboard', 'tecnologia.mantenimiento', 'tecnologia.personas', 'tecnologia.ambientes') ON CONFLICT (rol_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.usuario_permiso.tecnologia.final",
+    "label": "Excepciones personales en los módulos de Inv. Tecnología",
+    "summary": "Copia a los módulos nuevos las excepciones que cada persona ya tiene en el módulo de origen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "usuario_permiso"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar usuario_permiso",
+        "sql": "INSERT INTO \"public\".\"usuario_permiso\" (usuario_id, modulo_id, ver, crear, editar, eliminar, aprobar, anular) SELECT up.usuario_id, m.id, up.ver, (up.crear AND NOT (m.clave = 'tecnologia.dashboard')), (up.editar AND NOT (m.clave = 'tecnologia.dashboard')), (up.eliminar AND NOT (m.clave = 'tecnologia.dashboard')), false, false FROM \"public\".\"modulo\" m JOIN \"public\".\"modulo\" origen ON origen.clave = CASE m.clave WHEN 'tecnologia.ambientes' THEN 'maestros.generales' ELSE 'maestros.anexos' END JOIN \"public\".\"usuario_permiso\" up ON up.modulo_id = origen.id WHERE m.clave IN ('tecnologia.dashboard', 'tecnologia.mantenimiento', 'tecnologia.personas', 'tecnologia.ambientes') ON CONFLICT (usuario_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "data.area_modulo.tecnologia.final",
+    "label": "Módulos de Inv. Tecnología habilitados por área",
+    "summary": "Habilita en los módulos nuevos a las áreas que ya tienen habilitado el módulo de origen",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "area_modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "copiar area_modulo",
+        "sql": "INSERT INTO \"public\".\"area_modulo\" (area_id, modulo_id, solo_lectura) SELECT am.area_id, m.id, (am.solo_lectura OR m.clave = 'tecnologia.dashboard') FROM \"public\".\"modulo\" m JOIN \"public\".\"modulo\" origen ON origen.clave = CASE m.clave WHEN 'tecnologia.ambientes' THEN 'maestros.generales' ELSE 'maestros.anexos' END JOIN \"public\".\"area_modulo\" am ON am.modulo_id = origen.id WHERE m.clave IN ('tecnologia.dashboard', 'tecnologia.mantenimiento', 'tecnologia.personas', 'tecnologia.ambientes') ON CONFLICT (area_id, modulo_id) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  }
+]
