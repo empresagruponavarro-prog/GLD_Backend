@@ -21,7 +21,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 import {
   CreateUbicacionDto,
   ResolverUbicacionQueryDto,
@@ -62,6 +62,7 @@ export class UbicacionController {
     return this.handler.getById(id);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Post()
   @ApiOperation({ summary: 'Crear nueva ubicación' })
   @ApiCreatedResponse({ type: UbicacionResponseDto })
@@ -70,6 +71,7 @@ export class UbicacionController {
     return this.handler.create(dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar datos de una ubicación' })
   @ApiOkResponse({ type: UbicacionResponseDto })
@@ -81,6 +83,7 @@ export class UbicacionController {
     return this.handler.update(id, dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id/estado')
   @ApiOperation({ summary: 'Activar o desactivar ubicación' })
   @ApiOkResponse({ type: UbicacionResponseDto })
@@ -92,6 +95,7 @@ export class UbicacionController {
     return this.handler.toggleEstado(id, Boolean(estado));
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar una ubicación (si no tiene equipos)' })

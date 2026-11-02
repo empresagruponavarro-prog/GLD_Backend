@@ -626,6 +626,7 @@ model Anexos {
   reqEventos          requerimiento_evento[] @relation("RequerimientoEventoAnexo")
   prestamosResponsable almacen_prestamo[] @relation("PrestamoResponsable")
   activosFijos        activo_fijo[]   @relation("ActivoFijoResponsable")
+  areasJefe           area[]          @relation("AreaJefe")
   obraComoJefe        obra_datos_generales[] @relation("ObraJefeProyecto")
   obraComoCoordinador obra_datos_generales[] @relation("ObraCoordinador")
   obraComoResidente   obra_datos_generales[] @relation("ObraResidenteFicha")
@@ -1855,6 +1856,9 @@ model area {
   codigo    VarChar(20) @unique
   nombre    String
   estado    Boolean     @default(true)
+  descripcion VarChar(255)?
+  id_jefe   Int?
+  jefe      Anexos?     @relation("AreaJefe", fields: [id_jefe], references: [id], onDelete: SetNull)
   requerimientos requerimiento[] @relation("RequerimientoArea")
   documentos OrdenCompra[] @relation("DocumentoOrigenArea")
   usuarios   Usuarios[]

@@ -1,0 +1,9 @@
+{
+  "from": "26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753",
+  "to": "26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753",
+  "providedInvariants": [
+    "tecnologia-personas-ambientes"
+  ],
+  "createdAt": "2026-11-02T17:08:02.728Z",
+  "migrationHash": "13483556eb9a36b8bb601b5c533c709b8ffa746df473455fa82e4e825b216c59"
+}

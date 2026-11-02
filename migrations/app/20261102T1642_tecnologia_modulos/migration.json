@@ -1,0 +1,9 @@
+{
+  "from": "26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753",
+  "to": "26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753",
+  "providedInvariants": [
+    "tecnologia-modulos"
+  ],
+  "createdAt": "2026-11-02T16:42:01.606Z",
+  "migrationHash": "d50e2353452884521734178c2b27b9dad3d02cb9fe3139e1f58879ecf88da1b6"
+}

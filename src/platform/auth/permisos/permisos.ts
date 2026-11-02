@@ -39,6 +39,11 @@ export const CLAVES_MODULO = [
   'admin.roles',
   // 34.º módulo: Dashboard de Operaciones (migración 20261030T0435_operaciones_control).
   'operaciones',
+  // 35.º a 38.º: Inv. Tecnología (migraciones 20261102T1642_tecnologia_modulos y 20261102T1708_tecnologia_personas_ambientes).
+  'tecnologia.dashboard',
+  'tecnologia.mantenimiento',
+  'tecnologia.personas',
+  'tecnologia.ambientes',
 ] as const;
 
 export type ClaveModulo = (typeof CLAVES_MODULO)[number];

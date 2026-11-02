@@ -17,7 +17,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 import { CreateLocalDto, LocalResponseDto, UpdateLocalDto } from './local.dto.js';
 import { LocalHandler } from './local.handler.js';
 
@@ -45,6 +45,7 @@ export class LocalController {
     return this.handler.getById(id);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Post()
   @ApiOperation({ summary: 'Crear local físico asignado a Empresa O a Centro de Costo' })
   @ApiCreatedResponse({ type: LocalResponseDto })
@@ -53,6 +54,7 @@ export class LocalController {
     return this.handler.create(dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar datos de un local' })
   @ApiOkResponse({ type: LocalResponseDto })
@@ -64,6 +66,7 @@ export class LocalController {
     return this.handler.update(id, dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id/estado')
   @ApiOperation({ summary: 'Activar o desactivar local' })
   @ApiOkResponse({ type: LocalResponseDto })

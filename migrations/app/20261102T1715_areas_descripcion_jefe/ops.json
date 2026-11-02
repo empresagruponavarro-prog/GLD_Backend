@@ -1,0 +1,167 @@
+[
+  {
+    "id": "column.public.area.descripcion",
+    "label": "Add column \"descripcion\" to \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "descripcion",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"descripcion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "descripcion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"descripcion\"",
+        "sql": "ALTER TABLE \"public\".\"area\" ADD COLUMN \"descripcion\" character varying(255)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"descripcion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "descripcion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.area.id_jefe",
+    "label": "Add column \"id_jefe\" to \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_jefe",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_jefe\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "id_jefe"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_jefe\"",
+        "sql": "ALTER TABLE \"public\".\"area\" ADD COLUMN \"id_jefe\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_jefe\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "id_jefe"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.area.area_id_jefe_idx_8c5b92e7",
+    "label": "Create index \"area_id_jefe_idx_8c5b92e7\" on \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "area_id_jefe_idx_8c5b92e7",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"area_id_jefe_idx_8c5b92e7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_id_jefe_idx_8c5b92e7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"area_id_jefe_idx_8c5b92e7\"",
+        "sql": "CREATE INDEX \"area_id_jefe_idx_8c5b92e7\" ON \"public\".\"area\" (\"id_jefe\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"area_id_jefe_idx_8c5b92e7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_id_jefe_idx_8c5b92e7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.area.area_id_jefe_fkey",
+    "label": "Add foreign key \"area_id_jefe_fkey\" on \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "area_id_jefe_fkey",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"area_id_jefe_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_id_jefe_fkey",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"area_id_jefe_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"area\"\nADD CONSTRAINT \"area_id_jefe_fkey\"\nFOREIGN KEY (\"id_jefe\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"area_id_jefe_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_id_jefe_fkey",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ]
+  }
+]

@@ -17,7 +17,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 import { AmbienteResponseDto, CreateAmbienteDto, UpdateAmbienteDto } from './ambiente.dto.js';
 import { AmbienteHandler } from './ambiente.handler.js';
 
@@ -45,6 +45,7 @@ export class AmbienteController {
     return this.handler.getById(id);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Post()
   @ApiOperation({ summary: 'Crear nuevo ambiente' })
   @ApiCreatedResponse({ type: AmbienteResponseDto })
@@ -53,6 +54,7 @@ export class AmbienteController {
     return this.handler.create(dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar descripción o estado de un ambiente' })
   @ApiOkResponse({ type: AmbienteResponseDto })
@@ -64,6 +66,7 @@ export class AmbienteController {
     return this.handler.update(id, dto);
   }
 
+  @TambienDesde('tecnologia.ambientes')
   @Patch(':id/estado')
   @ApiOperation({ summary: 'Activar o desactivar ambiente' })
   @ApiOkResponse({ type: AmbienteResponseDto })

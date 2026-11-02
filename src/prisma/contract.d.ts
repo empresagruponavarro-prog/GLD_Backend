@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'26ae9fb3276678f1d0fb646f4495fc17ea95c93c734aa08581c0fd0f7af67753'>;
+  StorageHashBase<'111a0dfc38cf8cff922886de204290be58a8372f9c81cd5b6a001ecbf7cd132b'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -454,6 +454,8 @@ export type FieldOutputTypes = {
       readonly codigo: Varchar<20>;
       readonly nombre: CodecTypes['pg/text@1']['output'];
       readonly estado: CodecTypes['pg/bool@1']['output'];
+      readonly descripcion: Varchar<255> | null;
+      readonly id_jefe: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly area_modulo: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1817,6 +1819,8 @@ export type FieldInputTypes = {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
       readonly nombre: CodecTypes['pg/text@1']['input'];
       readonly estado: CodecTypes['pg/bool@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_jefe: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly area_modulo: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3177,8 +3181,10 @@ export type StorageColumnTypes = {
     };
     readonly area: {
       readonly codigo: Varchar<20>;
+      readonly descripcion: Varchar<255> | null;
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_jefe: CodecTypes['pg/int4@1']['output'] | null;
       readonly nombre: CodecTypes['pg/text@1']['output'];
     };
     readonly area_modulo: {
@@ -4540,8 +4546,10 @@ export type StorageColumnInputTypes = {
     };
     readonly area: {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
+      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_jefe: CodecTypes['pg/int4@1']['input'] | null;
       readonly nombre: CodecTypes['pg/text@1']['input'];
     };
     readonly area_modulo: {
@@ -7500,11 +7508,42 @@ type ContractBase = Omit<
                     readonly value: DefaultLiteralValue<'pg/bool@1', true>;
                   };
                 };
+                readonly descripcion: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly id_jefe: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [{ readonly columns: readonly ['codigo'] }];
-              indexes: readonly [];
-              foreignKeys: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'area_id_jefe_idx_8c5b92e7';
+                  readonly prefix: 'area_id_jefe_idx';
+                  readonly columns: readonly ['id_jefe'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'area';
+                    readonly columns: readonly ['id_jefe'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly area_modulo: {
               columns: {
@@ -18676,6 +18715,14 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id_responsable'];
                 };
               };
+              readonly areasJefe: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_jefe'];
+                };
+              };
               readonly cotizaciones: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -18929,6 +18976,18 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
+              readonly descripcion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly id_jefe: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly activosFijos: {
@@ -18951,6 +19010,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_area'];
+                };
+              };
+              readonly jefe: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_jefe'];
+                  readonly targetFields: readonly ['id'];
                 };
               };
               readonly modulos: {
@@ -18995,6 +19065,8 @@ type ContractBase = Omit<
                 readonly codigo: { readonly column: 'codigo' };
                 readonly nombre: { readonly column: 'nombre' };
                 readonly estado: { readonly column: 'estado' };
+                readonly descripcion: { readonly column: 'descripcion' };
+                readonly id_jefe: { readonly column: 'id_jefe' };
               };
             };
           };

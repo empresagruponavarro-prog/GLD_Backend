@@ -27,6 +27,8 @@ const OPS_JSON = new URL(
 /** Migraciones posteriores que agregan módulos al catálogo (en orden). */
 const OPS_JSON_MODULOS_NUEVOS = [
   new URL('../../../../migrations/app/20261030T0435_operaciones_control/ops.json', import.meta.url),
+  new URL('../../../../migrations/app/20261102T1642_tecnologia_modulos/ops.json', import.meta.url),
+  new URL('../../../../migrations/app/20261102T1708_tecnologia_personas_ambientes/ops.json', import.meta.url),
 ];
 
 interface Operacion {
@@ -45,7 +47,12 @@ function sqlDe(id: string, archivo: URL = OPS_JSON): string {
 /** Filas de la semilla: ('clave', 'nombre', 'grupo', 'ruta', orden, aprobar, anular). */
 function semillaModulos() {
   const patron = /\('((?:[^']|'')*)', '((?:[^']|'')*)', '((?:[^']|'')*)', '((?:[^']|'')*)', (\d+), (true|false), (true|false)\)/g;
-  const sqls = [sqlDe('data.modulo.semilla'), sqlDe('data.modulo.operaciones', OPS_JSON_MODULOS_NUEVOS[0])];
+  const sqls = [
+    sqlDe('data.modulo.semilla'),
+    sqlDe('data.modulo.operaciones', OPS_JSON_MODULOS_NUEVOS[0]),
+    sqlDe('data.modulo.tecnologia', OPS_JSON_MODULOS_NUEVOS[1]),
+    sqlDe('data.modulo.tecnologia2', OPS_JSON_MODULOS_NUEVOS[2]),
+  ];
   return sqls.flatMap((sql) => [...sql.matchAll(patron)]).map((m) => ({
     clave: m[1],
     nombre: m[2],
@@ -60,8 +67,8 @@ function semillaModulos() {
 describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   const semilla = semillaModulos();
 
-  it('las semillas traen los 34 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..34', () => {
-    expect(CLAVES_MODULO).toHaveLength(34);
+  it('las semillas traen los 38 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..38', () => {
+    expect(CLAVES_MODULO).toHaveLength(38);
     expect(semilla.map((m) => m.clave)).toEqual([...CLAVES_MODULO]);
     expect(semilla.map((m) => m.orden)).toEqual(CLAVES_MODULO.map((_c, i) => i + 1));
     expect(new Set(CLAVES_MODULO).size).toBe(CLAVES_MODULO.length);
@@ -100,6 +107,7 @@ describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
       'Maestros',
       'Proyectos',
       'Administración',
+      'Inv. Tecnología',
     ]);
     expect(semilla.filter((m) => m.grupo === 'Administración').map((m) => m.clave)).toEqual([
       'admin.empresas',
