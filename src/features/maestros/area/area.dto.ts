@@ -9,12 +9,6 @@ export class CreateAreaDto {
   @MaxLength(100)
   nombre: string;
 
-  @ApiPropertyOptional({ example: 'Soporte y desarrollo de sistemas' })
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  descripcion?: string;
-
   @ApiPropertyOptional({ description: 'Trabajador (anexo) que es jefe o gerente del área' })
   @IsOptional()
   @Type(() => Number)
@@ -43,12 +37,6 @@ export class UpdateAreaDto {
   @MaxLength(100)
   nombre?: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  descripcion?: string;
-
   @ApiPropertyOptional({ description: 'Trabajador jefe o gerente; 0 o null lo quita' })
   @IsOptional()
   @Type(() => Number)
@@ -74,7 +62,6 @@ export class AreaResponseDto {
   @ApiProperty({ description: 'Código correlativo asignado por el sistema (AR-01…)' }) codigo: string;
   @ApiProperty() nombre: string;
   @ApiProperty() estado: boolean;
-  @ApiProperty({ nullable: true }) descripcion: string | null;
   @ApiProperty({ nullable: true }) idJefe: number | null;
   @ApiProperty({ nullable: true, description: 'Nombre del jefe o gerente' }) jefe: string | null;
   @ApiProperty({ nullable: true, description: 'Área de la que depende (null = área superior)' }) idAreaPadre: number | null;

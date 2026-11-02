@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'8f4cf05305c3d9983e6dac2ea57d01bcef1c44e028d6f87413420627874c5d29'>;
+  StorageHashBase<'73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -454,7 +454,6 @@ export type FieldOutputTypes = {
       readonly codigo: Varchar<20>;
       readonly nombre: CodecTypes['pg/text@1']['output'];
       readonly estado: CodecTypes['pg/bool@1']['output'];
-      readonly descripcion: Varchar<255> | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_area_padre: CodecTypes['pg/int4@1']['output'] | null;
     };
@@ -1820,7 +1819,6 @@ export type FieldInputTypes = {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
       readonly nombre: CodecTypes['pg/text@1']['input'];
       readonly estado: CodecTypes['pg/bool@1']['input'];
-      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_area_padre: CodecTypes['pg/int4@1']['input'] | null;
     };
@@ -3183,7 +3181,6 @@ export type StorageColumnTypes = {
     };
     readonly area: {
       readonly codigo: Varchar<20>;
-      readonly descripcion: Varchar<255> | null;
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_area_padre: CodecTypes['pg/int4@1']['output'] | null;
@@ -4549,7 +4546,6 @@ export type StorageColumnInputTypes = {
     };
     readonly area: {
       readonly codigo: CodecTypes['sql/varchar@1']['input'];
-      readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_area_padre: CodecTypes['pg/int4@1']['input'] | null;
@@ -7511,12 +7507,6 @@ type ContractBase = Omit<
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/bool@1', true>;
                   };
-                };
-                readonly descripcion: {
-                  readonly nativeType: 'character varying';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly nullable: true;
-                  readonly typeParams: { readonly length: 255 };
                 };
                 readonly id_jefe: {
                   readonly nativeType: 'int4';
@@ -19003,14 +18993,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
-              readonly descripcion: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 255 };
-                };
-              };
               readonly id_jefe: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -19112,7 +19094,6 @@ type ContractBase = Omit<
                 readonly codigo: { readonly column: 'codigo' };
                 readonly nombre: { readonly column: 'nombre' };
                 readonly estado: { readonly column: 'estado' };
-                readonly descripcion: { readonly column: 'descripcion' };
                 readonly id_jefe: { readonly column: 'id_jefe' };
                 readonly id_area_padre: { readonly column: 'id_area_padre' };
               };

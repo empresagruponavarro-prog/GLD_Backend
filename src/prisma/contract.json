@@ -10925,16 +10925,6 @@
                   }
                 }
               },
-              "descripcion": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 255
-                  }
-                }
-              },
               "estado": {
                 "nullable": false,
                 "type": {
@@ -11097,9 +11087,6 @@
               "fields": {
                 "codigo": {
                   "column": "codigo"
-                },
-                "descripcion": {
-                  "column": "descripcion"
                 },
                 "estado": {
                   "column": "estado"
@@ -21949,14 +21936,6 @@
                   "nullable": false,
                   "typeParams": {
                     "length": 20
-                  }
-                },
-                "descripcion": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 255
                   }
                 },
                 "estado": {
@@ -33773,7 +33752,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "8f4cf05305c3d9983e6dac2ea57d01bcef1c44e028d6f87413420627874c5d29"
+    "storageHash": "73e6fa47ad298b32c5cd5acc8de25f67f1ab9b97adb0541d5958b3e1fbd2ba29"
   },
   "capabilities": {
     "postgres": {

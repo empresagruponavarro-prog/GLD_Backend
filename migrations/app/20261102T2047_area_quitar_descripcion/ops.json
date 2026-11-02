@@ -1,0 +1,44 @@
+[
+  {
+    "id": "dropColumn.area.descripcion",
+    "label": "Drop column \"descripcion\" from \"area\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "descripcion",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"descripcion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "descripcion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"descripcion\"",
+        "sql": "ALTER TABLE \"public\".\"area\" DROP COLUMN \"descripcion\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"descripcion\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "descripcion"
+        ]
+      }
+    ]
+  }
+]

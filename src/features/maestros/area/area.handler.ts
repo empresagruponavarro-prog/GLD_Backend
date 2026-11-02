@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { AlmacenSql, B, I, IN, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { AreaResponseDto, CreateAreaDto, UpdateAreaDto } from './area.dto.js';
 
-const SPEC = { id: I, codigo: T, nombre: T, estado: B, descripcion: TN, idJefe: IN, jefe: TN, idAreaPadre: IN, areaPadre: TN, jefeSuperior: TN } as const;
+const SPEC = { id: I, codigo: T, nombre: T, estado: B, idJefe: IN, jefe: TN, idAreaPadre: IN, areaPadre: TN, jefeSuperior: TN } as const;
 
 @Injectable()
 export class AreaHandler {
@@ -11,7 +11,7 @@ export class AreaHandler {
   async list(soloActivas = false): Promise<AreaResponseDto[]> {
     const q = sqlTag(this.sql);
     return q.rows<AreaResponseDto>(SPEC)`
-      SELECT a.id, a.codigo::text AS codigo, a.nombre, a.estado, a.descripcion::text AS descripcion,
+      SELECT a.id, a.codigo::text AS codigo, a.nombre, a.estado,
              a.id_jefe AS "idJefe", COALESCE(j."Anexo", j."NombreComercial")::text AS jefe,
              a.id_area_padre AS "idAreaPadre", p.nombre::text AS "areaPadre",
              COALESCE(jp."Anexo", jp."NombreComercial")::text AS "jefeSuperior"
@@ -29,9 +29,9 @@ export class AreaHandler {
     await this.validarPadre(null, dto.idAreaPadre);
     const [nuevo] = await q.rows<{ id: number }>({ id: I })`
       WITH n AS (SELECT nextval(pg_get_serial_sequence('area', 'id'))::int AS id)
-      INSERT INTO area (id, codigo, nombre, descripcion, id_jefe, id_area_padre, estado)
+      INSERT INTO area (id, codigo, nombre, id_jefe, id_area_padre, estado)
       SELECT n.id, 'AR-' || lpad(n.id::text, 2, '0'), ${dto.nombre.trim()}::text,
-             NULLIF(${dto.descripcion?.trim() ?? ''}::text, ''), NULLIF(${dto.idJefe ?? 0}::int, 0),
+             NULLIF(${dto.idJefe ?? 0}::int, 0),
              NULLIF(${dto.idAreaPadre ?? 0}::int, 0), ${dto.estado ?? true}::boolean
         FROM n
       RETURNING id`;
@@ -48,7 +48,6 @@ export class AreaHandler {
       UPDATE area SET
         nombre = CASE WHEN ${dto.nombre !== undefined}::boolean THEN ${dto.nombre?.trim() ?? ''}::text ELSE nombre END,
         estado = CASE WHEN ${dto.estado !== undefined}::boolean THEN ${dto.estado ?? true}::boolean ELSE estado END,
-        descripcion = CASE WHEN ${dto.descripcion !== undefined}::boolean THEN NULLIF(${dto.descripcion?.trim() ?? ''}::text, '') ELSE descripcion END,
         id_jefe = CASE WHEN ${cambiaJefe}::boolean THEN NULLIF(${dto.idJefe ?? 0}::int, 0) ELSE id_jefe END,
         id_area_padre = CASE WHEN ${cambiaPadre}::boolean THEN NULLIF(${dto.idAreaPadre ?? 0}::int, 0) ELSE id_area_padre END
        WHERE id = ${id}::int
