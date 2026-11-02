@@ -282,6 +282,24 @@ describe('Equipos asignados a un trabajador (e2e)', () => {
     await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-EST2-${Date.now()}`, estado: 'ROTO' }).expect(400);
   });
 
+  it('da de baja un equipo sin responsable (baja lógica) y lo saca del inventario; con responsable lo rechaza', async () => {
+    const base = { codigoBien, localId, nivelId, ambienteId, areaId };
+    const { body: libre } = await api().post('/maestros/anexo/equipos').send({ ...base, serie: `E2E-BAJA-${Date.now()}` }).expect(201);
+    const { body: antes } = await api().get('/maestros/anexo/equipos/inventario').expect(200);
+    expect(antes.map((e: { id: number }) => e.id)).toContain(libre.id);
+    await api().delete(`/maestros/anexo/equipos/${libre.id}`).expect(204);
+    const { body: despues } = await api().get('/maestros/anexo/equipos/inventario').expect(200);
+    expect(despues.map((e: { id: number }) => e.id)).not.toContain(libre.id);
+    await api().delete(`/maestros/anexo/equipos/${libre.id}`).expect(404);
+    await api().delete('/maestros/anexo/equipos/999999999').expect(404);
+
+    const { body: asignado } = await api()
+      .post('/maestros/anexo/equipos')
+      .send({ ...base, serie: `E2E-BAJA2-${Date.now()}`, anexoId: trabajadorId, fechaAsignacion: '2026-10-28' })
+      .expect(201);
+    await api().delete(`/maestros/anexo/equipos/${asignado.id}`).expect(409);
+  });
+
   it('mueve un equipo sin responsable a un centro de costo y deja el traslado en el historial', async () => {
     const { body: opciones } = await api().get('/maestros/anexo/equipos/opciones').expect(200);
     const { body: equipo } = await api()

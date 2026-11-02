@@ -174,10 +174,23 @@ export class ActivoFijoHandler {
     };
   }
 
-  /** Todos los equipos (asignados o no) para el tablero de equipos tecnológicos. */
+  /** Todos los equipos (asignados o no) para el tablero de equipos tecnológicos; los dados de baja no se listan. */
   async inventario(): Promise<EquipoInventarioDto[]> {
     const activos = await this.db.orm.public.activo_fijo.orderBy((a) => a.id.desc()).all();
-    return this.conResponsable(activos);
+    return this.conResponsable(activos.filter((a) => a.estado !== 'DE_BAJA'));
+  }
+
+  /**
+   * Da de baja un equipo (baja lógica): queda en la base con estado DE_BAJA, con su historial, y deja de
+   * aparecer en el inventario. Solo si no tiene responsable: antes hay que devolverlo.
+   */
+  async darDeBaja(equipoId: number): Promise<void> {
+    const activo = await this.db.orm.public.activo_fijo.first({ id: equipoId });
+    if (!activo || activo.estado === 'DE_BAJA') throw new NotFoundException(`Equipo ${equipoId} no encontrado`);
+    if (activo.id_responsable !== null) {
+      throw new ConflictException('El equipo está asignado a un trabajador; devuélvalo antes de darlo de baja');
+    }
+    await this.db.orm.public.activo_fijo.where({ id: equipoId }).update({ estado: 'DE_BAJA' });
   }
 
   /** Registra un activo en el inventario, con o sin trabajador (sin trabajador queda disponible). */

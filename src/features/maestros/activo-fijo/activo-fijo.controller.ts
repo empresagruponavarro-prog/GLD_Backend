@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Res, StreamableFile } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, Res, StreamableFile } from '@nestjs/common';
 import type { Response } from 'express';
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import {
   AsignarActivoDto,
@@ -58,6 +58,15 @@ export class ActivoFijoController {
   @ApiOkResponse({ type: EquipoInventarioDto })
   cambiarEstado(@Param('equipoId', ParseIntPipe) equipoId: number, @Body() dto: CambiarEstadoDto): Promise<EquipoInventarioDto> {
     return this.handler.cambiarEstado(equipoId, dto);
+  }
+
+  @Delete('equipos/:equipoId')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Dar de baja un equipo sin responsable (baja lógica: conserva el registro y su historial)' })
+  @ApiParam({ name: 'equipoId', type: Number, description: 'ID del activo fijo' })
+  @ApiNoContentResponse({ description: 'Equipo dado de baja' })
+  darDeBaja(@Param('equipoId', ParseIntPipe) equipoId: number): Promise<void> {
+    return this.handler.darDeBaja(equipoId);
   }
 
   @Patch('equipos/:equipoId/asignar')
