@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { ApiConflictResponse, ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AreaResponseDto, CreateAreaDto, UpdateAreaDto } from './area.dto.js';
 import { AreaHandler } from './area.handler.js';
 import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
@@ -33,5 +33,15 @@ export class AreaController {
   @ApiNotFoundResponse({ description: 'No existe' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAreaDto): Promise<AreaResponseDto> {
     return this.handler.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Eliminar area (solo si no esta en uso)' })
+  @ApiNoContentResponse({ description: 'Area eliminada' })
+  @ApiNotFoundResponse({ description: 'No existe' })
+  @ApiConflictResponse({ description: 'El area esta en uso' })
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.handler.remove(id);
   }
 }

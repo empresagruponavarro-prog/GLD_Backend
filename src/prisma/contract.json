@@ -10949,6 +10949,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_area_padre": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_jefe": {
                 "nullable": true,
                 "type": {
@@ -10977,6 +10984,21 @@
                 },
                 "to": {
                   "model": "activo_fijo",
+                  "namespace": "public"
+                }
+              },
+              "dependientes": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_area_padre"
+                  ]
+                },
+                "to": {
+                  "model": "area",
                   "namespace": "public"
                 }
               },
@@ -11025,6 +11047,21 @@
                   "namespace": "public"
                 }
               },
+              "padre": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_area_padre"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "area",
+                  "namespace": "public"
+                }
+              },
               "requerimientos": {
                 "cardinality": "1:N",
                 "on": {
@@ -11069,6 +11106,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "id_area_padre": {
+                  "column": "id_area_padre"
                 },
                 "id_jefe": {
                   "column": "id_jefe"
@@ -21937,6 +21977,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_area_padre": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_jefe": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -21965,9 +22010,34 @@
                     "namespaceId": "public",
                     "tableName": "anexos"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_area_padre"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "area"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_area_padre"
+                  ],
+                  "name": "area_id_area_padre_idx_66dd6b6b",
+                  "prefix": "area_id_area_padre_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_jefe"
@@ -33703,7 +33773,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "111a0dfc38cf8cff922886de204290be58a8372f9c81cd5b6a001ecbf7cd132b"
+    "storageHash": "8f4cf05305c3d9983e6dac2ea57d01bcef1c44e028d6f87413420627874c5d29"
   },
   "capabilities": {
     "postgres": {

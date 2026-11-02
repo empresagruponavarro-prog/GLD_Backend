@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'111a0dfc38cf8cff922886de204290be58a8372f9c81cd5b6a001ecbf7cd132b'>;
+  StorageHashBase<'8f4cf05305c3d9983e6dac2ea57d01bcef1c44e028d6f87413420627874c5d29'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -456,6 +456,7 @@ export type FieldOutputTypes = {
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly descripcion: Varchar<255> | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_area_padre: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly area_modulo: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1821,6 +1822,7 @@ export type FieldInputTypes = {
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_area_padre: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly area_modulo: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3184,6 +3186,7 @@ export type StorageColumnTypes = {
       readonly descripcion: Varchar<255> | null;
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_area_padre: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['output'] | null;
       readonly nombre: CodecTypes['pg/text@1']['output'];
     };
@@ -4549,6 +4552,7 @@ export type StorageColumnInputTypes = {
       readonly descripcion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_area_padre: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_jefe: CodecTypes['pg/int4@1']['input'] | null;
       readonly nombre: CodecTypes['pg/text@1']['input'];
     };
@@ -7519,10 +7523,21 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                 };
+                readonly id_area_padre: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [{ readonly columns: readonly ['codigo'] }];
               indexes: readonly [
+                {
+                  readonly name: 'area_id_area_padre_idx_66dd6b6b';
+                  readonly prefix: 'area_id_area_padre_idx';
+                  readonly columns: readonly ['id_area_padre'];
+                  readonly unique: false;
+                },
                 {
                   readonly name: 'area_id_jefe_idx_8c5b92e7';
                   readonly prefix: 'area_id_jefe_idx';
@@ -7540,6 +7555,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'area';
+                    readonly columns: readonly ['id_area_padre'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'area';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -18988,6 +19015,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly id_area_padre: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly activosFijos: {
@@ -18999,6 +19030,14 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_area'];
+                };
+              };
+              readonly dependientes: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_area_padre'];
                 };
               };
               readonly documentos: {
@@ -19034,6 +19073,14 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['area_id'];
                 };
               };
+              readonly padre: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_area_padre'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly requerimientos: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -19067,6 +19114,7 @@ type ContractBase = Omit<
                 readonly estado: { readonly column: 'estado' };
                 readonly descripcion: { readonly column: 'descripcion' };
                 readonly id_jefe: { readonly column: 'id_jefe' };
+                readonly id_area_padre: { readonly column: 'id_area_padre' };
               };
             };
           };

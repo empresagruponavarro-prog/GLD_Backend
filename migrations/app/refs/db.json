@@ -1,4 +1,7 @@
 {
-  "hash": "111a0dfc38cf8cff922886de204290be58a8372f9c81cd5b6a001ecbf7cd132b",
-  "invariants": []
+  "hash": "8f4cf05305c3d9983e6dac2ea57d01bcef1c44e028d6f87413420627874c5d29",
+  "invariants": [
+    "tecnologia-modulos",
+    "tecnologia-personas-ambientes"
+  ]
 }

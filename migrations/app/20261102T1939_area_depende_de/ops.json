@@ -1,0 +1,125 @@
+[
+  {
+    "id": "column.public.area.id_area_padre",
+    "label": "Add column \"id_area_padre\" to \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_area_padre",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_area_padre\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "id_area_padre"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_area_padre\"",
+        "sql": "ALTER TABLE \"public\".\"area\" ADD COLUMN \"id_area_padre\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_area_padre\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "area",
+          "id_area_padre"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.area.area_id_area_padre_idx_66dd6b6b",
+    "label": "Create index \"area_id_area_padre_idx_66dd6b6b\" on \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "area_id_area_padre_idx_66dd6b6b",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"area_id_area_padre_idx_66dd6b6b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_id_area_padre_idx_66dd6b6b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"area_id_area_padre_idx_66dd6b6b\"",
+        "sql": "CREATE INDEX \"area_id_area_padre_idx_66dd6b6b\" ON \"public\".\"area\" (\"id_area_padre\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"area_id_area_padre_idx_66dd6b6b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"area_id_area_padre_idx_66dd6b6b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.area.area_id_area_padre_fkey",
+    "label": "Add foreign key \"area_id_area_padre_fkey\" on \"area\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "area_id_area_padre_fkey",
+        "table": "area"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"area_id_area_padre_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_id_area_padre_fkey",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"area_id_area_padre_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"area\"\nADD CONSTRAINT \"area_id_area_padre_fkey\"\nFOREIGN KEY (\"id_area_padre\")\nREFERENCES \"public\".\"area\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"area_id_area_padre_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "area_id_area_padre_fkey",
+          "public",
+          "\"public\".\"area\""
+        ]
+      }
+    ]
+  }
+]

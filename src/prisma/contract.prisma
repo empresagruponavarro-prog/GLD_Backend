@@ -1864,6 +1864,11 @@ model area {
   usuarios   Usuarios[]
   modulos    area_modulo[]
   activosFijos activo_fijo[]
+  // Organigrama: area de la que depende (su jefe superior es el jefe de esa area). Sin dependencia = area superior.
+  id_area_padre Int?
+  padre         area?  @relation("AreaDependencia", fields: [id_area_padre], references: [id], onDelete: Restrict)
+  dependientes  area[] @relation("AreaDependencia")
+  @@index([id_area_padre])
   @@map("area")
 }
 

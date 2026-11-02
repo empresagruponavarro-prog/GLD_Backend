@@ -21,6 +21,18 @@ export class CreateAreaDto {
   @IsInt()
   @Min(1)
   idJefe?: number;
+
+  @ApiPropertyOptional({ description: 'Área de la que depende (su jefe superior es el jefe de esa área); sin valor = área superior' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  idAreaPadre?: number;
+
+  @ApiPropertyOptional({ description: 'Activa por defecto', default: true })
+  @IsOptional()
+  @IsBoolean()
+  estado?: boolean;
 }
 
 export class UpdateAreaDto {
@@ -44,6 +56,13 @@ export class UpdateAreaDto {
   @Min(0)
   idJefe?: number | null;
 
+  @ApiPropertyOptional({ description: 'Área de la que depende; 0 o null la deja como área superior' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  idAreaPadre?: number | null;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
@@ -58,4 +77,7 @@ export class AreaResponseDto {
   @ApiProperty({ nullable: true }) descripcion: string | null;
   @ApiProperty({ nullable: true }) idJefe: number | null;
   @ApiProperty({ nullable: true, description: 'Nombre del jefe o gerente' }) jefe: string | null;
+  @ApiProperty({ nullable: true, description: 'Área de la que depende (null = área superior)' }) idAreaPadre: number | null;
+  @ApiProperty({ nullable: true, description: 'Nombre del área de la que depende' }) areaPadre: string | null;
+  @ApiProperty({ nullable: true, description: 'Jefe superior: el jefe del área de la que depende' }) jefeSuperior: string | null;
 }
