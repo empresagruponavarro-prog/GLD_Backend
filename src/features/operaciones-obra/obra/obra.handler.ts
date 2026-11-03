@@ -8,7 +8,7 @@ import { mapDocumento } from '../documentos/documentos.handler.js';
 import { mapIncidencia } from '../incidencias/incidencias.handler.js';
 import type { ObraIncidenciaDto } from '../incidencias/incidencias.dto.js';
 import { mapPlano } from '../planos/planos.handler.js';
-import { mapResidente } from '../residentes/residentes.handler.js';
+import { cargarDirectorio } from '../residentes/directorio.js';
 import { truncar } from '../shared/control-avance/avance.js';
 import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { cargarEquipo, validarEquipo, ROLES_EQUIPO, type EquipoObra } from '../shared/control-avance/equipo.js';
@@ -122,7 +122,7 @@ export class ObraHandler {
     const [generalesRow, residentesRows, semanasRows, planosRows, documentosRows, incidenciasRows, cabecera, carga] =
       await Promise.all([
         pub.obra_datos_generales.first({ id_centro_costo: idCentroCosto }),
-        pub.obra_residentes.where({ id_centro_costo: idCentroCosto }).orderBy((r) => r.orden.asc()).all(),
+        cargarDirectorio(pub, idCentroCosto),
         pub.obra_semanas_cronograma.where({ id_centro_costo: idCentroCosto }).orderBy((s) => s.numero_semana.asc()).all(),
         pub.obra_planos.where({ id_centro_costo: idCentroCosto, es_vigente: true }).orderBy((p) => p.codigo_plano.asc()).all(),
         pub.obra_documentos_actas.where({ id_centro_costo: idCentroCosto }).orderBy((d) => d.id.desc()).all(),
@@ -153,7 +153,7 @@ export class ObraHandler {
       generales,
       kpis,
       cronograma,
-      residentes: residentesRows.map(mapResidente),
+      residentes: residentesRows,
       planos: planosRows.map(mapPlano),
       documentos: documentosRows.map(mapDocumento),
       incidencias,

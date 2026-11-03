@@ -1,46 +1,36 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
-import { assertCentroCosto, compact, whatsappUrl } from '../shared/obra-shared.js';
-import type { CreateObraResidenteDto, ObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
+import { assertCentroCosto, compact } from '../shared/obra-shared.js';
+import { cargarDirectorio, contactosDeTrabajadores, ETIQUETAS_ROL, mapResidente, ROL_COMPLEMENTO_EQUIPO, rolesPorPersona } from './directorio.js';
+import type { CreateObraResidenteDto, DatosEquipoDirectorioDto, ObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
 
-type ResidenteRow = NonNullable<Awaited<ReturnType<Database['orm']['public']['obra_residentes']['first']>>>;
-
-export function mapResidente(r: ResidenteRow): ObraResidenteDto {
-  return {
-    id: r.id,
-    id_anexo: r.id_anexo ?? undefined,
-    nombre_completo: r.nombre_completo ?? '',
-    rol_obra: r.rol_obra ?? '',
-    especialidad: r.especialidad ?? undefined,
-    telefono: r.telefono ?? undefined,
-    correo: r.correo ?? undefined,
-    turno: r.turno ?? undefined,
-    estado_planta: r.estado_planta ?? 'En Planta',
-    foto_url: r.foto_url ?? undefined,
-    orden: r.orden ?? 0,
-    whatsapp_url: whatsappUrl(r.telefono),
-  };
-}
+/** '' o null = quitar el dato propio (vuelve el de Trabajadores); undefined = no se toca. */
+const textoOpcional = (v: string | null | undefined): string | null | undefined => (v === undefined ? undefined : v?.trim() || null);
 
 @Injectable()
 export class ResidentesHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
+  /** Directorio de la obra: el equipo de la ficha técnica primero y luego los contactos agregados a mano. */
   async list(idCentroCosto: number): Promise<ObraResidenteDto[]> {
-    const rows = await this.db.orm.public.obra_residentes
-      .where({ id_centro_costo: idCentroCosto })
-      .orderBy((r) => r.orden.asc())
-      .all();
-    return rows.map(mapResidente);
+    return cargarDirectorio(this.db.orm.public, idCentroCosto);
   }
 
   async create(idCentroCosto: number, dto: CreateObraResidenteDto): Promise<ObraResidenteDto> {
     await assertCentroCosto(this.db, idCentroCosto);
+    if (dto.id_anexo !== undefined) {
+      const roles = (await this.equipoDeLaFicha(idCentroCosto)).get(dto.id_anexo);
+      if (roles) {
+        throw new ConflictException(
+          `Ya está en el directorio como ${roles.map((r) => ETIQUETAS_ROL[r]).join(' y ')} (equipo de la ficha técnica): complete sus datos desde su tarjeta`,
+        );
+      }
+    }
     let orden = dto.orden;
     if (orden === undefined) {
-      const actuales = await this.list(idCentroCosto);
-      orden = actuales.reduce((max, r) => Math.max(max, r.orden), 0) + 1;
+      const filas = await this.db.orm.public.obra_residentes.where({ id_centro_costo: idCentroCosto }).all();
+      orden = filas.reduce((max, r) => Math.max(max, r.orden ?? 0), 0) + 1;
     }
     const row = await this.db.orm.public.obra_residentes.create({
       id_centro_costo: idCentroCosto,
@@ -76,10 +66,54 @@ export class ResidentesHandler {
     return mapResidente(row);
   }
 
+  /**
+   * Datos de obra (teléfono y correo de obra, especialidad, turno, estado) de una persona del equipo de la ficha.
+   * Nombre y cargo no se tocan: salen de la ficha técnica y de Trabajadores.
+   */
+  async guardarDatosEquipo(idCentroCosto: number, idAnexo: number, dto: DatosEquipoDirectorioDto): Promise<ObraResidenteDto> {
+    await assertCentroCosto(this.db, idCentroCosto);
+    if (!(await this.equipoDeLaFicha(idCentroCosto)).has(idAnexo)) {
+      throw new NotFoundException(`El anexo ${idAnexo} no es parte del equipo de la ficha técnica de esta obra`);
+    }
+    const pub = this.db.orm.public;
+    const datos = {
+      especialidad: toVarchar<150>(textoOpcional(dto.especialidad)),
+      telefono: toVarchar<50>(textoOpcional(dto.telefono)),
+      correo: toVarchar<150>(textoOpcional(dto.correo)),
+      turno: toVarchar<100>(textoOpcional(dto.turno)),
+      estado_planta: toVarchar<50>(dto.estado_planta),
+    };
+    const [fila] = await pub.obra_residentes.where({ id_centro_costo: idCentroCosto, id_anexo: idAnexo }).orderBy((r) => r.orden.asc()).all();
+    if (fila) {
+      await pub.obra_residentes.where({ id: fila.id }).update(compact(datos));
+    } else {
+      const nombre = (await contactosDeTrabajadores(pub, [idAnexo])).get(idAnexo)?.nombre || `#${idAnexo}`;
+      await pub.obra_residentes.create({
+        id_centro_costo: idCentroCosto,
+        id_anexo: idAnexo,
+        nombre_completo: toVarchar<200>(nombre.slice(0, 200)),
+        rol_obra: toVarchar<100>(ROL_COMPLEMENTO_EQUIPO),
+        ...compact(datos),
+        estado_planta: datos.estado_planta ?? toVarchar<50>('En Planta'),
+        orden: 0,
+      });
+    }
+    const tarjeta = (await this.list(idCentroCosto)).find((r) => r.clave === `equipo-${idAnexo}`);
+    if (!tarjeta) throw new NotFoundException(`El anexo ${idAnexo} no es parte del equipo de la ficha técnica de esta obra`);
+    return tarjeta;
+  }
+
   async remove(idCentroCosto: number, idResidente: number) {
-    await this.findOrFail(idCentroCosto, idResidente);
+    const row = await this.findOrFail(idCentroCosto, idResidente);
+    if (row.id_anexo != null && (await this.equipoDeLaFicha(idCentroCosto)).has(row.id_anexo)) {
+      throw new BadRequestException('Es parte del equipo de la ficha técnica: cámbielo o quítelo desde la ficha');
+    }
     await this.db.orm.public.obra_residentes.where({ id: idResidente }).delete();
     return { deleted: true, id: idResidente };
+  }
+
+  private async equipoDeLaFicha(idCentroCosto: number) {
+    return rolesPorPersona(await this.db.orm.public.obra_datos_generales.first({ id_centro_costo: idCentroCosto }));
   }
 
   private async findOrFail(idCentroCosto: number, idResidente: number) {

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ResidentesHandler } from './residentes.handler.js';
-import { CreateObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
+import { CreateObraResidenteDto, DatosEquipoDirectorioDto, UpdateObraResidenteDto } from './residentes.dto.js';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('Operaciones de Obra')
@@ -12,7 +12,7 @@ export class ResidentesController {
   constructor(private readonly handler: ResidentesHandler) {}
 
   @Get()
-  @ApiOperation({ summary: 'Listar residentes / personal técnico de la obra' })
+  @ApiOperation({ summary: 'Directorio de la obra: el equipo de la ficha técnica y los contactos agregados a mano' })
   list(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
     return this.handler.list(idCentroCosto);
   }
@@ -21,6 +21,17 @@ export class ResidentesController {
   @ApiOperation({ summary: 'Asignar un residente / personal técnico a la obra' })
   create(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number, @Body() dto: CreateObraResidenteDto) {
     return this.handler.create(idCentroCosto, dto);
+  }
+
+  @Put('equipo/:idAnexo')
+  @ApiOperation({ summary: 'Datos de obra (teléfono, correo, turno, estado) de una persona del equipo de la ficha técnica' })
+  @ApiParam({ name: 'idAnexo', type: Number })
+  guardarDatosEquipo(
+    @Param('idCentroCosto', ParseIntPipe) idCentroCosto: number,
+    @Param('idAnexo', ParseIntPipe) idAnexo: number,
+    @Body() dto: DatosEquipoDirectorioDto,
+  ) {
+    return this.handler.guardarDatosEquipo(idCentroCosto, idAnexo, dto);
   }
 
   @Patch(':idResidente')
