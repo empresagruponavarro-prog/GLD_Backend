@@ -1,0 +1,9 @@
+{
+  "from": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "to": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "providedInvariants": [
+    "almacen-semillas"
+  ],
+  "createdAt": "2026-11-03T16:02:29.548Z",
+  "migrationHash": "b0b222c9fd671d81f86dc2b472f233b0cf2c91c3e5dd3ed0f37071997f7903bc"
+}
