@@ -1,0 +1,9 @@
+{
+  "from": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "to": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "providedInvariants": [
+    "operaciones-modulo-y-reglas"
+  ],
+  "createdAt": "2026-11-03T15:51:19.516Z",
+  "migrationHash": "6b298278e1153c40351340124f046194010315c668394df222fc1b07fa05d01d"
+}

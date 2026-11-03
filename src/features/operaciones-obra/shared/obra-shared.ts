@@ -1,5 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { toInstantString } from '../../../platform/db/temporal.js';
+import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import type { Database } from '../../../prisma/prisma.module.js';
 
 /** Estados válidos de una semana del cronograma. */
@@ -8,6 +9,18 @@ export const ESTADOS_SEMANA = ['Programado', 'En Plazo', 'Retrasado', 'Completad
 export const PRIORIDADES_INCIDENCIA = ['BAJA', 'MEDIA', 'ALTA', 'CRITICA'] as const;
 /** Estados válidos de incidencias / RFI. */
 export const ESTADOS_INCIDENCIA = ['PENDIENTE', 'EN PROCESO', 'RESUELTA'] as const;
+
+/**
+ * Código de obra y tienda de la ficha: salen del centro de costo (su id y su nombre), nunca se escriben a mano.
+ * Se guardan en `obra_datos_generales` para que las pantallas de Operaciones los lean sin cruzar tablas.
+ */
+export function codigoYTiendaDelCc(cc: { id: number; centro_costo: string | null }) {
+  const nombre = cc.centro_costo?.trim() ?? '';
+  return {
+    codigo_obra: toVarchar<30>(String(cc.id)),
+    tienda: toVarchar<80>(nombre === '' ? null : nombre.slice(0, 80)),
+  };
+}
 
 /** Verifica que el centro de costo exista; lanza 404 si no. */
 export async function assertCentroCosto(db: Database, idCentroCosto: number) {

@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { nowInstant } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
@@ -14,7 +14,7 @@ import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { cargarEquipo, validarEquipo, ROLES_EQUIPO, type EquipoObra } from '../shared/control-avance/equipo.js';
 import { calcularObra } from '../shared/control-avance/motor.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
-import { assertCentroCosto, compact, esFechaIso, hoyLima, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
+import { assertCentroCosto, codigoYTiendaDelCc, compact, esFechaIso, hoyLima, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
 import type {
   ObraCabeceraDto,
   ObraCockpitDto,
@@ -189,13 +189,6 @@ export class ObraHandler {
     const equipoAntes = existing ? await cargarEquipo(pub, existing) : null;
     const cambiaEquipo = ROLES_EQUIPO.some((rol) => equipoDto[`id_${rol}` as keyof typeof equipoDto] !== undefined);
 
-    // Código de obra único
-    const codigo = dto.codigo_obra?.trim().toUpperCase();
-    if (codigo) {
-      const otra = await pub.obra_datos_generales.first({ codigo_obra: toVarchar<30>(codigo) });
-      if (otra && otra.id_centro_costo !== idCentroCosto) throw new ConflictException(`El código de obra ${codigo} ya lo usa otra obra`);
-    }
-
     const payload = compact({
       expediente_codigo: toVarchar<100>(dto.expediente_codigo),
       direccion: toVarchar<1000>(dto.direccion),
@@ -211,8 +204,8 @@ export class ObraHandler {
       contacto_cliente_nombre: toVarchar<150>(dto.contacto_cliente_nombre),
       contacto_cliente_telefono: toVarchar<50>(dto.contacto_cliente_telefono),
       contacto_cliente_correo: toVarchar<150>(dto.contacto_cliente_correo),
-      codigo_obra: toVarchar<30>(codigo),
-      tienda: toVarchar<80>(dto.tienda?.trim()),
+      // Código y tienda: siempre los del centro de costo.
+      ...codigoYTiendaDelCc(cc),
       ...equipoDto,
       avance_general: dto.avance_general === undefined ? undefined : dto.avance_general === null ? null : String(Math.round(dto.avance_general * 10) / 10),
       comentario: dto.comentario === undefined ? undefined : toVarchar<200>(dto.comentario?.trim() || null),

@@ -157,21 +157,23 @@ describe('Importación del Excel por proyecto (e2e)', () => {
       const r = await previa(await excel({ 'Código de obra': null, Coordinador: null })).expect(201);
       expect(r.body.importable).toBe(false);
       const msgs = r.body.errores.map((e: { mensaje: string }) => e.mensaje);
-      expect(msgs).toContain('falta el código de obra');
+      // El código ya no se pide: es el del centro de costo.
+      expect(msgs).not.toContain('falta el código de obra');
       expect(msgs).toContain('falta el coordinador');
     });
 
     it('confirmar con errores, 400 con la lista', async () => {
-      const r = await importar(await excel({ 'Código de obra': null })).expect(400);
+      const r = await importar(await excel({ Coordinador: null })).expect(400);
       expect(r.body.errores.length).toBeGreaterThan(0);
       expect(await filas('obra_partida')).toBe(0);
     });
 
-    it('el código de otra obra es un error', async () => {
-      await db.query(`insert into obra_datos_generales (id_centro_costo, codigo_obra) values ($1, 'E2E-IMP-017')`, [ccOtra]);
+    it('el código y la tienda del archivo no se usan: solo se avisa que difieren del centro de costo', async () => {
       const r = await previa(await excel()).expect(201);
-      expect(r.body.errores.map((e: { mensaje: string }) => e.mensaje).join()).toContain('ya lo usa otra obra');
-      await db.query(`delete from obra_datos_generales where id_centro_costo = $1`, [ccOtra]);
+      const avisos = r.body.avisos.map((e: { mensaje: string }) => e.mensaje).join();
+      expect(avisos).toContain(`el código del archivo (E2E-IMP-017) no se usa: el código de la obra es el del centro de costo (${cc})`);
+      expect(avisos).toContain('la tienda es el nombre del centro de costo («E2E-IMP-A»)');
+      expect(r.body.errores.map((e: { mensaje: string }) => e.mensaje).join()).not.toContain('código');
     });
   });
 
@@ -181,7 +183,7 @@ describe('Importación del Excel por proyecto (e2e)', () => {
       expect(r.body.importado).toBe(true);
 
       const ctl = (await api().get(`${base()}/control?hoy=${GOLDEN.hoySugerido}`).expect(200)).body;
-      expect(ctl).toMatchObject({ configurada: true, estado_obra: 'EN_EJECUCION', ficha: { codigo_obra: 'E2E-IMP-017', tienda: 'Pacasmayo Callao' } });
+      expect(ctl).toMatchObject({ configurada: true, estado_obra: 'EN_EJECUCION', ficha: { codigo_obra: String(cc), tienda: 'E2E-IMP-A' } });
       expect(ctl.ficha.equipo.jefe_proyecto).toMatchObject({ id: jefe });
       expect(ctl.ficha.equipo.coordinador).toMatchObject({ id: coord });
       // Lo que calculó el Excel del jefe: 83 % real y 83 % programado, semana 6, fin 26/10.

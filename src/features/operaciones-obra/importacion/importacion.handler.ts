@@ -7,7 +7,7 @@ import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { ROLES_EQUIPO, type RolEquipo } from '../shared/control-avance/equipo.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
 import { SEMANAS_AVANCE, SEMANAS_META } from '../shared/control-avance/control-avance.types.js';
-import { assertCentroCosto, hoyLima, toDateOnly } from '../shared/obra-shared.js';
+import { assertCentroCosto, codigoYTiendaDelCc, hoyLima, toDateOnly } from '../shared/obra-shared.js';
 import { buscarPersona, type PersonaCandidata } from './buscar-persona.js';
 import { interpretarProyecto, normT, type LecturaExcel, type Mensaje } from './excel-proyecto.js';
 import { leerLibro } from './leer-libro.js';
@@ -69,6 +69,7 @@ export class ImportacionHandler {
       throw new BadRequestException({ message: `El archivo tiene ${a.errores.length} error(es): corríjalos y vuelva a intentar`, errores: a.errores });
     }
     const { ficha, partidas, reprogramaciones } = a.lectura;
+    const cc = await assertCentroCosto(this.db, idCentroCosto);
     const inicio = ficha.inicio!;
     const fin = ficha.fin!;
     const entrega = ficha.entrega;
@@ -86,8 +87,8 @@ export class ImportacionHandler {
         await t.CentroCostos.where({ id: idCentroCosto }).update(cambiosCc);
 
         const gen = {
-          codigo_obra: toVarchar<30>(ficha.codigo),
-          tienda: toVarchar<80>(ficha.tienda),
+          // Código y tienda: los del centro de costo, no los del archivo.
+          ...codigoYTiendaDelCc(cc),
           departamento: toVarchar<100>(ficha.departamento),
           comentario: toVarchar<200>(ficha.comentario || null),
           estado_obra: ficha.estado!,
@@ -172,7 +173,7 @@ export class ImportacionHandler {
         });
       });
     } catch (e) {
-      throwIfUniqueViolation(e, `El código de obra ${ficha.codigo} o un ítem del archivo ya existe`);
+      throwIfUniqueViolation(e, 'Un ítem del archivo ya existe');
       throw e;
     }
     return { importado: true, resumen: a.resumen, avisos: a.avisos };
@@ -214,14 +215,13 @@ export class ImportacionHandler {
       reprogramaciones: reprogramacionesActuales.length,
     };
 
-    // Código único
-    if (ficha.codigo) {
-      const otra = await orm.obra_datos_generales.first({ codigo_obra: toVarchar<30>(ficha.codigo) });
-      if (otra && otra.id_centro_costo !== idCentroCosto) {
-        errores.push({ fila: 'Ficha', nombre: nombreObra, mensaje: `el código ${ficha.codigo} ya lo usa otra obra (centro de costo ${otra.id_centro_costo})` });
-      } else if (actual.codigo_obra && actual.codigo_obra !== ficha.codigo) {
-        avisos.push({ fila: 'Ficha', nombre: nombreObra, mensaje: `el código de la obra cambia de ${actual.codigo_obra} a ${ficha.codigo}` });
-      }
+    // Código y tienda salen del centro de costo: lo que traiga el archivo solo se avisa si no coincide.
+    const delCc = codigoYTiendaDelCc(cc);
+    if (ficha.codigo && ficha.codigo !== delCc.codigo_obra) {
+      avisos.push({ fila: 'Ficha', nombre: nombreObra, mensaje: `el código del archivo (${ficha.codigo}) no se usa: el código de la obra es el del centro de costo (${delCc.codigo_obra})` });
+    }
+    if (ficha.tienda && delCc.tienda && normT(ficha.tienda) !== normT(delCc.tienda)) {
+      avisos.push({ fila: 'Ficha', nombre: nombreObra, mensaje: `la tienda del archivo («${ficha.tienda}») no se usa: la tienda es el nombre del centro de costo («${delCc.tienda}»)` });
     }
 
     // Cliente

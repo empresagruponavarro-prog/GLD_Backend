@@ -1,0 +1,9 @@
+{
+  "from": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "to": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "providedInvariants": [
+    "obra-codigo-tienda-del-cc"
+  ],
+  "createdAt": "2026-11-03T15:34:18.469Z",
+  "migrationHash": "10671ec9daca7807c9dbfaa52ac558020e040d7f6d0ecf2778443d4518bdb616"
+}

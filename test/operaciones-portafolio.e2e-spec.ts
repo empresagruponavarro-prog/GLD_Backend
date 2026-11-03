@@ -69,7 +69,8 @@ describe('Portafolio de operaciones (e2e)', () => {
       )
     ).rows[0].id as number;
     const base = `/operaciones/obra/${cc}`;
-    await api().patch(`${base}/generales`).send({ codigo_obra: `E2E-OPS2-${o.clave}`, tienda: `Tienda ${o.clave}`, departamento: 'Lima', id_jefe_proyecto: o.jefe }).expect(200);
+    // Código y tienda salen del centro de costo: su id y su nombre (`E2E-OPS2-<clave>`).
+    await api().patch(`${base}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: o.jefe }).expect(200);
     if (o.subFin) {
       const p = await api().post(`${base}/partidas`).send({ item: '01', nombre: 'Obras civiles' }).expect(201);
       await api().post(`${base}/partidas/${p.body.id}/subpartidas`).send({ item: '01.01', nombre: 'Tabiquería', fecha_inicio: o.inicio, fecha_fin: o.subFin }).expect(201);
@@ -181,10 +182,10 @@ describe('Portafolio de operaciones (e2e)', () => {
     it('obra al día: ficha, cliente, equipo y mini Curva S', async () => {
       const a = (await api().get(lista).expect(200)).body.obras.find((o: { id_centro_costo: number }) => o.id_centro_costo === id.A);
       expect(a).toMatchObject({
-        codigo_obra: 'E2E-OPS2-A',
-        nombre: 'E2E-OPS2 Cliente Uno Tienda A',
+        codigo_obra: String(id.A),
+        nombre: 'E2E-OPS2 Cliente Uno E2E-OPS2-A',
         cliente: { id: cliente1, nombre: 'E2E-OPS2 Cliente Uno' },
-        tienda: 'Tienda A',
+        tienda: 'E2E-OPS2-A',
         departamento: 'Lima',
         estado_obra: 'EN_EJECUCION',
         inicio,
@@ -258,8 +259,8 @@ describe('Portafolio de operaciones (e2e)', () => {
     it('búsqueda por código o nombre, sin tildes ni mayúsculas', async () => {
       const buscar = async (q: string) => ((await api().get(`/operaciones/portafolio?q=${encodeURIComponent(q)}`).expect(200)).body.obras as { id_centro_costo: number }[]).map((o) => o.id_centro_costo);
       expect(await buscar('e2e-ops2-b')).toEqual([id.B]);
-      expect(await buscar('E2E-OPS2 CLIENTE UNO TIENDA E')).toEqual([id.E]);
-      expect(await buscar('  e2e-ops2   cliente   uno  tienda a ')).toEqual([id.A]);
+      expect(await buscar('E2E-OPS2 CLIENTE UNO E2E-OPS2-E')).toEqual([id.E]);
+      expect(await buscar('  e2e-ops2   cliente   uno  e2e-ops2-a ')).toEqual([id.A]);
     });
 
     it('los filtros se combinan', async () => {
@@ -356,7 +357,8 @@ describe('Portafolio de operaciones (e2e)', () => {
 
     it('el feed del portafolio trae esos avisos con el código de la obra', async () => {
       const feed = (await api().get('/operaciones/portafolio/eventos?tipos=SITUACION,VENCIDO&limite=200').expect(200)).body as { codigo_obra: string | null; tipo: string; usuario: string | null; id: number }[];
-      const mios = feed.filter((e) => e.codigo_obra?.startsWith('E2E-OPS2-'));
+      const codigos = Object.values(id).map(String);
+      const mios = feed.filter((e) => e.codigo_obra !== null && codigos.includes(e.codigo_obra));
       expect(mios.length).toBeGreaterThanOrEqual(4); // base de A y B, recuperación de B y vencimiento de F
       expect(mios.every((e) => ['SITUACION', 'VENCIDO'].includes(e.tipo) && e.usuario === null)).toBe(true);
       const ids = feed.map((e) => e.id);

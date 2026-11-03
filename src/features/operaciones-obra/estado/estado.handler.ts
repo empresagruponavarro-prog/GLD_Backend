@@ -56,9 +56,9 @@ export class EstadoHandler {
     // Alta en el Dashboard: la ficha tiene que estar completa (RV-01…RV-03).
     if (actual === null) {
       const faltan: string[] = [];
-      if (!gen?.codigo_obra) faltan.push('código de obra');
       if (!cc.id_anexo) faltan.push('cliente del centro de costo');
-      if (!gen?.tienda) faltan.push('tienda / sede');
+      // Código y tienda salen del centro de costo; la tienda es su nombre.
+      if (!cc.centro_costo?.trim()) faltan.push('nombre del centro de costo (tienda)');
       if (!gen?.departamento) faltan.push('departamento');
       if (!gen?.id_jefe_proyecto) faltan.push('jefe de proyecto');
       if (!carga.inicio) faltan.push('fecha de inicio');

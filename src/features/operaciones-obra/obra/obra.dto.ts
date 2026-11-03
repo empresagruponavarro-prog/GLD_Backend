@@ -31,8 +31,8 @@ export class ObraDatosGeneralesDto {
   @ApiPropertyOptional() contacto_cliente_correo?: string;
 
   // ── Ficha operativa (Dashboard de Operaciones) ──
-  @ApiPropertyOptional({ example: 'OP-26-020', description: 'Código de obra único (= centro de costos del Excel)' }) codigo_obra?: string;
-  @ApiPropertyOptional() tienda?: string;
+  @ApiPropertyOptional({ example: '969', description: 'Id del centro de costo (no se edita)' }) codigo_obra?: string;
+  @ApiPropertyOptional({ description: 'Nombre del centro de costo (no se edita)' }) tienda?: string;
   /** Nulo = la obra no participa del Dashboard. Se cambia con `POST …/estado`. */
   @ApiPropertyOptional({ enum: ['PROXIMO', 'EN_EJECUCION', 'POST_VENTA', 'CULMINADO', 'SUSPENDIDA', 'CANCELADA'] }) estado_obra?: string;
   @ApiPropertyOptional() comentario?: string;
@@ -105,10 +105,7 @@ export class UpdateObraDatosGeneralesDto {
   @ApiPropertyOptional() @IsOptional() @IsEmail() @MaxLength(150) contacto_cliente_correo?: string;
 
   // ── Ficha operativa ──
-  @ApiPropertyOptional({ example: 'OP-26-020', description: 'Único por obra; se guarda en mayúsculas' })
-  @IsOptional() @IsString() @MaxLength(30) @Matches(/^[A-Za-z0-9._-]+$/, { message: 'codigo_obra solo admite letras, números, punto, guion y guion bajo' })
-  codigo_obra?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(80) tienda?: string;
+  // Código de obra y tienda no se envían: salen del centro de costo (id y nombre).
   @ApiPropertyOptional({ nullable: true, description: 'Anexo de tipo Trabajador' }) @IsOptional() @IsInt() @Type(() => Number) id_jefe_proyecto?: number | null;
   @ApiPropertyOptional({ nullable: true, description: 'Anexo de tipo Trabajador; null = sin coordinador' }) @IsOptional() @IsInt() @Type(() => Number) id_coordinador?: number | null;
   @ApiPropertyOptional({ nullable: true }) @IsOptional() @IsInt() @Type(() => Number) id_residente?: number | null;

@@ -3,6 +3,8 @@
   "invariants": [
     "rrhh-trabajadores",
     "rrhh-catalogos-iniciales",
-    "rrhh-catalogos-modulo"
+    "rrhh-catalogos-modulo",
+    "obra-codigo-tienda-del-cc",
+    "operaciones-modulo-y-reglas"
   ]
 }

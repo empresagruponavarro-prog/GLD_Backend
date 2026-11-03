@@ -1,0 +1,37 @@
+[
+  {
+    "id": "data.obra.codigo-tienda-del-cc",
+    "label": "Código y tienda de la ficha de obra desde el centro de costo",
+    "summary": "codigo_obra = id del centro de costo y tienda = nombre del centro de costo en obra_datos_generales",
+    "operationClass": "data",
+    "invariantId": "obra-codigo-tienda-del-cc",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_datos_generales"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "vaciar los códigos que no son el id del centro de costo",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET codigo_obra = NULL WHERE codigo_obra IS DISTINCT FROM id_centro_costo::text",
+        "params": []
+      },
+      {
+        "description": "código = id y tienda = nombre del centro de costo",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" g SET codigo_obra = c.id::text, tienda = NULLIF(left(btrim(c.centro_costo), 80), '') FROM \"public\".\"CentroCostos\" c WHERE c.id = g.id_centro_costo AND (g.codigo_obra IS DISTINCT FROM c.id::text OR g.tienda IS DISTINCT FROM NULLIF(left(btrim(c.centro_costo), 80), ''))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "todas las fichas tienen el código y la tienda de su centro de costo",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"obra_datos_generales\" g JOIN \"public\".\"CentroCostos\" c ON c.id = g.id_centro_costo WHERE g.codigo_obra IS DISTINCT FROM c.id::text OR g.tienda IS DISTINCT FROM NULLIF(left(btrim(c.centro_costo), 80), '')) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

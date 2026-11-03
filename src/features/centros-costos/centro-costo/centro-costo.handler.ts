@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { codigoYTiendaDelCc } from '../../operaciones-obra/shared/obra-shared.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../../platform/db/varchar-helpers.js';
 import {
   CatalogosFiltrosResponseDto,
@@ -274,6 +275,12 @@ export class CentroCostoHandler {
 
     const row = await this.db.orm.public.CentroCostos.where({ id }).update(data);
     if (!row) throw new NotFoundException(`Centro de costo ${id} no encontrado`);
+    // La tienda de la ficha de obra es el nombre del centro de costo: se mantiene igual al renombrarlo.
+    if (data.centro_costo !== undefined && data.centro_costo !== current.centro_costo) {
+      await this.db.orm.public.obra_datos_generales
+        .where({ id_centro_costo: id })
+        .update({ tienda: codigoYTiendaDelCc(row).tienda });
+    }
     return {
       id: row.id,
       idCentroCostosPrincipal: row.id_centro_costos_principal,

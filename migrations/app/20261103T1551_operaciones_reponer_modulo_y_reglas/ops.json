@@ -1,0 +1,72 @@
+[
+  {
+    "id": "data.modulo.operaciones.reponer",
+    "label": "Repone el módulo operaciones",
+    "summary": "Inserta el módulo operaciones (Dashboard de Operaciones) si no existe; no concede permisos a ningún rol",
+    "operationClass": "data",
+    "invariantId": "operaciones-modulo-y-reglas",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "seed modulo operaciones",
+        "sql": "INSERT INTO \"public\".\"modulo\" (clave, nombre, grupo, ruta, orden, admite_aprobar, admite_anular) VALUES ('operaciones', 'Dashboard de operaciones', 'Proyectos', '/operaciones', 34, false, false) ON CONFLICT (clave) DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "regla obra_subpartida_fechas_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_fechas_check') THEN\n    ALTER TABLE \"public\".\"obra_subpartida\" ADD CONSTRAINT \"obra_subpartida_fechas_check\" CHECK (\"fecha_fin\" >= \"fecha_inicio\") NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_subpartida\" VALIDATE CONSTRAINT \"obra_subpartida_fechas_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_subpartida_fechas_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_subpartida_semana_numero_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_numero_check') THEN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_numero_check\" CHECK (\"numero_semana\" BETWEEN 1 AND 16) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" VALIDATE CONSTRAINT \"obra_subpartida_semana_numero_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_subpartida_semana_numero_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_subpartida_semana_meta_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_meta_check') THEN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_meta_check\" CHECK (\"meta\" IS NULL OR (\"meta\" BETWEEN 0 AND 100 AND \"numero_semana\" <= 10)) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" VALIDATE CONSTRAINT \"obra_subpartida_semana_meta_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_subpartida_semana_meta_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_subpartida_semana_avance_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_subpartida_semana_avance_check') THEN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" ADD CONSTRAINT \"obra_subpartida_semana_avance_check\" CHECK (\"avance\" IS NULL OR \"avance\" BETWEEN 0 AND 100) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_subpartida_semana\" VALIDATE CONSTRAINT \"obra_subpartida_semana_avance_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_subpartida_semana_avance_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_reprogramacion_dias_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_reprogramacion_dias_check') THEN\n    ALTER TABLE \"public\".\"obra_reprogramacion\" ADD CONSTRAINT \"obra_reprogramacion_dias_check\" CHECK (\"dias\" BETWEEN 1 AND 60) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_reprogramacion\" VALIDATE CONSTRAINT \"obra_reprogramacion_dias_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_reprogramacion_dias_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_evento_severidad_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_evento_severidad_check') THEN\n    ALTER TABLE \"public\".\"obra_evento\" ADD CONSTRAINT \"obra_evento_severidad_check\" CHECK (\"severidad\" IN ('info', 'good', 'warn', 'crit')) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_evento\" VALIDATE CONSTRAINT \"obra_evento_severidad_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_evento_severidad_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_datos_generales_avance_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_datos_generales_avance_check') THEN\n    ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_avance_check\" CHECK (\"avance_general\" IS NULL OR \"avance_general\" BETWEEN 0 AND 100) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_datos_generales\" VALIDATE CONSTRAINT \"obra_datos_generales_avance_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_datos_generales_avance_check';\n  END;\nEND $$",
+        "params": []
+      },
+      {
+        "description": "regla obra_datos_generales_postventa_check",
+        "sql": "DO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'obra_datos_generales_postventa_check') THEN\n    ALTER TABLE \"public\".\"obra_datos_generales\" ADD CONSTRAINT \"obra_datos_generales_postventa_check\" CHECK (\"plazo_postventa_dias\" IS NULL OR \"plazo_postventa_dias\" BETWEEN 1 AND 365) NOT VALID;\n  END IF;\n  BEGIN\n    ALTER TABLE \"public\".\"obra_datos_generales\" VALIDATE CONSTRAINT \"obra_datos_generales_postventa_check\";\n  EXCEPTION WHEN check_violation THEN\n    RAISE NOTICE 'La regla % queda sin validar: hay filas antiguas que no la cumplen', 'obra_datos_generales_postventa_check';\n  END;\nEND $$",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "el módulo operaciones y las 8 reglas existen",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE clave = 'operaciones') AND (SELECT count(*) FROM pg_constraint WHERE conname IN ('obra_subpartida_fechas_check', 'obra_subpartida_semana_numero_check', 'obra_subpartida_semana_meta_check', 'obra_subpartida_semana_avance_check', 'obra_reprogramacion_dias_check', 'obra_evento_severidad_check', 'obra_datos_generales_avance_check', 'obra_datos_generales_postventa_check')) = 8 AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

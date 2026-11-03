@@ -131,10 +131,11 @@ describe('interpretarProyecto · casos', () => {
   it('lo que falta en la ficha es un error con su fila', () => {
     const l = interpretarProyecto([ficha({ 'Código de obra *': null, 'Jefe de proyecto *': null, 'Estado *': c('Casi listo') })], hoy)!;
     const msgs = l.errores.map((e) => e.mensaje);
-    expect(msgs).toContain('falta el código de obra');
+    // El código de obra ya no es obligatorio en el archivo: sale del centro de costo.
+    expect(msgs).not.toContain('falta el código de obra');
     expect(msgs).toContain('falta el jefe de proyecto');
     expect(msgs).toContain('estado «Casi listo» no válido');
-    expect(l.errores.find((e) => e.mensaje.includes('código'))?.fila).toMatch(/^Ficha f\. \d+$/);
+    expect(l.errores.find((e) => e.mensaje.includes('jefe'))?.fila).toMatch(/^Ficha f\. \d+$/);
   });
 
   it('fin anterior al inicio', () => {
