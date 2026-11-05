@@ -107,6 +107,13 @@ export class CreateCentroCostoDto {
   @IsNumber()
   @Min(1)
   id_anexo?: number;
+
+  @ApiPropertyOptional({ example: 1, nullable: true, description: 'Tipo de proyecto (define los planos obligatorios de la obra); null lo quita' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  id_tipo_proyecto?: number | null;
 }
 
 export class UpdateCentroCostoDto extends PartialType(CreateCentroCostoDto) {}
@@ -179,6 +186,9 @@ export class CentroCostoResponseDto {
 
   @ApiPropertyOptional({ example: 5, description: 'ID del anexo (colaborador asignado)' })
   id_anexo?: number | null;
+
+  @ApiPropertyOptional({ example: 1, description: 'Tipo de proyecto' })
+  id_tipo_proyecto?: number | null;
 
   @ApiPropertyOptional({ example: 'GLD SERVICIOS GENERALES EIRL', description: 'Razón social de la empresa' })
   Empresa?: string | null;

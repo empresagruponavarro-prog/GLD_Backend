@@ -10,6 +10,7 @@ import { metasEfectivas } from '../shared/control-avance/metas.js';
 import { calcularObra, estadoEfectivo } from '../shared/control-avance/motor.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
 import { hoyLima } from '../shared/obra-shared.js';
+import { exigirPresupuestoAprobado } from '../shared/presupuesto-aprobado.js';
 import type { AvanceObraDto, GuardarAvanceSemanaDto, ResultadoGuardarAvanceDto } from './avance.dto.js';
 
 const TOPE_SUMA = 100.5; // RV-07: la suma de las semanas no debe pasar de 100 (0,5 de tolerancia por redondeo)
@@ -69,6 +70,7 @@ export class AvanceHandler {
     if (estadoEfectivo(antes.estadoObra, aDia(antes.inicio), hoyDia) !== 'EN_EJECUCION') {
       throw new ConflictException('Solo se registra avance en obras en ejecución');
     }
+    await exigirPresupuestoAprobado(this.db.orm.public, idCentroCosto, 'avanzar');
     const cal = semanaObra(aDia(antes.inicio), hoyDia);
     if (semana > cal.semanaEnCurso) {
       throw new BadRequestException(`La semana ${semana} aún no llega (la semana en curso es la ${cal.semanaEnCurso}): no se puede registrar avance futuro (RV-10)`);

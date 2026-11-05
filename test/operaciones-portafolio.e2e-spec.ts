@@ -186,7 +186,7 @@ describe('Portafolio de operaciones (e2e)', () => {
         nombre: 'E2E-OPS2 Cliente Uno E2E-OPS2-A',
         cliente: { id: cliente1, nombre: 'E2E-OPS2 Cliente Uno' },
         tienda: 'E2E-OPS2-A',
-        departamento: 'Lima',
+        departamento: 'LIMA',
         estado_obra: 'EN_EJECUCION',
         inicio,
       });
@@ -289,7 +289,7 @@ describe('Portafolio de operaciones (e2e)', () => {
       const c = (await api().get('/operaciones/portafolio/catalogos').expect(200)).body;
       expect(c.clientes).toEqual(expect.arrayContaining([{ id: cliente1, nombre: 'E2E-OPS2 Cliente Uno' }, { id: cliente2, nombre: 'E2E-OPS2 Cliente Dos' }]));
       expect(c.jefes).toEqual(expect.arrayContaining([{ id: jefe1, nombre: 'E2E-OPS2 Jefe Uno' }, { id: jefe2, nombre: 'E2E-OPS2 Jefe Dos' }]));
-      expect(c.departamentos).toContain('Lima');
+      expect(c.departamentos).toContain('LIMA');
       expect(c.anios).toContain(Number(inicio.slice(0, 4)));
     });
 

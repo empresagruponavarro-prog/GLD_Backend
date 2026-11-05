@@ -3,6 +3,7 @@ import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pa
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, I, IN, T, TN, sqlTag, type Tx } from '../shared/almacen-sql.js';
 import { InventarioLedger, type MotivoMovimiento } from '../shared/inventario-ledger.js';
+import { centroTienePrincipalAprobado, validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
 import {
   CreateDocumentoDto,
   DocumentoLineaResponseDto,
@@ -164,13 +165,20 @@ export class DocumentoHandler {
       costo_unitario: TN,
       observaciones: TN,
       id_orden_compra_detalle: IN,
+      id_ppto_detalle_categoria: IN,
+      subfase: TN,
     })`
       SELECT l.id, l.id_producto, p.codigo::text AS codigo, p.descripcion::text AS descripcion,
              COALESCE(u.simbolo, u.codigo)::text AS unidad, l.cantidad::text AS cantidad,
-             l.costo_unitario::text AS costo_unitario, l.observaciones, l.id_orden_compra_detalle
+             l.costo_unitario::text AS costo_unitario, l.observaciones, l.id_orden_compra_detalle,
+             l.id_ppto_detalle_categoria,
+             CASE WHEN l.id_ppto_detalle_categoria IS NULL THEN NULL
+                  ELSE COALESCE(fc."Descripcion", 'Subfase #' || l.id_ppto_detalle_categoria)::text END AS subfase
         FROM almacen_documento_detalle l
         JOIN producto p ON p.id = l.id_producto
         JOIN unidad_medida u ON u.id = p.id_unidad_medida
+        LEFT JOIN "ppto_DetalleFasesCate" sf ON sf.id = l.id_ppto_detalle_categoria
+        LEFT JOIN "ppto_FasesCategorias" fc ON fc."IdpptoFaseCategoria" = sf."IdpptoFaseCategoria"
        WHERE l.id_documento = ${id}::int ORDER BY l.id`;
     return { ...(row as unknown as DocumentoResponseDto), lineas: lineas as unknown as DocumentoLineaResponseDto[] };
   }
@@ -282,8 +290,9 @@ export class DocumentoHandler {
     } else if (dto.id_almacen_destino) {
       throw new BadRequestException('id_almacen_destino solo aplica a transferencias');
     }
-    const ids = dto.lineas.map((l) => l.id_producto);
-    if (!permitirRepetidos && new Set(ids).size !== ids.length) {
+    // El mismo producto puede repetirse en una salida si va a subfases distintas (PECOSA); no en la misma.
+    const claves = dto.lineas.map((l) => `${l.id_producto}:${l.id_ppto_detalle_categoria ?? 0}`);
+    if (!permitirRepetidos && new Set(claves).size !== claves.length) {
       throw new BadRequestException('Hay productos repetidos en las líneas');
     }
     for (const l of dto.lineas) {
@@ -316,7 +325,30 @@ export class DocumentoHandler {
       const [c] = await q.rows<{ id: number }>({ id: I }, tx)`SELECT id FROM "CentroCostos" WHERE id = ${dto.id_centro_costo}::int`;
       if (!c) throw new BadRequestException(`Centro de costos ${dto.id_centro_costo} no existe`);
     }
-    void naturaleza;
+    await this.validarSubfases(tx, naturaleza, dto);
+  }
+
+  /**
+   * Subfase por línea (PECOSA, GRP S-09): solo en salidas por CONSUMO con centro de costo; obligatoria si el centro de costo
+   * tiene un presupuesto Principal aprobado, y siempre de un presupuesto aprobado de ese centro de costo.
+   */
+  private async validarSubfases(tx: Tx, naturaleza: Naturaleza, dto: CreateDocumentoDto): Promise<void> {
+    const conSubfase = dto.lineas.filter((l) => l.id_ppto_detalle_categoria);
+    const esConsumoDeObra = naturaleza === 'SALIDA' && dto.motivo === 'CONSUMO' && !!dto.id_centro_costo;
+    if (conSubfase.length > 0 && !esConsumoDeObra) {
+      throw new BadRequestException('La subfase solo se indica en salidas por CONSUMO a un centro de costo');
+    }
+    if (!esConsumoDeObra) return;
+    const idCc = dto.id_centro_costo as number;
+    if (conSubfase.length < dto.lineas.length && (await centroTienePrincipalAprobado(this.sql, tx, idCc))) {
+      throw new BadRequestException('El centro de costo tiene un presupuesto aprobado: cada línea de la salida debe indicar su subfase');
+    }
+    await validarSubfases(
+      this.sql,
+      tx,
+      idCc,
+      conSubfase.map((l) => l.id_ppto_detalle_categoria as number),
+    );
   }
 
   /** Inserta cabecera + lineas y aplica el movimiento en el motor. Devuelve el id del documento. */
@@ -349,10 +381,12 @@ export class DocumentoHandler {
     for (const [i, linea] of dto.lineas.entries()) {
       const idDetalleOc = vinculo?.idsDetalleOc?.[i] ?? 0;
       const [d] = await q.rows<{ id: number }>({ id: I }, tx)`
-        INSERT INTO almacen_documento_detalle (id_documento, id_producto, cantidad, costo_unitario, observaciones, id_orden_compra_detalle)
+        INSERT INTO almacen_documento_detalle (id_documento, id_producto, cantidad, costo_unitario, observaciones, id_orden_compra_detalle,
+                                               id_ppto_detalle_categoria)
         VALUES (${doc.id}::int, ${linea.id_producto}::int, ${linea.cantidad}::numeric,
                 CASE WHEN ${linea.costo_unitario !== undefined}::boolean THEN ${linea.costo_unitario ?? '0'}::numeric ELSE NULL END,
-                NULLIF(${linea.observaciones ?? ''}::text, ''), NULLIF(${idDetalleOc}::int, 0))
+                NULLIF(${linea.observaciones ?? ''}::text, ''), NULLIF(${idDetalleOc}::int, 0),
+                NULLIF(${linea.id_ppto_detalle_categoria ?? 0}::int, 0))
         RETURNING id`;
       detalles.push({ idDetalle: d.id, linea });
     }

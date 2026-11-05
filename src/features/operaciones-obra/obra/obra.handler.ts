@@ -8,13 +8,14 @@ import { mapDocumento } from '../documentos/documentos.handler.js';
 import { mapIncidencia } from '../incidencias/incidencias.handler.js';
 import type { ObraIncidenciaDto } from '../incidencias/incidencias.dto.js';
 import { mapPlano } from '../planos/planos.handler.js';
-import { cargarDirectorio } from '../residentes/directorio.js';
+import { cargarDirectorio, sincronizarEquipo } from '../residentes/directorio.js';
 import { truncar } from '../shared/control-avance/avance.js';
 import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { cargarEquipo, validarEquipo, ROLES_EQUIPO, type EquipoObra } from '../shared/control-avance/equipo.js';
 import { calcularObra } from '../shared/control-avance/motor.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
 import { assertCentroCosto, codigoYTiendaDelCc, compact, esFechaIso, hoyLima, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
+import { exigirPlazoEditable, resolverPlazo } from '../shared/plazo-obra.js';
 import type {
   ObraCabeceraDto,
   ObraCockpitDto,
@@ -172,10 +173,20 @@ export class ObraHandler {
     for (const [campo, valor] of [['fecha_inicio', dto.fecha_inicio], ['fecha_fin_prog', dto.fecha_fin_prog]] as const) {
       if (valor !== undefined && !esFechaIso(valor)) throw new BadRequestException(`${campo} inválida: ${valor}`);
     }
-    const inicio = dto.fecha_inicio ?? inicioActual;
-    const fin = dto.fecha_fin_prog ?? finActual;
+    // GRP S-02/S-05: inicio, fin y semanas se mantienen de acuerdo (lo último que se edita manda) y, una vez iniciada la
+    // obra, no se editan: las variaciones van por reprogramación.
+    const semanasActuales = existing?.semanas_totales ?? null;
+    const { plazo, error: errorPlazo } = resolverPlazo(
+      { inicio: inicioActual, fin: finActual, semanas: semanasActuales },
+      { inicio: dto.fecha_inicio, fin: dto.fecha_fin_prog, semanas: dto.semanas_totales },
+    );
+    if (errorPlazo) throw new BadRequestException(errorPlazo);
+    const inicio = plazo.inicio;
+    const fin = plazo.fin;
     if (inicio && fin && fin < inicio) throw new BadRequestException('El fin programado no puede ser anterior al inicio (RV-03)');
-    const cambiaPlazo = (dto.fecha_inicio !== undefined && dto.fecha_inicio !== inicioActual) || (dto.fecha_fin_prog !== undefined && dto.fecha_fin_prog !== finActual);
+    const cambiaPlazo = inicio !== inicioActual || fin !== finActual;
+    const cambiaSemanas = existing != null && plazo.semanas !== semanasActuales;
+    if (cambiaPlazo || cambiaSemanas) await exigirPlazoEditable(pub, idCentroCosto);
 
     // Equipo (D15): solo Anexos de tipo Trabajador activos
     const equipoDto = {
@@ -198,7 +209,7 @@ export class ObraHandler {
       ubigeo_cod: toVarchar<10>(dto.ubigeo_cod),
       latitud: dto.latitud != null ? String(dto.latitud) : undefined,
       longitud: dto.longitud != null ? String(dto.longitud) : undefined,
-      semanas_totales: dto.semanas_totales,
+      semanas_totales: plazo.semanas ?? undefined,
       personal_activo_promedio: dto.personal_activo_promedio,
       turno_trabajo: toVarchar<50>(dto.turno_trabajo),
       contacto_cliente_nombre: toVarchar<150>(dto.contacto_cliente_nombre),
@@ -219,7 +230,7 @@ export class ObraHandler {
       const t = tx.orm.public;
       if (cambiaPlazo) {
         await t.CentroCostos.where({ id: idCentroCosto }).update(
-          compact({ fecha_inicio: toDateOnly(dto.fecha_inicio), fecha_fin_prog: toDateOnly(dto.fecha_fin_prog) }),
+          compact({ fecha_inicio: toDateOnly(inicio ?? undefined), fecha_fin_prog: toDateOnly(fin ?? undefined) }),
         );
       }
       if (!existing) {
@@ -240,6 +251,8 @@ export class ObraHandler {
         });
       }
       if (cambiaEquipo) {
+        // GRP S-06: el directorio registra el alta y la baja de cada persona en cada rol (historial), en esta misma transacción.
+        await sincronizarEquipo(t, idCentroCosto, existing, row, hoyLima());
         const despues = await cargarEquipo(t, row);
         const cambios = ROLES_EQUIPO.filter((rol) => (equipoAntes?.[rol]?.id ?? null) !== (despues[rol]?.id ?? null)).map(
           (rol) => `${rol}: ${equipoAntes?.[rol]?.nombre ?? '—'} → ${despues[rol]?.nombre ?? '—'}`,

@@ -1,9 +1,9 @@
 import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
-import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
-import { assertCentroCosto, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
+import { capturarEstructura } from '../shared/capturar-estructura.js';
+import { assertCentroCosto, readDateOnly } from '../shared/obra-shared.js';
 import { estructuraObra, subpartidasConAvance } from './partidas.handler.js';
 import type { ImportarPresupuestoDto, ObraPartidaDto } from './partidas.dto.js';
 
@@ -24,8 +24,6 @@ export interface ResultadoImportacionDto {
   subpartidas: number;
   estructura: ObraPartidaDto[];
 }
-
-const dos = (n: number) => String(n).padStart(2, '0');
 
 /**
  * RF-OP-08 · Importa la estructura del presupuesto de la obra: cada fase asignada
@@ -79,10 +77,7 @@ export class ImportarPresupuestoHandler {
     }
     const codigo = ppto.IdPresupuesto;
 
-    const [fases, cates] = await Promise.all([
-      orm.ppto_DetalleFases.where({ IdPresupuesto: codigo }).all(),
-      orm.ppto_DetalleFasesCate.where({ IdPresupuesto: codigo }).all(),
-    ]);
+    const fases = await orm.ppto_DetalleFases.where({ IdPresupuesto: codigo }).all();
     if (fases.length === 0) throw new BadRequestException('El presupuesto no tiene fases asignadas: no hay estructura que importar');
 
     const actuales = await orm.obra_partida.where({ id_centro_costo: idCentroCosto }).all();
@@ -94,63 +89,26 @@ export class ImportarPresupuestoHandler {
       }
     }
 
-    // Nombres: la fase y la categoría del catálogo maestro.
-    const codigosFase = [...new Set(fases.map((f) => f.IdpptoFase).filter((c): c is NonNullable<typeof c> => !!c))];
-    const codigosCat = [...new Set(cates.map((c) => c.IdpptoFaseCategoria).filter((c): c is NonNullable<typeof c> => !!c))];
-    const [maestroFases, maestroCats] = await Promise.all([
-      codigosFase.length ? orm.ppto_Fases.where((f) => f.IdpptoFase.in(codigosFase)).all() : [],
-      codigosCat.length ? orm.ppto_FasesCategorias.where((c) => c.IdpptoFaseCategoria.in(codigosCat)).all() : [],
-    ]);
-    const nombreFase = new Map(maestroFases.map((f) => [f.IdpptoFase, f.FaseProyecto]));
-    const nombreCat = new Map(maestroCats.map((c) => [c.IdpptoFaseCategoria, c.Descripcion]));
-
-    const fasesOrdenadas = [...fases].sort((a, b) => a.id - b.id);
-    let totalSub = 0;
-
+    let capturada = { partidas: 0, subpartidas: 0 };
     try {
       await this.db.transaction(async (tx) => {
         const t = tx.orm.public;
         if (actuales.length > 0) await t.obra_partida.where({ id_centro_costo: idCentroCosto }).delete();
 
-        let pOrden = 0;
-        for (const fase of fasesOrdenadas) {
-          pOrden++;
-          const itemPartida = dos(pOrden);
-          const partida = await t.obra_partida.create({
-            id_centro_costo: idCentroCosto,
-            item: toVarchar<20>(itemPartida),
-            nombre: toVarchar<150>((nombreFase.get(fase.IdpptoFase) ?? `Fase ${pOrden}`).trim().slice(0, 150)),
-            tipo: 'CONTRACTUAL',
-            orden: pOrden,
-            id_ppto_detalle_fase: fase.id,
-          });
-          const delaFase = cates.filter((c) => c.IdPresupuestoDetalle === fase.IdPresupuestoDetalle).sort((a, b) => a.id - b.id);
-          let sOrden = 0;
-          for (const cat of delaFase) {
-            sOrden++;
-            totalSub++;
-            await t.obra_subpartida.create({
-              id_partida: partida.id,
-              id_centro_costo: idCentroCosto,
-              item: toVarchar<20>(`${itemPartida}.${dos(sOrden)}`),
-              nombre: toVarchar<150>((nombreCat.get(cat.IdpptoFaseCategoria) ?? `Partida ${itemPartida}.${dos(sOrden)}`).trim().slice(0, 150)),
-              fecha_inicio: toDateOnly(inicio)!,
-              fecha_fin: toDateOnly(fin)!,
-              orden: sOrden,
-              id_ppto_detalle_categoria: cat.id,
-            });
-          }
-        }
-
-        const gen = await t.obra_datos_generales.first({ id_centro_costo: idCentroCosto });
-        if (gen) await t.obra_datos_generales.where({ id: gen.id }).update({ id_presupuesto_origen: ppto.id });
-        else await t.obra_datos_generales.create({ id_centro_costo: idCentroCosto, id_presupuesto_origen: ppto.id });
+        // La misma captura que hace la aprobación del presupuesto (GRP): fase → partida, categoría → subpartida con su monto.
+        capturada = await capturarEstructura(t, {
+          idCentroCosto,
+          ppto: { id: ppto.id, IdPresupuesto: codigo },
+          inicio,
+          fin,
+          modo: 'principal',
+        });
 
         await registrarEvento(t, {
           idCentroCosto,
           tipo: 'ALTA',
           titulo: `Estructura importada del presupuesto ${codigo}`,
-          detalle: `${fasesOrdenadas.length} partida(s) y ${totalSub} subpartida(s)${actuales.length > 0 ? ' (reemplazó la estructura anterior)' : ''}`,
+          detalle: `${capturada.partidas} partida(s) y ${capturada.subpartidas} subpartida(s)${actuales.length > 0 ? ' (reemplazó la estructura anterior)' : ''}`,
           usuario,
         });
       });
@@ -159,6 +117,6 @@ export class ImportarPresupuestoHandler {
       throw e;
     }
 
-    return { id_presupuesto: ppto.id, partidas: fasesOrdenadas.length, subpartidas: totalSub, estructura: await estructuraObra(orm, idCentroCosto) };
+    return { id_presupuesto: ppto.id, partidas: capturada.partidas, subpartidas: capturada.subpartidas, estructura: await estructuraObra(orm, idCentroCosto) };
   }
 }

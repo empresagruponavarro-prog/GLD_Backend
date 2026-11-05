@@ -2,8 +2,10 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { assertCentroCosto, compact } from '../shared/obra-shared.js';
-import { cargarDirectorio, contactosDeTrabajadores, ETIQUETAS_ROL, mapResidente, ROL_COMPLEMENTO_EQUIPO, rolesPorPersona } from './directorio.js';
+import { cargarDirectorio, cargarHistorialEquipo, contactosDeTrabajadores, ETIQUETAS_ROL, mapResidente, ROL_COMPLEMENTO_EQUIPO, rolesPorPersona } from './directorio.js';
 import type { CreateObraResidenteDto, DatosEquipoDirectorioDto, ObraResidenteDto, UpdateObraResidenteDto } from './residentes.dto.js';
+
+const MSG_REGISTRO_DE_ROL = 'Es parte del historial del equipo de la ficha técnica: no se edita ni se elimina';
 
 /** '' o null = quitar el dato propio (vuelve el de Trabajadores); undefined = no se toca. */
 const textoOpcional = (v: string | null | undefined): string | null | undefined => (v === undefined ? undefined : v?.trim() || null);
@@ -12,9 +14,15 @@ const textoOpcional = (v: string | null | undefined): string | null | undefined 
 export class ResidentesHandler {
   constructor(@Inject(DB) private readonly db: Database) {}
 
-  /** Directorio de la obra: el equipo de la ficha técnica primero y luego los contactos agregados a mano. */
+  /** Directorio de la obra: el equipo de la ficha técnica primero (una tarjeta por persona y rol) y luego los contactos agregados a mano. */
   async list(idCentroCosto: number): Promise<ObraResidenteDto[]> {
     return cargarDirectorio(this.db.orm.public, idCentroCosto);
+  }
+
+  /** Historial del equipo: quiénes ocuparon cada rol de la ficha y dejaron de ocuparlo, del más reciente al más antiguo. */
+  async historial(idCentroCosto: number): Promise<ObraResidenteDto[]> {
+    await assertCentroCosto(this.db, idCentroCosto);
+    return cargarHistorialEquipo(this.db.orm.public, idCentroCosto);
   }
 
   async create(idCentroCosto: number, dto: CreateObraResidenteDto): Promise<ObraResidenteDto> {
@@ -48,7 +56,8 @@ export class ResidentesHandler {
   }
 
   async update(idCentroCosto: number, idResidente: number, dto: UpdateObraResidenteDto): Promise<ObraResidenteDto> {
-    await this.findOrFail(idCentroCosto, idResidente);
+    const fila = await this.findOrFail(idCentroCosto, idResidente);
+    if (fila.rol_equipo != null) throw new BadRequestException(MSG_REGISTRO_DE_ROL);
     const row = await this.db.orm.public.obra_residentes.where({ id: idResidente }).update(
       compact({
         id_anexo: dto.id_anexo,
@@ -83,7 +92,9 @@ export class ResidentesHandler {
       turno: toVarchar<100>(textoOpcional(dto.turno)),
       estado_planta: toVarchar<50>(dto.estado_planta),
     };
-    const [fila] = await pub.obra_residentes.where({ id_centro_costo: idCentroCosto, id_anexo: idAnexo }).orderBy((r) => r.orden.asc()).all();
+    // Los datos de obra son de la persona (valen para todas sus tarjetas); los registros de alta y baja de un rol no cuentan.
+    const filas = await pub.obra_residentes.where({ id_centro_costo: idCentroCosto, id_anexo: idAnexo }).orderBy((r) => r.orden.asc()).all();
+    const fila = filas.find((f) => f.rol_equipo == null);
     if (fila) {
       await pub.obra_residentes.where({ id: fila.id }).update(compact(datos));
     } else {
@@ -98,13 +109,14 @@ export class ResidentesHandler {
         orden: 0,
       });
     }
-    const tarjeta = (await this.list(idCentroCosto)).find((r) => r.clave === `equipo-${idAnexo}`);
+    const tarjeta = (await this.list(idCentroCosto)).find((r) => r.origen === 'equipo' && r.id_anexo === idAnexo);
     if (!tarjeta) throw new NotFoundException(`El anexo ${idAnexo} no es parte del equipo de la ficha técnica de esta obra`);
     return tarjeta;
   }
 
   async remove(idCentroCosto: number, idResidente: number) {
     const row = await this.findOrFail(idCentroCosto, idResidente);
+    if (row.rol_equipo != null) throw new BadRequestException(MSG_REGISTRO_DE_ROL);
     if (row.id_anexo != null && (await this.equipoDeLaFicha(idCentroCosto)).has(row.id_anexo)) {
       throw new BadRequestException('Es parte del equipo de la ficha técnica: cámbielo o quítelo desde la ficha');
     }

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "data.grp.inicio-y-menu",
+    "label": "GRP M4: desactiva dashboard y deja Centros de Costos en solo consulta",
+    "summary": "modulo.dashboard.activo = false; Promotor, Supervisor y Usuario sin crear/editar/eliminar en centros-costos",
+    "operationClass": "data",
+    "invariantId": "grp-inicio-y-menu",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "desactivar el módulo dashboard",
+        "sql": "UPDATE \"public\".\"modulo\" SET activo = false WHERE clave = 'dashboard' AND activo = true",
+        "params": []
+      },
+      {
+        "description": "centros-costos en solo consulta para Promotor, Supervisor y Usuario",
+        "sql": "UPDATE \"public\".\"rol_permiso\" SET crear = false, editar = false, eliminar = false\n                   WHERE modulo_id = (SELECT id FROM \"public\".\"modulo\" WHERE clave = 'centros-costos')\n                     AND rol_id IN (SELECT id FROM \"public\".\"rol\" WHERE nombre IN ('Promotor', 'Supervisor', 'Usuario'))\n                     AND (crear OR editar OR eliminar)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "dashboard inactivo y esos roles sin escritura en centros-costos",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE clave = 'dashboard' AND activo)\n                    AND NOT EXISTS (\n                      SELECT 1 FROM \"public\".\"rol_permiso\" p\n                        JOIN \"public\".\"modulo\" m ON m.id = p.modulo_id AND m.clave = 'centros-costos'\n                        JOIN \"public\".\"rol\" r ON r.id = p.rol_id AND r.nombre IN ('Promotor', 'Supervisor', 'Usuario')\n                       WHERE p.crear OR p.editar OR p.eliminar) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

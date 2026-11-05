@@ -29,6 +29,17 @@ enum estado_obra {
   CANCELADA
 }
 
+// Estado normalizado del presupuesto (GRP, DG1). `ppto_Principal.Estado` queda como legado de solo lectura.
+enum estado_presupuesto {
+  EN_DESARROLLO
+  EN_REVISION
+  OBSERVADO
+  APROBADO
+  ENTREGADO
+  LIQUIDADO
+  ANULADO
+}
+
 enum tipo_partida_obra {
   CONTRACTUAL
   ADICIONAL
@@ -379,12 +390,15 @@ model requerimiento_detalle {
   precio_referencial Decimal?
   observaciones      String?
   id_beneficiario    Int?
+  id_ppto_detalle_categoria Int?
+  pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields:[id_ppto_detalle_categoria], references:[id], onDelete: SetNull)
   requerimiento      requerimiento @relation(fields:[id_requerimiento], references:[id], onDelete: Cascade)
   producto           producto      @relation(fields:[id_producto], references:[id])
   beneficiario       Anexos?       @relation("RequerimientoDetalleBeneficiario", fields:[id_beneficiario], references:[id])
   ordenCompraLineas  OrdenCompraDetalle[]
   cotizacionLineas   cotizacion_detalle[]
   @@index([id_requerimiento])
+  @@index([id_ppto_detalle_categoria])
   @@map("requerimiento_detalle")
 }
 
@@ -449,9 +463,12 @@ model almacen_documento_detalle {
   producto       producto          @relation(fields:[id_producto], references:[id])
   id_orden_compra_detalle Int?
   ordenCompraDetalle OrdenCompraDetalle? @relation(fields:[id_orden_compra_detalle], references:[id], onDelete: Restrict)
+  id_ppto_detalle_categoria Int?
+  pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields:[id_ppto_detalle_categoria], references:[id], onDelete: SetNull)
   kardex         almacen_kardex[]
   @@index([id_documento])
   @@index([id_orden_compra_detalle])
+  @@index([id_ppto_detalle_categoria], map: "almacen_doc_det_subfase_idx")
   @@map("almacen_documento_detalle")
 }
 
@@ -745,6 +762,10 @@ model CentroCostos {
   empresa                       Empresas?               @relation("CentroCostosEmpresa", fields: [id_empresa], references: [id_empresa], onDelete: SetNull)
   id_anexo                      Int?
   anexo                         Anexos?                 @relation("CentroCostosAnexo", fields: [id_anexo], references: [id], onDelete: SetNull)
+  id_tipo_proyecto              Int?
+  tipoProyecto                  tipo_proyecto?          @relation(fields: [id_tipo_proyecto], references: [id], onDelete: SetNull)
+  fecha_liquidacion             DateString?
+  liquidado_por                 VarChar(255)?
 
   almacenMovimientos     AlmacenMovimientos[]
   cajaEgresosRetail      CajaEgresosRetail[]
@@ -768,6 +789,7 @@ model CentroCostos {
   obraSubpartidas        obra_subpartida[]
   obraReprogramaciones   obra_reprogramacion[]
   obraEventos            obra_evento[]
+  planosRequeridos       obra_plano_requerido[]
 
   @@index([id_centro_costos_principal])
   @@map("CentroCostos")
@@ -1152,9 +1174,12 @@ model OrdenCompraDetalle {
   requerimientoDetalle requerimiento_detalle? @relation(fields: [id_requerimiento_detalle], references: [id], onDelete: Restrict)
   id_producto     Int?
   producto        producto?     @relation(fields: [id_producto], references: [id], onDelete: SetNull)
+  id_ppto_detalle_categoria Int?
+  pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields: [id_ppto_detalle_categoria], references: [id], onDelete: SetNull)
   almacenDetalles almacen_documento_detalle[]
   @@index([id_orden_compra])
   @@index([id_requerimiento_detalle])
+  @@index([id_ppto_detalle_categoria])
   @@map("ordenCompraDetalle")
 }
 
@@ -1441,6 +1466,9 @@ model ppto_DetalleFasesCate {
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   items        ppto_DetalleItems[]
   obraSubpartidas obra_subpartida[] @relation("ObraSubpartidaOrigen")
+  requerimientoDetalles requerimiento_detalle[]
+  ordenCompraDetalles OrdenCompraDetalle[]
+  almacenDocumentoDetalles almacen_documento_detalle[]
   @@map("ppto_DetalleFasesCate")
 }
 
@@ -1496,6 +1524,13 @@ model ppto_Principal {
   IGV                   Decimal?
   Total                 Decimal?
   Estado                VarChar(50)?
+  estado_ppto           estado_presupuesto @default(EN_DESARROLLO)
+  numero_version        Int           @default(1)
+  id_version_de         Int?
+  versionDe             ppto_Principal? @relation("PptoVersiones", fields: [id_version_de], references: [id], onDelete: SetNull)
+  versiones             ppto_Principal[] @relation("PptoVersiones")
+  aprobado_por          VarChar(255)?
+  fecha_aprobacion      DateTime?
   File                  VarChar(255)?
   FILE_Presupuesto      VarChar(255)?
   Comentarios           String?
@@ -1602,6 +1637,8 @@ model obra_subpartida {
   orden                     Int                @default(0)
   observacion               VarChar(200)?
   id_ppto_detalle_categoria Int?
+  // Costo directo de la categoría al capturar (foto, GRP DG3). Es el peso de la subpartida en el avance.
+  monto                     Decimal?
   created_at                DateTime           @default(now())
   updated_at                DateTime           @default(now())
   partida                   obra_partida       @relation(fields: [id_partida], references: [id], onDelete: Cascade)
@@ -1689,6 +1726,11 @@ model obra_residentes {
   estado_planta   VarChar(50)?  @default("En Planta")
   foto_url        VarChar(1000)?
   orden           Int? @default(0)
+  // Equipo de la ficha (GRP S-06): una fila por persona y rol; al salir de la ficha queda inactiva con fecha de baja.
+  rol_equipo      VarChar(30)?
+  activo          Boolean @default(true)
+  fecha_alta      DateString?
+  fecha_baja      DateString?
   created_at      DateTime? @default(now())
   @@map("obra_residentes")
 }
@@ -2170,4 +2212,66 @@ model trabajador {
   @@index([id_modalidad_contrato])
   @@index([id_area])
   @@map("trabajador")
+}
+
+// ============================================================
+// GRP — tipos de proyecto, planos requeridos y periodos fiscales
+// ============================================================
+
+// Tipo de proyecto del centro de costo (TAMBO, ARUMA…): define qué planos son obligatorios.
+model tipo_proyecto {
+  id            Int      @id @default(autoincrement())
+  nombre        VarChar(80) @unique
+  activo        Boolean  @default(true)
+  orden         Int      @default(0)
+  centrosCosto  CentroCostos[]
+  planos        tipo_proyecto_plano[]
+  @@map("tipo_proyecto")
+}
+
+// Tipo de plano (arquitectura, estructuras, eléctrico…).
+model tipo_plano {
+  id            Int      @id @default(autoincrement())
+  codigo        VarChar(20) @unique
+  nombre        VarChar(120)
+  disciplina    VarChar(50)?
+  activo        Boolean  @default(true)
+  orden         Int      @default(0)
+  proyectos     tipo_proyecto_plano[]
+  requeridos    obra_plano_requerido[]
+  @@map("tipo_plano")
+}
+
+model tipo_proyecto_plano {
+  id_tipo_proyecto Int
+  id_tipo_plano    Int
+  obligatorio      Boolean @default(true)
+  tipoProyecto     tipo_proyecto @relation(fields: [id_tipo_proyecto], references: [id], onDelete: Cascade)
+  tipoPlano        tipo_plano    @relation(fields: [id_tipo_plano], references: [id], onDelete: Cascade)
+  @@id([id_tipo_proyecto, id_tipo_plano])
+  @@map("tipo_proyecto_plano")
+}
+
+// Lista de verificación de planos de una obra: se copia del tipo de proyecto y se marca con un check.
+model obra_plano_requerido {
+  id              Int      @id @default(autoincrement())
+  id_centro_costo Int
+  id_tipo_plano   Int
+  obligatorio     Boolean  @default(true)
+  entregado       Boolean  @default(false)
+  entregado_por   VarChar(255)?
+  entregado_en    DateTime?
+  id_plano        Int?
+  centroCosto     CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
+  tipoPlano       tipo_plano   @relation(fields: [id_tipo_plano], references: [id], onDelete: Restrict)
+  @@unique([id_centro_costo, id_tipo_plano])
+  @@index([id_centro_costo])
+  @@map("obra_plano_requerido")
+}
+
+// Años que se pueden elegir como periodo de un centro de costo o presupuesto.
+model periodo_fiscal {
+  anio    Int     @id
+  activo  Boolean @default(true)
+  @@map("periodo_fiscal")
 }

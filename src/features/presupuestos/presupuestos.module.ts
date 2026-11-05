@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../prisma/prisma.module.js';
+import { AlmacenModule } from '../almacen/almacen.module.js';
+import { AprobacionPresupuestoController } from './aprobacion/aprobacion.controller.js';
+import { AprobacionPresupuestoHandler } from './aprobacion/aprobacion.handler.js';
 import { PptoDetalleFasesCateController } from './detalle-fases-cate/detalle-fases-cate.controller.js';
 import { PptoDetalleFasesCateHandler } from './detalle-fases-cate/detalle-fases-cate.handler.js';
 import { PptoDetalleFasesController } from './detalle-fases/detalle-fases.controller.js';
@@ -10,6 +13,8 @@ import { PptoFasesController } from './fases/fases.controller.js';
 import { PptoFasesHandler } from './fases/fases.handler.js';
 import { PresupuestoHistorialController } from './presupuesto-historial/presupuesto-historial.controller.js';
 import { PresupuestoHistorialHandler } from './presupuesto-historial/presupuesto-historial.handler.js';
+import { SubfasesController } from './subfases/subfases.controller.js';
+import { SubfasesHandler } from './subfases/subfases.handler.js';
 import { PresupuestoPrincipalController } from './presupuesto-principal/presupuesto-principal.controller.js';
 import { PresupuestoPrincipalHandler } from './presupuesto-principal/presupuesto-principal.handler.js';
 
@@ -22,7 +27,7 @@ import { PptoDetalleItemsController } from './detalle-items/detalle-items.contro
 import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.js';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AlmacenModule],
   controllers: [
     PptoFasesController,
     PptoFasesCategoriasController,
@@ -30,6 +35,8 @@ import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.j
     PptoDetalleFasesCateController,
     PresupuestoHistorialController,
     PresupuestoPrincipalController,
+    AprobacionPresupuestoController,
+    SubfasesController,
     PlantillasController,
     AplicarPlantillaController,
     PlantillasItemsController,
@@ -37,6 +44,8 @@ import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.j
   ],
   providers: [
     PresupuestoPrincipalHandler,
+    AprobacionPresupuestoHandler,
+    SubfasesHandler,
     PptoFasesHandler,
     PptoFasesCategoriasHandler,
     PptoDetalleFasesHandler,

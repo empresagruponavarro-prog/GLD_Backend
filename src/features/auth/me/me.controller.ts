@@ -11,8 +11,10 @@ import { CurrentUser } from '../../../platform/auth/decorators/current-user.deco
 import { UsuarioSesionDto } from '../shared/usuario-sesion.dto.js';
 import { MeHandler } from './me.handler.js';
 import { LecturaCompartida } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('auth')
+@SinMayusculas()
 @Controller('auth')
 @LecturaCompartida()
 export class MeController {

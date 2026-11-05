@@ -10,8 +10,15 @@ export class ObraResidenteDto {
   @ApiProperty({ type: Number, nullable: true }) id: number | null;
   /** Identificador estable de la tarjeta: `equipo-<idAnexo>` o `res-<id>`. */
   @ApiProperty() clave: string;
-  /** `equipo`: sale del equipo de la ficha técnica (nombre y cargo no se editan aquí); `directorio`: agregado a mano. */
-  @ApiProperty({ enum: ['equipo', 'directorio'] }) origen: 'equipo' | 'directorio';
+  /**
+   * `equipo`: sale del equipo de la ficha técnica (nombre y cargo no se editan aquí; una persona con dos roles tiene dos
+   * tarjetas); `directorio`: agregado a mano; `historial`: persona que ya no ocupa ese rol (GRP S-06).
+   */
+  @ApiProperty({ enum: ['equipo', 'directorio', 'historial'] }) origen: 'equipo' | 'directorio' | 'historial';
+  /** Equipo de la ficha: desde cuándo ocupa el rol, si se registró el alta (`YYYY-MM-DD`). */
+  @ApiPropertyOptional() fecha_alta?: string;
+  /** Historial: hasta cuándo ocupó el rol (`YYYY-MM-DD`). */
+  @ApiPropertyOptional() fecha_baja?: string;
   @ApiPropertyOptional({ enum: ROLES_EQUIPO, isArray: true }) roles_equipo?: RolEquipo[];
   @ApiPropertyOptional() id_anexo?: number;
   @ApiProperty() nombre_completo: string;

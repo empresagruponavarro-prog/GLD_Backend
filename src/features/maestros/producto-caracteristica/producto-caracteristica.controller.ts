@@ -10,6 +10,7 @@ import {
 import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import { CaracteristicaItemDto, ReplaceCaracteristicasDto } from './producto-caracteristica.dto.js';
 import { ProductoCaracteristicaHandler } from './producto-caracteristica.handler.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('maestros/producto')
 @Controller('maestros/producto')
@@ -27,6 +28,8 @@ export class ProductoCaracteristicaController {
     return this.handler.listar(id);
   }
 
+  // Los nombres de las características son claves que el tablero de equipos busca tal cual («RAM», «Sistema operativo»).
+  @SinMayusculas()
   @Put(':id/caracteristicas')
   @ApiOperation({ summary: 'Reemplazar las características de un bien del catálogo (máx. 30)' })
   @ApiParam({ name: 'id', description: 'ID numérico del producto', type: Number })

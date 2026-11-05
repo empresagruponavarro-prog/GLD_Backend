@@ -1,0 +1,132 @@
+[
+  {
+    "id": "data.grp.mayusculas-datos",
+    "label": "GRP M3: textos libres de la lista blanca en mayúsculas",
+    "summary": "UPDATE … SET col = upper(col) en 21 columnas (nombres, descripciones y direcciones)",
+    "operationClass": "data",
+    "invariantId": "grp-mayusculas-datos",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "CentroCostos"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "CentroCostos.centro_costo en mayúsculas",
+        "sql": "UPDATE \"public\".\"CentroCostos\" SET \"centro_costo\" = upper(\"centro_costo\") WHERE \"centro_costo\" IS DISTINCT FROM upper(\"centro_costo\")",
+        "params": []
+      },
+      {
+        "description": "anexos.Anexo en mayúsculas",
+        "sql": "UPDATE \"public\".\"anexos\" SET \"Anexo\" = upper(\"Anexo\") WHERE \"Anexo\" IS DISTINCT FROM upper(\"Anexo\")",
+        "params": []
+      },
+      {
+        "description": "anexos.NombreComercial en mayúsculas",
+        "sql": "UPDATE \"public\".\"anexos\" SET \"NombreComercial\" = upper(\"NombreComercial\") WHERE \"NombreComercial\" IS DISTINCT FROM upper(\"NombreComercial\")",
+        "params": []
+      },
+      {
+        "description": "producto.descripcion en mayúsculas",
+        "sql": "UPDATE \"public\".\"producto\" SET \"descripcion\" = upper(\"descripcion\") WHERE \"descripcion\" IS DISTINCT FROM upper(\"descripcion\")",
+        "params": []
+      },
+      {
+        "description": "ppto_Principal.Proyecto en mayúsculas",
+        "sql": "UPDATE \"public\".\"ppto_Principal\" SET \"Proyecto\" = upper(\"Proyecto\") WHERE \"Proyecto\" IS DISTINCT FROM upper(\"Proyecto\")",
+        "params": []
+      },
+      {
+        "description": "ppto_Fases.FaseProyecto en mayúsculas",
+        "sql": "UPDATE \"public\".\"ppto_Fases\" SET \"FaseProyecto\" = upper(\"FaseProyecto\") WHERE \"FaseProyecto\" IS DISTINCT FROM upper(\"FaseProyecto\")",
+        "params": []
+      },
+      {
+        "description": "ppto_FasesCategorias.Descripcion en mayúsculas",
+        "sql": "UPDATE \"public\".\"ppto_FasesCategorias\" SET \"Descripcion\" = upper(\"Descripcion\") WHERE \"Descripcion\" IS DISTINCT FROM upper(\"Descripcion\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.direccion en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"direccion\" = upper(\"direccion\") WHERE \"direccion\" IS DISTINCT FROM upper(\"direccion\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.departamento en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"departamento\" = upper(\"departamento\") WHERE \"departamento\" IS DISTINCT FROM upper(\"departamento\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.provincia en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"provincia\" = upper(\"provincia\") WHERE \"provincia\" IS DISTINCT FROM upper(\"provincia\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.distrito en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"distrito\" = upper(\"distrito\") WHERE \"distrito\" IS DISTINCT FROM upper(\"distrito\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.tienda en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"tienda\" = upper(\"tienda\") WHERE \"tienda\" IS DISTINCT FROM upper(\"tienda\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.turno_trabajo en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"turno_trabajo\" = upper(\"turno_trabajo\") WHERE \"turno_trabajo\" IS DISTINCT FROM upper(\"turno_trabajo\")",
+        "params": []
+      },
+      {
+        "description": "obra_datos_generales.contacto_cliente_nombre en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_datos_generales\" SET \"contacto_cliente_nombre\" = upper(\"contacto_cliente_nombre\") WHERE \"contacto_cliente_nombre\" IS DISTINCT FROM upper(\"contacto_cliente_nombre\")",
+        "params": []
+      },
+      {
+        "description": "obra_residentes.nombre_completo en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_residentes\" SET \"nombre_completo\" = upper(\"nombre_completo\") WHERE \"nombre_completo\" IS DISTINCT FROM upper(\"nombre_completo\")",
+        "params": []
+      },
+      {
+        "description": "obra_residentes.especialidad en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_residentes\" SET \"especialidad\" = upper(\"especialidad\") WHERE \"especialidad\" IS DISTINCT FROM upper(\"especialidad\")",
+        "params": []
+      },
+      {
+        "description": "obra_residentes.turno en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_residentes\" SET \"turno\" = upper(\"turno\") WHERE \"turno\" IS DISTINCT FROM upper(\"turno\")",
+        "params": []
+      },
+      {
+        "description": "obra_partida.nombre en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_partida\" SET \"nombre\" = upper(\"nombre\") WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")",
+        "params": []
+      },
+      {
+        "description": "obra_subpartida.nombre en mayúsculas",
+        "sql": "UPDATE \"public\".\"obra_subpartida\" SET \"nombre\" = upper(\"nombre\") WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")",
+        "params": []
+      },
+      {
+        "description": "area.nombre en mayúsculas",
+        "sql": "UPDATE \"public\".\"area\" SET \"nombre\" = upper(\"nombre\") WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")",
+        "params": []
+      },
+      {
+        "description": "almacen.nombre en mayúsculas",
+        "sql": "UPDATE \"public\".\"almacen\" SET \"nombre\" = upper(\"nombre\") WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "ninguna columna de la lista blanca conserva minúsculas",
+        "sql": "SELECT ((SELECT count(*) FROM \"public\".\"CentroCostos\" WHERE \"centro_costo\" IS DISTINCT FROM upper(\"centro_costo\")) + (SELECT count(*) FROM \"public\".\"anexos\" WHERE \"Anexo\" IS DISTINCT FROM upper(\"Anexo\")) + (SELECT count(*) FROM \"public\".\"anexos\" WHERE \"NombreComercial\" IS DISTINCT FROM upper(\"NombreComercial\")) + (SELECT count(*) FROM \"public\".\"producto\" WHERE \"descripcion\" IS DISTINCT FROM upper(\"descripcion\")) + (SELECT count(*) FROM \"public\".\"ppto_Principal\" WHERE \"Proyecto\" IS DISTINCT FROM upper(\"Proyecto\")) + (SELECT count(*) FROM \"public\".\"ppto_Fases\" WHERE \"FaseProyecto\" IS DISTINCT FROM upper(\"FaseProyecto\")) + (SELECT count(*) FROM \"public\".\"ppto_FasesCategorias\" WHERE \"Descripcion\" IS DISTINCT FROM upper(\"Descripcion\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"direccion\" IS DISTINCT FROM upper(\"direccion\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"departamento\" IS DISTINCT FROM upper(\"departamento\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"provincia\" IS DISTINCT FROM upper(\"provincia\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"distrito\" IS DISTINCT FROM upper(\"distrito\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"tienda\" IS DISTINCT FROM upper(\"tienda\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"turno_trabajo\" IS DISTINCT FROM upper(\"turno_trabajo\")) + (SELECT count(*) FROM \"public\".\"obra_datos_generales\" WHERE \"contacto_cliente_nombre\" IS DISTINCT FROM upper(\"contacto_cliente_nombre\")) + (SELECT count(*) FROM \"public\".\"obra_residentes\" WHERE \"nombre_completo\" IS DISTINCT FROM upper(\"nombre_completo\")) + (SELECT count(*) FROM \"public\".\"obra_residentes\" WHERE \"especialidad\" IS DISTINCT FROM upper(\"especialidad\")) + (SELECT count(*) FROM \"public\".\"obra_residentes\" WHERE \"turno\" IS DISTINCT FROM upper(\"turno\")) + (SELECT count(*) FROM \"public\".\"obra_partida\" WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")) + (SELECT count(*) FROM \"public\".\"obra_subpartida\" WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")) + (SELECT count(*) FROM \"public\".\"area\" WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\")) + (SELECT count(*) FROM \"public\".\"almacen\" WHERE \"nombre\" IS DISTINCT FROM upper(\"nombre\"))) = 0 AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

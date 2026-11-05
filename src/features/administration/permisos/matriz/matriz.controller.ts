@@ -13,8 +13,10 @@ import {
 import { ActualizarPermisosDto, MatrizPermisosDto } from './matriz.dto.js';
 import { MatrizPermisosHandler } from './matriz.handler.js';
 import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/permisos')
+@SinMayusculas()
 @Controller('administration/roles')
 @Modulo('admin.roles')
 @ApiUnauthorizedResponse({ description: 'Sin sesión' })

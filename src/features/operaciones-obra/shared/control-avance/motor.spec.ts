@@ -302,8 +302,9 @@ describe('motor · RV avisos de lectura', () => {
     expect(codigos(obra())).not.toContain('RV-14');
   });
 
-  it('RV-15 actualización futura y RV-16 sin actualizar hace más de 14 días', () => {
-    expect(codigos(obra({ fechaActualizacion: '2026-12-01' }))).toContain('RV-15');
+  it('RV-16 sin actualizar hace más de 14 días; una actualización con fecha futura ya no avisa (S-12, se retiró RV-15)', () => {
+    expect(codigos(obra({ fechaActualizacion: '2026-12-01' }))).not.toContain('RV-15');
+    expect(codigos(obra({ fechaActualizacion: '2026-12-01' }))).not.toContain('RV-16');
     expect(codigos(obra({ fechaActualizacion: '2026-09-01' }))).toContain('RV-16');
     expect(codigos(obra({ fechaActualizacion: '2026-10-01' }))).not.toContain('RV-16');
   });

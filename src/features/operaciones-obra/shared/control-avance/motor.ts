@@ -14,7 +14,7 @@ import {
   type TipoPartida,
 } from './control-avance.types.js';
 import { curvaS, type FiltroTipoCurva, type SubpartidaCurva } from './curva-s.js';
-import { metasEfectivas, peso } from './metas.js';
+import { metasEfectivas, peso, usaMontoComoPeso } from './metas.js';
 import { diasDeRetraso, diasFueraDePlazo, proximoAVencer } from './plazos.js';
 import { postVenta } from './postventa.js';
 import {
@@ -81,6 +81,9 @@ interface Contexto {
   finVigente: Dia;
   finControl: Dia;
   subs: SubInterna[];
+  /** Con qué se pesa el avance (SP-03) y la suma de los pesos, para dar cada peso como porcentaje. */
+  pesoPor: 'MONTO' | 'DURACION';
+  pesoTotal: number;
 }
 
 function preparar(entrada: ObraEntrada, hoyIso: string): Contexto {
@@ -92,6 +95,7 @@ function preparar(entrada: ObraEntrada, hoyIso: string): Contexto {
   // «Aplica a» (reprogramar una sola partida) queda fuera de este motor (D5).
   const pausas: Pausa[] = (entrada.reprogramaciones ?? []).map((r) => ({ desde: aDia(r.desde), dias: r.dias, externa: esMotivoExterno(r.motivo) }));
 
+  const porMonto = usaMontoComoPeso(entrada.partidas.flatMap((p) => p.subpartidas));
   const subs: SubInterna[] = [];
   entrada.partidas.forEach((p, partidaIdx) => {
     for (const s of p.subpartidas) {
@@ -102,7 +106,7 @@ function preparar(entrada: ObraEntrada, hoyIso: string): Contexto {
         nombre: s.nombre,
         tipo: s.tipo ?? p.tipo ?? 'CONTRACTUAL',
         ...tramo,
-        peso: peso(tramo),
+        peso: porMonto ? (s.monto as number) : peso(tramo),
         metas: metasEfectivas(tramo, cal.w1, s.metas),
         avance: s.avance ?? [],
       });
@@ -127,10 +131,15 @@ function preparar(entrada: ObraEntrada, hoyIso: string): Contexto {
     finVigente: calcularFinVigente(finOriginal, pausas),
     finControl: calcularFinControl(finOriginal, pausas),
     subs,
+    pesoPor: porMonto ? 'MONTO' : 'DURACION',
+    pesoTotal: subs.reduce((a, s) => a + s.peso, 0),
   };
 }
 
 const sinSub = (c: Contexto) => c.subs.length === 0;
+
+/** Peso como porcentaje del total, con un decimal. */
+const porcentaje = (peso: number, total: number) => (total > 0 ? Math.round((peso / total) * 1000) / 10 : 0);
 
 /** Programado de control de una subpartida en una fecha. */
 const programadoSub = (c: Contexto, s: SubInterna, en: Dia) => pactadoControl(s, s.metas, c.w1, en, c.externas);
@@ -177,6 +186,7 @@ function resultadoSub(c: Contexto, s: SubInterna): SubpartidaResultado {
     inicio: deDia(s.inicio),
     fin: deDia(s.fin),
     peso: s.peso,
+    pesoPct: porcentaje(s.peso, c.pesoTotal),
     diasLaborables: diasLaborables(s.inicio, s.fin),
     metas: s.metas,
     sinAvance,
@@ -202,6 +212,7 @@ function resultadoPartida(c: Contexto, idx: number, subs: SubpartidaResultado[])
     inicio: deDia(inicio),
     fin: deDia(fin),
     peso: subs.reduce((a, s) => a + s.peso, 0),
+    pesoPct: Math.round(subs.reduce((a, s) => a + s.pesoPct, 0) * 10) / 10,
     subpartidas: subs,
   };
 }
@@ -318,6 +329,7 @@ export function calcularObra(entrada: ObraEntrada, hoyIso: string): ResultadoObr
 
   return {
     ...metricasObra,
+    pesoPor: c.pesoPor,
     estadoEfectivo: c.estado,
     sinPartidas,
     sinAvance,

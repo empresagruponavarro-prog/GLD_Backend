@@ -4,6 +4,7 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
+import { validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
 import { bloquearRequerimiento, registrarEvento, validarTrabajador } from '../shared/requerimiento-eventos.js';
 import { avancePorRequerimiento } from '../shared/requerimiento-saldos.js';
 import {
@@ -182,6 +183,8 @@ export class RequerimientoHandler {
       observaciones: TN,
       id_beneficiario: IN,
       beneficiario: TN,
+      id_ppto_detalle_categoria: IN,
+      subfase: TN,
       cantidad_ordenada: T,
       saldo_por_ordenar: T,
     })`
@@ -190,12 +193,17 @@ export class RequerimientoHandler {
              d.cantidad::text AS cantidad, d.cantidad_aprobada::text AS cantidad_aprobada,
              d.precio_referencial::text AS precio_referencial, d.observaciones,
              d.id_beneficiario, COALESCE(bn."NombreComercial", bn."Anexo")::text AS beneficiario,
+             d.id_ppto_detalle_categoria,
+             CASE WHEN d.id_ppto_detalle_categoria IS NULL THEN NULL
+                  ELSE COALESCE(fc."Descripcion", 'Subfase #' || d.id_ppto_detalle_categoria)::text END AS subfase,
              COALESCE(o.ordenado, 0)::text AS cantidad_ordenada,
              GREATEST(COALESCE(d.cantidad_aprobada, 0) - COALESCE(o.ordenado, 0), 0)::text AS saldo_por_ordenar
         FROM requerimiento_detalle d
         JOIN producto p ON p.id = d.id_producto
         JOIN unidad_medida u ON u.id = p.id_unidad_medida
         LEFT JOIN anexos bn ON bn.id = d.id_beneficiario
+        LEFT JOIN "ppto_DetalleFasesCate" sf ON sf.id = d.id_ppto_detalle_categoria
+        LEFT JOIN "ppto_FasesCategorias" fc ON fc."IdpptoFaseCategoria" = sf."IdpptoFaseCategoria"
         LEFT JOIN (
           SELECT id_requerimiento_detalle AS id, SUM("Cantidad") AS ordenado
             FROM "ordenCompraDetalle" WHERE id_requerimiento_detalle IS NOT NULL
@@ -249,7 +257,7 @@ export class RequerimientoHandler {
       const tipo = dto.tipo ?? 'COMPRA';
       await this.validarCabecera(tx, dto.id_centro_costo, dto.id_fase, dto.id_solicitante);
       await this.validarExtras(tx, dto.id_beneficiario, dto.id_area);
-      await this.validarLineas(tx, dto.lineas, tipo, dto.id_beneficiario);
+      await this.validarLineas(tx, dto.lineas, tipo, dto.id_beneficiario, dto.id_centro_costo);
       const numero = await this.ledger.siguienteNumero(tx, 'FUR');
       const [fur] = await q.rows<{ id: number }>({ id: I }, tx)`
         INSERT INTO requerimiento (numero, fecha, fecha_requerida, id_centro_costo, id_fase, id_solicitante, area, justificacion,
@@ -288,7 +296,13 @@ export class RequerimientoHandler {
         }
         const [benef] = await q.rows<{ id_beneficiario: number | null }>({ id_beneficiario: IN }, tx)`
           SELECT id_beneficiario FROM requerimiento WHERE id = ${id}::int`;
-        await this.validarLineas(tx, dto.lineas, dto.tipo ?? actual.tipo, dto.id_beneficiario ?? benef?.id_beneficiario ?? undefined);
+        await this.validarLineas(
+          tx,
+          dto.lineas,
+          dto.tipo ?? actual.tipo,
+          dto.id_beneficiario ?? benef?.id_beneficiario ?? undefined,
+          dto.id_centro_costo ?? actual.id_centro_costo,
+        );
       }
 
       await q.run(tx)`
@@ -373,11 +387,14 @@ export class RequerimientoHandler {
     tx: Tx,
     lineas: RequerimientoLineaDto[],
     tipo: string,
-    idBeneficiarioCabecera?: number,
+    idBeneficiarioCabecera: number | undefined,
+    idCentroCosto: number,
   ): Promise<void> {
     const ids = lineas.map((l) => l.id_producto);
     if (tipo === 'COMPRA') {
-      if (new Set(ids).size !== ids.length) throw new BadRequestException('Hay productos repetidos en las líneas');
+      // El mismo producto puede repetirse en subfases distintas (el FUR generado desde el presupuesto lo hace); no en la misma.
+      const claves = lineas.map((l) => `${l.id_producto}:${l.id_ppto_detalle_categoria ?? 0}`);
+      if (new Set(claves).size !== claves.length) throw new BadRequestException('Hay productos repetidos en las líneas (misma subfase)');
     } else {
       // Planilla por trabajador: el mismo concepto se repite, pero no para el mismo beneficiario.
       const claves = lineas.map((l) => `${l.id_producto}:${l.id_beneficiario ?? idBeneficiarioCabecera ?? 0}`);
@@ -394,6 +411,12 @@ export class RequerimientoHandler {
     for (const l of lineas) {
       if (Number(l.cantidad) <= 0) throw new BadRequestException(`La cantidad del producto ${l.id_producto} debe ser mayor a 0`);
     }
+    await validarSubfases(
+      this.sql,
+      tx,
+      idCentroCosto,
+      lineas.flatMap((l) => (l.id_ppto_detalle_categoria ? [l.id_ppto_detalle_categoria] : [])),
+    );
     const idsUnicos = [...new Set(ids)];
     const q = sqlTag(this.sql);
     const encontrados = await q.rows<{ id: number; descripcion: string; estado: boolean }>(
@@ -413,10 +436,12 @@ export class RequerimientoHandler {
     const q = sqlTag(this.sql);
     for (const l of lineas) {
       await q.run(tx)`
-        INSERT INTO requerimiento_detalle (id_requerimiento, id_producto, cantidad, precio_referencial, observaciones, id_beneficiario)
+        INSERT INTO requerimiento_detalle (id_requerimiento, id_producto, cantidad, precio_referencial, observaciones, id_beneficiario,
+                                           id_ppto_detalle_categoria)
         VALUES (${idRequerimiento}::int, ${l.id_producto}::int, ${l.cantidad}::numeric,
                 CASE WHEN ${l.precio_referencial !== undefined}::boolean THEN ${l.precio_referencial ?? '0'}::numeric ELSE NULL END,
-                NULLIF(${l.observaciones ?? ''}::text, ''), NULLIF(${l.id_beneficiario ?? 0}::int, 0))`;
+                NULLIF(${l.observaciones ?? ''}::text, ''), NULLIF(${l.id_beneficiario ?? 0}::int, 0),
+                NULLIF(${l.id_ppto_detalle_categoria ?? 0}::int, 0))`;
     }
   }
 }

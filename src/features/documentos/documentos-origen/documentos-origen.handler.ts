@@ -13,6 +13,7 @@ import {
   type EstadoRecepcion,
 } from '../../almacen/shared/oc-saldos.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
+import { validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
 import { bloquearRequerimiento } from '../../requerimientos/shared/requerimiento-eventos.js';
 import { validarConsumoLinea } from '../../requerimientos/shared/requerimiento-saldos.js';
 import {
@@ -353,6 +354,7 @@ export class DocumentosOrigenHandler {
       if (detalles.some((d) => d.id_requerimiento_detalle !== undefined)) {
         throw new BadRequestException('id_requerimiento_detalle solo aplica cuando la OC tiene id_requerimiento');
       }
+      await this.validarSubfasesDeLineas(undefined, dto.id_centro_costo, detalles);
       const id = await this.crearOc(this.db.orm.public, dto);
       return this.getById(id);
     }
@@ -366,10 +368,23 @@ export class DocumentosOrigenHandler {
         id_centro_costo: dto.id_centro_costo ?? fur.id_centro_costo,
         id_fase: dto.id_fase ?? fur.id_fase ?? undefined,
       };
+      await this.validarSubfasesDeLineas(tx, conDefaults.id_centro_costo, detalles);
       return this.crearOc(tx.orm.public as unknown as Orm, conDefaults);
     });
     // La respuesta se arma despues del commit: dentro de la transaccion las lecturas por otra conexion no ven lo creado.
     return this.getById(id);
+  }
+
+  /** Las subfases indicadas en las líneas deben ser de un presupuesto aprobado del centro de costo del documento. */
+  private async validarSubfasesDeLineas(
+    tx: Tx | undefined,
+    idCentroCosto: number | null | undefined,
+    detalles: ReadonlyArray<{ id_ppto_detalle_categoria?: number }>,
+  ): Promise<void> {
+    const ids = detalles.flatMap((d) => (d.id_ppto_detalle_categoria ? [d.id_ppto_detalle_categoria] : []));
+    if (ids.length === 0) return;
+    if (!idCentroCosto) throw new BadRequestException('Para imputar a una subfase el documento necesita un centro de costo');
+    await validarSubfases(this.sql, tx, idCentroCosto, ids);
   }
 
   private async crearOc(orm: Orm, dto: CreateDocumentoOrigenDto): Promise<number> {
@@ -524,6 +539,7 @@ export class DocumentosOrigenHandler {
         id_orden_compra: idOrdenCompra,
         id_producto: producto.id,
         id_requerimiento_detalle: detalle.id_requerimiento_detalle,
+        id_ppto_detalle_categoria: detalle.id_ppto_detalle_categoria,
         IdOC: toVarchar(idOC),
         ProductoCodigo: toVarchar(producto.codigo),
         TipoProducto: producto.tipo_producto,
@@ -541,6 +557,7 @@ export class DocumentosOrigenHandler {
         precio: created.Precio,
         monto: created.monto,
         id_requerimiento_detalle: created.id_requerimiento_detalle,
+        id_ppto_detalle_categoria: created.id_ppto_detalle_categoria ?? null,
         cantidad_recibida: null,
         saldo_por_recibir: null,
       });
@@ -583,6 +600,7 @@ export class DocumentosOrigenHandler {
       if (reemplazaDetalles && current.id_requerimiento !== null) {
         await this.validarContraRequerimiento(tx, current.id_requerimiento, dto.detalles ?? [], id);
       }
+      if (reemplazaDetalles) await this.validarSubfasesDeLineas(tx, dto.id_centro_costo ?? current.id_centro_costo, dto.detalles ?? []);
       await this.aplicarUpdate(tx.orm.public as unknown as Orm, id, dto, current, reemplazaDetalles);
     });
     return this.getById(id);
@@ -700,6 +718,10 @@ export class DocumentosOrigenHandler {
     const productoPorCodigo = new Map(productos.map((p) => [p.codigo, p]));
 
     const recibidoPorId = await recibidoPorLinea(this.sql, [idOrdenCompra]);
+    // La línea sin subfase propia hereda la de su línea del FUR.
+    const idsFur = [...new Set(rows.flatMap((r) => (r.id_requerimiento_detalle && !r.id_ppto_detalle_categoria ? [r.id_requerimiento_detalle] : [])))];
+    const lineasFur = idsFur.length > 0 ? await this.db.orm.public.requerimiento_detalle.where((d) => d.id.in(idsFur)).all() : [];
+    const subfaseFur = new Map(lineasFur.map((l) => [l.id, l.id_ppto_detalle_categoria ?? null]));
     return rows.map((r) => {
       const producto = r.ProductoCodigo ? productoPorCodigo.get(r.ProductoCodigo) : undefined;
       // Solo los productos del catalogo se reciben en almacen; servicios y lineas sin catalogo no tienen saldo.
@@ -715,6 +737,7 @@ export class DocumentosOrigenHandler {
         precio: r.Precio,
         monto: r.monto,
         id_requerimiento_detalle: r.id_requerimiento_detalle,
+        id_ppto_detalle_categoria: r.id_ppto_detalle_categoria ?? (r.id_requerimiento_detalle ? (subfaseFur.get(r.id_requerimiento_detalle) ?? null) : null),
         cantidad_recibida: recibible ? recibido : null,
         saldo_por_recibir: recibible ? restante(r.Cantidad, recibido) : null,
       };

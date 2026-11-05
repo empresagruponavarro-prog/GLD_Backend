@@ -49,6 +49,8 @@ export const CLAVES_MODULO = [
   'rrhh.trabajadores',
   // 40.º: RR.HH. › Catálogos de RR.HH. (migración 20261102T2142_rrhh_catalogos_modulo).
   'rrhh.catalogos',
+  // 41.º: Proyectos › Catálogos de proyecto (tipos de proyecto, tipos de plano y periodos; migración 20261105T0241_grp_cadena_obra).
+  'proyectos.catalogos',
 ] as const;
 
 export type ClaveModulo = (typeof CLAVES_MODULO)[number];
@@ -122,7 +124,13 @@ export function esAccion(valor: string): valor is Accion {
  * cobertura de la API para validar `@Accion('aprobar' | 'anular')`; `permisos.spec.ts` comprueba
  * que coinciden con la migración.
  */
-export const MODULOS_ADMITEN_APROBAR: readonly ClaveModulo[] = ['documentos.administracion', 'requerimientos.aprobacion'];
+export const MODULOS_ADMITEN_APROBAR: readonly ClaveModulo[] = [
+  'documentos.administracion',
+  'requerimientos.aprobacion',
+  // GRP (DG2): aprobar un presupuesto y liquidar una obra (migración 20261105T0241_grp_cadena_obra).
+  'presupuestos',
+  'obra',
+];
 
 export const MODULOS_ADMITEN_ANULAR: readonly ClaveModulo[] = [
   'documentos.administracion',

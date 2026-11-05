@@ -1,7 +1,12 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { codigoYTiendaDelCc } from '../../operaciones-obra/shared/obra-shared.js';
+import { codigoYTiendaDelCc, readDateOnly } from '../../operaciones-obra/shared/obra-shared.js';
+import { ESTADO_CERRADO, ESTADO_POR_LIQUIDAR } from '../../operaciones-obra/liquidacion/liquidacion.js';
+import { sincronizarPlanosRequeridos } from '../../operaciones-obra/planos-requeridos/planos-requeridos.js';
+import { exigirEjecucionCompleta } from '../../operaciones-obra/shared/avance-obra.js';
+import { exigirPlazoEditable, semanasPorPlazo } from '../../operaciones-obra/shared/plazo-obra.js';
+import { exigirPeriodoValido } from '../../proyectos-catalogos/periodo-fiscal/validar-periodo.js';
 import { toDecimalString, toVarchar, type Varchar255, type Varchar50 } from '../../../platform/db/varchar-helpers.js';
 import {
   CatalogosFiltrosResponseDto,
@@ -127,6 +132,7 @@ export class CentroCostoHandler {
           Estado: r.estado ?? 'ABIERTO',
           id_empresa: idEmpresa,
           id_anexo: (r as any).id_anexo ?? null,
+          id_tipo_proyecto: r.id_tipo_proyecto ?? null,
           Empresa: idEmpresa != null ? empresasById.get(idEmpresa) ?? null : null,
           periodo: r.periodo,
           CodCliente: r.cod_cliente,
@@ -189,6 +195,7 @@ export class CentroCostoHandler {
       Estado: row.estado,
       id_empresa: (row as any).id_empresa ?? null,
       id_anexo: (row as any).id_anexo ?? null,
+      id_tipo_proyecto: row.id_tipo_proyecto ?? null,
       periodo: row.periodo,
       CodCliente: row.cod_cliente,
       PresupuestoEstado: pptoEstado,
@@ -200,6 +207,8 @@ export class CentroCostoHandler {
   }
 
   async create(dto: CreateCentroCostoDto): Promise<CentroCostoResponseDto> {
+    if (dto.id_tipo_proyecto != null) await this.validarTipoProyecto(dto.id_tipo_proyecto);
+    await exigirPeriodoValido(this.db.orm.public, dto.periodo, dto.FechaIncio);
     const created = await this.db.orm.public.CentroCostos.create({
       periodo: dto.periodo,
       cod_cliente: toVarchar(dto.CodCliente),
@@ -217,7 +226,9 @@ export class CentroCostoHandler {
       oc_file: toVarchar(dto.OCFile),
       ...(dto.id_empresa != null ? { id_empresa: dto.id_empresa } : {}),
       ...(dto.id_anexo != null ? { id_anexo: dto.id_anexo } : {}),
+      ...(dto.id_tipo_proyecto != null ? { id_tipo_proyecto: dto.id_tipo_proyecto } : {}),
     });
+    if (dto.id_tipo_proyecto != null) await sincronizarPlanosRequeridos(this.db.orm.public, created.id, dto.id_tipo_proyecto);
 
     return {
       id: created.id,
@@ -226,6 +237,7 @@ export class CentroCostoHandler {
       Estado: created.estado,
       id_empresa: (created as any).id_empresa ?? null,
       id_anexo: (created as any).id_anexo ?? null,
+      id_tipo_proyecto: created.id_tipo_proyecto ?? null,
       periodo: created.periodo,
       CodCliente: created.cod_cliente,
       PresupuestoEstado: created.presupuesto_estado,
@@ -253,6 +265,7 @@ export class CentroCostoHandler {
       oc_file?: Varchar255;
       id_empresa?: number;
       id_anexo?: number;
+      id_tipo_proyecto?: number | null;
     } = {};
 
     if (dto.periodo !== undefined) data.periodo = dto.periodo;
@@ -272,9 +285,54 @@ export class CentroCostoHandler {
     if (dto.OCFile !== undefined) data.oc_file = toVarchar(dto.OCFile);
     if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.id_anexo !== undefined) data.id_anexo = dto.id_anexo;
+    // Tipo de proyecto (GRP S-08): al cambiarlo se copia su lista de planos a la obra, sin perder los checks ya hechos.
+    const cambiaTipo = dto.id_tipo_proyecto !== undefined && (dto.id_tipo_proyecto ?? null) !== (current.id_tipo_proyecto ?? null);
+    if (cambiaTipo) {
+      if (dto.id_tipo_proyecto != null) await this.validarTipoProyecto(dto.id_tipo_proyecto);
+      data.id_tipo_proyecto = dto.id_tipo_proyecto ?? null;
+    }
+
+    // GRP S-11: la fecha de fin real se habilita al completar la ejecución (100 %) y la obra se cierra al liquidarla.
+    const finRealActual = current.fecha_fin_real ? readDateOnly(current.fecha_fin_real) : null;
+    const cambiaFinReal = data.fecha_fin_real !== undefined && data.fecha_fin_real.slice(0, 10) !== finRealActual;
+    const estadoNuevo = data.estado !== undefined && String(data.estado) !== (current.estado ?? null) ? String(data.estado) : null;
+    if (cambiaFinReal) await exigirEjecucionCompleta(this.db.orm.public, id, 'registrar la fecha de fin real');
+    if (estadoNuevo === ESTADO_POR_LIQUIDAR) {
+      if (!(data.fecha_fin_real ?? finRealActual)) throw new ConflictException('Registre la fecha de fin real antes de pasar la obra a liquidación');
+      await exigirEjecucionCompleta(this.db.orm.public, id, 'pasar la obra a liquidación');
+    }
+    if (estadoNuevo === ESTADO_CERRADO && (await this.esObra(id, current.id_tipo_proyecto ?? null))) {
+      throw new ConflictException('Una obra se cierra al liquidarla: use «Liquidar» en la pestaña Liquidación de la obra');
+    }
+
+    // GRP S-05: el plazo es la línea base de la obra. Si cambia respecto de lo guardado y la obra ya inició, no se edita
+    // aquí: se registra como reprogramación (el formulario envía siempre todas las fechas, por eso se compara).
+    const inicioActual = current.fecha_inicio ? readDateOnly(current.fecha_inicio) : null;
+    const finActual = current.fecha_fin_prog ? readDateOnly(current.fecha_fin_prog) : null;
+    const cambiaPlazo =
+      (data.fecha_inicio !== undefined && data.fecha_inicio.slice(0, 10) !== inicioActual) ||
+      (data.fecha_fin_prog !== undefined && data.fecha_fin_prog.slice(0, 10) !== finActual);
+    if (cambiaPlazo) await exigirPlazoEditable(this.db.orm.public, id);
+
+    // GRP S-11 / SP-18: el periodo es un año activo y el de la fecha de inicio. Se valida cuando cambia el periodo o el inicio
+    // (así un centro de costo antiguo con un periodo ya inactivo se puede seguir editando).
+    const cambiaPeriodo = data.periodo !== undefined && data.periodo !== (current.periodo ?? null);
+    const cambiaInicio = data.fecha_inicio !== undefined && data.fecha_inicio.slice(0, 10) !== inicioActual;
+    if (cambiaPeriodo || cambiaInicio) {
+      await exigirPeriodoValido(this.db.orm.public, data.periodo ?? current.periodo, data.fecha_inicio ?? inicioActual);
+    }
 
     const row = await this.db.orm.public.CentroCostos.where({ id }).update(data);
     if (!row) throw new NotFoundException(`Centro de costo ${id} no encontrado`);
+    if (cambiaTipo) await sincronizarPlanosRequeridos(this.db.orm.public, id, row.id_tipo_proyecto ?? null);
+    // Antes de iniciar la obra, las semanas de la ficha siguen al plazo (S-02): inicio y fin mandan hasta que se edite la ficha.
+    if (cambiaPlazo && row.fecha_inicio && row.fecha_fin_prog) {
+      const ficha = await this.db.orm.public.obra_datos_generales.first({ id_centro_costo: id });
+      const semanas = semanasPorPlazo(readDateOnly(row.fecha_inicio), readDateOnly(row.fecha_fin_prog));
+      if (ficha && ficha.semanas_totales !== semanas) {
+        await this.db.orm.public.obra_datos_generales.where({ id: ficha.id }).update({ semanas_totales: semanas });
+      }
+    }
     // La tienda de la ficha de obra es el nombre del centro de costo: se mantiene igual al renombrarlo.
     if (data.centro_costo !== undefined && data.centro_costo !== current.centro_costo) {
       await this.db.orm.public.obra_datos_generales
@@ -288,11 +346,25 @@ export class CentroCostoHandler {
       Estado: row.estado,
       id_empresa: (row as any).id_empresa ?? null,
       id_anexo: (row as any).id_anexo ?? null,
+      id_tipo_proyecto: row.id_tipo_proyecto ?? null,
       periodo: row.periodo,
       CodCliente: row.cod_cliente,
       PresupuestoEstado: row.presupuesto_estado,
       PresupuestoMonto: row.presupuesto_monto != null ? String(row.presupuesto_monto) : null,
     };
+  }
+
+  /** Una obra: participa del control de avance o tiene tipo de proyecto (lista de planos). */
+  private async esObra(idCentroCosto: number, idTipoProyecto: number | null): Promise<boolean> {
+    if (idTipoProyecto !== null) return true;
+    const ficha = await this.db.orm.public.obra_datos_generales.first({ id_centro_costo: idCentroCosto });
+    return ficha?.estado_obra != null;
+  }
+
+  /** 400 si el tipo de proyecto no existe o está inactivo. */
+  private async validarTipoProyecto(idTipoProyecto: number): Promise<void> {
+    const tipo = await this.db.orm.public.tipo_proyecto.first({ id: idTipoProyecto });
+    if (!tipo || !tipo.activo) throw new BadRequestException(`El tipo de proyecto ${idTipoProyecto} no existe o está inactivo`);
   }
 
   async remove(id: number): Promise<{ deleted: boolean; id: number }> {

@@ -45,6 +45,17 @@ export class CreateDocumentoOrigenDetalleDto {
   @IsInt()
   @Min(1)
   id_requerimiento_detalle?: number;
+
+  @ApiPropertyOptional({
+    example: 40,
+    description:
+      'Subfase del presupuesto aprobado del centro de costo a la que se imputa la línea (GRP S-09). Las líneas que nacen de un FUR la heredan de la línea del FUR si no se indica',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  id_ppto_detalle_categoria?: number;
 }
 
 export class CreateDocumentoOrigenDto {
@@ -375,6 +386,9 @@ export class DocumentoOrigenDetalleResponseDto {
 
   @ApiPropertyOptional({ description: 'Línea del FUR que atiende' })
   id_requerimiento_detalle: number | null;
+
+  @ApiPropertyOptional({ description: 'Subfase a la que se imputa la línea: la propia o, si no tiene, la de la línea del FUR' })
+  id_ppto_detalle_categoria: number | null;
 
   @ApiPropertyOptional({ example: '1.00', description: 'Recibido en almacén (ingresos COMPRA vigentes)' })
   cantidad_recibida: string | null;

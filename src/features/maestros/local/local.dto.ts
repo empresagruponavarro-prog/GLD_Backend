@@ -17,7 +17,7 @@ export class CreateLocalDto {
   @IsOptional()
   @IsString()
   @MaxLength(20, { message: 'El código no puede superar 20 caracteres' })
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toUpperCase() : value))
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   codigo?: string;
 
   @ApiPropertyOptional({

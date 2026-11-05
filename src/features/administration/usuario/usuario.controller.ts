@@ -26,8 +26,10 @@ import { UsuarioHandler } from './usuario.handler.js';
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/usuarios')
+@SinMayusculas()
 @Controller('administration/usuarios')
 @Modulo('admin.usuarios')
 export class UsuarioController {

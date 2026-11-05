@@ -18,6 +18,15 @@ export function peso(sub: TramoSubpartida): number {
 }
 
 /**
+ * GRP S-02 / SP-03: el peso de cada subpartida es su **monto** en el presupuesto, pero solo si todas las subpartidas de
+ * la obra lo tienen (monto mayor a cero). Si falta alguno (obras cargadas desde Excel, que no traen montos) se usa la
+ * duración (RC-03) para todas: mezclar montos con días daría porcentajes sin sentido.
+ */
+export function usaMontoComoPeso(subs: readonly { monto?: number | null }[]): boolean {
+  return subs.length > 0 && subs.every((s) => s.monto != null && Number.isFinite(s.monto) && s.monto > 0);
+}
+
+/**
  * RC-04: meta automática de cada semana = días laborables de la subpartida en esa semana ÷ sus
  * días laborables totales, redondeada a 0,1. Se obtiene de las diferencias del acumulado, como
  * en la plantilla Excel.

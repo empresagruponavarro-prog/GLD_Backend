@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
+import { SinMayusculasCampo } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 export class CreatePresupuestoPrincipalDto {
   @ApiPropertyOptional({ example: 'PPTO-2026-001', description: 'Código único. Si no se envía, se autogenera.' })
@@ -40,6 +41,7 @@ export class CreatePresupuestoPrincipalDto {
   @IsOptional()
   @IsString()
   @MaxLength(255)
+  @SinMayusculasCampo()
   TipoPpto?: string;
 
   @ApiPropertyOptional({ example: 'CONSTRUCCION EDIFICIO MULTIFAMILIAR', description: 'Nombre del proyecto' })
@@ -125,7 +127,11 @@ export class CreatePresupuestoPrincipalDto {
   @IsNumber()
   DsctoComercial?: number;
 
-  @ApiPropertyOptional({ example: 'APROBADO', description: 'Estado del presupuesto (APROBADO, PENDIENTE, RECHAZADO)' })
+  @ApiPropertyOptional({
+    example: 'EN_REVISION',
+    description:
+      'Estado editable (PENDIENTE/EN_DESARROLLO, EN_REVISION, OBSERVADO, ANULADO). Aprobar se hace con POST /presupuestos/:id/aprobar.',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(50)
@@ -252,8 +258,27 @@ export class PresupuestoPrincipalResponseDto {
   @ApiPropertyOptional({ example: '218300.00' })
   Total: string | null;
 
-  @ApiPropertyOptional({ example: 'APROBADO' })
+  @ApiPropertyOptional({ example: 'Aprobado', description: 'Espejo legado de estado_ppto, para las pantallas que aún lo leen' })
   Estado: string | null;
+
+  @ApiPropertyOptional({
+    example: 'APROBADO',
+    enum: ['EN_DESARROLLO', 'EN_REVISION', 'OBSERVADO', 'APROBADO', 'ENTREGADO', 'LIQUIDADO', 'ANULADO'],
+    description: 'Estado normalizado del presupuesto (fuente de verdad)',
+  })
+  estado_ppto: string;
+
+  @ApiPropertyOptional({ example: 1, description: 'Número de versión (la primera es 1)' })
+  numero_version: number;
+
+  @ApiPropertyOptional({ description: 'Presupuesto del que es una nueva versión' })
+  id_version_de: number | null;
+
+  @ApiPropertyOptional({ description: 'Quién aprobó el presupuesto' })
+  aprobado_por: string | null;
+
+  @ApiPropertyOptional({ description: 'Cuándo se aprobó (ISO 8601)' })
+  fecha_aprobacion: string | null;
 
   @ApiPropertyOptional()
   Comentarios: string | null;
@@ -289,6 +314,8 @@ export class FurGeneradoItemDto {
   @ApiProperty() unidad: string;
   @ApiProperty() cantidad: string;
   @ApiProperty() precio_referencial: string;
+  @ApiProperty({ description: 'Subfase (categoría del presupuesto) a la que se imputa la línea' }) id_ppto_detalle_categoria: number;
+  @ApiProperty({ description: 'Nombre de la subfase' }) subfase: string;
 }
 
 export class FaseFurPreviewDto {

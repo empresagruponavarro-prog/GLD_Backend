@@ -30,7 +30,7 @@ export class AreaHandler {
     const [nuevo] = await q.rows<{ id: number }>({ id: I })`
       WITH n AS (SELECT nextval(pg_get_serial_sequence('area', 'id'))::int AS id)
       INSERT INTO area (id, codigo, nombre, id_jefe, id_area_padre, estado)
-      SELECT n.id, 'AR-' || lpad(n.id::text, 2, '0'), ${dto.nombre.trim()}::text,
+      SELECT n.id, 'AR-' || lpad(n.id::text, GREATEST(2, length(n.id::text)), '0'), ${dto.nombre.trim()}::text,
              NULLIF(${dto.idJefe ?? 0}::int, 0),
              NULLIF(${dto.idAreaPadre ?? 0}::int, 0), ${dto.estado ?? true}::boolean
         FROM n

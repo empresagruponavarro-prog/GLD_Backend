@@ -13,8 +13,10 @@ import { LoginDto, LoginResponseDto } from './login.dto.js';
 import { LoginHandler } from './login.handler.js';
 import { Public } from '../../../platform/auth/decorators/public.decorator.js';
 import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuarios/usuario-inactivo.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('auth')
+@SinMayusculas()
 @Controller('auth')
 @Public()
 @UseGuards(ThrottlerGuard)

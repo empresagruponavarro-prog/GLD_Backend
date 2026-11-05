@@ -17,6 +17,12 @@ export class ResidentesController {
     return this.handler.list(idCentroCosto);
   }
 
+  @Get('historial')
+  @ApiOperation({ summary: 'Historial del equipo de la ficha: quiénes ocuparon cada rol y dejaron de ocuparlo' })
+  historial(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
+    return this.handler.historial(idCentroCosto);
+  }
+
   @Post()
   @ApiOperation({ summary: 'Asignar un residente / personal técnico a la obra' })
   create(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number, @Body() dto: CreateObraResidenteDto) {

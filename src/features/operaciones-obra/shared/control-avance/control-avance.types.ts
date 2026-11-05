@@ -38,6 +38,8 @@ export interface SubpartidaEntrada {
   metas?: (number | null)[] | null;
   /** Avance de cada semana (1-16): lo avanzado SOLO en esa semana, no el acumulado. */
   avance?: (number | null)[] | null;
+  /** Costo directo en el presupuesto (GRP S-02): su peso en el avance, si todas las subpartidas de la obra lo traen. */
+  monto?: number | null;
 }
 
 export interface PartidaEntrada {
@@ -129,6 +131,8 @@ export interface SubpartidaResultado extends MetricasItem {
   inicio: string;
   fin: string;
   peso: number;
+  /** Peso como porcentaje del total de la obra (0-100, un decimal). */
+  pesoPct: number;
   diasLaborables: number;
   metas: number[];
   sinAvance: boolean;
@@ -142,6 +146,7 @@ export interface PartidaResultado extends MetricasItem {
   inicio: string;
   fin: string;
   peso: number;
+  pesoPct: number;
   subpartidas: SubpartidaResultado[];
 }
 
@@ -178,6 +183,8 @@ export interface AvisoCarga {
 }
 
 export interface ResultadoObra extends MetricasItem {
+  /** Con qué se pesó el avance: el monto del presupuesto o la duración de cada subpartida. */
+  pesoPor: 'MONTO' | 'DURACION';
   estadoEfectivo: EstadoObra;
   sinPartidas: boolean;
   sinAvance: boolean;

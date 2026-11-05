@@ -1,0 +1,1998 @@
+[
+  {
+    "id": "table.obra_plano_requerido",
+    "label": "Create table \"obra_plano_requerido\"",
+    "summary": "Creates table \"obra_plano_requerido\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"obra_plano_requerido\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"obra_plano_requerido\"",
+        "sql": "CREATE TABLE \"public\".\"obra_plano_requerido\" (\n  \"entregado\" bool DEFAULT false NOT NULL,\n  \"entregado_en\" timestamptz,\n  \"entregado_por\" character varying(255),\n  \"id\" SERIAL NOT NULL,\n  \"id_centro_costo\" int4 NOT NULL,\n  \"id_plano\" int4,\n  \"id_tipo_plano\" int4 NOT NULL,\n  \"obligatorio\" bool DEFAULT true NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"obra_plano_requerido\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.periodo_fiscal",
+    "label": "Create table \"periodo_fiscal\"",
+    "summary": "Creates table \"periodo_fiscal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "periodo_fiscal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"periodo_fiscal\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"periodo_fiscal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"periodo_fiscal\"",
+        "sql": "CREATE TABLE \"public\".\"periodo_fiscal\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"anio\" int4 NOT NULL,\n  PRIMARY KEY (\"anio\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"periodo_fiscal\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"periodo_fiscal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipo_plano",
+    "label": "Create table \"tipo_plano\"",
+    "summary": "Creates table \"tipo_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipo_plano\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_plano\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipo_plano\"",
+        "sql": "CREATE TABLE \"public\".\"tipo_plano\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"codigo\" character varying(20) NOT NULL,\n  \"disciplina\" character varying(50),\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(120) NOT NULL,\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipo_plano\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_plano\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipo_proyecto",
+    "label": "Create table \"tipo_proyecto\"",
+    "summary": "Creates table \"tipo_proyecto\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_proyecto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipo_proyecto\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipo_proyecto\"",
+        "sql": "CREATE TABLE \"public\".\"tipo_proyecto\" (\n  \"activo\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"nombre\" character varying(80) NOT NULL,\n  \"orden\" int4 DEFAULT 0 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipo_proyecto\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tipo_proyecto_plano",
+    "label": "Create table \"tipo_proyecto_plano\"",
+    "summary": "Creates table \"tipo_proyecto_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tipo_proyecto_plano\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tipo_proyecto_plano\"",
+        "sql": "CREATE TABLE \"public\".\"tipo_proyecto_plano\" (\n  \"id_tipo_plano\" int4 NOT NULL,\n  \"id_tipo_proyecto\" int4 NOT NULL,\n  \"obligatorio\" bool DEFAULT true NOT NULL,\n  PRIMARY KEY (\"id_tipo_proyecto\", \"id_tipo_plano\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tipo_proyecto_plano\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.fecha_liquidacion",
+    "label": "Add column \"fecha_liquidacion\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_liquidacion",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_liquidacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_liquidacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_liquidacion\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"fecha_liquidacion\" date"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_liquidacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "fecha_liquidacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.id_tipo_proyecto",
+    "label": "Add column \"id_tipo_proyecto\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_tipo_proyecto",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_tipo_proyecto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_tipo_proyecto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_tipo_proyecto\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"id_tipo_proyecto\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_tipo_proyecto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "id_tipo_proyecto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.CentroCostos.liquidado_por",
+    "label": "Add column \"liquidado_por\" to \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "liquidado_por",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"liquidado_por\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "liquidado_por"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"liquidado_por\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\" ADD COLUMN \"liquidado_por\" character varying(255)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"liquidado_por\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "CentroCostos",
+          "liquidado_por"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.almacen_documento_detalle.id_ppto_detalle_categoria",
+    "label": "Add column \"id_ppto_detalle_categoria\" to \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_detalle_categoria",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_detalle_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento_detalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_detalle_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\" ADD COLUMN \"id_ppto_detalle_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_detalle_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "almacen_documento_detalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_residentes.activo",
+    "label": "Add column \"activo\" to \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "activo",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"activo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "activo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"activo\"",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\" ADD COLUMN \"activo\" bool DEFAULT true NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"activo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "activo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_residentes.fecha_alta",
+    "label": "Add column \"fecha_alta\" to \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_alta",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_alta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "fecha_alta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_alta\"",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\" ADD COLUMN \"fecha_alta\" date"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_alta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "fecha_alta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_residentes.fecha_baja",
+    "label": "Add column \"fecha_baja\" to \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_baja",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_baja\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "fecha_baja"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_baja\"",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\" ADD COLUMN \"fecha_baja\" date"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_baja\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "fecha_baja"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_residentes.rol_equipo",
+    "label": "Add column \"rol_equipo\" to \"obra_residentes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "rol_equipo",
+        "table": "obra_residentes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"rol_equipo\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "rol_equipo"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"rol_equipo\"",
+        "sql": "ALTER TABLE \"public\".\"obra_residentes\" ADD COLUMN \"rol_equipo\" character varying(30)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"rol_equipo\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_residentes",
+          "rol_equipo"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.obra_subpartida.monto",
+    "label": "Add column \"monto\" to \"obra_subpartida\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "monto",
+        "table": "obra_subpartida"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"monto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_subpartida",
+          "monto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"monto\"",
+        "sql": "ALTER TABLE \"public\".\"obra_subpartida\" ADD COLUMN \"monto\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"monto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "obra_subpartida",
+          "monto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ordenCompraDetalle.id_ppto_detalle_categoria",
+    "label": "Add column \"id_ppto_detalle_categoria\" to \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_detalle_categoria",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_detalle_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_detalle_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\" ADD COLUMN \"id_ppto_detalle_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_detalle_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ordenCompraDetalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.aprobado_por",
+    "label": "Add column \"aprobado_por\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "aprobado_por",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"aprobado_por\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "aprobado_por"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"aprobado_por\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"aprobado_por\" character varying(255)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"aprobado_por\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "aprobado_por"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.estado_ppto",
+    "label": "Add column \"estado_ppto\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "estado_ppto",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"estado_ppto\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "estado_ppto"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"estado_ppto\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"estado_ppto\" text DEFAULT 'EN_DESARROLLO' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"estado_ppto\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "estado_ppto"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.fecha_aprobacion",
+    "label": "Add column \"fecha_aprobacion\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_aprobacion",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_aprobacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "fecha_aprobacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_aprobacion\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"fecha_aprobacion\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_aprobacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "fecha_aprobacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.id_version_de",
+    "label": "Add column \"id_version_de\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_version_de",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_version_de\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_version_de"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_version_de\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"id_version_de\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_version_de\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "id_version_de"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.numero_version",
+    "label": "Add column \"numero_version\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "numero_version",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"numero_version\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "numero_version"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"numero_version\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"numero_version\" int4 DEFAULT 1 NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"numero_version\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "numero_version"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento_detalle.id_ppto_detalle_categoria",
+    "label": "Add column \"id_ppto_detalle_categoria\" to \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_detalle_categoria",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_detalle_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_detalle_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\" ADD COLUMN \"id_ppto_detalle_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_detalle_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_ppto_detalle_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.obra_plano_requerido.obra_plano_requerido_id_centro_costo_id_tipo_plano_key",
+    "label": "Add unique constraint on \"obra_plano_requerido\" (id_centro_costo, id_tipo_plano)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "obra_plano_requerido_id_centro_costo_id_tipo_plano_key",
+        "table": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"obra_plano_requerido_id_centro_costo_id_tipo_plano_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_centro_costo_id_tipo_plano_key",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"obra_plano_requerido_id_centro_costo_id_tipo_plano_key\"",
+        "sql": "ALTER TABLE \"public\".\"obra_plano_requerido\" ADD CONSTRAINT \"obra_plano_requerido_id_centro_costo_id_tipo_plano_key\" UNIQUE (\"id_centro_costo\", \"id_tipo_plano\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"obra_plano_requerido_id_centro_costo_id_tipo_plano_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_centro_costo_id_tipo_plano_key",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.ppto_Principal.ppto_Principal_estado_ppto_check_3e2f5708",
+    "label": "Add check constraint \"ppto_Principal_estado_ppto_check_3e2f5708\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "ppto_Principal_estado_ppto_check_3e2f5708",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_Principal_estado_ppto_check_3e2f5708\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_estado_ppto_check_3e2f5708",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"ppto_Principal_estado_ppto_check_3e2f5708\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD CONSTRAINT \"ppto_Principal_estado_ppto_check_3e2f5708\" CHECK (\"estado_ppto\" IN ('EN_DESARROLLO', 'EN_REVISION', 'OBSERVADO', 'APROBADO', 'ENTREGADO', 'LIQUIDADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_Principal_estado_ppto_check_3e2f5708\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_estado_ppto_check_3e2f5708",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.tipo_plano.tipo_plano_codigo_key",
+    "label": "Add unique constraint on \"tipo_plano\" (codigo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "tipo_plano_codigo_key",
+        "table": "tipo_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"tipo_plano_codigo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_plano_codigo_key",
+          "public",
+          "\"public\".\"tipo_plano\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"tipo_plano_codigo_key\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_plano\" ADD CONSTRAINT \"tipo_plano_codigo_key\" UNIQUE (\"codigo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"tipo_plano_codigo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_plano_codigo_key",
+          "public",
+          "\"public\".\"tipo_plano\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.tipo_proyecto.tipo_proyecto_nombre_key",
+    "label": "Add unique constraint on \"tipo_proyecto\" (nombre)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "tipo_proyecto_nombre_key",
+        "table": "tipo_proyecto"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"tipo_proyecto_nombre_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_nombre_key",
+          "public",
+          "\"public\".\"tipo_proyecto\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"tipo_proyecto_nombre_key\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_proyecto\" ADD CONSTRAINT \"tipo_proyecto_nombre_key\" UNIQUE (\"nombre\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"tipo_proyecto_nombre_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_nombre_key",
+          "public",
+          "\"public\".\"tipo_proyecto\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.CentroCostos.CentroCostos_id_tipo_proyecto_idx_555c1d8a",
+    "label": "Create index \"CentroCostos_id_tipo_proyecto_idx_555c1d8a\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "CentroCostos_id_tipo_proyecto_idx_555c1d8a",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"CentroCostos_id_tipo_proyecto_idx_555c1d8a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_tipo_proyecto_idx_555c1d8a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"CentroCostos_id_tipo_proyecto_idx_555c1d8a\"",
+        "sql": "CREATE INDEX \"CentroCostos_id_tipo_proyecto_idx_555c1d8a\" ON \"public\".\"CentroCostos\" (\"id_tipo_proyecto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"CentroCostos_id_tipo_proyecto_idx_555c1d8a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"CentroCostos_id_tipo_proyecto_idx_555c1d8a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.almacen_documento_detalle.almacen_doc_det_subfase_idx",
+    "label": "Create index \"almacen_doc_det_subfase_idx\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "almacen_doc_det_subfase_idx",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"almacen_doc_det_subfase_idx\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_doc_det_subfase_idx\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"almacen_doc_det_subfase_idx\"",
+        "sql": "CREATE INDEX \"almacen_doc_det_subfase_idx\" ON \"public\".\"almacen_documento_detalle\" (\"id_ppto_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"almacen_doc_det_subfase_idx\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"almacen_doc_det_subfase_idx\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_plano_requerido.obra_plano_requerido_id_centro_costo_idx_8c84570b",
+    "label": "Create index \"obra_plano_requerido_id_centro_costo_idx_8c84570b\" on \"obra_plano_requerido\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_plano_requerido_id_centro_costo_idx_8c84570b",
+        "table": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_plano_requerido_id_centro_costo_idx_8c84570b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_plano_requerido_id_centro_costo_idx_8c84570b\"",
+        "sql": "CREATE INDEX \"obra_plano_requerido_id_centro_costo_idx_8c84570b\" ON \"public\".\"obra_plano_requerido\" (\"id_centro_costo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_plano_requerido_id_centro_costo_idx_8c84570b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido_id_centro_costo_idx_8c84570b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.obra_plano_requerido.obra_plano_requerido_id_tipo_plano_idx_1ae34369",
+    "label": "Create index \"obra_plano_requerido_id_tipo_plano_idx_1ae34369\" on \"obra_plano_requerido\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "obra_plano_requerido_id_tipo_plano_idx_1ae34369",
+        "table": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"obra_plano_requerido_id_tipo_plano_idx_1ae34369\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido_id_tipo_plano_idx_1ae34369\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"obra_plano_requerido_id_tipo_plano_idx_1ae34369\"",
+        "sql": "CREATE INDEX \"obra_plano_requerido_id_tipo_plano_idx_1ae34369\" ON \"public\".\"obra_plano_requerido\" (\"id_tipo_plano\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"obra_plano_requerido_id_tipo_plano_idx_1ae34369\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"obra_plano_requerido_id_tipo_plano_idx_1ae34369\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ordenCompraDetalle.ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86",
+    "label": "Create index \"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\"",
+        "sql": "CREATE INDEX \"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\" ON \"public\".\"ordenCompraDetalle\" (\"id_ppto_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_Principal.ppto_Principal_id_version_de_idx_642ba035",
+    "label": "Create index \"ppto_Principal_id_version_de_idx_642ba035\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_Principal_id_version_de_idx_642ba035",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_Principal_id_version_de_idx_642ba035\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_version_de_idx_642ba035\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_Principal_id_version_de_idx_642ba035\"",
+        "sql": "CREATE INDEX \"ppto_Principal_id_version_de_idx_642ba035\" ON \"public\".\"ppto_Principal\" (\"id_version_de\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_Principal_id_version_de_idx_642ba035\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_Principal_id_version_de_idx_642ba035\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_detalle.requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86",
+    "label": "Create index \"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\"",
+        "sql": "CREATE INDEX \"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\" ON \"public\".\"requerimiento_detalle\" (\"id_ppto_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.tipo_proyecto_plano.tipo_proyecto_plano_id_tipo_plano_idx_1ae34369",
+    "label": "Create index \"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\" on \"tipo_proyecto_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "tipo_proyecto_plano_id_tipo_plano_idx_1ae34369",
+        "table": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\"",
+        "sql": "CREATE INDEX \"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\" ON \"public\".\"tipo_proyecto_plano\" (\"id_tipo_plano\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano_id_tipo_plano_idx_1ae34369\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.tipo_proyecto_plano.tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a",
+    "label": "Create index \"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\" on \"tipo_proyecto_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a",
+        "table": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\"",
+        "sql": "CREATE INDEX \"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\" ON \"public\".\"tipo_proyecto_plano\" (\"id_tipo_proyecto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.almacen_documento_detalle.almacen_documento_detalle_id_ppto_detalle_categoria_fkey",
+    "label": "Add foreign key \"almacen_documento_detalle_id_ppto_detalle_categoria_fkey\" on \"almacen_documento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "almacen_documento_detalle_id_ppto_detalle_categoria_fkey",
+        "table": "almacen_documento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"almacen_documento_detalle_id_ppto_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"almacen_documento_detalle_id_ppto_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"almacen_documento_detalle\"\nADD CONSTRAINT \"almacen_documento_detalle_id_ppto_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_ppto_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"almacen_documento_detalle_id_ppto_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "almacen_documento_detalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"almacen_documento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_plano_requerido.obra_plano_requerido_id_centro_costo_fkey",
+    "label": "Add foreign key \"obra_plano_requerido_id_centro_costo_fkey\" on \"obra_plano_requerido\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_plano_requerido_id_centro_costo_fkey",
+        "table": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_plano_requerido_id_centro_costo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_plano_requerido_id_centro_costo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_plano_requerido\"\nADD CONSTRAINT \"obra_plano_requerido_id_centro_costo_fkey\"\nFOREIGN KEY (\"id_centro_costo\")\nREFERENCES \"public\".\"CentroCostos\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_plano_requerido_id_centro_costo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_centro_costo_fkey",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.obra_plano_requerido.obra_plano_requerido_id_tipo_plano_fkey",
+    "label": "Add foreign key \"obra_plano_requerido_id_tipo_plano_fkey\" on \"obra_plano_requerido\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "obra_plano_requerido_id_tipo_plano_fkey",
+        "table": "obra_plano_requerido"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"obra_plano_requerido_id_tipo_plano_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_tipo_plano_fkey",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"obra_plano_requerido_id_tipo_plano_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"obra_plano_requerido\"\nADD CONSTRAINT \"obra_plano_requerido_id_tipo_plano_fkey\"\nFOREIGN KEY (\"id_tipo_plano\")\nREFERENCES \"public\".\"tipo_plano\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"obra_plano_requerido_id_tipo_plano_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "obra_plano_requerido_id_tipo_plano_fkey",
+          "public",
+          "\"public\".\"obra_plano_requerido\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ordenCompraDetalle.ordenCompraDetalle_id_ppto_detalle_categoria_fkey",
+    "label": "Add foreign key \"ordenCompraDetalle_id_ppto_detalle_categoria_fkey\" on \"ordenCompraDetalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ordenCompraDetalle_id_ppto_detalle_categoria_fkey",
+        "table": "ordenCompraDetalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ordenCompraDetalle_id_ppto_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ordenCompraDetalle_id_ppto_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ordenCompraDetalle\"\nADD CONSTRAINT \"ordenCompraDetalle_id_ppto_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_ppto_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ordenCompraDetalle_id_ppto_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ordenCompraDetalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ordenCompraDetalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_Principal.ppto_Principal_id_version_de_fkey",
+    "label": "Add foreign key \"ppto_Principal_id_version_de_fkey\" on \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_Principal_id_version_de_fkey",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_Principal_id_version_de_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_version_de_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_Principal_id_version_de_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\"\nADD CONSTRAINT \"ppto_Principal_id_version_de_fkey\"\nFOREIGN KEY (\"id_version_de\")\nREFERENCES \"public\".\"ppto_Principal\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_Principal_id_version_de_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_Principal_id_version_de_fkey",
+          "public",
+          "\"public\".\"ppto_Principal\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_detalle.requerimiento_detalle_id_ppto_detalle_categoria_fkey",
+    "label": "Add foreign key \"requerimiento_detalle_id_ppto_detalle_categoria_fkey\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_detalle_id_ppto_detalle_categoria_fkey",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_detalle_id_ppto_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_detalle_id_ppto_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\"\nADD CONSTRAINT \"requerimiento_detalle_id_ppto_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_ppto_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_detalle_id_ppto_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_ppto_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.CentroCostos.CentroCostos_id_tipo_proyecto_fkey",
+    "label": "Add foreign key \"CentroCostos_id_tipo_proyecto_fkey\" on \"CentroCostos\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "CentroCostos_id_tipo_proyecto_fkey",
+        "table": "CentroCostos"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"CentroCostos_id_tipo_proyecto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_tipo_proyecto_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"CentroCostos_id_tipo_proyecto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"CentroCostos\"\nADD CONSTRAINT \"CentroCostos_id_tipo_proyecto_fkey\"\nFOREIGN KEY (\"id_tipo_proyecto\")\nREFERENCES \"public\".\"tipo_proyecto\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"CentroCostos_id_tipo_proyecto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "CentroCostos_id_tipo_proyecto_fkey",
+          "public",
+          "\"public\".\"CentroCostos\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.tipo_proyecto_plano.tipo_proyecto_plano_id_tipo_proyecto_fkey",
+    "label": "Add foreign key \"tipo_proyecto_plano_id_tipo_proyecto_fkey\" on \"tipo_proyecto_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "tipo_proyecto_plano_id_tipo_proyecto_fkey",
+        "table": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"tipo_proyecto_plano_id_tipo_proyecto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_plano_id_tipo_proyecto_fkey",
+          "public",
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"tipo_proyecto_plano_id_tipo_proyecto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_proyecto_plano\"\nADD CONSTRAINT \"tipo_proyecto_plano_id_tipo_proyecto_fkey\"\nFOREIGN KEY (\"id_tipo_proyecto\")\nREFERENCES \"public\".\"tipo_proyecto\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"tipo_proyecto_plano_id_tipo_proyecto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_plano_id_tipo_proyecto_fkey",
+          "public",
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.tipo_proyecto_plano.tipo_proyecto_plano_id_tipo_plano_fkey",
+    "label": "Add foreign key \"tipo_proyecto_plano_id_tipo_plano_fkey\" on \"tipo_proyecto_plano\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "tipo_proyecto_plano_id_tipo_plano_fkey",
+        "table": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"tipo_proyecto_plano_id_tipo_plano_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_plano_id_tipo_plano_fkey",
+          "public",
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"tipo_proyecto_plano_id_tipo_plano_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"tipo_proyecto_plano\"\nADD CONSTRAINT \"tipo_proyecto_plano_id_tipo_plano_fkey\"\nFOREIGN KEY (\"id_tipo_plano\")\nREFERENCES \"public\".\"tipo_plano\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"tipo_proyecto_plano_id_tipo_plano_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tipo_proyecto_plano_id_tipo_plano_fkey",
+          "public",
+          "\"public\".\"tipo_proyecto_plano\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.ppto_principal.estado_ppto",
+    "label": "Normaliza el estado de los presupuestos (DG1)",
+    "summary": "Normaliza el estado de los presupuestos (DG1)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_Principal"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Normaliza el estado de los presupuestos (DG1)",
+        "sql": "UPDATE \"public\".\"ppto_Principal\" SET \"estado_ppto\" = CASE translate(upper(btrim(replace(coalesce(\"Estado\", ''), '_', ' '))), 'Ó', 'O')\n           WHEN 'APROBADO' THEN 'APROBADO'\n           WHEN 'EN REVISION' THEN 'EN_REVISION'\n           WHEN 'REVISION' THEN 'EN_REVISION'\n           WHEN 'OBSERVADO' THEN 'OBSERVADO'\n           WHEN 'ENTREGADO' THEN 'ENTREGADO'\n           WHEN 'LIQUIDADO' THEN 'LIQUIDADO'\n           WHEN 'ANULADO' THEN 'ANULADO'\n           ELSE 'EN_DESARROLLO' END\n         WHERE \"estado_ppto\" = 'EN_DESARROLLO'",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Normaliza el estado de los presupuestos (DG1)",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"ppto_Principal\" WHERE upper(\"Estado\") = 'APROBADO' AND \"estado_ppto\" <> 'APROBADO') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.obra_subpartida.monto",
+    "label": "Copia el monto de la categoría a las subpartidas importadas (DG3)",
+    "summary": "Copia el monto de la categoría a las subpartidas importadas (DG3)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "obra_subpartida"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Copia el monto de la categoría a las subpartidas importadas (DG3)",
+        "sql": "UPDATE \"public\".\"obra_subpartida\" s SET \"monto\" = c.\"CostoDirecto\"\n         FROM \"public\".\"ppto_DetalleFasesCate\" c\n         WHERE c.\"id\" = s.\"id_ppto_detalle_categoria\" AND s.\"monto\" IS NULL AND c.\"CostoDirecto\" IS NOT NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Copia el monto de la categoría a las subpartidas importadas (DG3)",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"obra_subpartida\" s JOIN \"public\".\"ppto_DetalleFasesCate\" c ON c.\"id\" = s.\"id_ppto_detalle_categoria\" WHERE s.\"monto\" IS NULL AND c.\"CostoDirecto\" IS NOT NULL) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.tipo_plano.semilla",
+    "label": "Tipos de plano iniciales (temporal, SP-06)",
+    "summary": "Tipos de plano iniciales (temporal, SP-06)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_plano"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Tipos de plano iniciales (temporal, SP-06)",
+        "sql": "INSERT INTO \"public\".\"tipo_plano\" (\"codigo\", \"nombre\", \"disciplina\", \"orden\") VALUES ('ARQ', 'ARQUITECTURA', 'ARQUITECTURA', 1), ('EST', 'ESTRUCTURAS', 'ESTRUCTURAS', 2), ('ELE', 'INSTALACIONES ELÉCTRICAS', 'INSTALACIONES ELÉCTRICAS', 3), ('SAN', 'INSTALACIONES SANITARIAS', 'INSTALACIONES SANITARIAS', 4), ('MEC', 'INSTALACIONES MECÁNICAS', 'INSTALACIONES MECÁNICAS', 5), ('DET', 'DETALLES CONSTRUCTIVOS', 'DETALLES CONSTRUCTIVOS', 6) ON CONFLICT (\"codigo\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Tipos de plano iniciales (temporal, SP-06)",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"tipo_plano\" WHERE \"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN', 'MEC', 'DET')) = 6 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.tipo_proyecto.semilla",
+    "label": "Tipos de proyecto iniciales (temporal, SP-06)",
+    "summary": "Tipos de proyecto iniciales (temporal, SP-06)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_proyecto"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Tipos de proyecto iniciales (temporal, SP-06)",
+        "sql": "INSERT INTO \"public\".\"tipo_proyecto\" (\"nombre\", \"orden\") VALUES ('TAMBO', 1), ('ARUMA', 2), ('MASS', 3), ('OTROS', 4) ON CONFLICT (\"nombre\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Tipos de proyecto iniciales (temporal, SP-06)",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" IN ('TAMBO', 'ARUMA', 'MASS', 'OTROS')) = 4 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.tipo_proyecto_plano.semilla",
+    "label": "Planos por tipo de proyecto iniciales (temporal, SP-06)",
+    "summary": "Planos por tipo de proyecto iniciales (temporal, SP-06)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_proyecto_plano"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Planos por tipo de proyecto iniciales (temporal, SP-06)",
+        "sql": "INSERT INTO \"public\".\"tipo_proyecto_plano\" (\"id_tipo_proyecto\", \"id_tipo_plano\", \"obligatorio\")\n         SELECT p.\"id\", t.\"id\", t.\"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN')\n         FROM \"public\".\"tipo_proyecto\" p CROSS JOIN \"public\".\"tipo_plano\" t\n         WHERE p.\"nombre\" IN ('TAMBO', 'ARUMA', 'MASS', 'OTROS') AND t.\"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN', 'MEC', 'DET')\n         ON CONFLICT (\"id_tipo_proyecto\", \"id_tipo_plano\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Planos por tipo de proyecto iniciales (temporal, SP-06)",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"tipo_proyecto_plano\") >= 24 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.periodo_fiscal.semilla",
+    "label": "Años fiscales 2024–2027",
+    "summary": "Años fiscales 2024–2027",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "periodo_fiscal"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Años fiscales 2024–2027",
+        "sql": "INSERT INTO \"public\".\"periodo_fiscal\" (\"anio\", \"activo\") VALUES (2024, true), (2025, true), (2026, true), (2027, true) ON CONFLICT (\"anio\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Años fiscales 2024–2027",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"periodo_fiscal\" WHERE \"anio\" IN (2024, 2025, 2026, 2027)) = 4 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.modulo.aprobar",
+    "label": "Habilita la acción «aprobar» en presupuestos y obra (DG2)",
+    "summary": "Habilita la acción «aprobar» en presupuestos y obra (DG2)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Habilita la acción «aprobar» en presupuestos y obra (DG2)",
+        "sql": "UPDATE \"public\".\"modulo\" SET \"admite_aprobar\" = true WHERE \"clave\" IN ('presupuestos', 'obra')",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Habilita la acción «aprobar» en presupuestos y obra (DG2)",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"modulo\" WHERE \"clave\" IN ('presupuestos', 'obra') AND \"admite_aprobar\") = 2 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.modulo.proyectos_catalogos",
+    "label": "Módulo «Catálogos de proyecto» (DG14); sin permisos por defecto: solo el Administrador",
+    "summary": "Módulo «Catálogos de proyecto» (DG14); sin permisos por defecto: solo el Administrador",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Módulo «Catálogos de proyecto» (DG14); sin permisos por defecto: solo el Administrador",
+        "sql": "INSERT INTO \"public\".\"modulo\" (\"clave\", \"nombre\", \"grupo\", \"ruta\", \"orden\", \"admite_aprobar\", \"admite_anular\")\n         VALUES ('proyectos.catalogos', 'Catálogos de proyecto', 'Proyectos', '/proyectos/catalogos', 41, false, false)\n         ON CONFLICT (\"clave\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Módulo «Catálogos de proyecto» (DG14); sin permisos por defecto: solo el Administrador",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE \"clave\" = 'proyectos.catalogos') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { MayusculasInterceptor } from './platform/http/mayusculas.interceptor.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { AdministrationModule } from './features/administration/administration.module.js';
@@ -11,6 +13,7 @@ import { IncidenciasModule } from './features/incidencias/incidencias.module.js'
 import { PresupuestosModule } from './features/presupuestos/presupuestos.module.js';
 import { RequerimientosModule } from './features/requerimientos/requerimientos.module.js';
 import { OperacionesObraModule } from './features/operaciones-obra/operaciones-obra.module.js';
+import { ProyectosCatalogosModule } from './features/proyectos-catalogos/proyectos-catalogos.module.js';
 import { TesoreriaModule } from './features/tesoreria/tesoreria.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { RrhhModule } from './features/rrhh/rrhh.module.js';
@@ -29,9 +32,10 @@ import { RrhhModule } from './features/rrhh/rrhh.module.js';
     PresupuestosModule,
     IncidenciasModule,
     OperacionesObraModule,
+    ProyectosCatalogosModule,
     RrhhModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_INTERCEPTOR, useClass: MayusculasInterceptor }],
 })
 export class AppModule {}

@@ -59,7 +59,7 @@ describe('Control de avance de obra (e2e)', () => {
     // Presupuesto de la segunda obra: 1 fase y 2 categorías
     await db.query(`insert into "ppto_Fases" ("IdpptoFase", "FaseProyecto") values ('E2E-OPS-F1', 'E2E FASE ARQUITECTURA')`);
     await db.query(`insert into "ppto_FasesCategorias" ("IdpptoFaseCategoria", "IdpptoFase", "Descripcion") values ('E2E-OPS-C1', 'E2E-OPS-F1', 'E2E MUROS'), ('E2E-OPS-C2', 'E2E-OPS-F1', 'E2E PISOS')`);
-    idPresupuesto = (await db.query(`insert into "ppto_Principal" ("IdPresupuesto", "Version", "TipoPpto", "Estado", id_centro_costo) values ('E2E-OPS-PPTO', 'V1', 'Principal', 'Aprobado', $1) returning id`, [cc2])).rows[0].id;
+    idPresupuesto = (await db.query(`insert into "ppto_Principal" ("IdPresupuesto", "Version", "TipoPpto", "Estado", estado_ppto, id_centro_costo) values ('E2E-OPS-PPTO', 'V1', 'Principal', 'Aprobado', 'APROBADO', $1) returning id`, [cc2])).rows[0].id;
     await db.query(`insert into "ppto_DetalleFases" ("IdPresupuestoDetalle", "IdPresupuesto", id_centro_costo, "IdpptoFase") values ('E2E-OPS-DF1', 'E2E-OPS-PPTO', $1, 'E2E-OPS-F1')`, [cc2]);
     await db.query(
       `insert into "ppto_DetalleFasesCate" ("IdPresupuestoDetalleCategoria", "IdPresupuesto", "IdPresupuestoDetalle", id_centro_costo, "IdpptoFase", "IdpptoFaseCategoria")
@@ -456,25 +456,26 @@ describe('Control de avance de obra (e2e)', () => {
     it('el jefe y el coordinador de la ficha aparecen solos, con su cargo y sin fila propia', async () => {
       const r = await directorio();
       expect(r.slice(0, 2)).toMatchObject([
-        { id: null, clave: `equipo-${jefe}`, origen: 'equipo', nombre_completo: 'E2E-OPS Jefe de proyecto', rol_obra: 'Jefe de proyecto' },
-        { id: null, clave: `equipo-${coordinador}`, origen: 'equipo', rol_obra: 'Coordinador' },
+        { id: null, clave: `equipo-${jefe}-jefe_proyecto`, origen: 'equipo', nombre_completo: 'E2E-OPS Jefe de proyecto', rol_obra: 'Jefe de proyecto' },
+        { id: null, clave: `equipo-${coordinador}-coordinador`, origen: 'equipo', rol_obra: 'Coordinador' },
       ]);
       expect(r[0].telefono).toBeUndefined();
     });
 
     it('sus datos de obra se completan en el directorio; vaciar el teléfono vuelve al de Trabajadores', async () => {
       const t = (await api().put(`${base()}/residentes/equipo/${jefe}`).send({ telefono: '987654321', turno: 'Noche' }).expect(200)).body as Tarjeta;
-      expect(t).toMatchObject({ clave: `equipo-${jefe}`, nombre_completo: 'E2E-OPS Jefe de proyecto', rol_obra: 'Jefe de proyecto', telefono: '987654321', turno: 'Noche' });
+      // El turno lo escribe la persona: se guarda en mayúsculas (GRP S-11).
+      expect(t).toMatchObject({ clave: `equipo-${jefe}-jefe_proyecto`, nombre_completo: 'E2E-OPS Jefe de proyecto', rol_obra: 'Jefe de proyecto', telefono: '987654321', turno: 'NOCHE' });
       expect(t.id).toEqual(expect.any(Number));
       const vaciado = (await api().put(`${base()}/residentes/equipo/${jefe}`).send({ telefono: '' }).expect(200)).body as Tarjeta;
       expect(vaciado.telefono).toBeUndefined();
-      expect(vaciado.turno).toBe('Noche');
+      expect(vaciado.turno).toBe('NOCHE');
       expect((await directorio()).filter((x) => x.clave.startsWith('equipo-'))).toHaveLength(2);
     });
 
     it('no se puede agregar a mano a alguien del equipo, ni quitarlo desde el directorio', async () => {
       await api().post(`${base()}/residentes`).send({ id_anexo: jefe, nombre_completo: 'Otra vez', rol_obra: 'Jefe' }).expect(409);
-      const fila = (await directorio()).find((x) => x.clave === `equipo-${jefe}`);
+      const fila = (await directorio()).find((x) => x.clave === `equipo-${jefe}-jefe_proyecto`);
       await api().delete(`${base()}/residentes/${fila?.id}`).expect(400);
       await api().put(`${base()}/residentes/equipo/${proveedor}`).send({ turno: 'x' }).expect(404);
     });
@@ -482,7 +483,7 @@ describe('Control de avance de obra (e2e)', () => {
     it('los contactos a mano siguen igual, después del equipo; el cockpit muestra el mismo directorio', async () => {
       await api().post(`${base()}/residentes`).send({ nombre_completo: 'E2E-OPS Supervisor', rol_obra: 'Supervisor externo' }).expect(201);
       const r = await directorio();
-      expect(r.at(-1)).toMatchObject({ origen: 'directorio', nombre_completo: 'E2E-OPS Supervisor', rol_obra: 'Supervisor externo' });
+      expect(r.at(-1)).toMatchObject({ origen: 'directorio', nombre_completo: 'E2E-OPS SUPERVISOR', rol_obra: 'SUPERVISOR EXTERNO' });
       const cockpit = (await api().get(`${base()}/cockpit`).expect(200)).body as { residentes: Tarjeta[] };
       expect(cockpit.residentes.map((x) => x.clave)).toEqual(r.map((x) => x.clave));
     });

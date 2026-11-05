@@ -11,8 +11,10 @@ import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.
 import { SinPermisoErrorDto } from '../../../../platform/auth/usuarios/sin-permiso.js';
 import { AuditoriaPermisosQueryDto, ResumenAuditoriaPermisosDto } from './auditoria.dto.js';
 import { AuditoriaPermisosHandler } from './auditoria.handler.js';
+import { SinMayusculas } from '../../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/permisos')
+@SinMayusculas()
 @Controller('administration/permisos')
 @Modulo('admin.roles')
 export class AuditoriaPermisosController {

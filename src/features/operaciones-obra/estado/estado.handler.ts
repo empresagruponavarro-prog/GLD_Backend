@@ -1,6 +1,9 @@
 import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
+import { and } from '@prisma/orm-postgres/orm-client';
 import { nowInstant } from '../../../platform/db/temporal.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
+import { textoLegado } from '../../presupuestos/aprobacion/estados.js';
+import { sincronizarPresupuestoCc } from '../../presupuestos/aprobacion/sincronizar-cc.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { truncar } from '../shared/control-avance/avance.js';
 import { cargarObra } from '../shared/control-avance/carga-obra.js';
@@ -8,6 +11,7 @@ import type { EstadoObra } from '../shared/control-avance/control-avance.types.j
 import { calcularObra } from '../shared/control-avance/motor.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
 import { assertCentroCosto, esFechaIso, hoyLima, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
+import { exigirPresupuestoAprobado } from '../shared/presupuesto-aprobado.js';
 import type { CambiarEstadoObraDto, CambioEstadoObraDto } from './estado.dto.js';
 
 /**
@@ -49,6 +53,9 @@ export class EstadoHandler {
       const permitidas = TRANSICIONES_ESTADO[actual ?? 'NINGUNO'].map((e) => ETIQUETA[e]).join(', ') || 'ninguno (estado final)';
       throw new ConflictException(`No se puede pasar de ${actual ? ETIQUETA[actual] : 'sin estado'} a ${ETIQUETA[nuevo]}. Cambios permitidos: ${permitidas}`);
     }
+
+    // Una obra con presupuesto no inicia mientras su Principal no esté aprobado (S-05).
+    if (nuevo === 'EN_EJECUCION') await exigirPresupuestoAprobado(orm, idCentroCosto, 'iniciar');
 
     const carga = await cargarObra(orm, idCentroCosto);
     const avisos: string[] = [];
@@ -103,6 +110,13 @@ export class EstadoHandler {
         updated_at: nowInstant(),
         ...cambiosGen,
       });
+      // GRP DG1: al entregar la obra, sus presupuestos aprobados pasan a ENTREGADO (el cierre los pasa a LIQUIDADO).
+      if (nuevo === 'POST_VENTA') {
+        await t.ppto_Principal
+          .where((p) => and(p.id_centro_costo.eq(idCentroCosto), p.estado_ppto.eq('APROBADO')))
+          .updateAndCount({ estado_ppto: 'ENTREGADO', Estado: toVarchar<50>(textoLegado('ENTREGADO')) });
+        await sincronizarPresupuestoCc(t, idCentroCosto);
+      }
       await registrarEvento(t, {
         idCentroCosto,
         tipo: actual === null ? 'ALTA' : 'ESTADO',

@@ -1,0 +1,9 @@
+{
+  "from": "b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c",
+  "to": "b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c",
+  "providedInvariants": [
+    "grp-inicio-y-menu"
+  ],
+  "createdAt": "2026-11-05T12:43:01.221Z",
+  "migrationHash": "d57804b0f1780c0b95de6e30d8d88115f7ecca9e0cea701431e968651936afdc"
+}

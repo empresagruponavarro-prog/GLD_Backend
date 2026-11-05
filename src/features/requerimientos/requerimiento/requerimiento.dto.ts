@@ -62,6 +62,15 @@ export class RequerimientoLineaDto {
   @IsInt()
   @Min(1)
   id_beneficiario?: number;
+
+  @ApiPropertyOptional({
+    description:
+      'Subfase del presupuesto aprobado del centro de costo a la que se imputa la línea (GRP S-09). Opcional; con ella el gasto se ve por subfase',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  id_ppto_detalle_categoria?: number;
 }
 
 export class CreateRequerimientoDto {
@@ -187,6 +196,8 @@ export class RequerimientoLineaResponseDto {
   @ApiPropertyOptional() observaciones: string | null;
   @ApiPropertyOptional() id_beneficiario: number | null;
   @ApiPropertyOptional() beneficiario: string | null;
+  @ApiPropertyOptional({ description: 'Subfase del presupuesto a la que se imputa la línea' }) id_ppto_detalle_categoria: number | null;
+  @ApiPropertyOptional({ description: 'Nombre de la subfase' }) subfase: string | null;
   @ApiProperty({ example: '3', description: 'Suma de lo ordenado en OC' }) cantidad_ordenada: string;
   @ApiProperty({ example: '5', description: 'aprobada - ordenada (0 si no está aprobado)' }) saldo_por_ordenar: string;
 }

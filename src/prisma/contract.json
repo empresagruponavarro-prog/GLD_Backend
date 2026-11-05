@@ -240,6 +240,10 @@
       "model": "obra_partida",
       "namespace": "public"
     },
+    "obra_plano_requerido": {
+      "model": "obra_plano_requerido",
+      "namespace": "public"
+    },
     "obra_planos": {
       "model": "obra_planos",
       "namespace": "public"
@@ -274,6 +278,10 @@
     },
     "pago_programado": {
       "model": "pago_programado",
+      "namespace": "public"
+    },
+    "periodo_fiscal": {
+      "model": "periodo_fiscal",
       "namespace": "public"
     },
     "planillaPago": {
@@ -390,6 +398,18 @@
     },
     "tipo_categoria": {
       "model": "tipo_categoria",
+      "namespace": "public"
+    },
+    "tipo_plano": {
+      "model": "tipo_plano",
+      "namespace": "public"
+    },
+    "tipo_proyecto": {
+      "model": "tipo_proyecto",
+      "namespace": "public"
+    },
+    "tipo_proyecto_plano": {
+      "model": "tipo_proyecto_plano",
       "namespace": "public"
     },
     "trabajador": {
@@ -686,6 +706,39 @@
               {
                 "name": "CERRADO",
                 "value": "CERRADO"
+              },
+              {
+                "name": "ANULADO",
+                "value": "ANULADO"
+              }
+            ]
+          },
+          "estado_presupuesto": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "EN_DESARROLLO",
+                "value": "EN_DESARROLLO"
+              },
+              {
+                "name": "EN_REVISION",
+                "value": "EN_REVISION"
+              },
+              {
+                "name": "OBSERVADO",
+                "value": "OBSERVADO"
+              },
+              {
+                "name": "APROBADO",
+                "value": "APROBADO"
+              },
+              {
+                "name": "ENTREGADO",
+                "value": "ENTREGADO"
+              },
+              {
+                "name": "LIQUIDADO",
+                "value": "LIQUIDADO"
               },
               {
                 "name": "ANULADO",
@@ -2994,6 +3047,13 @@
                   "kind": "scalar"
                 }
               },
+              "fecha_liquidacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -3020,6 +3080,23 @@
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
+                }
+              },
+              "id_tipo_proyecto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "liquidado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
                 }
               },
               "oc_file": {
@@ -3379,6 +3456,21 @@
                   "namespace": "public"
                 }
               },
+              "planosRequeridos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_centro_costo"
+                  ]
+                },
+                "to": {
+                  "model": "obra_plano_requerido",
+                  "namespace": "public"
+                }
+              },
               "pptoDetalleFases": {
                 "cardinality": "1:N",
                 "on": {
@@ -3453,6 +3545,21 @@
                   "model": "requerimiento",
                   "namespace": "public"
                 }
+              },
+              "tipoProyecto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_proyecto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_proyecto",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -3475,6 +3582,9 @@
                 "fecha_inicio": {
                   "column": "fecha_inicio"
                 },
+                "fecha_liquidacion": {
+                  "column": "fecha_liquidacion"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -3486,6 +3596,12 @@
                 },
                 "id_empresa": {
                   "column": "id_empresa"
+                },
+                "id_tipo_proyecto": {
+                  "column": "id_tipo_proyecto"
+                },
+                "liquidado_por": {
+                  "column": "liquidado_por"
                 },
                 "oc_file": {
                   "column": "oc_file"
@@ -7858,6 +7974,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_ppto_detalle_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": true,
                 "type": {
@@ -7908,6 +8031,21 @@
                 },
                 "to": {
                   "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
+              "pptoDetalleCategoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
                   "namespace": "public"
                 }
               },
@@ -7967,6 +8105,9 @@
                 },
                 "id_orden_compra": {
                   "column": "id_orden_compra"
+                },
+                "id_ppto_detalle_categoria": {
+                  "column": "id_ppto_detalle_categoria"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -10120,6 +10261,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_ppto_detalle_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": false,
                 "type": {
@@ -10181,6 +10329,21 @@
                   "namespace": "public"
                 }
               },
+              "pptoDetalleCategoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
               "producto": {
                 "cardinality": "N:1",
                 "on": {
@@ -10213,6 +10376,9 @@
                 },
                 "id_orden_compra_detalle": {
                   "column": "id_orden_compra_detalle"
+                },
+                "id_ppto_detalle_categoria": {
+                  "column": "id_ppto_detalle_categoria"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -13732,6 +13898,131 @@
               "table": "obra_partida"
             }
           },
+          "obra_plano_requerido": {
+            "fields": {
+              "entregado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "entregado_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "entregado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_centro_costo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_plano": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_tipo_plano": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "obligatorio": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "centroCosto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_centro_costo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "tipoPlano": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_plano"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_plano",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "entregado": {
+                  "column": "entregado"
+                },
+                "entregado_en": {
+                  "column": "entregado_en"
+                },
+                "entregado_por": {
+                  "column": "entregado_por"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_centro_costo": {
+                  "column": "id_centro_costo"
+                },
+                "id_plano": {
+                  "column": "id_plano"
+                },
+                "id_tipo_plano": {
+                  "column": "id_tipo_plano"
+                },
+                "obligatorio": {
+                  "column": "obligatorio"
+                }
+              },
+              "namespaceId": "public",
+              "table": "obra_plano_requerido"
+            }
+          },
           "obra_planos": {
             "fields": {
               "archivo_url": {
@@ -14070,6 +14361,13 @@
           },
           "obra_residentes": {
             "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "correo": {
                 "nullable": true,
                 "type": {
@@ -14105,6 +14403,20 @@
                   "typeParams": {
                     "length": 50
                   }
+                }
+              },
+              "fecha_alta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_baja": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
                 }
               },
               "foto_url": {
@@ -14153,6 +14465,16 @@
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
+                }
+              },
+              "rol_equipo": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 30
+                  }
                 }
               },
               "rol_obra": {
@@ -14205,6 +14527,9 @@
             },
             "storage": {
               "fields": {
+                "activo": {
+                  "column": "activo"
+                },
                 "correo": {
                   "column": "correo"
                 },
@@ -14216,6 +14541,12 @@
                 },
                 "estado_planta": {
                   "column": "estado_planta"
+                },
+                "fecha_alta": {
+                  "column": "fecha_alta"
+                },
+                "fecha_baja": {
+                  "column": "fecha_baja"
                 },
                 "foto_url": {
                   "column": "foto_url"
@@ -14234,6 +14565,9 @@
                 },
                 "orden": {
                   "column": "orden"
+                },
+                "rol_equipo": {
+                  "column": "rol_equipo"
                 },
                 "rol_obra": {
                   "column": "rol_obra"
@@ -14482,6 +14816,13 @@
                   }
                 }
               },
+              "monto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "nombre": {
                 "nullable": false,
                 "type": {
@@ -14632,6 +14973,9 @@
                 },
                 "item": {
                   "column": "item"
+                },
+                "monto": {
+                  "column": "monto"
                 },
                 "nombre": {
                   "column": "nombre"
@@ -15215,6 +15559,37 @@
               "table": "pago_programado"
             }
           },
+          "periodo_fiscal": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "anio": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "anio": {
+                  "column": "anio"
+                }
+              },
+              "namespaceId": "public",
+              "table": "periodo_fiscal"
+            }
+          },
           "ppto_DetalleFases": {
             "fields": {
               "CodCentroCto": {
@@ -15602,6 +15977,21 @@
               }
             },
             "relations": {
+              "almacenDocumentoDetalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ppto_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "almacen_documento_detalle",
+                  "namespace": "public"
+                }
+              },
               "categoria": {
                 "cardinality": "N:1",
                 "on": {
@@ -15692,6 +16082,21 @@
                   "namespace": "public"
                 }
               },
+              "ordenCompraDetalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ppto_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompraDetalle",
+                  "namespace": "public"
+                }
+              },
               "presupuesto": {
                 "cardinality": "N:1",
                 "on": {
@@ -15704,6 +16109,21 @@
                 },
                 "to": {
                   "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              },
+              "requerimientoDetalles": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_ppto_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "requerimiento_detalle",
                   "namespace": "public"
                 }
               }
@@ -16890,6 +17310,36 @@
                   "kind": "scalar"
                 }
               },
+              "aprobado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "estado_ppto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_presupuesto",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha_aprobacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -16913,6 +17363,20 @@
               },
               "id_empresa": {
                 "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_version_de": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero_version": {
+                "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -17031,6 +17495,36 @@
                   "model": "obra_datos_generales",
                   "namespace": "public"
                 }
+              },
+              "versionDe": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_version_de"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
+              },
+              "versiones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_version_de"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_Principal",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -17116,6 +17610,15 @@
                 "Viaticos": {
                   "column": "Viaticos"
                 },
+                "aprobado_por": {
+                  "column": "aprobado_por"
+                },
+                "estado_ppto": {
+                  "column": "estado_ppto"
+                },
+                "fecha_aprobacion": {
+                  "column": "fecha_aprobacion"
+                },
                 "id": {
                   "column": "id"
                 },
@@ -17127,6 +17630,12 @@
                 },
                 "id_empresa": {
                   "column": "id_empresa"
+                },
+                "id_version_de": {
+                  "column": "id_version_de"
+                },
+                "numero_version": {
+                  "column": "numero_version"
                 },
                 "periodo": {
                   "column": "periodo"
@@ -18228,6 +18737,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_ppto_detalle_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_producto": {
                 "nullable": false,
                 "type": {
@@ -18303,6 +18819,21 @@
                   "namespace": "public"
                 }
               },
+              "pptoDetalleCategoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
+              },
               "producto": {
                 "cardinality": "N:1",
                 "on": {
@@ -18347,6 +18878,9 @@
                 },
                 "id_beneficiario": {
                   "column": "id_beneficiario"
+                },
+                "id_ppto_detalle_categoria": {
+                  "column": "id_ppto_detalle_categoria"
                 },
                 "id_producto": {
                   "column": "id_producto"
@@ -19103,6 +19637,274 @@
               "table": "tipo_categoria"
             }
           },
+          "tipo_plano": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "codigo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "disciplina": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 50
+                  }
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 120
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "proyectos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_plano"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_proyecto_plano",
+                  "namespace": "public"
+                }
+              },
+              "requeridos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_plano"
+                  ]
+                },
+                "to": {
+                  "model": "obra_plano_requerido",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "codigo": {
+                  "column": "codigo"
+                },
+                "disciplina": {
+                  "column": "disciplina"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                }
+              },
+              "namespaceId": "public",
+              "table": "tipo_plano"
+            }
+          },
+          "tipo_proyecto": {
+            "fields": {
+              "activo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 80
+                  }
+                }
+              },
+              "orden": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "centrosCosto": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_proyecto"
+                  ]
+                },
+                "to": {
+                  "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "planos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_tipo_proyecto"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_proyecto_plano",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "activo": {
+                  "column": "activo"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                },
+                "orden": {
+                  "column": "orden"
+                }
+              },
+              "namespaceId": "public",
+              "table": "tipo_proyecto"
+            }
+          },
+          "tipo_proyecto_plano": {
+            "fields": {
+              "id_tipo_plano": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_tipo_proyecto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "obligatorio": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "tipoPlano": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_plano"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_plano",
+                  "namespace": "public"
+                }
+              },
+              "tipoProyecto": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_tipo_proyecto"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "tipo_proyecto",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id_tipo_plano": {
+                  "column": "id_tipo_plano"
+                },
+                "id_tipo_proyecto": {
+                  "column": "id_tipo_proyecto"
+                },
+                "obligatorio": {
+                  "column": "obligatorio"
+                }
+              },
+              "namespaceId": "public",
+              "table": "tipo_proyecto_plano"
+            }
+          },
           "trabajador": {
             "fields": {
               "correo_institucional": {
@@ -19801,6 +20603,11 @@
                   "nativeType": "date",
                   "nullable": true
                 },
+                "fecha_liquidacion": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -19824,6 +20631,19 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "id_tipo_proyecto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "liquidado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
                 },
                 "oc_file": {
                   "codecId": "sql/varchar@1",
@@ -19918,6 +20738,23 @@
                     "namespaceId": "public",
                     "tableName": "anexos"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_tipo_proyecto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_proyecto"
+                  }
                 }
               ],
               "indexes": [
@@ -19943,6 +20780,14 @@
                   ],
                   "name": "CentroCostos_id_empresa_idx_328936e2",
                   "prefix": "CentroCostos_id_empresa_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_tipo_proyecto"
+                  ],
+                  "name": "CentroCostos_id_tipo_proyecto_idx_555c1d8a",
+                  "prefix": "CentroCostos_id_tipo_proyecto_idx",
                   "unique": false
                 }
               ],
@@ -21189,6 +22034,11 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_ppto_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -21250,9 +22100,33 @@
                     "namespaceId": "public",
                     "tableName": "ordenCompraDetalle"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ppto_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "almacen_documento_detalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "name": "almacen_doc_det_subfase_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_documento"
@@ -28072,6 +28946,132 @@
                 }
               ]
             },
+            "obra_plano_requerido": {
+              "columns": {
+                "entregado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "entregado_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "entregado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_centro_costo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_plano": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_tipo_plano": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "obligatorio": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_centro_costo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_plano_requerido"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "CentroCostos"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_tipo_plano"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_plano_requerido"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_plano"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_centro_costo"
+                  ],
+                  "name": "obra_plano_requerido_id_centro_costo_idx_8c84570b",
+                  "prefix": "obra_plano_requerido_id_centro_costo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_tipo_plano"
+                  ],
+                  "name": "obra_plano_requerido_id_tipo_plano_idx_1ae34369",
+                  "prefix": "obra_plano_requerido_id_tipo_plano_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_centro_costo",
+                    "id_tipo_plano"
+                  ]
+                }
+              ]
+            },
             "obra_planos": {
               "columns": {
                 "archivo_url": {
@@ -28358,6 +29358,15 @@
             },
             "obra_residentes": {
               "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "correo": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -28394,6 +29403,16 @@
                   "typeParams": {
                     "length": 50
                   }
+                },
+                "fecha_alta": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "fecha_baja": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
                 },
                 "foto_url": {
                   "codecId": "sql/varchar@1",
@@ -28438,6 +29457,14 @@
                   },
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "rol_equipo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 30
+                  }
                 },
                 "rol_obra": {
                   "codecId": "sql/varchar@1",
@@ -28709,6 +29736,11 @@
                   "typeParams": {
                     "length": 20
                   }
+                },
+                "monto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
                 },
                 "nombre": {
                   "codecId": "sql/varchar@1",
@@ -29005,6 +30037,11 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_ppto_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -29072,6 +30109,23 @@
                     "namespaceId": "public",
                     "tableName": "producto"
                   }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ppto_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ordenCompraDetalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
                 }
               ],
               "indexes": [
@@ -29081,6 +30135,14 @@
                   ],
                   "name": "ordenCompraDetalle_id_orden_compra_idx_ceb1e2df",
                   "prefix": "ordenCompraDetalle_id_orden_compra_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "name": "ordenCompraDetalle_id_ppto_detalle_categoria_idx_5963aa86",
+                  "prefix": "ordenCompraDetalle_id_ppto_detalle_categoria_idx",
                   "unique": false
                 },
                 {
@@ -29536,6 +30598,32 @@
               "primaryKey": {
                 "columns": [
                   "id"
+                ]
+              },
+              "uniques": []
+            },
+            "periodo_fiscal": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "anio": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "anio"
                 ]
               },
               "uniques": []
@@ -31051,6 +32139,13 @@
               "uniques": []
             },
             "ppto_Principal": {
+              "checks": [
+                {
+                  "expression": "\"estado_ppto\" IN ('EN_DESARROLLO', 'EN_REVISION', 'OBSERVADO', 'APROBADO', 'ENTREGADO', 'LIQUIDADO', 'ANULADO')",
+                  "name": "ppto_Principal_estado_ppto_check_3e2f5708",
+                  "prefix": "ppto_Principal_estado_ppto_check"
+                }
+              ],
               "columns": {
                 "CodCentroCto": {
                   "codecId": "sql/varchar@1",
@@ -31232,6 +32327,34 @@
                   "nativeType": "numeric",
                   "nullable": true
                 },
+                "aprobado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "estado_ppto": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "EN_DESARROLLO"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_presupuesto",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha_aprobacion": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -31255,6 +32378,20 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "id_version_de": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "numero_version": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
                 },
                 "periodo": {
                   "codecId": "pg/int4@1",
@@ -31301,6 +32438,23 @@
                   "onDelete": "setNull",
                   "source": {
                     "columns": [
+                      "id_version_de"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_Principal"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
                       "id_categoria"
                     ],
                     "namespaceId": "public",
@@ -31338,6 +32492,14 @@
                   ],
                   "name": "ppto_Principal_id_empresa_idx_328936e2",
                   "prefix": "ppto_Principal_id_empresa_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_version_de"
+                  ],
+                  "name": "ppto_Principal_id_version_de_idx_642ba035",
+                  "prefix": "ppto_Principal_id_version_de_idx",
                   "unique": false
                 }
               ],
@@ -32342,6 +33504,11 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_ppto_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_producto": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -32364,6 +33531,23 @@
                 }
               },
               "foreignKeys": [
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_ppto_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "requerimiento_detalle"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
+                },
                 {
                   "onDelete": "cascade",
                   "source": {
@@ -32421,6 +33605,14 @@
                   ],
                   "name": "requerimiento_detalle_id_beneficiario_idx_9721cabf",
                   "prefix": "requerimiento_detalle_id_beneficiario_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_ppto_detalle_categoria"
+                  ],
+                  "name": "requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86",
+                  "prefix": "requerimiento_detalle_id_ppto_detalle_categoria_idx",
                   "unique": false
                 },
                 {
@@ -33280,6 +34472,212 @@
                   ]
                 }
               ]
+            },
+            "tipo_plano": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "codigo": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "disciplina": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 120
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "codigo"
+                  ]
+                }
+              ]
+            },
+            "tipo_proyecto": {
+              "columns": {
+                "activo": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 80
+                  }
+                },
+                "orden": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "nombre"
+                  ]
+                }
+              ]
+            },
+            "tipo_proyecto_plano": {
+              "columns": {
+                "id_tipo_plano": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_tipo_proyecto": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "obligatorio": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_tipo_proyecto"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_proyecto_plano"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_proyecto"
+                  }
+                },
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_tipo_plano"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_proyecto_plano"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "tipo_plano"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_tipo_plano"
+                  ],
+                  "name": "tipo_proyecto_plano_id_tipo_plano_idx_1ae34369",
+                  "prefix": "tipo_proyecto_plano_id_tipo_plano_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_tipo_proyecto"
+                  ],
+                  "name": "tipo_proyecto_plano_id_tipo_proyecto_idx_555c1d8a",
+                  "prefix": "tipo_proyecto_plano_id_tipo_proyecto_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id_tipo_proyecto",
+                  "id_tipo_plano"
+                ]
+              },
+              "uniques": []
             },
             "trabajador": {
               "columns": {
@@ -34251,6 +35649,18 @@
                 "ANULADO"
               ]
             },
+            "estado_presupuesto": {
+              "kind": "valueSet",
+              "values": [
+                "EN_DESARROLLO",
+                "EN_REVISION",
+                "OBSERVADO",
+                "APROBADO",
+                "ENTREGADO",
+                "LIQUIDADO",
+                "ANULADO"
+              ]
+            },
             "estado_programacion": {
               "kind": "valueSet",
               "values": [
@@ -34379,7 +35789,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539"
+    "storageHash": "b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c"
   },
   "capabilities": {
     "postgres": {

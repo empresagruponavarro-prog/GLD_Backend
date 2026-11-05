@@ -1,5 +1,6 @@
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, GoneException, NotFoundException } from '@nestjs/common';
 import type { Database } from '../../prisma/prisma.module.js';
+import { CronogramaController } from './cronograma/cronograma.controller.js';
 import { CronogramaHandler } from './cronograma/cronograma.handler.js';
 import type { ObraSemanaDto } from './cronograma/cronograma.dto.js';
 import { ObraIncidenciasHandler } from './incidencias/incidencias.handler.js';
@@ -100,37 +101,30 @@ describe('operaciones-obra / calcularKpis', () => {
   });
 });
 
-describe('operaciones-obra / CronogramaHandler', () => {
-  it('asigna numero_semana = max + 1 y etiqueta por defecto', async () => {
+describe('operaciones-obra / CronogramaHandler (solo lectura, GRP)', () => {
+  it('lista las semanas ordenadas con su etiqueta y sus porcentajes', async () => {
     const tabla = tableMock();
     tabla.all.mockResolvedValue([
-      { id: 1, numero_semana: 1, etiqueta_semana: 'SEM 01', fecha_inicio: '2026-10-05', fecha_fin: '2026-10-11' },
-      { id: 2, numero_semana: 3, etiqueta_semana: 'SEM 03', fecha_inicio: '2026-10-19', fecha_fin: '2026-10-25' },
+      { id: 1, numero_semana: 1, etiqueta_semana: null, fecha_inicio: '2026-10-05', fecha_fin: '2026-10-11', fase_principal: 'Preliminares', porcentaje_meta: '10', porcentaje_real: '8', estado: 'En Plazo' },
     ]);
-    tabla.create.mockImplementation(async (data: Record<string, unknown>) => ({ id: 9, ...data }));
     const handler = new CronogramaHandler(dbWith({ obra_semanas_cronograma: tabla }));
 
-    const res = await handler.create(10, { fecha_inicio: '2026-10-26', fecha_fin: '2026-11-01', fase_principal: 'Acabados' });
+    const [s] = await handler.list(10);
 
-    expect(res.numero_semana).toBe(4);
-    expect(res.etiqueta_semana).toBe('SEM 04');
-    expect(res.estado).toBe('Programado');
+    expect(s).toMatchObject({ numero_semana: 1, etiqueta_semana: 'SEM 01', fase_principal: 'Preliminares', porcentaje_meta: 10, porcentaje_real: 8, estado: 'En Plazo' });
   });
 
-  it('rechaza numero_semana duplicado', async () => {
-    const tabla = tableMock();
-    tabla.all.mockResolvedValue([{ id: 1, numero_semana: 1, fecha_inicio: '', fecha_fin: '' }]);
-    const handler = new CronogramaHandler(dbWith({ obra_semanas_cronograma: tabla }));
-    await expect(
-      handler.create(10, { numero_semana: 1, fecha_inicio: '2026-10-05', fecha_fin: '2026-10-11', fase_principal: 'X' }),
-    ).rejects.toBeInstanceOf(ConflictException);
+  it('el handler ya no escribe: programar, editar, avanzar y eliminar semanas se retiraron', () => {
+    const handler = new CronogramaHandler(dbWith({ obra_semanas_cronograma: tableMock() })) as unknown as Record<string, unknown>;
+    for (const metodo of ['create', 'createLote', 'update', 'updateAvance', 'remove']) expect(handler[metodo]).toBeUndefined();
   });
 
-  it('rechaza fecha_inicio > fecha_fin', async () => {
-    const handler = new CronogramaHandler(dbWith({ obra_semanas_cronograma: tableMock() }));
-    await expect(
-      handler.create(10, { fecha_inicio: '2026-10-20', fecha_fin: '2026-10-11', fase_principal: 'X' }),
-    ).rejects.toBeInstanceOf(BadRequestException);
+  it('las rutas de escritura responden 410 y dicen dónde se registra el avance', () => {
+    const controlador = new CronogramaController(new CronogramaHandler(dbWith({})));
+    for (const ruta of [() => controlador.createLote(), () => controlador.create(), () => controlador.update(), () => controlador.updateAvance(), () => controlador.remove()]) {
+      expect(ruta).toThrow(GoneException);
+      expect(ruta).toThrow(/Control de avance/);
+    }
   });
 });
 

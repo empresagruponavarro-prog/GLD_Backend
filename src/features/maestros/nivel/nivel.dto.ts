@@ -7,7 +7,7 @@ export class CreateNivelDto {
   @IsString()
   @IsNotEmpty({ message: 'El código es obligatorio' })
   @MaxLength(20, { message: 'El código no puede superar 20 caracteres' })
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toUpperCase() : value))
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   codigo!: string;
 
   @ApiProperty({ description: 'Descripción o nombre del nivel', example: 'PRIMER PISO' })

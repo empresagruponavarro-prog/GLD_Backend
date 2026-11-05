@@ -24,8 +24,10 @@ import {
 import { CreateRolDto, RolResponseDto, UpdateRolDto } from './rol.dto.js';
 import { RolHandler } from './rol.handler.js';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/roles')
+@SinMayusculas()
 @Controller('administration/roles')
 @Modulo('admin.roles')
 export class RolController {

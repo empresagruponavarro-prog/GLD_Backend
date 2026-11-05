@@ -14,9 +14,11 @@ import { UsuarioInactivoErrorDto } from '../../../platform/auth/usuarios/usuario
 import { MisPermisosDto, PermisosDto } from './mis-permisos.dto.js';
 import { MisPermisosHandler } from './mis-permisos.handler.js';
 import { LecturaCompartida } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('auth')
 @ApiExtraModels(PermisosDto)
+@SinMayusculas()
 @Controller('auth')
 @LecturaCompartida()
 export class MisPermisosController {

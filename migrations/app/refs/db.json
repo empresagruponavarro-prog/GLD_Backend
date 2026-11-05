@@ -1,11 +1,13 @@
 {
-  "hash": "f83172668560b02d2a9178f94dfa055a44a2c5e3772a2d7a5944c1adc56d4539",
+  "hash": "b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c",
   "invariants": [
     "rrhh-trabajadores",
     "rrhh-catalogos-iniciales",
     "rrhh-catalogos-modulo",
     "obra-codigo-tienda-del-cc",
     "operaciones-modulo-y-reglas",
-    "almacen-semillas"
+    "almacen-semillas",
+    "grp-inicio-y-menu",
+    "grp-mayusculas-datos"
   ]
 }

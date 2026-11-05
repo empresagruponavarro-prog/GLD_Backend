@@ -17,12 +17,19 @@ import { ImportacionHandler } from './importacion/importacion.handler.js';
 import { AvisosController } from './avisos/avisos.controller.js';
 import { AvisosHandler } from './avisos/avisos.handler.js';
 import { AvanceController } from './avance/avance.controller.js';
+import { AlmacenModule } from '../almacen/almacen.module.js';
 import { AvanceHandler } from './avance/avance.handler.js';
 import { ControlController } from './control/control.controller.js';
 import { ControlHandler } from './control/control.handler.js';
 import { EstadoController } from './estado/estado.controller.js';
 import { EstadoHandler } from './estado/estado.handler.js';
 import { ImportarPresupuestoHandler } from './partidas/importar-presupuesto.handler.js';
+import { GastoController } from './gasto/gasto.controller.js';
+import { GastoHandler } from './gasto/gasto.handler.js';
+import { LiquidacionController } from './liquidacion/liquidacion.controller.js';
+import { LiquidacionHandler } from './liquidacion/liquidacion.handler.js';
+import { PlanosRequeridosController } from './planos-requeridos/planos-requeridos.controller.js';
+import { PlanosRequeridosHandler } from './planos-requeridos/planos-requeridos.handler.js';
 import { PartidasController } from './partidas/partidas.controller.js';
 import { PartidasHandler } from './partidas/partidas.handler.js';
 import { PortafolioController } from './portafolio/portafolio.controller.js';
@@ -31,7 +38,7 @@ import { ReprogramacionesController } from './reprogramaciones/reprogramaciones.
 import { ReprogramacionesHandler } from './reprogramaciones/reprogramaciones.handler.js';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AlmacenModule],
   controllers: [
     ObraController,
     CronogramaController,
@@ -49,6 +56,10 @@ import { ReprogramacionesHandler } from './reprogramaciones/reprogramaciones.han
     PortafolioController,
     AvisosController,
     ImportacionController,
+    // GRP: lista de verificación de planos de la obra
+    PlanosRequeridosController,
+    LiquidacionController,
+    GastoController,
   ],
   providers: [
     ObraHandler,
@@ -66,6 +77,9 @@ import { ReprogramacionesHandler } from './reprogramaciones/reprogramaciones.han
     PortafolioHandler,
     AvisosHandler,
     ImportacionHandler,
+    PlanosRequeridosHandler,
+    LiquidacionHandler,
+    GastoHandler,
   ],
 })
 export class OperacionesObraModule {}

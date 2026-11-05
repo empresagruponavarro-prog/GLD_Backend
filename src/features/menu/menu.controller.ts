@@ -3,8 +3,10 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetMenuQueryDto, MenuSectionResponseDto } from './menu.dto.js';
 import { MenuHandler } from './menu.handler.js';
 import { LecturaCompartida } from '../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('menu')
+@SinMayusculas()
 @Controller('menu')
 @LecturaCompartida()
 export class MenuController {

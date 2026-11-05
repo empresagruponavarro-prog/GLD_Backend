@@ -53,6 +53,15 @@ export class DocumentoLineaDto {
   @IsOptional()
   @IsString()
   observaciones?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Subfase del presupuesto aprobado del centro de costo a la que se imputa la salida (PECOSA). Solo en salidas por CONSUMO; obligatoria si el centro de costo tiene un presupuesto Principal aprobado',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  id_ppto_detalle_categoria?: number;
 }
 
 export class CreateDocumentoDto {
@@ -179,6 +188,8 @@ export class DocumentoLineaResponseDto {
   @ApiPropertyOptional({ example: '22.5' }) costo_unitario: string | null;
   @ApiPropertyOptional() observaciones: string | null;
   @ApiPropertyOptional({ description: 'Línea de OC de origen (recepciones)' }) id_orden_compra_detalle: number | null;
+  @ApiPropertyOptional({ description: 'Subfase del presupuesto a la que se imputó la salida (PECOSA)' }) id_ppto_detalle_categoria: number | null;
+  @ApiPropertyOptional({ description: 'Nombre de la subfase' }) subfase: string | null;
 }
 
 export class DocumentoResponseDto {

@@ -1,9 +1,10 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { nowInstant } from '../../../platform/db/temporal.js';
-import { toVarchar } from '../../../platform/db/varchar-helpers.js';
+import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { SEMANAS_META } from '../shared/control-avance/control-avance.types.js';
+import { usaMontoComoPeso } from '../shared/control-avance/metas.js';
 import type { OrmObra } from '../shared/control-avance/orm.js';
 import { assertCentroCosto, compact, esFechaIso, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
 import type {
@@ -65,6 +66,7 @@ export async function estructuraObra(orm: OrmObra, idCentroCosto: number): Promi
           orden: s.orden,
           observacion: s.observacion ?? null,
           id_ppto_detalle_categoria: s.id_ppto_detalle_categoria ?? null,
+          monto: s.monto ?? null,
           metas_manuales: metas.get(s.id) ?? Array<number | null>(SEMANAS_META).fill(null),
           tiene_avance: conAvance.has(s.id),
         }),
@@ -77,6 +79,17 @@ export async function subpartidasConAvance(orm: OrmObra, idsSubpartida: number[]
   if (idsSubpartida.length === 0) return 0;
   const filas = await orm.obra_subpartida_semana.where((s) => s.id_subpartida.in(idsSubpartida)).all();
   return new Set(filas.filter((f) => f.avance != null).map((f) => f.id_subpartida)).size;
+}
+
+const MSG_MONTO = 'La obra pesa su avance por monto: indique el monto de la subpartida (mayor a cero) o el avance dejaría de pesarse por monto';
+
+/**
+ * ¿La obra pesa su avance por monto? (todas sus subpartidas, salvo `excepto`, tienen monto.) Si es así, a toda
+ * subpartida nueva o editada se le exige monto (SP-03).
+ */
+async function obraPesaPorMonto(orm: OrmObra, idCentroCosto: number, excepto?: number): Promise<boolean> {
+  const subs = await orm.obra_subpartida.where({ id_centro_costo: idCentroCosto }).all();
+  return usaMontoComoPeso(subs.filter((s) => s.id !== excepto).map((s) => ({ monto: s.monto == null ? null : Number(s.monto) })));
 }
 
 function validarFechas(inicio: string, fin: string): void {
@@ -147,6 +160,7 @@ export class PartidasHandler {
   async crearSubpartida(idCentroCosto: number, idPartida: number, dto: CreateSubpartidaDto): Promise<ObraSubpartidaDto> {
     await this.partidaOFalla(idCentroCosto, idPartida);
     validarFechas(dto.fecha_inicio, dto.fecha_fin);
+    if ((await obraPesaPorMonto(this.db.orm.public, idCentroCosto)) && !((dto.monto ?? 0) > 0)) throw new BadRequestException(MSG_MONTO);
     const hermanas = await this.db.orm.public.obra_subpartida.where({ id_partida: idPartida }).all();
     const orden = hermanas.reduce((m, s) => Math.max(m, s.orden), 0) + 1;
     try {
@@ -160,6 +174,7 @@ export class PartidasHandler {
         fecha_fin: toDateOnly(dto.fecha_fin)!,
         orden,
         observacion: toVarchar<200>(dto.observacion?.trim() || null),
+        monto: dto.monto == null ? null : toDecimalString(dto.monto),
       });
       return this.subpartida(idCentroCosto, row.id);
     } catch (e) {
@@ -172,6 +187,9 @@ export class PartidasHandler {
     const actual = await this.subOFalla(idCentroCosto, idSub);
     validarFechas(dto.fecha_inicio ?? readDateOnly(actual.fecha_inicio), dto.fecha_fin ?? readDateOnly(actual.fecha_fin));
     if (dto.id_partida !== undefined && dto.id_partida !== actual.id_partida) await this.partidaOFalla(idCentroCosto, dto.id_partida);
+    if (dto.monto !== undefined && !((dto.monto ?? 0) > 0) && (await obraPesaPorMonto(this.db.orm.public, idCentroCosto, idSub))) {
+      throw new BadRequestException(MSG_MONTO);
+    }
     try {
       await this.db.orm.public.obra_subpartida.where({ id: idSub }).update(
         compact({
@@ -183,6 +201,7 @@ export class PartidasHandler {
           observacion: dto.observacion === undefined ? undefined : toVarchar<200>(dto.observacion?.trim() || null),
           orden: dto.orden,
           id_partida: dto.id_partida,
+          monto: dto.monto === undefined ? undefined : dto.monto === null ? null : toDecimalString(dto.monto),
           updated_at: nowInstant(),
         }),
       );

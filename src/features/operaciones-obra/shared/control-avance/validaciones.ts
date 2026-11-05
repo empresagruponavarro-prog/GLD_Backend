@@ -62,9 +62,9 @@ export function avisosCarga(obra: ObraEntrada, ctx: ContextoAvisos): AvisoCarga[
   // Por obra
   if (fin > limite10Semanas) obraAviso('RV-14', 'la obra supera 10 semanas: el avance solo se registra hasta la semana 10');
   if (obra.fechaActualizacion) {
+    // GRP S-12: una actualización con fecha futura es válida y ya no avisa (se retiró RV-15); el avance cuenta desde su semana.
     const fa = aDia(obra.fechaActualizacion);
-    if (fa > ctx.hoy) obraAviso('RV-15', `la fecha de actualización (${obra.fechaActualizacion}) es posterior a hoy`);
-    else if (enEjecucion && iniciada && ctx.hoy - fa > 14) obraAviso('RV-16', `sin actualizar desde el ${obra.fechaActualizacion}`);
+    if (enEjecucion && iniciada && ctx.hoy - fa > 14) obraAviso('RV-16', `sin actualizar desde el ${obra.fechaActualizacion}`);
   }
   if ((obra.estado === 'POST_VENTA' || obra.estado === 'CULMINADO') && Math.floor(ctx.real + 1e-9) < 100) {
     obraAviso('RV-17', 'entregada sin el 100% de avance');

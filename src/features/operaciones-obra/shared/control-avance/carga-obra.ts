@@ -182,6 +182,7 @@ export function armarObra(filas: FilasObra): ObraCargada {
         fin: readDateOnly(s.fecha_fin),
         metas: metas.get(s.id) ?? null,
         avance: avance.get(s.id) ?? null,
+        monto: s.monto != null ? num(s.monto) : null,
       })),
   }));
 

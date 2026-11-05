@@ -14,8 +14,10 @@ import { CurrentUser } from '../../../../platform/auth/decorators/current-user.d
 import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
 import { ActualizarModulosAreaDto, AreaMatrizDto, MatrizAreasDto } from './areas.dto.js';
 import { AreasPermisosHandler } from './areas.handler.js';
+import { SinMayusculas } from '../../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/permisos')
+@SinMayusculas()
 @Controller('administration/permisos/areas')
 @Modulo('admin.roles')
 @ApiUnauthorizedResponse({ description: 'Sin sesión' })

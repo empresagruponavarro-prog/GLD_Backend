@@ -31,6 +31,7 @@ const OPS_JSON_MODULOS_NUEVOS = [
   new URL('../../../../migrations/app/20261102T1708_tecnologia_personas_ambientes/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261102T2119_rrhh_trabajadores/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261102T2142_rrhh_catalogos_modulo/ops.json', import.meta.url),
+  new URL('../../../../migrations/app/20261105T0241_grp_cadena_obra/ops.json', import.meta.url),
 ];
 
 interface Operacion {
@@ -56,6 +57,7 @@ function semillaModulos() {
     sqlDe('data.modulo.tecnologia2', OPS_JSON_MODULOS_NUEVOS[2]),
     sqlDe('data.modulo.rrhh.trabajadores', OPS_JSON_MODULOS_NUEVOS[3]),
     sqlDe('data.modulo.rrhh.catalogos', OPS_JSON_MODULOS_NUEVOS[4]),
+    sqlDe('data.modulo.proyectos_catalogos', OPS_JSON_MODULOS_NUEVOS[5]),
   ];
   return sqls.flatMap((sql) => [...sql.matchAll(patron)]).map((m) => ({
     clave: m[1],
@@ -68,11 +70,18 @@ function semillaModulos() {
   }));
 }
 
+/** Módulos a los que la migración GRP habilita «aprobar» después de la semilla (presupuestos y liquidación de obra). */
+function aprobarHabilitadoPorGrp(): string[] {
+  const sql = sqlDe('data.modulo.aprobar', OPS_JSON_MODULOS_NUEVOS[5]);
+  const lista = /"clave" IN \(([^)]*)\)/.exec(sql)?.[1] ?? '';
+  return [...lista.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+}
+
 describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   const semilla = semillaModulos();
 
-  it('las semillas traen los 40 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..40', () => {
-    expect(CLAVES_MODULO).toHaveLength(40);
+  it('las semillas traen los 41 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..41', () => {
+    expect(CLAVES_MODULO).toHaveLength(41);
     expect(semilla.map((m) => m.clave)).toEqual([...CLAVES_MODULO]);
     expect(semilla.map((m) => m.orden)).toEqual(CLAVES_MODULO.map((_c, i) => i + 1));
     expect(new Set(CLAVES_MODULO).size).toBe(CLAVES_MODULO.length);
@@ -123,7 +132,11 @@ describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   });
 
   it('MODULOS_ADMITEN_APROBAR/ANULAR y MODULOS_ADMINISTRACION coinciden con la semilla', () => {
-    expect([...MODULOS_ADMITEN_APROBAR]).toEqual(semilla.filter((m) => m.aprobar).map((m) => m.clave));
+    expect([...MODULOS_ADMITEN_APROBAR]).toEqual([
+      ...semilla.filter((m) => m.aprobar).map((m) => m.clave),
+      ...aprobarHabilitadoPorGrp(),
+    ]);
+    expect(aprobarHabilitadoPorGrp()).toEqual(['presupuestos', 'obra']);
     expect([...MODULOS_ADMITEN_ANULAR]).toEqual(semilla.filter((m) => m.anular).map((m) => m.clave));
     expect([...MODULOS_ADMINISTRACION]).toEqual(
       semilla.filter((m) => m.grupo === 'Administración').map((m) => m.clave),

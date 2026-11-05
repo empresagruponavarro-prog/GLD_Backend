@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Matches, MaxLength, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export const TIPOS_PARTIDA = ['CONTRACTUAL', 'ADICIONAL'] as const;
@@ -20,6 +20,8 @@ export class ObraSubpartidaDto {
   @ApiProperty() orden: number;
   @ApiPropertyOptional({ nullable: true }) observacion: string | null;
   @ApiPropertyOptional({ nullable: true }) id_ppto_detalle_categoria: number | null;
+  /** Costo directo de la categoría del presupuesto (su peso en el avance cuando todas las subpartidas lo tienen). */
+  @ApiPropertyOptional({ nullable: true, example: '4024.00' }) monto: string | null;
   /** Metas escritas a mano por semana (1-10); `null` = usa el reparto automático. */
   @ApiProperty({ type: [Number], description: 'Diez posiciones; null = automática' }) metas_manuales: (number | null)[];
   @ApiProperty() tiene_avance: boolean;
@@ -57,6 +59,8 @@ export class CreateSubpartidaDto {
   @ApiProperty({ example: '2026-09-23' }) @Matches(FECHA, { message: 'fecha_inicio debe ser YYYY-MM-DD' }) fecha_inicio: string;
   @ApiProperty({ example: '2026-09-24' }) @Matches(FECHA, { message: 'fecha_fin debe ser YYYY-MM-DD' }) fecha_fin: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(200) observacion?: string | null;
+  @ApiPropertyOptional({ description: 'Monto de la subpartida; obligatorio si la obra ya pesa su avance por monto' })
+  @IsOptional() @Type(() => Number) @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) monto?: number | null;
 }
 
 export class UpdateSubpartidaDto {
@@ -67,6 +71,8 @@ export class UpdateSubpartidaDto {
   @ApiPropertyOptional() @IsOptional() @Matches(FECHA, { message: 'fecha_fin debe ser YYYY-MM-DD' }) fecha_fin?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(200) observacion?: string | null;
   @ApiPropertyOptional() @IsOptional() @IsInt() @Type(() => Number) orden?: number;
+  @ApiPropertyOptional({ nullable: true, description: 'null quita el monto (no se puede si la obra pesa por monto)' })
+  @IsOptional() @Type(() => Number) @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) monto?: number | null;
   /** Mover la subpartida a otra partida de la misma obra. */
   @ApiPropertyOptional() @IsOptional() @IsInt() @Type(() => Number) id_partida?: number;
 }

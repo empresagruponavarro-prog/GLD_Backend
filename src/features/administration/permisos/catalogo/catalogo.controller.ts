@@ -9,8 +9,10 @@ import {
 import { GrupoCatalogoDto } from './catalogo.dto.js';
 import { CatalogoPermisosHandler } from './catalogo.handler.js';
 import { Modulo } from '../../../../platform/auth/decorators/permisos.decorator.js';
+import { SinMayusculas } from '../../../../platform/http/sin-mayusculas.decorator.js';
 
 @ApiTags('administration/permisos')
+@SinMayusculas()
 @Controller('administration/permisos')
 @Modulo('admin.roles')
 export class CatalogoPermisosController {

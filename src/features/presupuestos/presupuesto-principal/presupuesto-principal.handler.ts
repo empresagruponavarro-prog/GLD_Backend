@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
@@ -16,10 +16,19 @@ import {
   UpdatePresupuestoPrincipalDto,
 } from './presupuesto-principal.dto.js';
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { esAprobado, estadoPptoDeTexto, textoLegado, type EstadoPpto } from '../aprobacion/estados.js';
+import { sincronizarPresupuestoCc } from '../aprobacion/sincronizar-cc.js';
+import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
+import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
+import { agruparLineasFur } from './lineas-fur.js';
+import { exigirPeriodoValido } from '../../proyectos-catalogos/periodo-fiscal/validar-periodo.js';
 
 @Injectable()
 export class PresupuestoPrincipalHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly ledger: InventarioLedger,
+  ) {}
 
   async list(query: ListPresupuestoPrincipalQueryDto): Promise<Paginated<PresupuestoPrincipalResponseDto>> {
     const { page, pageSize, offset } = pageParams(query);
@@ -122,11 +131,14 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       ccRow = await this.db.orm.public.CentroCostos.first({ id: idCentroCosto });
     }
     const codigoAnexo = (dto.CodigoAnexo || ccRow?.cod_cliente || null);
+    // GRP S-11: el periodo es un año activo y, si la obra ya tiene inicio, el año de ese inicio.
+    await exigirPeriodoValido(this.db.orm.public, dto.periodo, ccRow?.fecha_inicio ? String(ccRow.fecha_inicio) : null);
 
     // Autogenerar IdPresupuesto si no viene del frontend
     const idPresupuesto = ((dto.IdPresupuesto ?? '').trim()) || (await generateIdPresupuesto(this.db));
 
     const { subTotal, igv, total, gastosGenerales, utilidad } = calculateAmounts(dto);
+    const estado = estadoPermitido(dto.Estado, null);
 
     try {
       const created = await this.db.orm.public.ppto_Principal.create({
@@ -153,7 +165,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         SubTotalSinIGV: toDecimalString(subTotal),
         IGV: toDecimalString(igv),
         Total: toDecimalString(total),
-        Estado: toVarchar<50>(dto.Estado ?? 'PENDIENTE'),
+        Estado: toVarchar<50>(textoLegado(estado)),
+        estado_ppto: estado,
         Comentarios: dto.Comentarios,
         Usuario: toVarchar(dto.Usuario || usuarioAuth),
         FechaCreacion: toVarchar(new Date().toISOString()),
@@ -201,6 +214,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     };
 
     const { subTotal, igv, total, gastosGenerales, utilidad } = calculateAmounts(merged);
+    const estadoNuevo = dto.Estado !== undefined ? estadoPermitido(dto.Estado, current.estado_ppto as EstadoPpto) : undefined;
 
     const data: {
       IdPresupuesto?: Varchar255;
@@ -227,6 +241,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       IGV?: string;
       Total?: string;
       Estado?: Varchar50;
+      estado_ppto?: EstadoPpto;
       Comentarios?: string;
       Usuario?: Varchar255;
     } = {};
@@ -234,6 +249,11 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     if (dto.IdPresupuesto !== undefined) data.IdPresupuesto = toVarchar(dto.IdPresupuesto);
     if (dto.id_empresa !== undefined) data.id_empresa = dto.id_empresa;
     if (dto.periodo !== undefined) data.periodo = dto.periodo;
+    // GRP S-11: solo se valida al cambiar el periodo (un presupuesto antiguo con un periodo ya inactivo sigue editable).
+    if (dto.periodo !== undefined && dto.periodo !== (current.periodo ?? null)) {
+      const cc = (idCentroCosto ?? current.id_centro_costo) ? await this.db.orm.public.CentroCostos.first({ id: (idCentroCosto ?? current.id_centro_costo) as number }) : null;
+      await exigirPeriodoValido(this.db.orm.public, dto.periodo, cc?.fecha_inicio ? String(cc.fecha_inicio) : null);
+    }
     if (dto.Version !== undefined) data.Version = toVarchar(dto.Version);
     if (dto.CodigoAnexo !== undefined) data.CodigoAnexo = toVarchar(dto.CodigoAnexo);
     if (dto.TipoPpto !== undefined) data.TipoPpto = toVarchar(dto.TipoPpto);
@@ -244,7 +264,10 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     if (idCentroCosto !== undefined) data.id_centro_costo = idCentroCosto;
     if (dto.FechaRequerimiento !== undefined) data.FechaRequerimiento = toVarchar(dto.FechaRequerimiento);
     if (dto.FechaEntrega !== undefined) data.FechaEntrega = toVarchar(dto.FechaEntrega);
-    if (dto.Estado !== undefined) data.Estado = toVarchar<50>(dto.Estado);
+    if (estadoNuevo !== undefined) {
+      data.Estado = toVarchar<50>(textoLegado(estadoNuevo));
+      data.estado_ppto = estadoNuevo;
+    }
     if (dto.Comentarios !== undefined) data.Comentarios = dto.Comentarios;
     if (dto.Usuario !== undefined) data.Usuario = toVarchar(dto.Usuario);
 
@@ -296,24 +319,13 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
   }
 
   
+  /**
+   * Deja al día el monto y el estado del presupuesto en el centro de costo (el presupuesto es su único dueño).
+   * Las reglas están en `aprobacion/sincronizar-cc.ts`; la aprobación usa la misma función dentro de su transacción.
+   */
   async syncCentroCostoPresupuesto(idCentroCosto: number): Promise<void> {
     try {
-      const [pptos, fases] = await Promise.all([
-        this.db.orm.public.ppto_Principal.where((p) => p.id_centro_costo.eq(idCentroCosto)).all(),
-        this.db.orm.public.ppto_DetalleFases.where((f) => f.id_centro_costo.eq(idCentroCosto)).all(),
-      ]);
-      const cdPpto = pptos.reduce((acc, p) => acc + (Number(p.CostoDirecto) || 0), 0);
-      const cdFases = fases.reduce((acc, f) => acc + (Number(f.CostoDirecto) || 0), 0);
-      const totalCD = Math.max(cdPpto, cdFases);
-      const lastEstado = pptos.find((p) => p.Estado)?.Estado ?? 'ABIERTO';
-
-      await this.db.orm.public.CentroCostos
-        .where((c) => c.id.eq(idCentroCosto))
-        .update({
-          presupuesto_monto: toDecimalString(totalCD),
-          presupuesto_costo_directo: toDecimalString(totalCD),
-          presupuesto_estado: toVarchar<50>(lastEstado),
-        });
+      await sincronizarPresupuestoCc(this.db.orm.public, idCentroCosto);
     } catch {
       // Non-blocking sync
     }
@@ -346,6 +358,12 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     const fasesByNameMap = new Map(pptoFases.map((f) => [f.FaseProyecto?.trim().toUpperCase(), f]));
 
     const catToDetalleFase = new Map(todasCategorias.map((c) => [c.id, c.IdPresupuestoDetalle]));
+    const codigosCat = [...new Set(todasCategorias.map((c) => c.IdpptoFaseCategoria).filter((c): c is NonNullable<typeof c> => !!c))];
+    const maestroCats = codigosCat.length ? await this.db.orm.public.ppto_FasesCategorias.where((c) => c.IdpptoFaseCategoria.in(codigosCat)).all() : [];
+    const descripcionCat = new Map(maestroCats.map((c) => [c.IdpptoFaseCategoria, c.Descripcion]));
+    const nombreSubfase = new Map(
+      todasCategorias.map((c) => [c.id, (c.IdpptoFaseCategoria ? descripcionCat.get(c.IdpptoFaseCategoria) : null) ?? `Subfase #${c.id}`]),
+    );
 
     const furPorFaseMap = new Map<number, { id: number; numero: string; estado: string }>();
     for (const r of fursExistentes) {
@@ -376,48 +394,35 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       const itemsFase = itemsPorDetalleFase.get(df.IdPresupuestoDetalle) || [];
       if (itemsFase.length === 0) continue;
 
-      const productosMap = new Map<number, {
-        id_producto: number;
-        cantidadTotal: number;
-        costoUnitario: number;
-      }>();
-
-      for (const it of itemsFase) {
-        const cant = Number(it.Cantidad || 0);
-        const costo = Number(it.CostoUnitario || 0);
-        if (cant <= 0) continue;
-
-        const prev = productosMap.get(it.id_producto);
-        if (prev) {
-          prev.cantidadTotal += cant;
-          prev.costoUnitario = Math.max(prev.costoUnitario, costo);
-        } else {
-          productosMap.set(it.id_producto, {
-            id_producto: it.id_producto,
-            cantidadTotal: cant,
-            costoUnitario: costo,
-          });
-        }
-      }
+      // Una línea por (producto, subfase): la subfase viaja con la línea para imputar después el gasto (GRP S-09).
+      const lineas = agruparLineasFur(
+        itemsFase.map((it) => ({
+          id_producto: it.id_producto,
+          id_detalle_categoria: it.id_detalle_categoria,
+          Cantidad: it.Cantidad,
+          CostoUnitario: it.CostoUnitario,
+        })),
+      );
 
       const itemsDto: FurGeneradoItemDto[] = [];
       let totalCantidad = 0;
       let totalEstimado = 0;
 
-      for (const p of productosMap.values()) {
-        const prod = prodMap.get(p.id_producto);
+      for (const l of lineas) {
+        const prod = prodMap.get(l.id_producto);
         const unidad = prod?.id_unidad_medida ? umMap.get(prod.id_unidad_medida) || 'UND' : 'UND';
-        const subtotal = p.cantidadTotal * p.costoUnitario;
-        totalCantidad += p.cantidadTotal;
-        totalEstimado += subtotal;
+        totalCantidad += l.cantidad;
+        totalEstimado += l.cantidad * l.costoUnitario;
 
         itemsDto.push({
-          id_producto: p.id_producto,
-          codigo: prod?.codigo ? String(prod.codigo) : `PROD-${p.id_producto}`,
+          id_producto: l.id_producto,
+          codigo: prod?.codigo ? String(prod.codigo) : `PROD-${l.id_producto}`,
           descripcion: prod?.descripcion ? String(prod.descripcion) : '(Sin descripción)',
           unidad,
-          cantidad: p.cantidadTotal.toFixed(2),
-          precio_referencial: p.costoUnitario.toFixed(2),
+          cantidad: l.cantidad.toFixed(2),
+          precio_referencial: l.costoUnitario.toFixed(2),
+          id_ppto_detalle_categoria: l.id_ppto_detalle_categoria,
+          subfase: nombreSubfase.get(l.id_ppto_detalle_categoria) ?? `Subfase #${l.id_ppto_detalle_categoria}`,
         });
       }
 
@@ -448,6 +453,10 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
     dto: GenerarFursPresupuestoDto,
     user?: AuthUser,
   ): Promise<GenerarFursPresupuestoResponseDto> {
+    const ppto = await this.getById(idOrCode);
+    if (!esAprobado(ppto.estado_ppto)) {
+      throw new ConflictException('Solo se pueden generar requerimientos desde un presupuesto aprobado: apruébelo primero');
+    }
     const preview = await this.previewFursPorFase(idOrCode);
     if (preview.fases.length === 0) {
       throw new BadRequestException('El presupuesto no tiene fases con ítems de productos para generar requerimientos.');
@@ -470,7 +479,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       }
     }
 
-    const todayISO = new Date().toISOString().slice(0, 10);
+    const todayISO = hoyLima();
     const fechaReq = dto.fecha_requerida ? dto.fecha_requerida.slice(0, 10) : null;
 
     return this.db.transaction(async (tx) => {
@@ -498,18 +507,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
           continue;
         }
 
-        const cor = await orm.almacen_correlativo.first({ serie: toVarchar<10>('FUR') });
-        let ultimo = 1;
-        if (cor) {
-          ultimo = (cor.ultimo ?? 0) + 1;
-          await orm.almacen_correlativo.where({ serie: toVarchar<10>('FUR') }).update({ ultimo });
-        } else {
-          await orm.almacen_correlativo.create({
-            serie: toVarchar<10>('FUR'),
-            ultimo: 1,
-          });
-        }
-        const numeroFur = toVarchar<20>(`FUR-${String(ultimo).padStart(6, '0')}`);
+        // Correlativo con bloqueo de fila (el mismo de los FUR manuales): dos generaciones a la vez no repiten número.
+        const numeroFur = toVarchar<20>(await this.ledger.siguienteNumero(tx, 'FUR'));
 
         const reqData: any = {
           numero: numeroFur,
@@ -531,7 +530,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
             id_producto: item.id_producto,
             cantidad: toDecimalString(item.cantidad),
             precio_referencial: toDecimalString(item.precio_referencial),
-            observaciones: `Ppto: ${preview.id_presupuesto}`,
+            observaciones: `Ppto: ${preview.id_presupuesto} · ${item.subfase}`,
+            id_ppto_detalle_categoria: item.id_ppto_detalle_categoria,
           } as any);
         }
 
@@ -583,7 +583,7 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
 }
 
 
-  function calculateAmounts(dto: {
+export function calculateAmounts(dto: {
   CostoDirecto?: number;
   GGPorcentaje?: number;
   GastosGenerales?: number;
@@ -612,6 +612,25 @@ function hasFilters(query: ListPresupuestoPrincipalQueryDto): boolean {
     utilidad: Number(ut.toFixed(2)),
   };
 }
+/**
+ * Estado con que se crea o se edita un presupuesto. Aprobar, entregar y liquidar tienen su propio camino
+ * (`POST :id/aprobar` y el cierre de la obra): aquí solo se edita lo que todavía no está aprobado.
+ */
+function estadoPermitido(texto: string | undefined, actual: EstadoPpto | null): EstadoPpto {
+  const pedido = estadoPptoDeTexto(texto);
+  if (actual && pedido === actual) return actual; // reenvío del mismo estado: no cambia nada
+  if (pedido === 'APROBADO') {
+    throw new BadRequestException('Para aprobar un presupuesto use POST /presupuestos/:id/aprobar (requiere el permiso «aprobar»)');
+  }
+  if (pedido === 'ENTREGADO' || pedido === 'LIQUIDADO') {
+    throw new BadRequestException(`El estado ${pedido} no se edita: lo asigna el cierre de la obra`);
+  }
+  if (actual && esAprobado(actual)) {
+    throw new ConflictException('El presupuesto ya está aprobado: no se puede cambiar su estado (use una nueva versión o un adicional)');
+  }
+  return pedido;
+}
+
 // Genera un ID único para el presupuesto: PPTO-{año}-{correlativo 3 dígitos}
 async function generateIdPresupuesto(db: Database): Promise<string> {
   const year = new Date().getFullYear();

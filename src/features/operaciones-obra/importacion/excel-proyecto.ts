@@ -526,7 +526,6 @@ export function interpretarProyecto(hojas: readonly Hoja[], hoy: string): Lectur
   if (ficha.entrega && ficha.cierre && ficha.cierre < ficha.entrega) avisos.push({ fila: f('cie'), nombre: nombreObra, mensaje: 'el cierre de post venta es anterior a la entrega: se ignora' });
   if (ficha.entrega && (ficha.estado === 'EN_EJECUCION' || ficha.estado === 'PROXIMO')) avisos.push({ fila: f('ent'), nombre: nombreObra, mensaje: 'tiene fecha de entrega: cambia el estado a Post venta' });
   if (ficha.estado === 'PROXIMO' && ficha.inicio && ficha.inicio <= hoy) avisos.push({ fila: f('es'), nombre: nombreObra, mensaje: 'ya inició: sale «En ejecución» (cambia su estado en la ficha)' });
-  if (ficha.fechaActualizacion && ficha.fechaActualizacion > hoy) avisos.push({ fila: f('fa'), nombre: nombreObra, mensaje: `la fecha de actualización (${ficha.fechaActualizacion}) es posterior a hoy` });
 
   const items = new Map<string, number>();
   for (const p of conSubpartidas) for (const it of [p.item, ...p.subpartidas.map((s) => s.item)]) if (it) items.set(it, (items.get(it) ?? 0) + 1);
