@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { toInstantString } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { ubicacionesDe } from '../../maestros/ubigeo/ubigeo.js';
 import { cargarObras, porLotes, type ObraCargada } from '../shared/control-avance/carga-obra.js';
 import type { EstadoObra } from '../shared/control-avance/control-avance.types.js';
 import { construirEquipo, idsDeEquipo } from '../shared/control-avance/equipo.js';
@@ -178,6 +179,7 @@ export class PortafolioHandler {
     const anexos = await porLotes([...new Set([...idsCliente, ...idsPersona])], async (l) => await orm.Anexos.where((a) => a.id.in(l)).all());
     const nombrePersona = new Map(anexos.map((a) => [a.id, a.Anexo ?? a.NombreComercial ?? '']));
     const nombreCliente = new Map(anexos.map((a) => [a.id, a.NombreComercial ?? a.Anexo ?? '']));
+    const ubicaciones = await ubicacionesDe(orm, cargas.map((c) => c.filas.gen?.id_distrito));
 
     const resumenes: ObraResumen[] = [];
     const sinEvaluar: ObraSinEvaluarDto[] = [];
@@ -191,6 +193,7 @@ export class PortafolioHandler {
         resumirObra(c, calcularObra(c.entrada, hoy), {
           cliente: idCliente != null ? { id: idCliente, nombre: nombreCliente.get(idCliente) ?? `#${idCliente}` } : null,
           equipo: construirEquipo(c.filas.gen, nombrePersona),
+          departamento: ubicaciones.get(c.filas.gen?.id_distrito ?? '')?.departamento ?? null,
         }),
       );
     }

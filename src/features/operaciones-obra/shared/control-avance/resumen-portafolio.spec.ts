@@ -162,12 +162,12 @@ describe('portafolio · resumirObra', () => {
   } as unknown as ResultadoObra;
 
   it('une la ficha, el motor y los nombres de pantalla', () => {
-    const r = resumirObra(carga, resultado, { cliente: persona(10, 'TAMBO'), equipo: SIN_EQUIPO });
+    const r = resumirObra(carga, resultado, { cliente: persona(10, 'TAMBO'), equipo: SIN_EQUIPO, departamento: 'Lima' });
     expect(r).toMatchObject({ id_centro_costo: 7, codigo_obra: 'OP-26-020', nombre: 'TAMBO Samame Surco', tienda: 'Samame Surco', departamento: 'Lima', inicio: '2026-09-23', fin: '2026-10-26', estado_obra: 'EN_EJECUCION' });
   });
 
   it('no arrastra el árbol, la Curva S ni la lista de avisos: deja el conteo y una mini curva', () => {
-    const r = resumirObra(carga, resultado, { cliente: null, equipo: SIN_EQUIPO });
+    const r = resumirObra(carga, resultado, { cliente: null, equipo: SIN_EQUIPO, departamento: null });
     expect(r.resultado).not.toHaveProperty('partidas');
     expect(r.resultado).not.toHaveProperty('curvaS');
     expect(r.resultado.avisos).toBe(2);
@@ -175,13 +175,13 @@ describe('portafolio · resumirObra', () => {
   });
 
   it('sin cliente usa solo la tienda; sin ninguno, el nombre del centro de costo', () => {
-    expect(resumirObra(carga, resultado, { cliente: null, equipo: SIN_EQUIPO }).nombre).toBe('Samame Surco');
+    expect(resumirObra(carga, resultado, { cliente: null, equipo: SIN_EQUIPO, departamento: null }).nombre).toBe('Samame Surco');
     const sinTienda = { ...carga, filas: { cc: { centro_costo: 'OBRA X' }, gen: null } } as unknown as ObraCargada;
-    expect(resumirObra(sinTienda, resultado, { cliente: null, equipo: SIN_EQUIPO }).nombre).toBe('OBRA X');
+    expect(resumirObra(sinTienda, resultado, { cliente: null, equipo: SIN_EQUIPO, departamento: null }).nombre).toBe('OBRA X');
   });
 
   it('una obra sin partidas no tiene mini curva', () => {
-    const r = resumirObra(carga, { ...resultado, curvaS: null } as unknown as ResultadoObra, { cliente: null, equipo: SIN_EQUIPO });
+    const r = resumirObra(carga, { ...resultado, curvaS: null } as unknown as ResultadoObra, { cliente: null, equipo: SIN_EQUIPO, departamento: null });
     expect(r.curva).toBeNull();
   });
 });

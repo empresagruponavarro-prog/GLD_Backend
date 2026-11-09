@@ -62,7 +62,7 @@ describe('Presupuesto, monto y plazo de la obra (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     await app.init();
 
-    for (const cc of [ccP, ccM]) await api().patch(`${obra(cc)}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: jefe }).expect(200);
+    for (const cc of [ccP, ccM]) await api().patch(`${obra(cc)}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: jefe }).expect(200);
   });
 
   afterAll(async () => {

@@ -89,7 +89,6 @@ export class ImportacionHandler {
         const gen = {
           // Código y tienda: los del centro de costo, no los del archivo.
           ...codigoYTiendaDelCc(cc),
-          departamento: toVarchar<100>(ficha.departamento),
           comentario: toVarchar<200>(ficha.comentario || null),
           estado_obra: ficha.estado!,
           plazo_postventa_dias: ficha.plazoPostVenta,

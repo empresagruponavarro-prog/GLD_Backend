@@ -96,14 +96,14 @@ describe('Control de avance de obra (e2e)', () => {
 
     it('no se puede iniciar el control con la ficha incompleta (RV-01…03)', async () => {
       const res = await api().post(`${base()}/estado`).send({ estado: 'EN_EJECUCION' }).expect(400);
-      expect(JSON.stringify(res.body.message)).toMatch(/departamento.*jefe de proyecto/s);
+      expect(JSON.stringify(res.body.message)).toMatch(/ubicación.*jefe de proyecto/s);
       // Código y tienda ya no se piden: salen del centro de costo.
       expect(JSON.stringify(res.body.message)).not.toMatch(/código de obra|tienda/);
     });
 
     it('el centro de costo debe tener cliente para entrar al control (RV-01)', async () => {
       const sinCliente = (await db.query(`insert into "CentroCostos" (centro_costo, estado, fecha_inicio, fecha_fin_prog) values ('E2E-OPS-3', 'ABIERTO', $1, $2) returning id`, [inicio, fin])).rows[0].id;
-      await api().patch(`/operaciones/obra/${sinCliente}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: jefe }).expect(200);
+      await api().patch(`/operaciones/obra/${sinCliente}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: jefe }).expect(200);
       const res = await api().post(`/operaciones/obra/${sinCliente}/estado`).send({ estado: 'EN_EJECUCION' }).expect(400);
       expect(JSON.stringify(res.body.message)).toMatch(/cliente del centro de costo/);
     });
@@ -117,7 +117,7 @@ describe('Control de avance de obra (e2e)', () => {
       const res = await api()
         .patch(`${base()}/generales`)
         // Lo que se mande como código o tienda se ignora.
-        .send({ codigo_obra: 'OTRO-001', tienda: 'Tienda escrita a mano', departamento: 'Lima', id_jefe_proyecto: jefe, id_coordinador: coordinador, comentario: 'Obra de prueba' })
+        .send({ codigo_obra: 'OTRO-001', tienda: 'Tienda escrita a mano', id_distrito: '150101', id_jefe_proyecto: jefe, id_coordinador: coordinador, comentario: 'Obra de prueba' })
         .expect(200);
       expect(res.body).toMatchObject({ codigo_obra: String(cc), tienda: 'E2E-OPS-1', comentario: 'Obra de prueba' });
       expect(res.body.equipo.jefe_proyecto).toEqual({ id: jefe, nombre: 'E2E-OPS Jefe de proyecto' });
@@ -386,7 +386,7 @@ describe('Control de avance de obra (e2e)', () => {
 
     it('con avance registrado ya no se puede reemplazar la estructura', async () => {
       // pone la obra en ejecución, registra avance y comprueba que protege los datos
-      await api().patch(`${base2()}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: jefe }).expect(200);
+      await api().patch(`${base2()}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: jefe }).expect(200);
       await api().post(`${base2()}/estado`).send({ estado: 'EN_EJECUCION' }).expect(201);
       const sub = (await api().get(`${base2()}/partidas`).expect(200)).body[0].subpartidas[0].id;
       await api().put(`${base2()}/avance/semanas/1`).send({ lineas: [{ idSubpartida: sub, avance: 10 }] }).expect(200);

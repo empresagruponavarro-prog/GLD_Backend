@@ -148,6 +148,14 @@
       "model": "CuentasCajaBancos",
       "namespace": "public"
     },
+    "departamento": {
+      "model": "departamento",
+      "namespace": "public"
+    },
+    "distrito": {
+      "model": "distrito",
+      "namespace": "public"
+    },
     "docCompra": {
       "model": "DocCompra",
       "namespace": "public"
@@ -346,6 +354,10 @@
     },
     "productos": {
       "model": "Productos",
+      "namespace": "public"
+    },
+    "provincia": {
+      "model": "provincia",
       "namespace": "public"
     },
     "requerimiento": {
@@ -12215,6 +12227,140 @@
               "table": "cuenta_tesoreria"
             }
           },
+          "departamento": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 2
+                  }
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              }
+            },
+            "relations": {
+              "provincias": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_departamento"
+                  ]
+                },
+                "to": {
+                  "model": "provincia",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "departamento"
+            }
+          },
+          "distrito": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 6
+                  }
+                }
+              },
+              "id_provincia": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 4
+                  }
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              }
+            },
+            "relations": {
+              "obras": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_distrito"
+                  ]
+                },
+                "to": {
+                  "model": "obra_datos_generales",
+                  "namespace": "public"
+                }
+              },
+              "provincia": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_provincia"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "provincia",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "id_provincia": {
+                  "column": "id_provincia"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "distrito"
+            }
+          },
           "familia_almacen": {
             "fields": {
               "estado": {
@@ -12812,16 +12958,6 @@
                   "kind": "scalar"
                 }
               },
-              "departamento": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 100
-                  }
-                }
-              },
               "direccion": {
                 "nullable": true,
                 "type": {
@@ -12829,16 +12965,6 @@
                   "kind": "scalar",
                   "typeParams": {
                     "length": 1000
-                  }
-                }
-              },
-              "distrito": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 100
                   }
                 }
               },
@@ -12891,6 +13017,16 @@
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
+                }
+              },
+              "id_distrito": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 6
+                  }
                 }
               },
               "id_jefe_proyecto": {
@@ -12966,16 +13102,6 @@
                   "kind": "scalar"
                 }
               },
-              "provincia": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 100
-                  }
-                }
-              },
               "semanas_totales": {
                 "nullable": true,
                 "type": {
@@ -13000,16 +13126,6 @@
                   "kind": "scalar",
                   "typeParams": {
                     "length": 50
-                  }
-                }
-              },
-              "ubigeo_cod": {
-                "nullable": true,
-                "type": {
-                  "codecId": "sql/varchar@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 10
                   }
                 }
               },
@@ -13049,6 +13165,21 @@
                 },
                 "to": {
                   "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "distritoUbigeo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_distrito"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "distrito",
                   "namespace": "public"
                 }
               },
@@ -13154,14 +13285,8 @@
                 "created_at": {
                   "column": "created_at"
                 },
-                "departamento": {
-                  "column": "departamento"
-                },
                 "direccion": {
                   "column": "direccion"
-                },
-                "distrito": {
-                  "column": "distrito"
                 },
                 "estado_obra": {
                   "column": "estado_obra"
@@ -13180,6 +13305,9 @@
                 },
                 "id_coordinador": {
                   "column": "id_coordinador"
+                },
+                "id_distrito": {
+                  "column": "id_distrito"
                 },
                 "id_jefe_proyecto": {
                   "column": "id_jefe_proyecto"
@@ -13211,9 +13339,6 @@
                 "plazo_postventa_dias": {
                   "column": "plazo_postventa_dias"
                 },
-                "provincia": {
-                  "column": "provincia"
-                },
                 "semanas_totales": {
                   "column": "semanas_totales"
                 },
@@ -13222,9 +13347,6 @@
                 },
                 "turno_trabajo": {
                   "column": "turno_trabajo"
-                },
-                "ubigeo_cod": {
-                  "column": "ubigeo_cod"
                 },
                 "updated_at": {
                   "column": "updated_at"
@@ -18320,6 +18442,87 @@
               },
               "namespaceId": "public",
               "table": "producto_caracteristica"
+            }
+          },
+          "provincia": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 4
+                  }
+                }
+              },
+              "id_departamento": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 2
+                  }
+                }
+              },
+              "nombre": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              }
+            },
+            "relations": {
+              "departamento": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_departamento"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "departamento",
+                  "namespace": "public"
+                }
+              },
+              "distritos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_provincia"
+                  ]
+                },
+                "to": {
+                  "model": "distrito",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "id_departamento": {
+                  "column": "id_departamento"
+                },
+                "nombre": {
+                  "column": "nombre"
+                }
+              },
+              "namespaceId": "public",
+              "table": "provincia"
             }
           },
           "requerimiento": {
@@ -25254,6 +25457,97 @@
               },
               "uniques": []
             },
+            "departamento": {
+              "columns": {
+                "id": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 2
+                  }
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "distrito": {
+              "columns": {
+                "id": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 6
+                  }
+                },
+                "id_provincia": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 4
+                  }
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_provincia"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "distrito"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "provincia"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_provincia"
+                  ],
+                  "name": "distrito_id_provincia_idx_28d1a845",
+                  "prefix": "distrito_id_provincia_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "docCompra": {
               "columns": {
                 "Ajuste": {
@@ -27949,36 +28243,12 @@
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
-                "departamento": {
-                  "codecId": "sql/varchar@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": "Lima"
-                  },
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 100
-                  }
-                },
                 "direccion": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
                   "nullable": true,
                   "typeParams": {
                     "length": 1000
-                  }
-                },
-                "distrito": {
-                  "codecId": "sql/varchar@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": "Lima"
-                  },
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 100
                   }
                 },
                 "estado_obra": {
@@ -28023,6 +28293,14 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": true
+                },
+                "id_distrito": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 6
+                  }
                 },
                 "id_jefe_proyecto": {
                   "codecId": "pg/int4@1",
@@ -28081,18 +28359,6 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
-                "provincia": {
-                  "codecId": "sql/varchar@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": "Lima"
-                  },
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 100
-                  }
-                },
                 "semanas_totales": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -28122,14 +28388,6 @@
                     "length": 50
                   }
                 },
-                "ubigeo_cod": {
-                  "codecId": "sql/varchar@1",
-                  "nativeType": "character varying",
-                  "nullable": true,
-                  "typeParams": {
-                    "length": 10
-                  }
-                },
                 "updated_at": {
                   "codecId": "pg/timestamptz-temporal@1",
                   "default": {
@@ -28156,6 +28414,23 @@
                     ],
                     "namespaceId": "public",
                     "tableName": "CentroCostos"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_distrito"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_datos_generales"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "distrito"
                   }
                 },
                 {
@@ -28276,6 +28551,14 @@
                   ],
                   "name": "obra_datos_generales_id_coordinador_idx_3bc51f7a",
                   "prefix": "obra_datos_generales_id_coordinador_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_distrito"
+                  ],
+                  "name": "obra_datos_generales_id_distrito_idx_b110a137",
+                  "prefix": "obra_datos_generales_id_distrito_idx",
                   "unique": false
                 },
                 {
@@ -33139,6 +33422,69 @@
               },
               "uniques": []
             },
+            "provincia": {
+              "columns": {
+                "id": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 4
+                  }
+                },
+                "id_departamento": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 2
+                  }
+                },
+                "nombre": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 100
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_departamento"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "provincia"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "departamento"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_departamento"
+                  ],
+                  "name": "provincia_id_departamento_idx_a72b1370",
+                  "prefix": "provincia_id_departamento_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
             "requerimiento": {
               "checks": [
                 {
@@ -35789,7 +36135,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c"
+    "storageHash": "a6bfefceec48555e9c47a132be2096cdcc94d395ece0b06550ae9b0e369219cf"
   },
   "capabilities": {
     "postgres": {

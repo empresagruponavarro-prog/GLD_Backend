@@ -66,7 +66,7 @@ export class EstadoHandler {
       if (!cc.id_anexo) faltan.push('cliente del centro de costo');
       // Código y tienda salen del centro de costo; la tienda es su nombre.
       if (!cc.centro_costo?.trim()) faltan.push('nombre del centro de costo (tienda)');
-      if (!gen?.departamento) faltan.push('departamento');
+      if (!gen?.id_distrito) faltan.push('ubicación (departamento, provincia y distrito)');
       if (!gen?.id_jefe_proyecto) faltan.push('jefe de proyecto');
       if (!carga.inicio) faltan.push('fecha de inicio');
       if (!carga.fin) faltan.push('fecha de fin programado');

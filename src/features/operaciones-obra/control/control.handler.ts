@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { toInstantString } from '../../../platform/db/temporal.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { ubicacionDe } from '../../maestros/ubigeo/ubigeo.js';
 import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { cargarEquipo } from '../shared/control-avance/equipo.js';
 import { calcularCurvaS, calcularObra } from '../shared/control-avance/motor.js';
@@ -32,7 +33,7 @@ export class ControlHandler {
       ficha: {
         codigo_obra: gen?.codigo_obra ?? null,
         tienda: gen?.tienda ?? null,
-        departamento: gen?.departamento ?? null,
+        departamento: (await ubicacionDe(orm, gen?.id_distrito))?.departamento ?? null,
         comentario: gen?.comentario ?? null,
         equipo: await cargarEquipo(orm, gen),
       },

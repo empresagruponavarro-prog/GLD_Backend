@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b1e0b7fd38e5febde01fd50ae5d9b9e1c73d23c402515c6c67d8d1140553396c'>;
+  StorageHashBase<'a6bfefceec48555e9c47a132be2096cdcc94d395ece0b06550ae9b0e369219cf'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -691,6 +691,12 @@ export type FieldOutputTypes = {
       readonly FechaSaldoInicial: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['output'] | null;
     };
+    readonly departamento: { readonly id: Varchar<2>; readonly nombre: Varchar<100> };
+    readonly distrito: {
+      readonly id: Varchar<6>;
+      readonly nombre: Varchar<100>;
+      readonly id_provincia: Varchar<4>;
+    };
     readonly DocCompra: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdDocCompra: Varchar<255> | null;
@@ -932,10 +938,7 @@ export type FieldOutputTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
       readonly expediente_codigo: Varchar<100> | null;
       readonly direccion: Varchar<1000> | null;
-      readonly departamento: Varchar<100> | null;
-      readonly provincia: Varchar<100> | null;
-      readonly distrito: Varchar<100> | null;
-      readonly ubigeo_cod: Varchar<10> | null;
+      readonly id_distrito: Varchar<6> | null;
       readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
       readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['output'] | null;
@@ -1447,6 +1450,11 @@ export type FieldOutputTypes = {
       readonly Comentarios: CodecTypes['pg/text@1']['output'] | null;
       readonly Imagen: Varchar<255> | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
+    };
+    readonly provincia: {
+      readonly id: Varchar<4>;
+      readonly nombre: Varchar<100>;
+      readonly id_departamento: Varchar<2>;
     };
     readonly requerimiento: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2135,6 +2143,15 @@ export type FieldInputTypes = {
       readonly FechaSaldoInicial: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['input'] | null;
     };
+    readonly departamento: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly distrito: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly id_provincia: CodecTypes['sql/varchar@1']['input'];
+    };
     readonly DocCompra: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdDocCompra: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2376,10 +2393,7 @@ export type FieldInputTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
       readonly expediente_codigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly direccion: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly departamento: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly provincia: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly distrito: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly ubigeo_cod: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id_distrito: CodecTypes['sql/varchar@1']['input'] | null;
       readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
       readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['input'] | null;
@@ -2891,6 +2905,11 @@ export type FieldInputTypes = {
       readonly Comentarios: CodecTypes['pg/text@1']['input'] | null;
       readonly Imagen: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
+    };
+    readonly provincia: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly id_departamento: CodecTypes['sql/varchar@1']['input'];
     };
     readonly requerimiento: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3579,6 +3598,12 @@ export type StorageColumnTypes = {
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Tipo: Varchar<255> | null;
     };
+    readonly departamento: { readonly id: Varchar<2>; readonly nombre: Varchar<100> };
+    readonly distrito: {
+      readonly id: Varchar<6>;
+      readonly id_provincia: Varchar<4>;
+      readonly nombre: Varchar<100>;
+    };
     readonly docCompra: {
       readonly Ajuste: Varchar<255> | null;
       readonly CategoriaCodigo: Varchar<255> | null;
@@ -3877,9 +3902,7 @@ export type StorageColumnTypes = {
       readonly contacto_cliente_nombre: Varchar<150> | null;
       readonly contacto_cliente_telefono: Varchar<50> | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly departamento: Varchar<100> | null;
       readonly direccion: Varchar<1000> | null;
-      readonly distrito: Varchar<100> | null;
       readonly estado_obra:
         'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
       readonly expediente_codigo: Varchar<100> | null;
@@ -3887,6 +3910,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
       readonly id_coordinador: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_distrito: Varchar<6> | null;
       readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_residente: CodecTypes['pg/int4@1']['output'] | null;
@@ -3897,11 +3921,9 @@ export type StorageColumnTypes = {
       readonly observaciones_postventa: Varchar<200> | null;
       readonly personal_activo_promedio: CodecTypes['pg/int4@1']['output'] | null;
       readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['output'] | null;
-      readonly provincia: Varchar<100> | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['output'] | null;
       readonly tienda: Varchar<80> | null;
       readonly turno_trabajo: Varchar<50> | null;
-      readonly ubigeo_cod: Varchar<10> | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     };
     readonly obra_documentos_actas: {
@@ -4335,6 +4357,11 @@ export type StorageColumnTypes = {
       readonly ProductoCodigo: Varchar<255> | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
       readonly UniMedCodigo: Varchar<255> | null;
+    };
+    readonly provincia: {
+      readonly id: Varchar<4>;
+      readonly id_departamento: Varchar<2>;
+      readonly nombre: Varchar<100>;
     };
     readonly requerimiento: {
       readonly area: Varchar<100> | null;
@@ -5023,6 +5050,15 @@ export type StorageColumnInputTypes = {
       readonly SaldoInicial: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Tipo: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly departamento: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+    };
+    readonly distrito: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly id_provincia: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
+    };
     readonly docCompra: {
       readonly Ajuste: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CategoriaCodigo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -5321,9 +5357,7 @@ export type StorageColumnInputTypes = {
       readonly contacto_cliente_nombre: CodecTypes['sql/varchar@1']['input'] | null;
       readonly contacto_cliente_telefono: CodecTypes['sql/varchar@1']['input'] | null;
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly departamento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly direccion: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly distrito: CodecTypes['sql/varchar@1']['input'] | null;
       readonly estado_obra:
         'PROXIMO' | 'EN_EJECUCION' | 'POST_VENTA' | 'CULMINADO' | 'SUSPENDIDA' | 'CANCELADA' | null;
       readonly expediente_codigo: CodecTypes['sql/varchar@1']['input'] | null;
@@ -5331,6 +5365,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
       readonly id_coordinador: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_distrito: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_jefe_proyecto: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_presupuesto_origen: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_residente: CodecTypes['pg/int4@1']['input'] | null;
@@ -5341,11 +5376,9 @@ export type StorageColumnInputTypes = {
       readonly observaciones_postventa: CodecTypes['sql/varchar@1']['input'] | null;
       readonly personal_activo_promedio: CodecTypes['pg/int4@1']['input'] | null;
       readonly plazo_postventa_dias: CodecTypes['pg/int4@1']['input'] | null;
-      readonly provincia: CodecTypes['sql/varchar@1']['input'] | null;
       readonly semanas_totales: CodecTypes['pg/int4@1']['input'] | null;
       readonly tienda: CodecTypes['sql/varchar@1']['input'] | null;
       readonly turno_trabajo: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly ubigeo_cod: CodecTypes['sql/varchar@1']['input'] | null;
       readonly updated_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
     };
     readonly obra_documentos_actas: {
@@ -5779,6 +5812,11 @@ export type StorageColumnInputTypes = {
       readonly ProductoCodigo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoProducto: 'PRODUCTO' | 'SERVICIO' | null;
       readonly UniMedCodigo: CodecTypes['sql/varchar@1']['input'] | null;
+    };
+    readonly provincia: {
+      readonly id: CodecTypes['sql/varchar@1']['input'];
+      readonly id_departamento: CodecTypes['sql/varchar@1']['input'];
+      readonly nombre: CodecTypes['sql/varchar@1']['input'];
     };
     readonly requerimiento: {
       readonly area: CodecTypes['sql/varchar@1']['input'] | null;
@@ -9637,6 +9675,72 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly departamento: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 2 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly distrito: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 6 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly id_provincia: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 4 };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'distrito_id_provincia_idx_28d1a845';
+                  readonly prefix: 'distrito_id_provincia_idx';
+                  readonly columns: readonly ['id_provincia'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'distrito';
+                    readonly columns: readonly ['id_provincia'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'provincia';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly docCompra: {
               columns: {
                 readonly id: {
@@ -11681,41 +11785,11 @@ type ContractBase = Omit<
                   readonly nullable: true;
                   readonly typeParams: { readonly length: 1000 };
                 };
-                readonly departamento: {
+                readonly id_distrito: {
                   readonly nativeType: 'character varying';
                   readonly codecId: 'sql/varchar@1';
                   readonly nullable: true;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
-                  };
-                  readonly typeParams: { readonly length: 100 };
-                };
-                readonly provincia: {
-                  readonly nativeType: 'character varying';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly nullable: true;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
-                  };
-                  readonly typeParams: { readonly length: 100 };
-                };
-                readonly distrito: {
-                  readonly nativeType: 'character varying';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly nullable: true;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'sql/varchar@1', 'Lima'>;
-                  };
-                  readonly typeParams: { readonly length: 100 };
-                };
-                readonly ubigeo_cod: {
-                  readonly nativeType: 'character varying';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly nullable: true;
-                  readonly typeParams: { readonly length: 10 };
+                  readonly typeParams: { readonly length: 6 };
                 };
                 readonly latitud: {
                   readonly nativeType: 'numeric';
@@ -11879,6 +11953,12 @@ type ContractBase = Omit<
                   readonly unique: false;
                 },
                 {
+                  readonly name: 'obra_datos_generales_id_distrito_idx_b110a137';
+                  readonly prefix: 'obra_datos_generales_id_distrito_idx';
+                  readonly columns: readonly ['id_distrito'];
+                  readonly unique: false;
+                },
+                {
                   readonly name: 'obra_datos_generales_id_jefe_proyecto_idx_2a4e762a';
                   readonly prefix: 'obra_datos_generales_id_jefe_proyecto_idx';
                   readonly columns: readonly ['id_jefe_proyecto'];
@@ -11925,6 +12005,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'CentroCostos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'obra_datos_generales';
+                    readonly columns: readonly ['id_distrito'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'distrito';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -15648,6 +15740,52 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly provincia: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 4 };
+                };
+                readonly nombre: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly id_departamento: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 2 };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'provincia_id_departamento_idx_a72b1370';
+                  readonly prefix: 'provincia_id_departamento_idx';
+                  readonly columns: readonly ['id_departamento'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'provincia';
+                    readonly columns: readonly ['id_departamento'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'departamento';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly requerimiento: {
               columns: {
                 readonly id: {
@@ -18062,6 +18200,12 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'periodo_fiscal';
     };
+    readonly departamento: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'departamento';
+    };
+    readonly provincia: { readonly namespace: 'public' & NamespaceId; readonly model: 'provincia' };
+    readonly distrito: { readonly namespace: 'public' & NamespaceId; readonly model: 'distrito' };
   };
   readonly domain: {
     readonly namespaces: {
@@ -22357,6 +22501,108 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly departamento: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 2 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+            };
+            readonly relations: {
+              readonly provincias: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'provincia';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_departamento'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'departamento';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+              };
+            };
+          };
+          readonly distrito: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 6 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly id_provincia: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 4 };
+                };
+              };
+            };
+            readonly relations: {
+              readonly obras: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'obra_datos_generales';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_distrito'];
+                };
+              };
+              readonly provincia: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'provincia';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_provincia'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'distrito';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly id_provincia: { readonly column: 'id_provincia' };
+              };
+            };
+          };
           readonly DocCompra: {
             readonly fields: {
               readonly id: {
@@ -24613,36 +24859,12 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 1000 };
                 };
               };
-              readonly departamento: {
+              readonly id_distrito: {
                 readonly nullable: true;
                 readonly type: {
                   readonly kind: 'scalar';
                   readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 100 };
-                };
-              };
-              readonly provincia: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 100 };
-                };
-              };
-              readonly distrito: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 100 };
-                };
-              };
-              readonly ubigeo_cod: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/varchar@1';
-                  readonly typeParams: { readonly length: 10 };
+                  readonly typeParams: { readonly length: 6 };
                 };
               };
               readonly latitud: {
@@ -24811,6 +25033,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly distritoUbigeo: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'distrito';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_distrito'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly jefeProyecto: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -24875,10 +25108,7 @@ type ContractBase = Omit<
                 readonly id_centro_costo: { readonly column: 'id_centro_costo' };
                 readonly expediente_codigo: { readonly column: 'expediente_codigo' };
                 readonly direccion: { readonly column: 'direccion' };
-                readonly departamento: { readonly column: 'departamento' };
-                readonly provincia: { readonly column: 'provincia' };
-                readonly distrito: { readonly column: 'distrito' };
-                readonly ubigeo_cod: { readonly column: 'ubigeo_cod' };
+                readonly id_distrito: { readonly column: 'id_distrito' };
                 readonly latitud: { readonly column: 'latitud' };
                 readonly longitud: { readonly column: 'longitud' };
                 readonly semanas_totales: { readonly column: 'semanas_totales' };
@@ -29063,6 +29293,67 @@ type ContractBase = Omit<
                 readonly Comentarios: { readonly column: 'Comentarios' };
                 readonly Imagen: { readonly column: 'Imagen' };
                 readonly TipoProducto: { readonly column: 'TipoProducto' };
+              };
+            };
+          };
+          readonly provincia: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 4 };
+                };
+              };
+              readonly nombre: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly id_departamento: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 2 };
+                };
+              };
+            };
+            readonly relations: {
+              readonly departamento: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'departamento';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_departamento'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly distritos: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'distrito';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_provincia'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'provincia';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly nombre: { readonly column: 'nombre' };
+                readonly id_departamento: { readonly column: 'id_departamento' };
               };
             };
           };

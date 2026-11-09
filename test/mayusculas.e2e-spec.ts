@@ -51,10 +51,10 @@ describe('Textos en mayúsculas (e2e)', () => {
   it('en la ficha de obra: la dirección va en mayúsculas; el comentario y los enlaces no se tocan', async () => {
     const { body } = await api()
       .patch(`/operaciones/obra/${idCc}/generales`)
-      .send({ direccion: 'av. central 450', comentario: 'Nota en minúscula', departamento: 'lima' })
+      .send({ direccion: 'av. central 450', comentario: 'Nota en minúscula', expediente_codigo: 'exp-2026-01' })
       .expect(200);
     expect(body.direccion).toBe('AV. CENTRAL 450');
-    expect(body.departamento).toBe('LIMA');
+    expect(body.expediente_codigo).toBe('EXP-2026-01');
     expect(body.comentario).toBe('Nota en minúscula');
   });
 

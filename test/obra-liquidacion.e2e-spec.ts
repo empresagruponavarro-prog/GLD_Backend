@@ -128,7 +128,7 @@ describe('Catálogos, directorio, planos y liquidación (e2e)', () => {
     const historial = async () => (await api().get(`${obra()}/residentes/historial`).expect(200)).body as { clave: string; origen: string; id: number; id_anexo?: number; rol_obra: string; fecha_alta?: string; fecha_baja?: string }[];
 
     it('una persona con dos roles aparece dos veces, con el «desde» de cada rol', async () => {
-      await api().patch(`${obra()}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: ana, id_residente: ana }).expect(200);
+      await api().patch(`${obra()}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: ana, id_residente: ana }).expect(200);
       const t = await tarjetas();
       expect(t.map((x) => [x.clave, x.rol_obra])).toEqual([[`equipo-${ana}-jefe_proyecto`, 'Jefe de proyecto'], [`equipo-${ana}-residente`, 'Residente']]);
       expect(t.every((x) => x.origen === 'equipo' && x.fecha_alta === hoy)).toBe(true);

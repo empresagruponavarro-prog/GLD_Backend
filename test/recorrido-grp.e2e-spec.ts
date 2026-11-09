@@ -244,7 +244,7 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
 
     it('la obra inicia, el peso sale del monto y el avance se ve igual en la cabecera, el control y el portafolio', async () => {
       // La ficha necesita al menos el jefe de proyecto para entrar al control de avance.
-      await api().patch(`${obra()}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: ana }).expect(200);
+      await api().patch(`${obra()}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: ana }).expect(200);
       await api().post(`${obra()}/estado`).send({ estado: 'EN_EJECUCION' }).expect(201);
       await avanceTodas(1, 40);
 
@@ -284,7 +284,7 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
   // ─── 6. Directorio ────────────────────────────────────────────────────────────
   describe('6. directorio: una tarjeta por rol y historial', () => {
     it('la misma persona como jefe y residente da dos tarjetas; al cambiar al residente queda el historial', async () => {
-      await api().patch(`${obra()}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: ana, id_residente: ana }).expect(200);
+      await api().patch(`${obra()}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: ana, id_residente: ana }).expect(200);
       const tarjetas = (await api().get(`${obra()}/residentes`).expect(200)).body as { clave: string }[];
       expect(tarjetas.map((t) => t.clave)).toEqual([`equipo-${ana}-jefe_proyecto`, `equipo-${ana}-residente`]);
 

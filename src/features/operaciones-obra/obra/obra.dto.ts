@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEmail, IsInt, IsLatitude, IsLongitude, IsOptional, IsString, Matches, Max, MaxLength, Min } from 'class-validator';
+import { IsEmail, IsInt, IsLatitude, IsLongitude, IsOptional, IsString, Matches, Max, MaxLength, Min , ValidateIf } from 'class-validator';
 import { ObraSemanaDto } from '../cronograma/cronograma.dto.js';
 import { ObraDocumentoDto } from '../documentos/documentos.dto.js';
 import { ObraIncidenciaDto } from '../incidencias/incidencias.dto.js';
@@ -13,10 +13,13 @@ export class ObraDatosGeneralesDto {
   @ApiProperty() id: number;
   @ApiPropertyOptional() expediente_codigo?: string;
   @ApiPropertyOptional() direccion?: string;
-  @ApiPropertyOptional() departamento?: string;
-  @ApiPropertyOptional() provincia?: string;
-  @ApiPropertyOptional() distrito?: string;
-  @ApiPropertyOptional() ubigeo_cod?: string;
+  /** Código ubigeo INEI del distrito (6 dígitos). Departamento, provincia y distrito son sus nombres en el catálogo. */
+  @ApiPropertyOptional({ example: '150142' }) id_distrito?: string;
+  @ApiPropertyOptional({ example: 'LIMA' }) departamento?: string;
+  @ApiPropertyOptional({ example: 'LIMA' }) provincia?: string;
+  @ApiPropertyOptional({ example: 'VILLA EL SALVADOR' }) distrito?: string;
+  /** Igual a `id_distrito` (se mantiene para las pantallas e impresiones que lo leen). */
+  @ApiPropertyOptional({ example: '150142' }) ubigeo_cod?: string;
   @ApiPropertyOptional() latitud?: number;
   @ApiPropertyOptional() longitud?: number;
   /** Enlace Google Maps generado al vuelo */
@@ -91,10 +94,10 @@ export class ObraCockpitDto {
 export class UpdateObraDatosGeneralesDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) expediente_codigo?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(1000) direccion?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) departamento?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) provincia?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) distrito?: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(10) ubigeo_cod?: string;
+  /** Ubicación: solo el código ubigeo INEI del distrito; `null` la quita. */
+  @ApiPropertyOptional({ example: '150142', nullable: true })
+  @IsOptional() @ValidateIf((_o, v) => v !== null) @Matches(/^\d{6}$/, { message: 'id_distrito debe ser un ubigeo de 6 dígitos' })
+  id_distrito?: string | null;
   @ApiPropertyOptional() @IsOptional() @IsLatitude() @Type(() => Number) latitud?: number;
   @ApiPropertyOptional() @IsOptional() @IsLongitude() @Type(() => Number) longitud?: number;
   @ApiPropertyOptional() @IsOptional() @IsInt() @Min(1) @Type(() => Number) semanas_totales?: number;

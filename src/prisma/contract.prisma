@@ -1563,10 +1563,9 @@ model obra_datos_generales {
   centroCosto               CentroCostos @relation(fields: [id_centro_costo], references: [id], onDelete: Cascade)
   expediente_codigo         VarChar(100)?
   direccion                 VarChar(1000)?
-  departamento              VarChar(100)? @default("Lima")
-  provincia                 VarChar(100)? @default("Lima")
-  distrito                  VarChar(100)? @default("Lima")
-  ubigeo_cod                VarChar(10)?
+  // Ubicación: solo el distrito (código ubigeo INEI de 6 dígitos); provincia y departamento salen de él.
+  id_distrito               VarChar(6)?
+  distritoUbigeo            distrito?  @relation(fields: [id_distrito], references: [id], onDelete: SetNull)
   latitud                   Decimal?
   longitud                  Decimal?
   semanas_totales           Int? @default(6)
@@ -1601,6 +1600,7 @@ model obra_datos_generales {
   respProcura               Anexos?        @relation("ObraRespProcura", fields: [id_resp_procura], references: [id], onDelete: SetNull)
   presupuestoOrigen         ppto_Principal? @relation("ObraPresupuestoOrigen", fields: [id_presupuesto_origen], references: [id], onDelete: SetNull)
   @@index([estado_obra])
+  @@index([id_distrito])
   @@index([id_jefe_proyecto])
   @@index([id_coordinador])
   @@map("obra_datos_generales")
@@ -2274,4 +2274,32 @@ model periodo_fiscal {
   anio    Int     @id
   activo  Boolean @default(true)
   @@map("periodo_fiscal")
+}
+
+// ---- Ubigeo INEI (catálogo fijo de Perú). El código es jerárquico: 15 › 1501 › 150142. ----
+model departamento {
+  id         VarChar(2)   @id
+  nombre     VarChar(100)
+  provincias provincia[]
+  @@map("departamento")
+}
+
+model provincia {
+  id              VarChar(4)   @id
+  nombre          VarChar(100)
+  id_departamento VarChar(2)
+  departamento    departamento @relation(fields: [id_departamento], references: [id], onDelete: Restrict)
+  distritos       distrito[]
+  @@index([id_departamento])
+  @@map("provincia")
+}
+
+model distrito {
+  id           VarChar(6)   @id
+  nombre       VarChar(100)
+  id_provincia VarChar(4)
+  provincia    provincia    @relation(fields: [id_provincia], references: [id], onDelete: Restrict)
+  obras        obra_datos_generales[]
+  @@index([id_provincia])
+  @@map("distrito")
 }

@@ -451,7 +451,6 @@ export function interpretarProyecto(hojas: readonly Hoja[], hoy: string): Lectur
   const nombreObra = [ficha.cliente, ficha.tienda].filter(Boolean).join(' ') || '(sin nombre)';
   const falta = (k: string, que: string) => errores.push({ fila: f(k), nombre: nombreObra, mensaje: `falta ${que}` });
   if (!ficha.cliente) falta('cl', 'el cliente');
-  if (!ficha.departamento) falta('dep', 'el departamento');
   if (!ficha.jefe) falta('je', 'el jefe de proyecto');
   if (!ficha.coordinador) falta('co', 'el coordinador');
   if (!estadoTexto) falta('es', 'el estado');

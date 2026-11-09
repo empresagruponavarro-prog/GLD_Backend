@@ -14,6 +14,7 @@ import { cargarObra } from '../shared/control-avance/carga-obra.js';
 import { cargarEquipo, validarEquipo, ROLES_EQUIPO, type EquipoObra } from '../shared/control-avance/equipo.js';
 import { calcularObra } from '../shared/control-avance/motor.js';
 import { registrarEvento } from '../shared/control-avance/registrar-evento.js';
+import { ubicacionDe, type Ubicacion } from '../../maestros/ubigeo/ubigeo.js';
 import { assertCentroCosto, codigoYTiendaDelCc, compact, esFechaIso, hoyLima, readDateOnly, toDateOnly } from '../shared/obra-shared.js';
 import { exigirPlazoEditable, resolverPlazo } from '../shared/plazo-obra.js';
 import type {
@@ -29,7 +30,7 @@ type GeneralesRow = NonNullable<Awaited<ReturnType<Database['orm']['public']['ob
 const MS_DIA = 86_400_000;
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
-export function mapGenerales(row: GeneralesRow, equipo?: EquipoObra): ObraDatosGeneralesDto {
+export function mapGenerales(row: GeneralesRow, equipo?: EquipoObra, ubicacion?: Ubicacion | null): ObraDatosGeneralesDto {
   const lat = row.latitud != null ? Number(row.latitud) : undefined;
   const lng = row.longitud != null ? Number(row.longitud) : undefined;
   const hasCoords = lat != null && lng != null && !Number.isNaN(lat) && !Number.isNaN(lng);
@@ -37,10 +38,11 @@ export function mapGenerales(row: GeneralesRow, equipo?: EquipoObra): ObraDatosG
     id: row.id,
     expediente_codigo: row.expediente_codigo ?? undefined,
     direccion: row.direccion ?? undefined,
-    departamento: row.departamento ?? undefined,
-    provincia: row.provincia ?? undefined,
-    distrito: row.distrito ?? undefined,
-    ubigeo_cod: row.ubigeo_cod ?? undefined,
+    id_distrito: row.id_distrito ?? undefined,
+    departamento: ubicacion?.departamento,
+    provincia: ubicacion?.provincia,
+    distrito: ubicacion?.distrito,
+    ubigeo_cod: row.id_distrito ?? undefined,
     latitud: hasCoords ? lat : undefined,
     longitud: hasCoords ? lng : undefined,
     google_maps_url: hasCoords ? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}` : undefined,
@@ -132,7 +134,9 @@ export class ObraHandler {
         cargarObra(pub, idCentroCosto),
       ]);
 
-    const generales = generalesRow ? mapGenerales(generalesRow, await cargarEquipo(pub, generalesRow)) : undefined;
+    const generales = generalesRow
+      ? mapGenerales(generalesRow, await cargarEquipo(pub, generalesRow), await ubicacionDe(pub, generalesRow.id_distrito))
+      : undefined;
     const cronograma = semanasRows.map(mapSemana);
     const incidencias = incidenciasRows.map(mapIncidencia);
     const kpis = calcularKpis(cronograma, incidencias, generales, cabecera, hoy);
@@ -196,6 +200,7 @@ export class ObraHandler {
       id_resp_presupuesto: dto.id_resp_presupuesto,
       id_resp_procura: dto.id_resp_procura,
     };
+    if (dto.id_distrito && !(await ubicacionDe(pub, dto.id_distrito))) throw new BadRequestException(`No existe el ubigeo ${dto.id_distrito}`);
     await validarEquipo(pub, equipoDto);
     const equipoAntes = existing ? await cargarEquipo(pub, existing) : null;
     const cambiaEquipo = ROLES_EQUIPO.some((rol) => equipoDto[`id_${rol}` as keyof typeof equipoDto] !== undefined);
@@ -203,10 +208,7 @@ export class ObraHandler {
     const payload = compact({
       expediente_codigo: toVarchar<100>(dto.expediente_codigo),
       direccion: toVarchar<1000>(dto.direccion),
-      departamento: toVarchar<100>(dto.departamento),
-      provincia: toVarchar<100>(dto.provincia),
-      distrito: toVarchar<100>(dto.distrito),
-      ubigeo_cod: toVarchar<10>(dto.ubigeo_cod),
+      id_distrito: dto.id_distrito === undefined ? undefined : dto.id_distrito === null ? null : toVarchar<6>(dto.id_distrito),
       latitud: dto.latitud != null ? String(dto.latitud) : undefined,
       longitud: dto.longitud != null ? String(dto.longitud) : undefined,
       semanas_totales: plazo.semanas ?? undefined,
@@ -260,7 +262,7 @@ export class ObraHandler {
         if (cambios.length > 0) await registrarEvento(t, { idCentroCosto, tipo: 'EQUIPO', titulo: 'Equipo de la obra actualizado', detalle: cambios.join(' · '), usuario });
       }
     });
-    return mapGenerales(row, await cargarEquipo(pub, row));
+    return mapGenerales(row, await cargarEquipo(pub, row), await ubicacionDe(pub, row.id_distrito));
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────

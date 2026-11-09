@@ -70,7 +70,7 @@ describe('Portafolio de operaciones (e2e)', () => {
     ).rows[0].id as number;
     const base = `/operaciones/obra/${cc}`;
     // Código y tienda salen del centro de costo: su id y su nombre (`E2E-OPS2-<clave>`).
-    await api().patch(`${base}/generales`).send({ departamento: 'Lima', id_jefe_proyecto: o.jefe }).expect(200);
+    await api().patch(`${base}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: o.jefe }).expect(200);
     if (o.subFin) {
       const p = await api().post(`${base}/partidas`).send({ item: '01', nombre: 'Obras civiles' }).expect(201);
       await api().post(`${base}/partidas/${p.body.id}/subpartidas`).send({ item: '01.01', nombre: 'Tabiquería', fecha_inicio: o.inicio, fecha_fin: o.subFin }).expect(201);
@@ -430,8 +430,8 @@ describe('Portafolio de operaciones (e2e)', () => {
         [inicio, deDia(w1 + 33), cliente1, n],
       );
       await db.query(
-        `insert into obra_datos_generales (id_centro_costo, codigo_obra, tienda, departamento, estado_obra, id_jefe_proyecto)
-         select id, centro_costo, 'Perf', 'Lima', 'EN_EJECUCION', $1 from "CentroCostos" where centro_costo like 'E2E-PERF-%'`,
+        `insert into obra_datos_generales (id_centro_costo, codigo_obra, tienda, id_distrito, estado_obra, id_jefe_proyecto)
+         select id, centro_costo, 'Perf', '150101', 'EN_EJECUCION', $1 from "CentroCostos" where centro_costo like 'E2E-PERF-%'`,
         [jefe1],
       );
       await db.query(

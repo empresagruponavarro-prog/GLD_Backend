@@ -10,6 +10,8 @@ import { AnexoHandler } from './anexo/anexo.handler.js';
 import { ActivoFijoController } from './activo-fijo/activo-fijo.controller.js';
 import { ActivoFijoHandler } from './activo-fijo/activo-fijo.handler.js';
 import { AreaController } from './area/area.controller.js';
+import { UbigeoController } from './ubigeo/ubigeo.controller.js';
+import { UbigeoHandler } from './ubigeo/ubigeo.handler.js';
 import { AreaHandler } from './area/area.handler.js';
 import { FamiliaAlmacenController } from './familia-almacen/familia-almacen.controller.js';
 import { FamiliaAlmacenHandler } from './familia-almacen/familia-almacen.handler.js';
@@ -56,12 +58,14 @@ import { UbicacionHandler } from './ubicacion/ubicacion.handler.js';
     ActivoFijoController,
     FamiliaAlmacenController,
     AreaController,
+    UbigeoController,
     LocalController,
     NivelController,
     AmbienteController,
     UbicacionController,
   ],
   providers: [
+    UbigeoHandler,
     AreaHandler,
     FamiliaAlmacenHandler,
     TipoCategoriaHandler,

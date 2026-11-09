@@ -37,6 +37,8 @@ export interface ObraResumen {
 export interface DatosPantalla {
   cliente: { id: number; nombre: string } | null;
   equipo: EquipoObra;
+  /** Nombre del departamento (sale del distrito de la ficha). */
+  departamento: string | null;
 }
 
 /** Combina la obra cargada, el resultado del motor y los nombres de pantalla en un resumen. */
@@ -51,7 +53,7 @@ export function resumirObra(carga: ObraCargada, r: ResultadoObra, pantalla: Dato
     nombre: [pantalla.cliente?.nombre, tienda].filter(Boolean).join(' ') || carga.filas.cc.centro_costo || `Obra #${carga.idCentroCosto}`,
     cliente: pantalla.cliente,
     tienda,
-    departamento: gen?.departamento ?? null,
+    departamento: pantalla.departamento,
     comentario: gen?.comentario ?? null,
     equipo: pantalla.equipo,
     estado_obra: carga.estadoObra!,
