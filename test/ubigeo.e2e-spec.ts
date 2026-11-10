@@ -43,12 +43,14 @@ describe('Ubigeo y ubicación de la obra (e2e)', () => {
     const provs = (await api().get('/maestros/ubigeo/provincias?departamento=15').expect(200)).body as { id: string }[];
     expect(provs.every((p) => p.id.startsWith('15'))).toBe(true);
     const dists = (await api().get('/maestros/ubigeo/distritos?provincia=1501').expect(200)).body as { id: string; nombre: string }[];
-    expect(dists).toContainEqual({ id: '150142', nombre: 'VILLA EL SALVADOR' });
+    expect(dists).toContainEqual({ id: '150142', nombre: 'VILLA EL SALVADOR', latitud: -12.213333, longitud: -76.937222 });
+    // Todos los distritos traen su centro (los que el INEI no trae usan el de su provincia).
+    expect(dists.every((d) => typeof (d as { latitud?: number }).latitud === 'number')).toBe(true);
   });
 
   it('desde el código se obtiene la ubicación completa; un código mal formado o inexistente se rechaza', async () => {
     const u = (await api().get('/maestros/ubigeo/distritos/150142').expect(200)).body;
-    expect(u).toEqual({ id_distrito: '150142', id_provincia: '1501', id_departamento: '15', departamento: 'LIMA', provincia: 'LIMA', distrito: 'VILLA EL SALVADOR' });
+    expect(u).toEqual({ id_distrito: '150142', id_provincia: '1501', id_departamento: '15', departamento: 'LIMA', provincia: 'LIMA', distrito: 'VILLA EL SALVADOR', latitud: -12.213333, longitud: -76.937222 });
     await api().get('/maestros/ubigeo/distritos/999999').expect(404);
     await api().get('/maestros/ubigeo/distritos/15014').expect(400);
     await api().get('/maestros/ubigeo/provincias?departamento=1').expect(400);

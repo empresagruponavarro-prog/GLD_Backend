@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import type { OpcionUbigeoDto, UbicacionDto } from './ubigeo.dto.js';
-import { ubicacionDe } from './ubigeo.js';
+import { aNumero, ubicacionDe } from './ubigeo.js';
 
 const porNombre = (a: OpcionUbigeoDto, b: OpcionUbigeoDto) => a.nombre.localeCompare(b.nombre, 'es');
 
@@ -22,7 +22,7 @@ export class UbigeoHandler {
 
   async distritos(idProvincia: string): Promise<OpcionUbigeoDto[]> {
     const filas = await this.db.orm.public.distrito.where({ id_provincia: toVarchar<4>(idProvincia) }).all();
-    return filas.map((d) => ({ id: d.id, nombre: d.nombre })).sort(porNombre);
+    return filas.map((d) => ({ id: d.id, nombre: d.nombre, latitud: aNumero(d.latitud), longitud: aNumero(d.longitud) })).sort(porNombre);
   }
 
   /** Ubicación completa de un código ubigeo de distrito (para completar las tres listas desde el código). */

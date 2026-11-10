@@ -2297,6 +2297,9 @@ model provincia {
 model distrito {
   id           VarChar(6)   @id
   nombre       VarChar(100)
+  // Centro del distrito (para centrar el mapa de la ficha); los que el INEI no trae usan el centro de su provincia.
+  latitud      Decimal?
+  longitud     Decimal?
   id_provincia VarChar(4)
   provincia    provincia    @relation(fields: [id_provincia], references: [id], onDelete: Restrict)
   obras        obra_datos_generales[]

@@ -11,6 +11,16 @@ export interface Ubicacion {
   departamento: string;
   provincia: string;
   distrito: string;
+  /** Centro del distrito. */
+  latitud?: number;
+  longitud?: number;
+}
+
+/** Decimal de la BD (llega como texto) a número; `undefined` si no hay valor. */
+export function aNumero(valor: unknown): number | undefined {
+  if (valor === null || valor === undefined || valor === '') return undefined;
+  const n = Number(valor);
+  return Number.isFinite(n) ? n : undefined;
 }
 
 /** Ubicaciones de los distritos pedidos (tres consultas). Los códigos que no existan no aparecen en el mapa. */
@@ -29,7 +39,16 @@ export async function ubicacionesDe(orm: Orm, idsDistrito: readonly (string | nu
     const p = prov.get(d.id_provincia);
     const dp = p ? dep.get(p.id_departamento) : undefined;
     if (!p || !dp) continue;
-    res.set(d.id, { id_distrito: d.id, id_provincia: p.id, id_departamento: dp.id, departamento: dp.nombre, provincia: p.nombre, distrito: d.nombre });
+    res.set(d.id, {
+      id_distrito: d.id,
+      id_provincia: p.id,
+      id_departamento: dp.id,
+      departamento: dp.nombre,
+      provincia: p.nombre,
+      distrito: d.nombre,
+      latitud: aNumero(d.latitud),
+      longitud: aNumero(d.longitud),
+    });
   }
   return res;
 }

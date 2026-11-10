@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a6bfefceec48555e9c47a132be2096cdcc94d395ece0b06550ae9b0e369219cf'>;
+  StorageHashBase<'3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -695,6 +695,8 @@ export type FieldOutputTypes = {
     readonly distrito: {
       readonly id: Varchar<6>;
       readonly nombre: Varchar<100>;
+      readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
       readonly id_provincia: Varchar<4>;
     };
     readonly DocCompra: {
@@ -2150,6 +2152,8 @@ export type FieldInputTypes = {
     readonly distrito: {
       readonly id: CodecTypes['sql/varchar@1']['input'];
       readonly nombre: CodecTypes['sql/varchar@1']['input'];
+      readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
       readonly id_provincia: CodecTypes['sql/varchar@1']['input'];
     };
     readonly DocCompra: {
@@ -3602,6 +3606,8 @@ export type StorageColumnTypes = {
     readonly distrito: {
       readonly id: Varchar<6>;
       readonly id_provincia: Varchar<4>;
+      readonly latitud: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['output'] | null;
       readonly nombre: Varchar<100>;
     };
     readonly docCompra: {
@@ -5057,6 +5063,8 @@ export type StorageColumnInputTypes = {
     readonly distrito: {
       readonly id: CodecTypes['sql/varchar@1']['input'];
       readonly id_provincia: CodecTypes['sql/varchar@1']['input'];
+      readonly latitud: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly longitud: CodecTypes['pg/numeric@1']['input'] | null;
       readonly nombre: CodecTypes['sql/varchar@1']['input'];
     };
     readonly docCompra: {
@@ -9708,6 +9716,16 @@ type ContractBase = Omit<
                   readonly codecId: 'sql/varchar@1';
                   readonly nullable: false;
                   readonly typeParams: { readonly length: 100 };
+                };
+                readonly latitud: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly longitud: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
                 };
                 readonly id_provincia: {
                   readonly nativeType: 'character varying';
@@ -22560,6 +22578,14 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 100 };
                 };
               };
+              readonly latitud: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly longitud: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
               readonly id_provincia: {
                 readonly nullable: false;
                 readonly type: {
@@ -22599,6 +22625,8 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly id: { readonly column: 'id' };
                 readonly nombre: { readonly column: 'nombre' };
+                readonly latitud: { readonly column: 'latitud' };
+                readonly longitud: { readonly column: 'longitud' };
                 readonly id_provincia: { readonly column: 'id_provincia' };
               };
             };

@@ -12302,6 +12302,20 @@
                   }
                 }
               },
+              "latitud": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "longitud": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "nombre": {
                 "nullable": false,
                 "type": {
@@ -12352,6 +12366,12 @@
                 },
                 "id_provincia": {
                   "column": "id_provincia"
+                },
+                "latitud": {
+                  "column": "latitud"
+                },
+                "longitud": {
+                  "column": "longitud"
                 },
                 "nombre": {
                   "column": "nombre"
@@ -25503,6 +25523,16 @@
                     "length": 4
                   }
                 },
+                "latitud": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "longitud": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
                 "nombre": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -36135,7 +36165,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a6bfefceec48555e9c47a132be2096cdcc94d395ece0b06550ae9b0e369219cf"
+    "storageHash": "3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9"
   },
   "capabilities": {
     "postgres": {
