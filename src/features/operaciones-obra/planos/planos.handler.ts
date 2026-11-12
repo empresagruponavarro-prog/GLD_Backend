@@ -7,6 +7,7 @@ import { existsSync } from 'node:fs';
 import { readdir, stat, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { ArchivoPlanoDto, CreateObraPlanoDto, NuevaVersionPlanoDto, ObraPlanoDto, UpdateObraPlanoDto } from './planos.dto.js';
+import { type DisciplinaPlano, disciplinasDeLaObra, normalizarDisciplina } from './disciplinas.js';
 import { UPLOADS_ROOT, borrarArchivoLocal, carpetaPlanos, esArchivoLocal, formatoPeso, nombreDescarga, rutaSegura } from './planos.storage.js';
 
 /** Archivos sin plano asociado más antiguos que esto se eliminan en la limpieza automática. */
@@ -62,8 +63,14 @@ export class PlanosHandler {
     return rows.map(mapPlano);
   }
 
+  /** Disciplinas que se pueden elegir en la obra: las de los planos de su tipo de proyecto (o todas las del catálogo). */
+  async disciplinas(idCentroCosto: number): Promise<DisciplinaPlano[]> {
+    const cc = await assertCentroCosto(this.db, idCentroCosto);
+    return disciplinasDeLaObra(this.db.orm.public, cc.id_tipo_proyecto ?? null);
+  }
+
   async create(idCentroCosto: number, dto: CreateObraPlanoDto): Promise<ObraPlanoDto> {
-    await assertCentroCosto(this.db, idCentroCosto);
+    const cc = await assertCentroCosto(this.db, idCentroCosto);
     this.validarArchivo(idCentroCosto, dto.archivo_url);
     const codigo = dto.codigo_plano.trim().toUpperCase();
     const duplicado = await this.db.orm.public.obra_planos.first({
@@ -74,12 +81,13 @@ export class PlanosHandler {
     if (duplicado) {
       throw new ConflictException(`Ya existe un plano vigente con código ${codigo}. Emita una nueva versión.`);
     }
+    const disciplina = await this.disciplinaValida(cc.id_tipo_proyecto ?? null, dto.disciplina);
 
     const row = await this.db.orm.public.obra_planos.create({
       id_centro_costo: idCentroCosto,
       codigo_plano: toVarchar<50>(codigo),
       nombre_plano: toVarchar<255>(dto.nombre_plano.trim()),
-      disciplina: toVarchar<50>(dto.disciplina),
+      disciplina: toVarchar<50>(disciplina),
       version: toVarchar<20>(dto.version?.trim() || 'v1.0'),
       es_vigente: true,
       estado_aprobacion: toVarchar<50>(dto.estado_aprobacion ?? 'Aprobado Obra'),
@@ -94,10 +102,18 @@ export class PlanosHandler {
   async update(idCentroCosto: number, idPlano: number, dto: UpdateObraPlanoDto): Promise<ObraPlanoDto> {
     const actual = await this.findOrFail(idCentroCosto, idPlano);
     this.validarArchivo(idCentroCosto, dto.archivo_url);
+    let disciplina: string | undefined;
+    if (dto.disciplina !== undefined) {
+      // Conservar la disciplina que ya tenía el plano siempre se puede; cambiarla, solo a una de la obra.
+      const misma = normalizarDisciplina(dto.disciplina) === normalizarDisciplina(String(actual.disciplina ?? ''));
+      disciplina = misma
+        ? String(actual.disciplina)
+        : await this.disciplinaValida((await assertCentroCosto(this.db, idCentroCosto)).id_tipo_proyecto ?? null, dto.disciplina);
+    }
     const row = await this.db.orm.public.obra_planos.where({ id: idPlano }).update(
       compact({
         nombre_plano: toVarchar<255>(dto.nombre_plano?.trim()),
-        disciplina: toVarchar<50>(dto.disciplina),
+        disciplina: toVarchar<50>(disciplina),
         estado_aprobacion: toVarchar<50>(dto.estado_aprobacion),
         fecha_vobo: toDateOnly(dto.fecha_vobo),
         formato_peso: toVarchar<50>(dto.formato_peso),
@@ -201,6 +217,18 @@ export class PlanosHandler {
     if (!existsSync(ruta)) throw new NotFoundException('El archivo del plano ya no existe en el servidor');
     const nombre = nombreDescarga(url);
     return { tipo: 'local', ruta, nombre };
+  }
+
+  /** La disciplina de un plano tiene que ser una de las de la obra (`GET …/planos/disciplinas`); se guarda normalizada. */
+  private async disciplinaValida(idTipoProyecto: number | null, disciplina: string): Promise<string> {
+    const nombre = normalizarDisciplina(disciplina);
+    const lista = await disciplinasDeLaObra(this.db.orm.public, idTipoProyecto);
+    if (!lista.some((d) => d.nombre === nombre)) {
+      throw new BadRequestException(
+        `La disciplina ${nombre} no es de esta obra. Use una de: ${lista.map((d) => d.nombre).join(', ') || '(el catálogo de tipos de plano no tiene disciplinas)'}`,
+      );
+    }
+    return nombre;
   }
 
   /** Una clave local solo es válida si pertenece a la carpeta de planos del mismo CC. */

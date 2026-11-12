@@ -202,10 +202,34 @@ describe('Catálogos, directorio, planos y liquidación (e2e)', () => {
       await api().patch(`/proyectos/catalogos/tipos-proyecto/${tipoB}`).send({ activo: true }).expect(200);
     });
 
+    it('las disciplinas de la obra son las de los planos de su tipo de proyecto', async () => {
+      // El tipo A pide P1 (ARQUITECTURA), P2 y P3 (sin disciplina).
+      expect((await api().get(`${obra()}/planos/disciplinas`).expect(200)).body).toEqual([{ nombre: 'ARQUITECTURA', prefijo: 'ARQ' }]);
+      const res = await api().post(`${obra()}/planos`).send({ codigo_plano: 'E2E-LIQ-X', nombre_plano: 'Fuera', disciplina: 'ESTRUCTURAS' }).expect(400);
+      expect(res.body.message).toMatch(/ESTRUCTURAS no es de esta obra.*ARQUITECTURA/);
+    });
+
+    it('sin archivo el plano no se puede marcar como entregado', async () => {
+      const res = await api().put(`${obra()}/planos-requeridos/${p1}`).send({ entregado: true }).expect(400);
+      expect(res.body.message).toMatch(/Sube primero el archivo del plano E2E-LIQ-P1/);
+      // Un plano registrado sin archivo tampoco cuenta.
+      await api().post(`${obra()}/planos`).send({ codigo_plano: 'E2E-LIQ-P1', nombre_plano: 'Planta', disciplina: 'Arquitectura' }).expect(201);
+      await api().put(`${obra()}/planos-requeridos/${p1}`).send({ entregado: true }).expect(400);
+      const item = (await lista()).items.find((i: { id_tipo_plano: number }) => i.id_tipo_plano === p1);
+      expect(item).toMatchObject({ entregado: false, archivo: null, disciplina: 'ARQUITECTURA' });
+    });
+
     it('el check de entregado guarda quién y cuándo', async () => {
+      const planos = (await api().get(`${obra()}/planos`).expect(200)).body as { id: number; codigo_plano: string }[];
+      const p1Obra = planos.find((p) => p.codigo_plano === 'E2E-LIQ-P1')!;
+      await api().patch(`${obra()}/planos/${p1Obra.id}`).send({ archivo_url: 'https://example.com/e2e-liq-p1.pdf' }).expect(200);
       const res = await api().put(`${obra()}/planos-requeridos/${p1}`).send({ entregado: true }).expect(200);
       const item = res.body.items.find((i: { id_tipo_plano: number }) => i.id_tipo_plano === p1);
-      expect(item).toMatchObject({ entregado: true, entregado_por: 'e2e-admin' });
+      expect(item).toMatchObject({ entregado: true, entregado_por: 'e2e-admin', archivo: { id_plano: p1Obra.id, version: 'v1.0' } });
+      expect((await db.query(`select id_plano from obra_plano_requerido where id_centro_costo = $1 and id_tipo_plano = $2`, [cc, p1])).rows[0].id_plano).toBe(p1Obra.id);
+      // Quitar el check no pide archivo.
+      await api().put(`${obra()}/planos-requeridos/${p1}`).send({ entregado: false }).expect(200);
+      await api().put(`${obra()}/planos-requeridos/${p1}`).send({ entregado: true }).expect(200);
       expect(item.entregado_en).not.toBeNull();
       expect(res.body.resumen).toMatchObject({ entregados_obligatorios: 1, completo: false });
       await api().put(`${obra()}/planos-requeridos/999999999`).send({ entregado: true }).expect(404);
@@ -274,6 +298,10 @@ describe('Catálogos, directorio, planos y liquidación (e2e)', () => {
     });
 
     it('con todos los planos obligatorios se entrega el dosier', async () => {
+      await api()
+        .post(`${obra()}/planos`)
+        .send({ codigo_plano: 'E2E-LIQ-P2', nombre_plano: 'Cortes', disciplina: 'Arquitectura', archivo_url: 'https://example.com/e2e-liq-p2.pdf' })
+        .expect(201);
       await api().put(`${obra()}/planos-requeridos/${p2}`).send({ entregado: true }).expect(200);
       const d = (await api().get(`${obra()}/dosier`).expect(200)).body;
       expect(d).toMatchObject({ id_centro_costo: cc, nombre_obra: 'E2E-LIQ-OBRA', fecha: hoy });

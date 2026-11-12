@@ -1,0 +1,9 @@
+{
+  "from": "3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9",
+  "to": "3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9",
+  "providedInvariants": [
+    "tambo-planos-individuales"
+  ],
+  "createdAt": "2026-11-12T20:42:52.178Z",
+  "migrationHash": "d89054999060bff4135c02925ea606c5a4528999649c8e2ab45bee998a0e60f8"
+}

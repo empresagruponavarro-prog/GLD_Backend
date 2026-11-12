@@ -1,0 +1,37 @@
+[
+  {
+    "id": "data.disciplinas.unificadas",
+    "label": "Unifica los nombres de las disciplinas de plano",
+    "summary": "Tipos de plano y planos de obra con un solo nombre por disciplina, en mayúsculas",
+    "operationClass": "data",
+    "invariantId": "disciplinas-unificadas",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_plano"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "tipos de plano: un nombre por disciplina",
+        "sql": "UPDATE \"public\".\"tipo_plano\" SET \"disciplina\" = CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END\n                  WHERE \"disciplina\" IS NOT NULL AND \"disciplina\" <> CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END",
+        "params": []
+      },
+      {
+        "description": "planos de obra: la disciplina con el nombre del catálogo",
+        "sql": "UPDATE \"public\".\"obra_planos\" SET \"disciplina\" = CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END\n                  WHERE \"disciplina\" IS NOT NULL AND \"disciplina\" <> CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "no queda ninguna disciplina con otro nombre",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"tipo_plano\" WHERE \"disciplina\" IS NOT NULL AND \"disciplina\" <> CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END) AND NOT EXISTS (SELECT 1 FROM \"public\".\"obra_planos\" WHERE \"disciplina\" IS NOT NULL AND \"disciplina\" <> CASE upper(translate(btrim(\"disciplina\"), 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))\n    WHEN 'ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'INSTALACIONES ELECTRICAS' THEN 'INSTALACIONES ELÉCTRICAS'\n    WHEN 'SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'INSTALACIONES SANITARIAS' THEN 'INSTALACIONES SANITARIAS'\n    WHEN 'MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    WHEN 'INSTALACIONES MECANICAS' THEN 'INSTALACIONES MECÁNICAS'\n    ELSE upper(btrim(\"disciplina\")) END) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

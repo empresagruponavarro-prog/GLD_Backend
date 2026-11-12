@@ -13,10 +13,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { type ArchivoSubido, PlanosHandler } from './planos.handler.js';
-import { CreateObraPlanoDto, NuevaVersionPlanoDto, UpdateObraPlanoDto } from './planos.dto.js';
+import { CreateObraPlanoDto, DisciplinaPlanoDto, NuevaVersionPlanoDto, UpdateObraPlanoDto } from './planos.dto.js';
 import { PLANO_EXTENSIONES, planoMulterOptions } from './planos.storage.js';
 import { Accion, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 
@@ -31,6 +31,13 @@ export class PlanosController {
   @ApiOperation({ summary: 'Listar planos vigentes de la obra' })
   list(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
     return this.handler.list(idCentroCosto);
+  }
+
+  @Get('disciplinas')
+  @ApiOperation({ summary: 'Disciplinas que se pueden elegir en la obra: las de los planos de su tipo de proyecto (o todas las del catálogo)' })
+  @ApiOkResponse({ type: DisciplinaPlanoDto, isArray: true })
+  disciplinas(@Param('idCentroCosto', ParseIntPipe) idCentroCosto: number) {
+    return this.handler.disciplinas(idCentroCosto);
   }
 
   @Post()

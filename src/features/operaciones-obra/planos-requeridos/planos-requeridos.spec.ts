@@ -1,13 +1,38 @@
-import { planificarCopia, resumenPlanos, type PlanoRequeridoItem } from './planos-requeridos.js';
+import { archivoDelPlano, planificarCopia, resumenPlanos, type PlanoRequeridoItem, type PlanoVigente } from './planos-requeridos.js';
 
 const item = (id: number, obligatorio: boolean, entregado: boolean): PlanoRequeridoItem => ({
   id_tipo_plano: id,
   codigo: `P${id}`,
   nombre: `PLANO ${id}`,
+  disciplina: 'ARQUITECTURA',
   obligatorio,
   entregado,
   entregado_por: null,
   entregado_en: null,
+  archivo: null,
+});
+
+describe('archivoDelPlano (planos · versión K)', () => {
+  const vigente = (id: number, codigo: string, archivo: string | null, version = 'v1.0'): PlanoVigente => ({
+    id,
+    codigo_plano: codigo,
+    version,
+    formato_peso: archivo ? 'PDF (1 MB)' : null,
+    archivo_url: archivo,
+  });
+
+  it('el archivo es el plano vigente con el mismo código, sin distinguir mayúsculas ni espacios', () => {
+    expect(archivoDelPlano('A01', [vigente(5, ' a01 ', 'obras/1/planos/x.pdf', 'v2.0')])).toEqual({ id_plano: 5, version: 'v2.0', formato_peso: 'PDF (1 MB)' });
+  });
+
+  it('un enlace externo también cuenta como archivo', () => {
+    expect(archivoDelPlano('IE01', [vigente(7, 'IE01', 'https://drive.example.com/ie01')])?.id_plano).toBe(7);
+  });
+
+  it('sin plano con ese código, o con el plano registrado sin archivo, no hay archivo', () => {
+    expect(archivoDelPlano('A02', [vigente(5, 'A01', 'x.pdf')])).toBeNull();
+    expect(archivoDelPlano('A02', [vigente(6, 'A02', null), vigente(8, 'A02', '  ')])).toBeNull();
+  });
 });
 
 describe('resumenPlanos (S-08)', () => {

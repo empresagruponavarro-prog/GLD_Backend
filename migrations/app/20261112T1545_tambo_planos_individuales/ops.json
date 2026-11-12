@@ -1,0 +1,52 @@
+[
+  {
+    "id": "data.tambo.planos_individuales",
+    "label": "Lista oficial de planos de TIENDAS TAMBO",
+    "summary": "21 planos de TAMBO (todos obligatorios) en el catálogo, en el tipo de proyecto y en sus obras",
+    "operationClass": "data",
+    "invariantId": "tambo-planos-individuales",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tipo_plano"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "catálogo: los 21 planos de TAMBO",
+        "sql": "INSERT INTO \"public\".\"tipo_plano\" (\"codigo\", \"nombre\", \"disciplina\", \"orden\") VALUES ('A01', 'PLANO DE DISTRIBUCIÓN', 'ARQUITECTURA', 101), ('A02', 'PLANO DE ELEVACIONES', 'ARQUITECTURA', 102), ('A03', 'PLANO DE CORTES', 'ARQUITECTURA', 103), ('SE01', 'PLANO DE EVACUACIÓN', 'ARQUITECTURA', 104), ('SE02', 'PLANO DE SEÑALÉTICAS', 'ARQUITECTURA', 105), ('SE03', 'PLANO DE RIESGOS', 'ARQUITECTURA', 106), ('IS01', 'PLANO DE DESAGÜE', 'SANITARIAS', 107), ('IS02', 'PLANO DE AGUA', 'SANITARIAS', 108), ('IE01', 'PLANO DE LUMINARIAS', 'ELÉCTRICAS', 109), ('IE02', 'PLANO DE TOMACORRIENTES', 'ELÉCTRICAS', 110), ('IE03', 'PLANO DE FUERZAS', 'ELÉCTRICAS', 111), ('IE04', 'DIAGRAMA UNIFILAR', 'ELÉCTRICAS', 112), ('IE05', 'CUADRO DE CARGAS', 'ELÉCTRICAS', 113), ('IE06', 'PLANO DE REGISTROS DE POZO', 'ELÉCTRICAS', 114), ('HVAC01', 'PLANO DE CLIMATIZACIÓN', 'ELÉCTRICAS', 115), ('DA01', 'PLANO DE DATA', 'ELÉCTRICAS', 116), ('CO01', 'PLANO DE ALARMAS', 'ELÉCTRICAS', 117), ('E01', 'PLANO E01', 'ESTRUCTURAS', 118), ('E02', 'PLANO E02', 'ESTRUCTURAS', 119), ('E03', 'PLANO E03', 'ESTRUCTURAS', 120), ('E04', 'PLANO E04', 'ESTRUCTURAS', 121) ON CONFLICT (\"codigo\") DO NOTHING",
+        "params": []
+      },
+      {
+        "description": "TAMBO deja de pedir las 6 disciplinas temporales",
+        "sql": "DELETE FROM \"public\".\"tipo_proyecto_plano\" WHERE \"id_tipo_proyecto\" = (SELECT \"id\" FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO')\n                  AND \"id_tipo_plano\" IN (SELECT \"id\" FROM \"public\".\"tipo_plano\" WHERE \"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN', 'MEC', 'DET'))",
+        "params": []
+      },
+      {
+        "description": "TAMBO pide los 21 planos, todos obligatorios",
+        "sql": "INSERT INTO \"public\".\"tipo_proyecto_plano\" (\"id_tipo_proyecto\", \"id_tipo_plano\", \"obligatorio\")\n                  SELECT p.\"id\", t.\"id\", true FROM \"public\".\"tipo_proyecto\" p CROSS JOIN \"public\".\"tipo_plano\" t\n                  WHERE p.\"nombre\" = 'TAMBO' AND t.\"codigo\" IN ('A01', 'A02', 'A03', 'SE01', 'SE02', 'SE03', 'IS01', 'IS02', 'IE01', 'IE02', 'IE03', 'IE04', 'IE05', 'IE06', 'HVAC01', 'DA01', 'CO01', 'E01', 'E02', 'E03', 'E04')\n                  ON CONFLICT (\"id_tipo_proyecto\", \"id_tipo_plano\") DO UPDATE SET \"obligatorio\" = true",
+        "params": []
+      },
+      {
+        "description": "obras de TAMBO: agregan los 21 planos",
+        "sql": "INSERT INTO \"public\".\"obra_plano_requerido\" (\"id_centro_costo\", \"id_tipo_plano\", \"obligatorio\")\n                  SELECT cc.\"id\", t.\"id\", true FROM \"public\".\"CentroCostos\" cc CROSS JOIN \"public\".\"tipo_plano\" t\n                  WHERE cc.\"id\" IN (SELECT \"id\" FROM \"public\".\"CentroCostos\" WHERE \"id_tipo_proyecto\" = (SELECT \"id\" FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO')) AND t.\"codigo\" IN ('A01', 'A02', 'A03', 'SE01', 'SE02', 'SE03', 'IS01', 'IS02', 'IE01', 'IE02', 'IE03', 'IE04', 'IE05', 'IE06', 'HVAC01', 'DA01', 'CO01', 'E01', 'E02', 'E03', 'E04')\n                  ON CONFLICT (\"id_centro_costo\", \"id_tipo_plano\") DO UPDATE SET \"obligatorio\" = true",
+        "params": []
+      },
+      {
+        "description": "obras de TAMBO: quitan las disciplinas temporales no entregadas",
+        "sql": "DELETE FROM \"public\".\"obra_plano_requerido\" WHERE \"id_centro_costo\" IN (SELECT \"id\" FROM \"public\".\"CentroCostos\" WHERE \"id_tipo_proyecto\" = (SELECT \"id\" FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO')) AND NOT \"entregado\"\n                  AND \"id_tipo_plano\" IN (SELECT \"id\" FROM \"public\".\"tipo_plano\" WHERE \"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN', 'MEC', 'DET'))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "los 21 planos existen y TAMBO (si existe) pide exactamente esos, todos obligatorios",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"tipo_plano\" WHERE \"codigo\" IN ('A01', 'A02', 'A03', 'SE01', 'SE02', 'SE03', 'IS01', 'IS02', 'IE01', 'IE02', 'IE03', 'IE04', 'IE05', 'IE06', 'HVAC01', 'DA01', 'CO01', 'E01', 'E02', 'E03', 'E04')) = 21\n                  AND (NOT EXISTS (SELECT 1 FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO') OR (\n                    (SELECT count(*) FROM \"public\".\"tipo_proyecto_plano\" tp JOIN \"public\".\"tipo_plano\" t ON t.\"id\" = tp.\"id_tipo_plano\"\n                     WHERE tp.\"id_tipo_proyecto\" = (SELECT \"id\" FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO') AND t.\"codigo\" IN ('A01', 'A02', 'A03', 'SE01', 'SE02', 'SE03', 'IS01', 'IS02', 'IE01', 'IE02', 'IE03', 'IE04', 'IE05', 'IE06', 'HVAC01', 'DA01', 'CO01', 'E01', 'E02', 'E03', 'E04') AND tp.\"obligatorio\") = 21\n                    AND NOT EXISTS (SELECT 1 FROM \"public\".\"tipo_proyecto_plano\" tp JOIN \"public\".\"tipo_plano\" t ON t.\"id\" = tp.\"id_tipo_plano\"\n                     WHERE tp.\"id_tipo_proyecto\" = (SELECT \"id\" FROM \"public\".\"tipo_proyecto\" WHERE \"nombre\" = 'TAMBO') AND t.\"codigo\" IN ('ARQ', 'EST', 'ELE', 'SAN', 'MEC', 'DET')))) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

@@ -1,14 +1,23 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean } from 'class-validator';
 
+export class ArchivoRequeridoDto {
+  @ApiProperty({ description: 'Plano vigente de la obra (obra_planos) con el mismo código' }) id_plano: number;
+  @ApiProperty({ example: 'v1.0' }) version: string;
+  @ApiPropertyOptional({ nullable: true, example: 'PDF (2.4 MB)' }) formato_peso: string | null;
+}
+
 export class PlanoRequeridoDto {
   @ApiProperty() id_tipo_plano: number;
-  @ApiProperty({ example: 'ARQ' }) codigo: string;
-  @ApiProperty({ example: 'ARQUITECTURA' }) nombre: string;
+  @ApiProperty({ example: 'A01' }) codigo: string;
+  @ApiProperty({ example: 'PLANO DE DISTRIBUCIÓN' }) nombre: string;
+  @ApiPropertyOptional({ nullable: true, example: 'ARQUITECTURA' }) disciplina: string | null;
   @ApiProperty() obligatorio: boolean;
   @ApiProperty() entregado: boolean;
   @ApiPropertyOptional({ nullable: true }) entregado_por: string | null;
   @ApiPropertyOptional({ nullable: true }) entregado_en: string | null;
+  @ApiPropertyOptional({ type: ArchivoRequeridoDto, nullable: true, description: 'Sin archivo no se puede marcar como entregado' })
+  archivo: ArchivoRequeridoDto | null;
 }
 
 export class FaltantePlanoDto {

@@ -21,7 +21,7 @@ export class PlanosRequeridosController {
   }
 
   @Put(':idTipoPlano')
-  @ApiOperation({ summary: 'Marca (o quita) el check de entregado de un plano de la lista' })
+  @ApiOperation({ summary: 'Marca (o quita) el check de entregado de un plano de la lista; marcarlo exige que el plano ya tenga archivo' })
   @ApiParam({ name: 'idTipoPlano', type: Number })
   @ApiOkResponse({ type: PlanosRequeridosObraDto })
   marcar(

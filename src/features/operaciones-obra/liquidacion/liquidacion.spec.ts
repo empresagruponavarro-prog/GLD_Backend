@@ -45,7 +45,7 @@ describe('evaluarLiquidacion (S-11, DG6)', () => {
       entrada({ planos: { total: 2, obligatorios: 2, entregados_obligatorios: 1, completo: false, faltantes: [{ id_tipo_plano: 2, codigo: 'EST', nombre: 'ESTRUCTURAS' }] } }),
     );
     expect(r.puedeLiquidar).toBe(false);
-    expect(r.requisitos.find((x) => x.codigo === 'PLANOS')?.mensaje).toBe('Faltan 1 plano(s) obligatorio(s): ESTRUCTURAS');
+    expect(r.requisitos.find((x) => x.codigo === 'PLANOS')?.mensaje).toBe('Faltan 1 plano(s) obligatorio(s): EST ESTRUCTURAS');
   });
 
   it('una obra ya cerrada está liquidada y no se liquida de nuevo', () => {

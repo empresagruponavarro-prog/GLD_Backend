@@ -96,7 +96,7 @@ export class LiquidacionHandler {
     const resumen = resumenPlanos(items);
     if (!resumen.completo) {
       throw new ConflictException({
-        message: `No se puede entregar el dosier: faltan ${resumen.faltantes.length} plano(s) obligatorio(s): ${resumen.faltantes.map((f) => f.nombre).join(', ')}`,
+        message: `No se puede entregar el dosier: faltan ${resumen.faltantes.length} plano(s) obligatorio(s): ${resumen.faltantes.map((f) => `${f.codigo} ${f.nombre}`).join(', ')}`,
         planos: resumen,
       });
     }

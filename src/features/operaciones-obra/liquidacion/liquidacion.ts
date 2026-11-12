@@ -58,7 +58,7 @@ export function evaluarLiquidacion(e: EntradaLiquidacion): SituacionLiquidacion 
       cumplido: e.planos.completo,
       mensaje: e.planos.completo
         ? 'Están todos los planos obligatorios'
-        : `Faltan ${e.planos.faltantes.length} plano(s) obligatorio(s): ${e.planos.faltantes.map((f) => f.nombre).join(', ')}`,
+        : `Faltan ${e.planos.faltantes.length} plano(s) obligatorio(s): ${e.planos.faltantes.map((f) => `${f.codigo} ${f.nombre}`).join(', ')}`,
     },
   ];
   return { liquidada, puedeLiquidar: !liquidada && requisitos.every((r) => r.cumplido), requisitos };

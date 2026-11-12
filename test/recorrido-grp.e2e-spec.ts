@@ -403,6 +403,13 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
     });
 
     it('con los planos marcados se emite el dosier y se liquida: el centro de costo queda CERRADO', async () => {
+      // El check exige el archivo de cada plano (mismo código, con archivo o enlace).
+      for (const [codigo, disciplina] of [['E2E-REC-ARQ', 'Arquitectura'], ['E2E-REC-EST', 'Estructuras']]) {
+        await api()
+          .post(`${obra()}/planos`)
+          .send({ codigo_plano: codigo, nombre_plano: `rec ${codigo}`, disciplina, archivo_url: `https://example.com/${codigo}.pdf` })
+          .expect(201);
+      }
       await api().put(`${obra()}/planos-requeridos/${planoA}`).send({ entregado: true }).expect(200);
       await api().put(`${obra()}/planos-requeridos/${planoB}`).send({ entregado: true }).expect(200);
 

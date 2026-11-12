@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsIn, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export const DISCIPLINAS_PLANO = ['Arquitectura', 'Estructuras', 'Eléctricas', 'Sanitarias', 'Mecánicas', 'Comunicaciones', 'Otros'] as const;
 export const ESTADOS_APROBACION_PLANO = ['Aprobado Obra', 'En Revisión', 'Observado', 'Para Construcción'] as const;
 
 export class ObraPlanoDto {
@@ -20,6 +19,12 @@ export class ObraPlanoDto {
   @ApiProperty() created_at: string;
 }
 
+/** Disciplina que se puede elegir en la obra (columna «Disciplina» de los tipos de plano de su tipo de proyecto). */
+export class DisciplinaPlanoDto {
+  @ApiProperty({ example: 'INSTALACIONES ELÉCTRICAS' }) nombre: string;
+  @ApiProperty({ example: 'IE', description: 'Prefijo del código sugerido (IE-01)' }) prefijo: string;
+}
+
 /** Respuesta de la subida de un archivo de plano. */
 export class ArchivoPlanoDto {
   @ApiProperty({ example: 'obras/944/planos/1a2b3c4d_ARQ-01.pdf' }) archivo_url: string;
@@ -31,7 +36,9 @@ export class ArchivoPlanoDto {
 export class CreateObraPlanoDto {
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(50) codigo_plano: string;
   @ApiProperty() @IsString() @IsNotEmpty() @MaxLength(255) nombre_plano: string;
-  @ApiProperty({ enum: DISCIPLINAS_PLANO }) @IsIn(DISCIPLINAS_PLANO) disciplina: string;
+  @ApiProperty({ example: 'ARQUITECTURA', description: 'Una de GET …/planos/disciplinas (las del tipo de proyecto de la obra)' })
+  @IsString() @IsNotEmpty() @MaxLength(50)
+  disciplina: string;
   @ApiPropertyOptional({ default: 'v1.0' }) @IsOptional() @IsString() @MaxLength(20) version?: string;
   @ApiPropertyOptional({ enum: ESTADOS_APROBACION_PLANO }) @IsOptional() @IsIn(ESTADOS_APROBACION_PLANO) estado_aprobacion?: string;
   @ApiPropertyOptional() @IsOptional() @IsDateString() fecha_vobo?: string;
@@ -44,7 +51,9 @@ export class CreateObraPlanoDto {
 
 export class UpdateObraPlanoDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @IsNotEmpty() @MaxLength(255) nombre_plano?: string;
-  @ApiPropertyOptional({ enum: DISCIPLINAS_PLANO }) @IsOptional() @IsIn(DISCIPLINAS_PLANO) disciplina?: string;
+  @ApiPropertyOptional({ example: 'ARQUITECTURA', description: 'Una de GET …/planos/disciplinas, o la que ya tenía el plano' })
+  @IsOptional() @IsString() @IsNotEmpty() @MaxLength(50)
+  disciplina?: string;
   @ApiPropertyOptional({ enum: ESTADOS_APROBACION_PLANO }) @IsOptional() @IsIn(ESTADOS_APROBACION_PLANO) estado_aprobacion?: string;
   @ApiPropertyOptional() @IsOptional() @IsDateString() fecha_vobo?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) formato_peso?: string;
