@@ -1,5 +1,5 @@
 {
-  "hash": "3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9",
+  "hash": "f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41",
   "invariants": [
     "rrhh-trabajadores",
     "rrhh-catalogos-iniciales",
@@ -10,6 +10,7 @@
     "grp-inicio-y-menu",
     "grp-mayusculas-datos",
     "tambo-planos-individuales",
-    "disciplinas-unificadas"
+    "disciplinas-unificadas",
+    "ppto-cotizaciones-datos"
   ]
 }
