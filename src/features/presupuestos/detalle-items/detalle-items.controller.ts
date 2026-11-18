@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Put } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '../../../platform/auth/decorators/current-user.decorator.js';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { PartidaItemsResponseDto, SyncPartidaItemsDto } from '../plantillas-items/plantillas-items.dto.js';
 import { PptoDetalleItemsHandler } from './detalle-items.handler.js';
 
@@ -20,7 +22,11 @@ export class PptoDetalleItemsController {
   @Put(':idCat/items')
   @ApiOperation({ summary: 'Sincroniza el lote completo de \u00edtems de la partida y recalcula su costo directo' })
   @ApiOkResponse({ type: PartidaItemsResponseDto })
-  sync(@Param('idCat', ParseIntPipe) idCat: number, @Body() dto: SyncPartidaItemsDto): Promise<PartidaItemsResponseDto> {
-    return this.handler.sync(idCat, dto);
+  sync(
+    @Param('idCat', ParseIntPipe) idCat: number,
+    @Body() dto: SyncPartidaItemsDto,
+    @CurrentUser() user?: AuthUser,
+  ): Promise<PartidaItemsResponseDto> {
+    return this.handler.sync(idCat, dto, user);
   }
 }

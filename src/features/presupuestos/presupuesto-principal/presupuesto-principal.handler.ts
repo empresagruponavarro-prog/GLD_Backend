@@ -20,7 +20,7 @@ import { esAprobado, estadoPptoDeTexto, textoLegado, type EstadoPpto } from '../
 import { sincronizarPresupuestoCc } from '../aprobacion/sincronizar-cc.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
-import { agruparLineasFur } from './lineas-fur.js';
+import { agruparLineasFur, separarItemsPedidos, type LineaPedida } from './lineas-fur.js';
 import { exigirPeriodoValido } from '../../proyectos-catalogos/periodo-fiscal/validar-periodo.js';
 
 @Injectable()
@@ -367,19 +367,40 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
 
     const furPorFaseMap = new Map<number, { id: number; numero: string; estado: string }>();
     for (const r of fursExistentes) {
-      if (r.id_fase && r.estado !== 'ANULADO') {
+      // Los FUR de la adjudicación de cotizaciones (plan 09) no bloquean la fase: se excluyen ítem por ítem.
+      if (r.id_fase && r.estado !== 'ANULADO' && r.origen !== 'PPTO_ADJUDICACION') {
         furPorFaseMap.set(r.id_fase, { id: r.id, numero: String(r.numero), estado: String(r.estado) });
       }
     }
 
+    // Plan 09: «Generar FURs» solo pide lo que la adjudicación de cotizaciones no cubre (ítems sin ganador y sin FUR vigente).
+    const idsItems = itemsPresupuesto.map((i) => i.id);
+    const lineasDeFur = idsItems.length ? await this.db.orm.public.requerimiento_detalle.where((d) => d.id_ppto_item.in(idsItems)).all() : [];
+    const furPorId = new Map(fursExistentes.map((r) => [r.id, r]));
+    const pedidas: LineaPedida[] = lineasDeFur
+      .filter((l) => {
+        const f = furPorId.get(l.id_requerimiento);
+        return f !== undefined && f.estado !== 'ANULADO' && f.estado !== 'RECHAZADO';
+      })
+      .map((l) => ({
+        id_ppto_item: l.id_ppto_item ?? null,
+        id_producto: l.id_producto,
+        id_ppto_detalle_categoria: l.id_ppto_detalle_categoria ?? null,
+        deAdjudicacion: furPorId.get(l.id_requerimiento)?.origen === 'PPTO_ADJUDICACION',
+      }));
+    const { libres, excluidos } = separarItemsPedidos(itemsPresupuesto.filter((i) => !!i.id_producto), pedidas);
     const itemsPorDetalleFase = new Map<string, typeof itemsPresupuesto>();
-    for (const it of itemsPresupuesto) {
-      if (!it.id_producto) continue;
+    const yaPedidosPorDetalleFase = new Map<string, number>();
+    for (const it of libres) {
       const idDetalleFase = catToDetalleFase.get(it.id_detalle_categoria);
       if (idDetalleFase) {
         if (!itemsPorDetalleFase.has(idDetalleFase)) itemsPorDetalleFase.set(idDetalleFase, []);
         itemsPorDetalleFase.get(idDetalleFase)!.push(it);
       }
+    }
+    for (const it of excluidos) {
+      const idDetalleFase = catToDetalleFase.get(it.id_detalle_categoria);
+      if (idDetalleFase) yaPedidosPorDetalleFase.set(idDetalleFase, (yaPedidosPorDetalleFase.get(idDetalleFase) ?? 0) + 1);
     }
 
     const fasesPreview: FaseFurPreviewDto[] = [];
@@ -397,6 +418,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
       // Una línea por (producto, subfase): la subfase viaja con la línea para imputar después el gasto (GRP S-09).
       const lineas = agruparLineasFur(
         itemsFase.map((it) => ({
+          id: it.id,
           id_producto: it.id_producto,
           id_detalle_categoria: it.id_detalle_categoria,
           Cantidad: it.Cantidad,
@@ -422,6 +444,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
           cantidad: l.cantidad.toFixed(2),
           precio_referencial: l.costoUnitario.toFixed(2),
           id_ppto_detalle_categoria: l.id_ppto_detalle_categoria,
+          id_ppto_item: l.id_ppto_item,
           subfase: nombreSubfase.get(l.id_ppto_detalle_categoria) ?? `Subfase #${l.id_ppto_detalle_categoria}`,
         });
       }
@@ -434,6 +457,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
           total_cantidad: Number(totalCantidad.toFixed(2)),
           total_estimado: Number(totalEstimado.toFixed(2)),
           fur_existente: furPorFaseMap.get(idFaseNum) ?? null,
+          items_ya_pedidos: yaPedidosPorDetalleFase.get(df.IdPresupuestoDetalle) ?? 0,
           items: itemsDto,
         });
       }
@@ -519,6 +543,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
           justificacion: `[Auto-Ppto: ${preview.id_presupuesto}] Requerimiento de materiales e insumos para la Fase: ${fase.nombre_fase}`,
           estado: 'BORRADOR',
           tipo: 'COMPRA',
+          id_ppto_principal: ppto.id,
+          origen: 'PPTO_FASE',
         };
         if (fechaReq) reqData.fecha_requerida = fechaReq;
 
@@ -532,6 +558,7 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
             precio_referencial: toDecimalString(item.precio_referencial),
             observaciones: `Ppto: ${preview.id_presupuesto} · ${item.subfase}`,
             id_ppto_detalle_categoria: item.id_ppto_detalle_categoria,
+            ...(item.id_ppto_item !== undefined ? { id_ppto_item: item.id_ppto_item } : {}),
           } as any);
         }
 

@@ -11,7 +11,7 @@ export class ProblemaPresupuestoDto {
 }
 
 export class BloqueoAprobacionDto {
-  @ApiProperty({ enum: ['YA_APROBADO', 'ANULADO', 'SIN_CENTRO_COSTO', 'OTRO_PRINCIPAL', 'SIN_PRINCIPAL'] }) codigo: string;
+  @ApiProperty({ enum: ['YA_APROBADO', 'ANULADO', 'SIN_CENTRO_COSTO', 'OTRO_PRINCIPAL', 'SIN_PRINCIPAL', 'ITEMS_SIN_ADJUDICAR', 'COMPROMISO_EN_CONFLICTO'] }) codigo: string;
   @ApiProperty() mensaje: string;
 }
 
@@ -51,6 +51,8 @@ export class AprobarPresupuestoResponseDto {
   @ApiProperty({ type: EstructuraCapturadaDto }) estructura: EstructuraCapturadaDto;
   @ApiPropertyOptional({ description: 'Presupuesto al que reemplaza (una versión anterior que pasó a ANULADO)' })
   reemplaza?: { id: number; id_presupuesto: string | null };
+  @ApiProperty({ description: 'Órdenes de compra y de servicio que pasaron de provisionales a registradas y ya están en programación y pago' })
+  documentos_cerrados: number;
 }
 
 export class FaseSinCategoriasDto {
@@ -74,6 +76,8 @@ export class NuevaVersionResponseDto {
   @ApiProperty() fases: number;
   @ApiProperty() categorias: number;
   @ApiProperty() items: number;
+  @ApiProperty({ description: 'Cotizaciones de proveedores que se copiaron a la versión nueva (con sus líneas)' }) cotizaciones: number;
+  @ApiProperty({ description: 'Ítems que conservaron su proveedor ganador' }) adjudicaciones: number;
 }
 
 export class RequerimientoComercialDto {
@@ -84,12 +88,28 @@ export class RequerimientoComercialDto {
   @ApiProperty({ description: 'Total sin IGV de la cotización ganadora, en soles' }) monto: number;
 }
 
+export class ItemComercialDto {
+  @ApiProperty() id_item: number;
+  @ApiProperty() codigo: string;
+  @ApiProperty() descripcion: string;
+  @ApiProperty() cantidad: number;
+  @ApiProperty({ description: 'Costo total del ítem en el Meta (no cambia)' }) meta: number;
+  @ApiProperty({ description: 'Cantidad × precio sin IGV del proveedor ganador, en soles; sin ganador, el del Meta' }) comercial: number;
+  @ApiProperty({ description: 'Comercial − Meta' }) diferencia: number;
+  @ApiPropertyOptional({ nullable: true, type: Number, description: 'Diferencia sobre el Meta, en %' }) diferencia_pct: number | null;
+  @ApiPropertyOptional({ nullable: true, type: String }) proveedor: string | null;
+  @ApiProperty({ description: 'Tiene un proveedor ganador ya valorizado en soles' }) adjudicado: boolean;
+  @ApiProperty({ description: 'Tiene ganador en otra moneda sin tipo de cambio: se deja al costo del Meta' }) sin_tipo_cambio: boolean;
+}
+
 export class FaseComercialDto {
   @ApiProperty() id_fase: number;
   @ApiProperty() nombre_fase: string;
   @ApiProperty({ description: 'Costo directo de la fase en el presupuesto Meta' }) meta: number;
   @ApiProperty({ description: 'Monto de la cotización ganadora; si la fase aún no tiene, el del Meta' }) comercial: number;
-  @ApiProperty({ enum: ['COTIZACION', 'META'] }) fuente: 'COTIZACION' | 'META';
+  @ApiProperty({ enum: ['ADJUDICACION', 'MIXTA', 'COTIZACION', 'META'] }) fuente: 'ADJUDICACION' | 'MIXTA' | 'COTIZACION' | 'META';
+  @ApiProperty({ type: ItemComercialDto, isArray: true, description: 'Ítems de la fase con su diferencia respecto del Meta' }) items: ItemComercialDto[];
+  @ApiProperty({ description: 'Ítems de la fase con un proveedor ganador ya valorizado' }) items_adjudicados: number;
   @ApiProperty({ type: RequerimientoComercialDto, isArray: true }) requerimientos: RequerimientoComercialDto[];
   @ApiProperty({ description: 'Hay una ganadora en otra moneda sin tipo de cambio registrado' }) sin_tipo_cambio: boolean;
 }

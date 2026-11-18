@@ -1,6 +1,12 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
+import { ESTADOS_EDITABLES, type EstadoPpto } from '../aprobacion/estados.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { ConciliarCompromisosService, type ResultadoConciliacion } from '../compromisos/conciliar-compromisos.service.js';
+import { bloquearPresupuestoPorCodigo } from '../cotizaciones-ppto/contexto-ppto.js';
+import { resumenCotizacionDeItems } from '../cotizaciones-ppto/resumen-items.js';
 import {
   calcularTotalesItem,
   mapearItemsConCatalogo,
@@ -19,7 +25,11 @@ import type { PartidaItemsResponseDto, SyncPartidaItemsDto } from '../plantillas
  */
 @Injectable()
 export class PptoDetalleItemsHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+    private readonly conciliacion: ConciliarCompromisosService,
+  ) {}
 
   async list(idPartida: number): Promise<PartidaItemsResponseDto> {
     const partida = await this.db.orm.public.ppto_DetalleFasesCate.first({ id: idPartida });
@@ -31,6 +41,7 @@ export class PptoDetalleItemsHandler {
       .all();
 
     const resultado = await mapearItemsConCatalogo(this.db, items, 'id_detalle_categoria');
+    await this.agregarCotizaciones(resultado);
     return { id_plantilla_categoria: idPartida, items: resultado, ...sumarTotales(resultado) };
   }
 
@@ -38,8 +49,12 @@ export class PptoDetalleItemsHandler {
    * Sincroniza el lote completo de \u00edtems de la partida en una transacci\u00f3n: actualiza los que traen
    * `id`, crea los nuevos y elimina los que ya no vienen. Recalcula totales en el servidor y deja
    * `CostoDirecto` de la partida (y de su fase) al d\u00eda.
+   *
+   * Plan 09 (D-12): un presupuesto aprobado, entregado, liquidado o anulado no admite cambios de ítems (409): se hacen con una
+   * nueva versión o un adicional. Los ítems que conservan su `id` conservan sus cotizaciones y su ganador (D-14); si cambia el
+   * producto, la cotización era por otro y el ítem pierde su ganador.
    */
-  async sync(idPartida: number, dto: SyncPartidaItemsDto): Promise<PartidaItemsResponseDto> {
+  async sync(idPartida: number, dto: SyncPartidaItemsDto, user?: AuthUser): Promise<PartidaItemsResponseDto> {
     const partida = await this.db.orm.public.ppto_DetalleFasesCate.first({ id: idPartida });
     if (!partida) throw new NotFoundException(`Partida ${idPartida} del presupuesto no encontrada`);
 
@@ -50,9 +65,16 @@ export class PptoDetalleItemsHandler {
       entrada.map((i) => i.id_unidad_medida),
     );
 
-    await this.db.transaction(async (tx) => {
+    const compromisos = await this.db.transaction(async (tx): Promise<ResultadoConciliacion | undefined> => {
       const orm = tx.orm.public;
+      const ppto = partida.IdPresupuesto ? await bloquearPresupuestoPorCodigo(this.sql, tx, String(partida.IdPresupuesto)) : null;
+      if (ppto && !ESTADOS_EDITABLES.includes(ppto.estado as EstadoPpto)) {
+        throw new ConflictException(
+          `El presupuesto ${ppto.codigo} está ${ppto.estado}: no se pueden cambiar sus ítems. Haga el cambio con una nueva versión o con un presupuesto adicional`,
+        );
+      }
       const actuales = await orm.ppto_DetalleItems.where((i: any) => i.id_detalle_categoria.eq(idPartida)).all();
+      const productoPrevio = new Map(actuales.map((i: any) => [i.id as number, i.id_producto as number]));
       const idsActuales = new Set(actuales.map((i: any) => i.id as number));
       const conservados = new Set<number>();
       let costo = 0;
@@ -77,7 +99,8 @@ export class PptoDetalleItemsHandler {
         }
 
         if (it.id && idsActuales.has(it.id) && !conservados.has(it.id)) {
-          await orm.ppto_DetalleItems.where({ id: it.id }).update(datos as any);
+          const cambiaProducto = productoPrevio.get(it.id) !== it.id_producto;
+          await orm.ppto_DetalleItems.where({ id: it.id }).update((cambiaProducto ? { ...datos, ...SIN_GANADOR } : datos) as any);
           conservados.add(it.id);
         } else {
           await orm.ppto_DetalleItems.create({
@@ -105,8 +128,32 @@ export class PptoDetalleItemsHandler {
           .where((f: any) => f.IdPresupuestoDetalle.eq(toVarchar(partida.IdPresupuestoDetalle as string)))
           .update({ CostoDirecto: toDecimalString(redondear2(suma)) });
       }
+
+      // Los cambios de cantidad, producto o de ítems dejan al día el FUR y las órdenes provisionales ya generadas.
+      return ppto ? this.conciliacion.conciliar(tx, ppto, user) : undefined;
     });
 
-    return this.list(idPartida);
+    const respuesta = await this.list(idPartida);
+    return compromisos ? { ...respuesta, compromisos } : respuesta;
+  }
+
+  /** Agrega a cada ítem sus cotizaciones, el proveedor ganador y el FUR/orden que ya nació de él. */
+  private async agregarCotizaciones(items: PartidaItemsResponseDto['items']): Promise<void> {
+    const resumen = await resumenCotizacionDeItems(
+      this.sql,
+      items.map((i) => i.id),
+    );
+    for (const item of items) {
+      const r = resumen.get(item.id);
+      if (r) item.cotizacion = { cotizaciones: r.cotizaciones, adjudicado: r.adjudicado, compromiso: r.compromiso, cubierto: r.cubierto };
+    }
   }
 }
+
+/** Ganador y trazabilidad de la adjudicación en blanco. */
+const SIN_GANADOR = {
+  id_ppto_cot_detalle_ganadora: null,
+  adjudicado_por: null,
+  fecha_adjudicacion: null,
+  comentario_adjudicacion: null,
+};

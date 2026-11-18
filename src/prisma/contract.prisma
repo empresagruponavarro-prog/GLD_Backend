@@ -109,8 +109,17 @@ enum clase_documento_origen {
 }
 
 enum estado_documento_origen {
+  // Plan 09: generado desde un presupuesto sin aprobar. No se programa, no se paga ni se recibe en almacén.
+  PROVISIONAL
   REGISTRADO
   ANULADO
+}
+
+// Plan 09: de dónde viene un FUR.
+enum origen_requerimiento {
+  MANUAL
+  PPTO_FASE
+  PPTO_ADJUDICACION
 }
 
 enum medio_pago {
@@ -365,7 +374,10 @@ model requerimiento {
   id_area               Int?
   id_cotizacion_ganadora Int?
   comentario_adjudicacion String?
+  id_ppto_principal     Int?
+  origen                origen_requerimiento   @default(MANUAL)
   created_at            DateTime               @default(now())
+  pptoPrincipal         ppto_Principal?        @relation("RequerimientoPpto", fields:[id_ppto_principal], references:[id], onDelete: SetNull)
   beneficiario          Anexos?                @relation("RequerimientoBeneficiario", fields:[id_beneficiario], references:[id])
   areaMaestro           area?                  @relation("RequerimientoArea", fields:[id_area], references:[id])
   cotizacionGanadora    cotizacion?            @relation("RequerimientoGanadora", fields:[id_cotizacion_ganadora], references:[id], onDelete: Restrict)
@@ -378,6 +390,7 @@ model requerimiento {
   eventos               requerimiento_evento[]
   ordenesCompra         OrdenCompra[]
   @@index([estado, fecha])
+  @@index([id_ppto_principal])
   @@map("requerimiento")
 }
 
@@ -391,7 +404,9 @@ model requerimiento_detalle {
   observaciones      String?
   id_beneficiario    Int?
   id_ppto_detalle_categoria Int?
+  id_ppto_item       Int?
   pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields:[id_ppto_detalle_categoria], references:[id], onDelete: SetNull)
+  pptoItem           ppto_DetalleItems? @relation("RequerimientoDetalleItem", fields:[id_ppto_item], references:[id], onDelete: SetNull)
   requerimiento      requerimiento @relation(fields:[id_requerimiento], references:[id], onDelete: Cascade)
   producto           producto      @relation(fields:[id_producto], references:[id])
   beneficiario       Anexos?       @relation("RequerimientoDetalleBeneficiario", fields:[id_beneficiario], references:[id])
@@ -399,6 +414,7 @@ model requerimiento_detalle {
   cotizacionLineas   cotizacion_detalle[]
   @@index([id_requerimiento])
   @@index([id_ppto_detalle_categoria])
+  @@index([id_ppto_item])
   @@map("requerimiento_detalle")
 }
 
@@ -650,6 +666,7 @@ model Anexos {
   obraComoRespPpto    obra_datos_generales[] @relation("ObraRespPresupuesto")
   obraComoRespProcura obra_datos_generales[] @relation("ObraRespProcura")
   fichaTrabajador     trabajador?
+  pptoCotizaciones    ppto_cotizacion[] @relation("PptoCotizacionProveedor")
   @@map("anexos")
 }
 
@@ -1273,10 +1290,14 @@ model Usuarios {
   // Usuario desactivado: no puede iniciar sesion y su sesion abierta se corta (plan 05-roles, D6).
   activo    Boolean       @default(true)
   id_area   Int?
+  // Plan 09: trabajador (anexo) que firma como solicitante y aprobador de lo que este usuario registra.
+  id_trabajador Int?
   area      area?         @relation(fields: [id_area], references: [id])
+  trabajador trabajador?  @relation(fields: [id_trabajador], references: [id_anexo], onDelete: SetNull)
   permisos  usuario_permiso[]
   avisoObra obra_aviso_usuario?
   @@index([id_area])
+  @@index([id_trabajador])
   @@map("usuarios")
 }
 
@@ -1441,6 +1462,7 @@ model ppto_DetalleFases {
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   obraPartidas obra_partida[] @relation("ObraPartidaOrigen")
+  cotizacionesPpto ppto_cotizacion[]
   @@map("ppto_DetalleFases")
 }
 
@@ -1541,6 +1563,8 @@ model ppto_Principal {
   detallesFasesCate     ppto_DetalleFasesCate[]
   historial             ppto_Principal_Historial[]
   obraOrigen            obra_datos_generales[] @relation("ObraPresupuestoOrigen")
+  cotizacionesPpto      ppto_cotizacion[]
+  requerimientosPpto    requerimiento[] @relation("RequerimientoPpto")
   id_categoria Int?
   categoria    categoria? @relation(fields: [id_categoria], references: [id], onDelete: SetNull)
   @@map("ppto_Principal")
@@ -1882,13 +1906,80 @@ model ppto_DetalleItems {
   CostoTotal             Decimal  @default("0")
   VentaTotal             Decimal  @default("0")
   Orden                  Int      @default(0)
+  // Plan 09: ganador del ítem (uno solo), quién lo eligió y el ítem de la versión anterior del que viene.
+  id_ppto_cot_detalle_ganadora Int?
+  adjudicado_por         VarChar(255)?
+  fecha_adjudicacion     DateTime?
+  comentario_adjudicacion String?
+  id_item_origen         Int?
 
   partida                ppto_DetalleFasesCate @relation(fields: [id_detalle_categoria], references: [id], onDelete: Cascade)
+  cotDetalleGanadora     ppto_cotizacion_detalle? @relation("ItemGanadora", fields: [id_ppto_cot_detalle_ganadora], references: [id], onDelete: SetNull)
+  itemOrigen             ppto_DetalleItems?    @relation("ItemOrigen", fields: [id_item_origen], references: [id], onDelete: SetNull)
+  itemsDerivados         ppto_DetalleItems[]   @relation("ItemOrigen")
+  cotizacionLineas       ppto_cotizacion_detalle[] @relation("CotizacionDetalleItem")
+  requerimientoLineas    requerimiento_detalle[] @relation("RequerimientoDetalleItem")
   producto               producto              @relation(fields: [id_producto], references: [id])
   unidad_medida          unidad_medida         @relation(fields: [id_unidad_medida], references: [id])
   @@index([id_detalle_categoria])
   @@index([IdPresupuesto])
+  @@index([id_ppto_cot_detalle_ganadora])
+  @@index([id_item_origen])
   @@map("ppto_DetalleItems")
+}
+
+// ============================================================
+// Plan 09: cotizaciones por ítem del presupuesto Meta
+// ============================================================
+// Una cotización por (fase del presupuesto, proveedor), con una línea por ítem de esa fase.
+model ppto_cotizacion {
+  id                   Int         @id @default(autoincrement())
+  numero               VarChar(20) @unique
+  id_presupuesto       Int
+  id_detalle_fase      Int
+  id_proveedor         Int
+  fecha                DateString
+  referencia           VarChar(50)?
+  moneda_id            VarChar(10)
+  moneda_simbolo       VarChar(10)?
+  incluye_igv          Boolean     @default(false)
+  afecto_igv           Boolean     @default(true)
+  forma_pago           VarChar(50)
+  dias_credito         Int         @default(0)
+  adelanto_porcentaje  Decimal?
+  medio_pago           medio_pago?
+  plazo_entrega_dias   Int?
+  validez_dias         Int?
+  garantia             VarChar(100)?
+  condiciones          String?
+  archivo_url          VarChar(255)?
+  registrado_por       VarChar(255)?
+  created_at           DateTime    @default(now())
+  presupuesto          ppto_Principal    @relation(fields:[id_presupuesto], references:[id], onDelete: Cascade)
+  detalleFase          ppto_DetalleFases @relation(fields:[id_detalle_fase], references:[id], onDelete: Cascade)
+  proveedor            Anexos            @relation("PptoCotizacionProveedor", fields:[id_proveedor], references:[id])
+  detalles             ppto_cotizacion_detalle[]
+  @@unique([id_detalle_fase, id_proveedor])
+  @@index([id_presupuesto])
+  @@map("ppto_cotizacion")
+}
+
+model ppto_cotizacion_detalle {
+  id                 Int     @id @default(autoincrement())
+  id_cotizacion      Int
+  id_ppto_item       Int
+  cotiza             Boolean @default(true)
+  cantidad           Decimal
+  precio_unitario    Decimal
+  plazo_entrega_dias Int?
+  marca_modelo       VarChar(100)?
+  observaciones      String?
+  cotizacion         ppto_cotizacion   @relation(fields:[id_cotizacion], references:[id], onDelete: Cascade)
+  item               ppto_DetalleItems @relation("CotizacionDetalleItem", fields:[id_ppto_item], references:[id], onDelete: Cascade)
+  ganadoraDe         ppto_DetalleItems[] @relation("ItemGanadora")
+  @@unique([id_cotizacion, id_ppto_item])
+  @@index([id_ppto_item])
+  @@map("ppto_cotizacion_detalle")
 }
 
 // ============================================================
@@ -2208,6 +2299,7 @@ model trabajador {
   tipo                    rrhh_tipo_trabajador?    @relation(fields: [id_tipo_trabajador], references: [id], onDelete: Restrict)
   modalidad               rrhh_modalidad_contrato? @relation(fields: [id_modalidad_contrato], references: [id], onDelete: Restrict)
   area                    area?                    @relation(fields: [id_area], references: [id], onDelete: SetNull)
+  usuarios                Usuarios[]
   @@index([id_tipo_trabajador])
   @@index([id_modalidad_contrato])
   @@index([id_area])

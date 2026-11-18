@@ -4,9 +4,11 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { CotizacionHandler } from '../../requerimientos/cotizaciones/cotizacion.handler.js';
+import { exigirNoProvisional } from '../shared/estado-documento.js';
 import { RequerimientoHandler } from '../../requerimientos/requerimiento/requerimiento.handler.js';
 import { saldosPago } from '../../tesoreria/shared/do-saldos-pago.js';
 import { consultarDocumentos, type DocumentoConsultado } from '../../tesoreria/shared/documentos-consulta.js';
+import { cargarTopesAvance, type InfoTope } from '../../tesoreria/shared/tope-avance-carga.js';
 import {
   IGV_PCT,
   RETENCION_PCT,
@@ -23,11 +25,28 @@ import {
   UpdateDeduccionesDto,
 } from './administracion.dto.js';
 
+/** Condiciones de la cotización ganadora vinculada al documento (para imprimir la orden: plazo, garantía, adelanto…). */
+export interface CotizacionDelDocumento {
+  numero: string;
+  referencia: string | null;
+  plazo_entrega_dias: number | null;
+  validez_dias: number | null;
+  garantia: string | null;
+  adelanto_porcentaje: string | null;
+  medio_pago: string | null;
+  condiciones: string | null;
+  archivo_url: string | null;
+}
+
 export interface DocumentoDetalle extends Omit<DocumentoConsultado, 'total_filas'> {
   lineas: Array<Record<string, unknown>>;
   programaciones: Array<Record<string, unknown>>;
   pagos: Array<Record<string, unknown>>;
   retencion_motivo: string;
+  /** Cotización ganadora vinculada (`id_cotizacion`); `null` en los documentos sin cotización. */
+  cotizacion: CotizacionDelDocumento | null;
+  /** Solo en una orden de servicio de un presupuesto: adelanto, avance de obra y lo que ya se puede pagar. */
+  tope_avance: Omit<InfoTope, 'lineas'> | null;
 }
 
 const EPS = 0.005;
@@ -114,7 +133,59 @@ export class AdministracionHandler {
         FROM pago p LEFT JOIN cuenta_tesoreria c ON c.id = p.id_cuenta
        WHERE p.id_documento_origen = ${id}::int ORDER BY p.id`;
 
-    return { ...doc, lineas, programaciones, pagos, retencion_motivo: await this.motivoRetencion(doc) };
+    const [cot] = await q.rows<CotizacionDelDocumento>({
+      numero: T,
+      referencia: TN,
+      plazo_entrega_dias: IN,
+      validez_dias: IN,
+      garantia: TN,
+      adelanto_porcentaje: TN,
+      medio_pago: TN,
+      condiciones: TN,
+      archivo_url: TN,
+    })`
+      SELECT c.numero::text AS numero, c.referencia::text AS referencia, c.plazo_entrega_dias, c.validez_dias, c.garantia::text AS garantia,
+             c.adelanto_porcentaje::text AS adelanto_porcentaje, c.medio_pago::text AS medio_pago, c.condiciones, c.archivo_url::text AS archivo_url
+        FROM "documentosOrigen" o JOIN cotizacion c ON c.id = o.id_cotizacion WHERE o.id = ${id}::int`;
+    const tope = (await cargarTopesAvance(this.sql, this.db.orm.public, [row])).get(id);
+    const resumenTope = tope ? (({ lineas: _l, ...r }) => r)(tope) : null;
+
+    return { ...doc, lineas, programaciones, pagos, retencion_motivo: await this.motivoRetencion(doc), cotizacion: cot ?? null, tope_avance: resumenTope };
+  }
+
+  /**
+   * Valorización de una orden de servicio de un presupuesto (plan 09, respuesta 6): lo ejecutado según el avance de obra por línea, el adelanto,
+   * lo que ya se liberó y lo que falta. Alimenta el formato impreso que acompaña a cada pago parcial.
+   */
+  async valorizacion(id: number) {
+    const [row] = await consultarDocumentos(this.sql, { id }, 1, 0);
+    if (!row) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
+    const info = (await cargarTopesAvance(this.sql, this.db.orm.public, [row])).get(id);
+    if (!info) {
+      throw new BadRequestException('Solo una orden de servicio registrada que nació de un presupuesto lleva valorización por avance');
+    }
+    const f2 = (n: number) => n.toFixed(2);
+    return {
+      id: row.id,
+      numero_documento: row.numero_documento,
+      estado: row.estado,
+      proveedor: row.proveedor,
+      centro_costo: row.centro_costo,
+      moneda_id: row.moneda_id,
+      moneda_simbolo: row.moneda_simbolo,
+      total: row.total,
+      neto_proveedor: row.neto_proveedor,
+      adelanto_porcentaje: info.adelanto_porcentaje,
+      avance_pct: info.avance_pct,
+      pct_aplicado: info.pct_aplicado,
+      /** Lo máximo liberado hasta hoy por el adelanto y el avance. */
+      liberado: f2(info.tope),
+      pagado: f2(info.pagado),
+      programado: f2(info.programado),
+      disponible: f2(info.disponible),
+      sugerido: f2(info.sugerido),
+      lineas: info.lineas.map((l) => ({ ...l, monto: f2(l.monto), monto_valorizado: f2(l.monto_valorizado) })),
+    };
   }
 
   /** FUR, cuadro comparativo, documento, recepciones, programaciones y pagos del expediente. */
@@ -212,6 +283,7 @@ export class AdministracionHandler {
                COALESCE(dscto_intervencion, 0)::text AS di, COALESCE(dscto_otros, 0)::text AS dotros
           FROM "documentosOrigen" WHERE id = ${id}::int FOR UPDATE`;
       if (!doc) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
+      exigirNoProvisional(doc.estado, 'cambiar las deducciones');
       if (doc.estado !== 'REGISTRADO') throw new ConflictException(`Un documento ${doc.estado} no se puede modificar`);
 
       const cambiaMontos =
@@ -301,6 +373,7 @@ export class AdministracionHandler {
         SELECT estado::text AS estado FROM "documentosOrigen" WHERE id = ${id}::int FOR UPDATE`;
       if (!doc) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
       if (doc.estado === 'ANULADO') throw new ConflictException('El documento ya está anulado');
+      exigirNoProvisional(doc.estado, 'anular el documento');
 
       const [dep] = await q.rows<{ pagos: number; prog: number; recep: number }>({ pagos: I, prog: I, recep: I }, tx)`
         SELECT (SELECT count(*)::int FROM pago WHERE id_documento_origen = ${id}::int AND estado = 'REGISTRADO') AS pagos,

@@ -316,6 +316,7 @@ export class FurGeneradoItemDto {
   @ApiProperty() precio_referencial: string;
   @ApiProperty({ description: 'Subfase (categoría del presupuesto) a la que se imputa la línea' }) id_ppto_detalle_categoria: number;
   @ApiProperty({ description: 'Nombre de la subfase' }) subfase: string;
+  @ApiPropertyOptional({ description: 'Ítem del presupuesto que originó la línea (el primero si se juntaron varios)' }) id_ppto_item?: number;
 }
 
 export class FaseFurPreviewDto {
@@ -325,6 +326,7 @@ export class FaseFurPreviewDto {
   @ApiProperty() total_cantidad: number;
   @ApiProperty() total_estimado: number;
   @ApiPropertyOptional() fur_existente?: { id: number; numero: string; estado: string } | null;
+  @ApiProperty({ description: 'Ítems de la fase que no se piden aquí: ya tienen proveedor ganador o están en un FUR vigente' }) items_ya_pedidos: number;
   @ApiProperty({ type: [FurGeneradoItemDto] }) items: FurGeneradoItemDto[];
 }
 

@@ -3,6 +3,12 @@ import { PrismaModule } from '../../prisma/prisma.module.js';
 import { AlmacenModule } from '../almacen/almacen.module.js';
 import { AprobacionPresupuestoController } from './aprobacion/aprobacion.controller.js';
 import { AprobacionPresupuestoHandler } from './aprobacion/aprobacion.handler.js';
+import { ConciliarCompromisosService } from './compromisos/conciliar-compromisos.service.js';
+import { CompromisosPresupuestoController } from './compromisos/compromisos.controller.js';
+import { CompromisosHandler } from './compromisos/compromisos.handler.js';
+import { AdjudicacionHandler } from './cotizaciones-ppto/adjudicacion.handler.js';
+import { CotizacionPptoController } from './cotizaciones-ppto/cotizacion-ppto.controller.js';
+import { CotizacionPptoHandler } from './cotizaciones-ppto/cotizacion-ppto.handler.js';
 import { PptoDetalleFasesCateController } from './detalle-fases-cate/detalle-fases-cate.controller.js';
 import { PptoDetalleFasesCateHandler } from './detalle-fases-cate/detalle-fases-cate.handler.js';
 import { PptoDetalleFasesController } from './detalle-fases/detalle-fases.controller.js';
@@ -41,6 +47,8 @@ import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.j
     AplicarPlantillaController,
     PlantillasItemsController,
     PptoDetalleItemsController,
+    CotizacionPptoController,
+    CompromisosPresupuestoController,
   ],
   providers: [
     PresupuestoPrincipalHandler,
@@ -54,6 +62,10 @@ import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.j
     PlantillasHandler,
     PlantillasItemsHandler,
     PptoDetalleItemsHandler,
+    CotizacionPptoHandler,
+    AdjudicacionHandler,
+    ConciliarCompromisosService,
+    CompromisosHandler,
   ],
   exports: [
     PresupuestoPrincipalHandler,

@@ -14,6 +14,7 @@ import {
 } from '../../almacen/shared/oc-saldos.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../../presupuestos/presupuestos.helpers.js';
 import { validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
+import { exigirCamposDeCabecera, exigirNoProvisional } from '../shared/estado-documento.js';
 import { bloquearRequerimiento } from '../../requerimientos/shared/requerimiento-eventos.js';
 import { validarConsumoLinea } from '../../requerimientos/shared/requerimiento-saldos.js';
 import {
@@ -581,7 +582,7 @@ export class DocumentosOrigenHandler {
     }
 
     await this.db.transaction(async (tx) => {
-      await this.bloquearOc(tx, id);
+      exigirCamposDeCabecera(await this.bloquearOc(tx, id), dto);
       if (reemplazaDetalles) {
         if (await tieneRecepciones(this.sql, id, tx)) {
           throw new ConflictException('La OC ya tiene recepciones en almacén; su detalle no se puede reemplazar');
@@ -666,7 +667,7 @@ export class DocumentosOrigenHandler {
     const current = await this.db.orm.public.OrdenCompra.first({ id });
     if (!current) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
     await this.db.transaction(async (tx) => {
-      await this.bloquearOc(tx, id);
+      exigirNoProvisional(await this.bloquearOc(tx, id), 'eliminar el documento');
       if (await tieneRecepciones(this.sql, id, tx)) {
         throw new ConflictException('La OC tiene recepciones en almacén; no se puede eliminar');
       }
@@ -690,10 +691,11 @@ export class DocumentosOrigenHandler {
     return row.existe;
   }
 
-  /** Bloquea la OC hasta el fin de la transaccion: serializa ediciones, bajas y recepciones. */
-  private async bloquearOc(tx: Tx, id: number): Promise<void> {
+  /** Bloquea la OC hasta el fin de la transaccion (serializa ediciones, bajas y recepciones) y devuelve su estado. */
+  private async bloquearOc(tx: Tx, id: number): Promise<string | null> {
     const q = sqlTag(this.sql);
-    await q.rows<{ id: number }>({ id: I }, tx)`SELECT id FROM "documentosOrigen" WHERE id = ${id}::int FOR UPDATE`;
+    const [row] = await q.rows<{ estado: string }>({ estado: T }, tx)`SELECT estado::text AS estado FROM "documentosOrigen" WHERE id = ${id}::int FOR UPDATE`;
+    return row?.estado ?? null;
   }
 
   private async getDetalles(idOrdenCompra: number): Promise<DocumentoOrigenDetalleResponseDto[]> {

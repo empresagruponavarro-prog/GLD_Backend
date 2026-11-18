@@ -13,6 +13,12 @@ import {
 
 const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
 
+/** Año y nombre del mes (como los guarda `documentosOrigen.periodo` / `mes`) de una fecha YYYY-MM-DD. */
+export function periodoYMes(fechaIso: string): { periodo: string; mes: string } {
+  const [anio, mes] = fechaIso.split('-').map(Number);
+  return { periodo: String(anio), mes: MESES[mes - 1] };
+}
+
 export interface LineaNuevoDocumento {
   idProducto: number;
   codigo: string;
@@ -44,6 +50,8 @@ export interface NuevoDocumentoOrigen {
   comentarios: string | null;
   idRequerimiento: number | null;
   idCotizacion: number | null;
+  /** `undefined` = `REGISTRADO`. `PROVISIONAL` (plan 09): lo genera un presupuesto sin aprobar (ver `estado-documento.ts`). */
+  estado?: 'PROVISIONAL' | 'REGISTRADO';
   /** `undefined` = proponer (10 % en servicios sobre S/ 700); 0 = sin detraccion. */
   detraccionPorcentaje?: number | null;
   /** Retencion fijada a mano; `undefined` = calcular. */
@@ -73,6 +81,67 @@ export async function totalEnSoles(
   return redondear(total * Number(tc.venta));
 }
 
+export interface EntradaMontos {
+  clase: ClaseDocumento;
+  /** Base imponible (sin IGV). */
+  monto: number;
+  afectoIgv: boolean;
+  idAnexo: number | null;
+  monedaId: string | null;
+  monedaSimbolo: string | null;
+  /** YYYY-MM-DD: fecha del tipo de cambio si el documento no esta en soles. */
+  fechaEmision: string;
+  detraccionPorcentaje?: number | null;
+  retencionManual?: number | null;
+}
+
+export interface MontosDocumento {
+  monto: number;
+  igv: number;
+  total: number;
+  trib: ReturnType<typeof calcularTributos>;
+}
+
+/**
+ * IGV, total, detraccion y retencion de un documento (plan 06 §5.5.1). Lo usan el alta y la conciliacion de compromisos
+ * del presupuesto (plan 09) cuando rehace las lineas de un documento provisional.
+ */
+export async function calcularMontosDocumento(sql: AlmacenSql, tx: Tx, e: EntradaMontos): Promise<MontosDocumento> {
+  const q = sqlTag(sql);
+  const monto = redondear(e.monto);
+  const igv = e.afectoIgv ? redondear((monto * IGV_PCT) / 100) : 0;
+  const total = redondear(monto + igv);
+
+  const [prov] = e.idAnexo
+    ? await q.rows<{ ex: boolean }>({ ex: { codecId: 'pg/bool@1', nullable: false } }, tx)`
+        SELECT COALESCE(exceptuado_retencion, false) AS ex FROM anexos WHERE id = ${e.idAnexo}::int`
+    : [];
+  const totalSoles = await totalEnSoles(sql, tx, total, e.monedaId, e.monedaSimbolo, e.fechaEmision);
+  const trib = calcularTributos({
+    clase: e.clase,
+    afectoIgv: e.afectoIgv,
+    total,
+    totalSoles,
+    proveedorExceptuado: prov?.ex ?? false,
+    detraccionPorcentaje: e.detraccionPorcentaje,
+    retencionManual: e.retencionManual,
+  });
+  return { monto, igv, total, trib };
+}
+
+/** Inserta las lineas de un documento de origen (`ordenCompraDetalle`). */
+export async function insertarLineasDocumento(sql: AlmacenSql, tx: Tx, idDocumento: number, lineas: LineaNuevoDocumento[]): Promise<void> {
+  const q = sqlTag(sql);
+  for (const l of lineas) {
+    const sub = redondear(Number(l.cantidad) * Number(l.precio));
+    await q.run(tx)`
+      INSERT INTO "ordenCompraDetalle" ("TipoProducto", "ProductoCodigo", "Cantidad", "Precio", monto, id_orden_compra,
+                                        id_requerimiento_detalle, id_producto)
+      VALUES (${l.tipoProducto}::text, ${l.codigo}::text, ${l.cantidad}::numeric, ${l.precio}::numeric, ${String(sub)}::numeric,
+              ${idDocumento}::int, NULLIF(${l.idRequerimientoDetalle ?? 0}::int, 0), ${l.idProducto}::int)`;
+  }
+}
+
 /**
  * Inserta un documento de origen con su detalle dentro de `tx`: numero correlativo por clase,
  * IGV, detraccion y retencion automaticas (plan 06 §5.5.1).
@@ -85,24 +154,8 @@ export async function insertarDocumentoOrigen(
 ): Promise<{ id: number; numero_documento: string }> {
   const q = sqlTag(sql);
   const numero = await ledger.siguienteNumero(tx, SERIE_POR_CLASE[d.clase]);
-  const monto = redondear(d.monto);
-  const igv = d.afectoIgv ? redondear((monto * IGV_PCT) / 100) : 0;
-  const total = redondear(monto + igv);
-
-  const [prov] = d.idAnexo
-    ? await q.rows<{ ex: boolean }>({ ex: { codecId: 'pg/bool@1', nullable: false } }, tx)`
-        SELECT COALESCE(exceptuado_retencion, false) AS ex FROM anexos WHERE id = ${d.idAnexo}::int`
-    : [];
-  const totalSoles = await totalEnSoles(sql, tx, total, d.monedaId, d.monedaSimbolo, d.fechaEmision);
-  const trib = calcularTributos({
-    clase: d.clase,
-    afectoIgv: d.afectoIgv,
-    total,
-    totalSoles,
-    proveedorExceptuado: prov?.ex ?? false,
-    detraccionPorcentaje: d.detraccionPorcentaje,
-    retencionManual: d.retencionManual,
-  });
+  const { monto, igv, total, trib } = await calcularMontosDocumento(sql, tx, d);
+  const estado = d.estado ?? 'REGISTRADO';
 
   const [anio, mes] = d.fechaEmision.split('-').map(Number);
   const [doc] = await q.rows<{ id: number }>({ id: I }, tx)`
@@ -120,7 +173,7 @@ export async function insertarDocumentoOrigen(
       ${String(monto)}::numeric, ${String(igv)}::numeric, ${String(d.renta4ta ?? 0)}::numeric, ${String(d.dsctoCompras ?? 0)}::numeric,
       ${String(d.dsctoIntervencion ?? 0)}::numeric, ${String(d.dsctoOtros ?? 0)}::numeric, ${String(total)}::numeric,
       NULLIF(${d.comentarios ?? ''}::text, ''), now(), NULLIF(${d.idRequerimiento ?? 0}::int, 0), ${d.clase}::text, ${numero}::text,
-      'REGISTRADO', NULLIF(${d.idArea ?? 0}::int, 0), ${d.afectoIgv}::boolean,
+      ${estado}::text, NULLIF(${d.idArea ?? 0}::int, 0), ${d.afectoIgv}::boolean,
       CASE WHEN ${d.diasCredito !== null}::boolean THEN ${d.diasCredito ?? 0}::int END,
       NULLIF(${d.fechaVencimiento ?? ''}::text, '')::date,
       CASE WHEN ${trib.detraccion_porcentaje !== null}::boolean THEN ${String(trib.detraccion_porcentaje ?? 0)}::numeric END,
@@ -130,13 +183,6 @@ export async function insertarDocumentoOrigen(
       ${trib.retencion_manual}::boolean, NULLIF(${d.idCotizacion ?? 0}::int, 0))
     RETURNING id`;
 
-  for (const l of d.lineas) {
-    const sub = redondear(Number(l.cantidad) * Number(l.precio));
-    await q.run(tx)`
-      INSERT INTO "ordenCompraDetalle" ("TipoProducto", "ProductoCodigo", "Cantidad", "Precio", monto, id_orden_compra,
-                                        id_requerimiento_detalle, id_producto)
-      VALUES (${l.tipoProducto}::text, ${l.codigo}::text, ${l.cantidad}::numeric, ${l.precio}::numeric, ${String(sub)}::numeric,
-              ${doc.id}::int, NULLIF(${l.idRequerimientoDetalle ?? 0}::int, 0), ${l.idProducto}::int)`;
-  }
+  await insertarLineasDocumento(sql, tx, doc.id, d.lineas);
   return { id: doc.id, numero_documento: numero };
 }

@@ -1,0 +1,1520 @@
+[
+  {
+    "id": "dropCheckConstraint.documentosOrigen.documentosOrigen_estado_check_22231c7b",
+    "label": "Drop check constraint \"documentosOrigen_estado_check_22231c7b\" on \"documentosOrigen\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "documentosOrigen_estado_check_22231c7b",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_estado_check_22231c7b\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_22231c7b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"documentosOrigen_estado_check_22231c7b\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" DROP CONSTRAINT \"documentosOrigen_estado_check_22231c7b\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_estado_check_22231c7b\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_22231c7b",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_cotizacion",
+    "label": "Create table \"ppto_cotizacion\"",
+    "summary": "Creates table \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_cotizacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_cotizacion\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_cotizacion\" (\n  \"adelanto_porcentaje\" numeric,\n  \"afecto_igv\" bool DEFAULT true NOT NULL,\n  \"archivo_url\" character varying(255),\n  \"condiciones\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"dias_credito\" int4 DEFAULT 0 NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"forma_pago\" character varying(50) NOT NULL,\n  \"garantia\" character varying(100),\n  \"id\" SERIAL NOT NULL,\n  \"id_detalle_fase\" int4 NOT NULL,\n  \"id_presupuesto\" int4 NOT NULL,\n  \"id_proveedor\" int4 NOT NULL,\n  \"incluye_igv\" bool DEFAULT false NOT NULL,\n  \"medio_pago\" text,\n  \"moneda_id\" character varying(10) NOT NULL,\n  \"moneda_simbolo\" character varying(10),\n  \"numero\" character varying(20) NOT NULL,\n  \"plazo_entrega_dias\" int4,\n  \"referencia\" character varying(50),\n  \"registrado_por\" character varying(255),\n  \"validez_dias\" int4,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"ppto_cotizacion_medio_pago_check_e0a6d2bb\" CHECK (\"medio_pago\" IN ('EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'DEPOSITO', 'YAPE', 'PLIN', 'OTRO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_cotizacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.ppto_cotizacion_detalle",
+    "label": "Create table \"ppto_cotizacion_detalle\"",
+    "summary": "Creates table \"ppto_cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"ppto_cotizacion_detalle\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"ppto_cotizacion_detalle\"",
+        "sql": "CREATE TABLE \"public\".\"ppto_cotizacion_detalle\" (\n  \"cantidad\" numeric NOT NULL,\n  \"cotiza\" bool DEFAULT true NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_cotizacion\" int4 NOT NULL,\n  \"id_ppto_item\" int4 NOT NULL,\n  \"marca_modelo\" character varying(100),\n  \"observaciones\" text,\n  \"plazo_entrega_dias\" int4,\n  \"precio_unitario\" numeric NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"ppto_cotizacion_detalle\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.adjudicado_por",
+    "label": "Add column \"adjudicado_por\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "adjudicado_por",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"adjudicado_por\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "adjudicado_por"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"adjudicado_por\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"adjudicado_por\" character varying(255)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"adjudicado_por\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "adjudicado_por"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.comentario_adjudicacion",
+    "label": "Add column \"comentario_adjudicacion\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "comentario_adjudicacion",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"comentario_adjudicacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "comentario_adjudicacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"comentario_adjudicacion\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"comentario_adjudicacion\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"comentario_adjudicacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "comentario_adjudicacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.fecha_adjudicacion",
+    "label": "Add column \"fecha_adjudicacion\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "fecha_adjudicacion",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"fecha_adjudicacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "fecha_adjudicacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"fecha_adjudicacion\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"fecha_adjudicacion\" timestamptz"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"fecha_adjudicacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "fecha_adjudicacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.id_item_origen",
+    "label": "Add column \"id_item_origen\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_item_origen",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_item_origen\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "id_item_origen"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_item_origen\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"id_item_origen\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_item_origen\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "id_item_origen"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.id_ppto_cot_detalle_ganadora",
+    "label": "Add column \"id_ppto_cot_detalle_ganadora\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_cot_detalle_ganadora",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_cot_detalle_ganadora\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "id_ppto_cot_detalle_ganadora"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_cot_detalle_ganadora\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"id_ppto_cot_detalle_ganadora\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_cot_detalle_ganadora\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "id_ppto_cot_detalle_ganadora"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.id_ppto_principal",
+    "label": "Add column \"id_ppto_principal\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_principal",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_principal\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_ppto_principal"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_principal\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"id_ppto_principal\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_principal\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "id_ppto_principal"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento.origen",
+    "label": "Add column \"origen\" to \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "origen",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"origen\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "origen"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"origen\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD COLUMN \"origen\" text DEFAULT 'MANUAL' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"origen\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento",
+          "origen"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.requerimiento_detalle.id_ppto_item",
+    "label": "Add column \"id_ppto_item\" to \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_ppto_item",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_ppto_item\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_ppto_item"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_ppto_item\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\" ADD COLUMN \"id_ppto_item\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_ppto_item\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "requerimiento_detalle",
+          "id_ppto_item"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.usuarios.id_trabajador",
+    "label": "Add column \"id_trabajador\" to \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_trabajador",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_trabajador\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "id_trabajador"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_trabajador\"",
+        "sql": "ALTER TABLE \"public\".\"usuarios\" ADD COLUMN \"id_trabajador\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_trabajador\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "usuarios",
+          "id_trabajador"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.documentosOrigen.documentosOrigen_estado_check_decb1ff0",
+    "label": "Add check constraint \"documentosOrigen_estado_check_decb1ff0\" on \"documentosOrigen\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "documentosOrigen_estado_check_decb1ff0",
+        "table": "documentosOrigen"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"documentosOrigen_estado_check_decb1ff0\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_decb1ff0",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"documentosOrigen_estado_check_decb1ff0\"",
+        "sql": "ALTER TABLE \"public\".\"documentosOrigen\" ADD CONSTRAINT \"documentosOrigen_estado_check_decb1ff0\" CHECK (\"estado\" IN ('PROVISIONAL', 'REGISTRADO', 'ANULADO'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"documentosOrigen_estado_check_decb1ff0\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "documentosOrigen_estado_check_decb1ff0",
+          "public",
+          "\"public\".\"documentosOrigen\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_cotizacion.ppto_cotizacion_numero_key",
+    "label": "Add unique constraint on \"ppto_cotizacion\" (numero)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_cotizacion_numero_key",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_cotizacion_numero_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_numero_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_cotizacion_numero_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD CONSTRAINT \"ppto_cotizacion_numero_key\" UNIQUE (\"numero\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_cotizacion_numero_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_numero_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_cotizacion.ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+    "label": "Add unique constraint on \"ppto_cotizacion\" (id_detalle_fase, id_proveedor)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD CONSTRAINT \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" UNIQUE (\"id_detalle_fase\", \"id_proveedor\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_cotizacion_detalle.ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key",
+    "label": "Add unique constraint on \"ppto_cotizacion_detalle\" (id_cotizacion, id_ppto_item)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key",
+        "table": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion_detalle\" ADD CONSTRAINT \"ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key\" UNIQUE (\"id_cotizacion\", \"id_ppto_item\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_cotizacion_id_ppto_item_key",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.requerimiento.requerimiento_origen_check_6c1ac36d",
+    "label": "Add check constraint \"requerimiento_origen_check_6c1ac36d\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "requerimiento_origen_check_6c1ac36d",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"requerimiento_origen_check_6c1ac36d\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_origen_check_6c1ac36d",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"requerimiento_origen_check_6c1ac36d\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\" ADD CONSTRAINT \"requerimiento_origen_check_6c1ac36d\" CHECK (\"origen\" IN ('MANUAL', 'PPTO_FASE', 'PPTO_ADJUDICACION'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"requerimiento_origen_check_6c1ac36d\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_origen_check_6c1ac36d",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_id_item_origen_idx_0ff49c6d",
+    "label": "Create index \"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_id_item_origen_idx_0ff49c6d",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\" ON \"public\".\"ppto_DetalleItems\" (\"id_item_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_item_origen_idx_0ff49c6d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_DetalleItems.ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48",
+    "label": "Create index \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\"",
+        "sql": "CREATE INDEX \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\" ON \"public\".\"ppto_DetalleItems\" (\"id_ppto_cot_detalle_ganadora\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion.ppto_cotizacion_id_detalle_fase_idx_baca5911",
+    "label": "Create index \"ppto_cotizacion_id_detalle_fase_idx_baca5911\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_id_detalle_fase_idx_baca5911",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_id_detalle_fase_idx_baca5911\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_detalle_fase_idx_baca5911\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_id_detalle_fase_idx_baca5911\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_id_detalle_fase_idx_baca5911\" ON \"public\".\"ppto_cotizacion\" (\"id_detalle_fase\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_id_detalle_fase_idx_baca5911\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_detalle_fase_idx_baca5911\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion.ppto_cotizacion_id_presupuesto_idx_c44c4c50",
+    "label": "Create index \"ppto_cotizacion_id_presupuesto_idx_c44c4c50\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_id_presupuesto_idx_c44c4c50",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_id_presupuesto_idx_c44c4c50\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_presupuesto_idx_c44c4c50\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_id_presupuesto_idx_c44c4c50\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_id_presupuesto_idx_c44c4c50\" ON \"public\".\"ppto_cotizacion\" (\"id_presupuesto\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_id_presupuesto_idx_c44c4c50\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_presupuesto_idx_c44c4c50\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion.ppto_cotizacion_id_proveedor_idx_4edef4d1",
+    "label": "Create index \"ppto_cotizacion_id_proveedor_idx_4edef4d1\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_id_proveedor_idx_4edef4d1",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_id_proveedor_idx_4edef4d1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_id_proveedor_idx_4edef4d1\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_id_proveedor_idx_4edef4d1\" ON \"public\".\"ppto_cotizacion\" (\"id_proveedor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_id_proveedor_idx_4edef4d1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_proveedor_idx_4edef4d1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion_detalle.ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0",
+    "label": "Create index \"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\" on \"ppto_cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0",
+        "table": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\" ON \"public\".\"ppto_cotizacion_detalle\" (\"id_cotizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion_detalle.ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe",
+    "label": "Create index \"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\" on \"ppto_cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe",
+        "table": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\" ON \"public\".\"ppto_cotizacion_detalle\" (\"id_ppto_item\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento.requerimiento_id_ppto_principal_idx_4f26647a",
+    "label": "Create index \"requerimiento_id_ppto_principal_idx_4f26647a\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_id_ppto_principal_idx_4f26647a",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_id_ppto_principal_idx_4f26647a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_ppto_principal_idx_4f26647a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_id_ppto_principal_idx_4f26647a\"",
+        "sql": "CREATE INDEX \"requerimiento_id_ppto_principal_idx_4f26647a\" ON \"public\".\"requerimiento\" (\"id_ppto_principal\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_id_ppto_principal_idx_4f26647a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_id_ppto_principal_idx_4f26647a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.requerimiento_detalle.requerimiento_detalle_id_ppto_item_idx_06e4b8fe",
+    "label": "Create index \"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "requerimiento_detalle_id_ppto_item_idx_06e4b8fe",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\"",
+        "sql": "CREATE INDEX \"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\" ON \"public\".\"requerimiento_detalle\" (\"id_ppto_item\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"requerimiento_detalle_id_ppto_item_idx_06e4b8fe\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.usuarios.usuarios_id_trabajador_idx_efbff78d",
+    "label": "Create index \"usuarios_id_trabajador_idx_efbff78d\" on \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "usuarios_id_trabajador_idx_efbff78d",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"usuarios_id_trabajador_idx_efbff78d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios_id_trabajador_idx_efbff78d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"usuarios_id_trabajador_idx_efbff78d\"",
+        "sql": "CREATE INDEX \"usuarios_id_trabajador_idx_efbff78d\" ON \"public\".\"usuarios\" (\"id_trabajador\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"usuarios_id_trabajador_idx_efbff78d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"usuarios_id_trabajador_idx_efbff78d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleItems.ppto_DetalleItems_id_item_origen_fkey",
+    "label": "Add foreign key \"ppto_DetalleItems_id_item_origen_fkey\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleItems_id_item_origen_fkey",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleItems_id_item_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_item_origen_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleItems_id_item_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\"\nADD CONSTRAINT \"ppto_DetalleItems_id_item_origen_fkey\"\nFOREIGN KEY (\"id_item_origen\")\nREFERENCES \"public\".\"ppto_DetalleItems\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleItems_id_item_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_item_origen_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion.ppto_cotizacion_id_presupuesto_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_id_presupuesto_fkey\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_id_presupuesto_fkey",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_id_presupuesto_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_presupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_id_presupuesto_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\"\nADD CONSTRAINT \"ppto_cotizacion_id_presupuesto_fkey\"\nFOREIGN KEY (\"id_presupuesto\")\nREFERENCES \"public\".\"ppto_Principal\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_id_presupuesto_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_presupuesto_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion.ppto_cotizacion_id_detalle_fase_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_id_detalle_fase_fkey\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_id_detalle_fase_fkey",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_id_detalle_fase_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_id_detalle_fase_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\"\nADD CONSTRAINT \"ppto_cotizacion_id_detalle_fase_fkey\"\nFOREIGN KEY (\"id_detalle_fase\")\nREFERENCES \"public\".\"ppto_DetalleFases\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_id_detalle_fase_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion.ppto_cotizacion_id_proveedor_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_id_proveedor_fkey\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_id_proveedor_fkey",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_id_proveedor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_proveedor_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_id_proveedor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\"\nADD CONSTRAINT \"ppto_cotizacion_id_proveedor_fkey\"\nFOREIGN KEY (\"id_proveedor\")\nREFERENCES \"public\".\"anexos\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_id_proveedor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_proveedor_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion_detalle.ppto_cotizacion_detalle_id_cotizacion_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_detalle_id_cotizacion_fkey\" on \"ppto_cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_detalle_id_cotizacion_fkey",
+        "table": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_detalle_id_cotizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_detalle_id_cotizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion_detalle\"\nADD CONSTRAINT \"ppto_cotizacion_detalle_id_cotizacion_fkey\"\nFOREIGN KEY (\"id_cotizacion\")\nREFERENCES \"public\".\"ppto_cotizacion\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_detalle_id_cotizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_cotizacion_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion_detalle.ppto_cotizacion_detalle_id_ppto_item_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_detalle_id_ppto_item_fkey\" on \"ppto_cotizacion_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_detalle_id_ppto_item_fkey",
+        "table": "ppto_cotizacion_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_detalle_id_ppto_item_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_ppto_item_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_detalle_id_ppto_item_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion_detalle\"\nADD CONSTRAINT \"ppto_cotizacion_detalle_id_ppto_item_fkey\"\nFOREIGN KEY (\"id_ppto_item\")\nREFERENCES \"public\".\"ppto_DetalleItems\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_detalle_id_ppto_item_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_detalle_id_ppto_item_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_DetalleItems.ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey",
+    "label": "Add foreign key \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey\" on \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\"\nADD CONSTRAINT \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey\"\nFOREIGN KEY (\"id_ppto_cot_detalle_ganadora\")\nREFERENCES \"public\".\"ppto_cotizacion_detalle\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_DetalleItems_id_ppto_cot_detalle_ganadora_fkey",
+          "public",
+          "\"public\".\"ppto_DetalleItems\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento.requerimiento_id_ppto_principal_fkey",
+    "label": "Add foreign key \"requerimiento_id_ppto_principal_fkey\" on \"requerimiento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_id_ppto_principal_fkey",
+        "table": "requerimiento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_id_ppto_principal_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_ppto_principal_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_id_ppto_principal_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento\"\nADD CONSTRAINT \"requerimiento_id_ppto_principal_fkey\"\nFOREIGN KEY (\"id_ppto_principal\")\nREFERENCES \"public\".\"ppto_Principal\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_id_ppto_principal_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_id_ppto_principal_fkey",
+          "public",
+          "\"public\".\"requerimiento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.requerimiento_detalle.requerimiento_detalle_id_ppto_item_fkey",
+    "label": "Add foreign key \"requerimiento_detalle_id_ppto_item_fkey\" on \"requerimiento_detalle\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "requerimiento_detalle_id_ppto_item_fkey",
+        "table": "requerimiento_detalle"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"requerimiento_detalle_id_ppto_item_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_ppto_item_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"requerimiento_detalle_id_ppto_item_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"requerimiento_detalle\"\nADD CONSTRAINT \"requerimiento_detalle_id_ppto_item_fkey\"\nFOREIGN KEY (\"id_ppto_item\")\nREFERENCES \"public\".\"ppto_DetalleItems\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"requerimiento_detalle_id_ppto_item_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "requerimiento_detalle_id_ppto_item_fkey",
+          "public",
+          "\"public\".\"requerimiento_detalle\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.usuarios.usuarios_id_trabajador_fkey",
+    "label": "Add foreign key \"usuarios_id_trabajador_fkey\" on \"usuarios\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "usuarios_id_trabajador_fkey",
+        "table": "usuarios"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"usuarios_id_trabajador_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuarios_id_trabajador_fkey",
+          "public",
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"usuarios_id_trabajador_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"usuarios\"\nADD CONSTRAINT \"usuarios_id_trabajador_fkey\"\nFOREIGN KEY (\"id_trabajador\")\nREFERENCES \"public\".\"trabajador\" (\"id_anexo\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"usuarios_id_trabajador_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "usuarios_id_trabajador_fkey",
+          "public",
+          "\"public\".\"usuarios\""
+        ]
+      }
+    ]
+  }
+]

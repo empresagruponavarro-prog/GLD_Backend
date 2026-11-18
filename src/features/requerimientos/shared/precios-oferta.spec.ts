@@ -1,4 +1,4 @@
-import { preciosOferta, totalesCotizacion } from './cotizacion.handler.js';
+import { preciosOferta, totalesCotizacion } from './precios-oferta.js';
 
 describe('cotizaciones / precios e IGV', () => {
   it('precio sin IGV: se queda igual; con IGV: suma 18 %', () => {
@@ -35,5 +35,9 @@ describe('cotizaciones / precios e IGV', () => {
   it('totales de un proveedor no afecto no llevan IGV', () => {
     const t = totalesCotizacion([{ cotiza: true, cantidad: 10, precio: 95 }, { cotiza: true, cantidad: 1, precio: 900 }], true, false);
     expect(t).toEqual({ subtotal: 1850, igv: 0, total: 1850 });
+  });
+
+  it('una lista sin líneas cotizadas da cero', () => {
+    expect(totalesCotizacion([{ cotiza: false, cantidad: 3, precio: 50 }], false, true)).toEqual({ subtotal: 0, igv: 0, total: 0 });
   });
 });

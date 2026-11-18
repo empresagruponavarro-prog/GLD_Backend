@@ -2,16 +2,18 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { nowInstant } from '../../../platform/db/temporal.js';
 import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers.js';
+import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
+import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, B, I, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
-import { totalesCotizacion } from '../../requerimientos/cotizaciones/cotizacion.handler.js';
+import { preciosOferta, totalesCotizacion } from '../../requerimientos/shared/precios-oferta.js';
 import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
 import { esSoles } from '../../tesoreria/shared/tributos.js';
 import { subpartidasConAvance } from '../../operaciones-obra/partidas/partidas.handler.js';
 import { capturarEstructura } from '../../operaciones-obra/shared/capturar-estructura.js';
 import { registrarEvento } from '../../operaciones-obra/shared/control-avance/registrar-evento.js';
-import { readDateOnly } from '../../operaciones-obra/shared/obra-shared.js';
+import { hoyLima, readDateOnly } from '../../operaciones-obra/shared/obra-shared.js';
 import { calculateAmounts } from '../presupuesto-principal/presupuesto-principal.handler.js';
 import type {
   AprobarPresupuestoResponseDto,
@@ -22,7 +24,10 @@ import type {
   NuevaVersionResponseDto,
   ValidacionPresupuestoResponseDto,
 } from './aprobacion.dto.js';
-import { armarComercial, type FaseMeta, type OfertaGanadora } from './comercial.js';
+import { armarComercial, type ItemComercialEntrada, type FaseMeta, type OfertaGanadora } from './comercial.js';
+import { conflictosPorOrigen } from '../compromisos/cobertura-origen.js';
+import { ConciliarCompromisosService } from '../compromisos/conciliar-compromisos.service.js';
+import { bloquearPresupuesto, itemsSinAdjudicar } from '../cotizaciones-ppto/contexto-ppto.js';
 import { ESTADOS_EDITABLES, esAdicional, esAprobado, textoLegado, type EstadoPpto } from './estados.js';
 import { sincronizarPresupuestoCc } from './sincronizar-cc.js';
 import {
@@ -56,6 +61,8 @@ export class AprobacionPresupuestoHandler {
   constructor(
     @Inject(DB) private readonly db: Database,
     private readonly sql: AlmacenSql,
+    private readonly conciliacion: ConciliarCompromisosService,
+    private readonly ledger: InventarioLedger,
   ) {}
 
   async validacion(idOrCode: string | number): Promise<ValidacionPresupuestoResponseDto> {
@@ -105,6 +112,7 @@ export class AprobacionPresupuestoHandler {
           JOIN cotizacion c ON c.id = r.id_cotizacion_ganadora
           LEFT JOIN anexos a ON a.id = c.id_proveedor
          WHERE r.id_centro_costo = ${ppto.id_centro_costo}::int AND r.estado::text <> 'ANULADO' AND r.id_fase IS NOT NULL
+           AND r.origen::text <> 'PPTO_ADJUDICACION' -- plan 09: los FUR de adjudicación ya se cuentan por ítem
          ORDER BY r.id`;
       const idsCot = furs.map((f) => f.id_cot);
       const lineas = idsCot.length
@@ -133,21 +141,62 @@ export class AprobacionPresupuestoHandler {
         });
       }
     }
+    const items = metas.length > 0 ? await this.itemsComercial(String(ppto.IdPresupuesto ?? '')) : [];
     return {
       id: ppto.id,
       id_presupuesto: ppto.IdPresupuesto ?? null,
       proyecto: ppto.Proyecto ?? null,
       id_centro_costo: ppto.id_centro_costo ?? null,
       estado_ppto: ppto.estado_ppto,
-      ...armarComercial(metas, ganadoras),
+      ...armarComercial(metas, ganadoras, items),
     };
   }
 
-  async aprobar(idOrCode: string | number, usuario: string | undefined): Promise<AprobarPresupuestoResponseDto> {
+  /**
+   * Ítems del Meta con su proveedor ganador (plan 09). El precio unitario sin IGV del ganador se lleva a soles con el tipo de cambio de venta
+   * del día de la cotización; sin tipo de cambio el ítem queda al costo del Meta y la fase lo avisa.
+   */
+  private async itemsComercial(codigo: string): Promise<ItemComercialEntrada[]> {
+    const q = sqlTag(this.sql);
+    const filas = await q.rows<{
+      id_fase: number; id_item: number; codigo: string; descripcion: string; cantidad: string; costo_meta: string; proveedor: string | null;
+      precio: string | null; moneda_id: string | null; simbolo: string | null; incluye_igv: boolean | null; afecto_igv: boolean | null; fecha: string | null;
+    }>({ id_fase: I, id_item: I, codigo: T, descripcion: T, cantidad: T, costo_meta: T, proveedor: TN, precio: TN, moneda_id: TN, simbolo: TN, incluye_igv: { codecId: 'pg/bool@1', nullable: true }, afecto_igv: { codecId: 'pg/bool@1', nullable: true }, fecha: TN })`
+      SELECT COALESCE(m.id, df.id) AS id_fase, i.id AS id_item, p.codigo::text AS codigo, p.descripcion::text AS descripcion,
+             i."Cantidad"::text AS cantidad, i."CostoTotal"::text AS costo_meta, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor,
+             g.precio_unitario::text AS precio, q.moneda_id::text AS moneda_id, q.moneda_simbolo::text AS simbolo, q.incluye_igv, q.afecto_igv, q.fecha::text AS fecha
+        FROM "ppto_DetalleItems" i
+        JOIN "ppto_DetalleFasesCate" c ON c.id = i.id_detalle_categoria
+        JOIN "ppto_DetalleFases" df ON df."IdPresupuestoDetalle" = c."IdPresupuestoDetalle"
+        LEFT JOIN "ppto_Fases" m ON m."IdpptoFase" = df."IdpptoFase"
+        JOIN producto p ON p.id = i.id_producto
+        LEFT JOIN ppto_cotizacion_detalle g ON g.id = i.id_ppto_cot_detalle_ganadora
+        LEFT JOIN ppto_cotizacion q ON q.id = g.id_cotizacion
+        LEFT JOIN anexos a ON a.id = q.id_proveedor
+       WHERE i."IdPresupuesto" = ${codigo}::text AND df."IdPresupuesto" = ${codigo}::text AND i."Cantidad" > 0
+       ORDER BY df.id, c.id, i."Orden", i.id`;
+    const resultado: ItemComercialEntrada[] = [];
+    for (const f of filas) {
+      let adjudicado: ItemComercialEntrada['adjudicado'] = null;
+      if (f.precio !== null && f.moneda_id !== null) {
+        const sin = preciosOferta(Number(f.precio), f.incluye_igv ?? false, f.afecto_igv ?? true).sin;
+        let enSoles: number | null = sin;
+        if (!esSoles(f.moneda_id, f.simbolo)) {
+          const tc = await tcVigente(this.sql, claveMoneda(f.moneda_id, f.simbolo), f.fecha ?? hoyLima());
+          enSoles = tc ? sin * Number(tc.venta) : null;
+        }
+        adjudicado = { proveedor: f.proveedor, precio_sin_igv: enSoles };
+      }
+      resultado.push({ id_fase: f.id_fase, id_item: f.id_item, codigo: f.codigo, descripcion: f.descripcion, cantidad: Number(f.cantidad), costo_meta: Number(f.costo_meta), adjudicado });
+    }
+    return resultado;
+  }
+
+  async aprobar(idOrCode: string | number, user: AuthUser | undefined): Promise<AprobarPresupuestoResponseDto> {
     const previo = await this.cargar(this.db.orm.public, idOrCode);
     const idCc = previo.id_centro_costo;
     if (!idCc) throw new BadRequestException('El presupuesto debe estar vinculado a un centro de costo para aprobarse');
-    const quien = usuario ?? 'SISTEMA';
+    const quien = user?.usuario ?? 'SISTEMA';
     const q = sqlTag(this.sql);
 
     const r = await this.db.transaction(async (tx) => {
@@ -156,8 +205,12 @@ export class AprobacionPresupuestoHandler {
       await q.rows<{ id: number }>({ id: I }, tx)`SELECT id FROM "CentroCostos" WHERE id = ${idCc}::int FOR UPDATE`;
 
       const ppto = await this.cargar(orm, previo.id);
-      const { tipo, bloqueos, predecesor } = await this.evaluar(orm, ppto);
-      if (bloqueos.length > 0) throw new ConflictException({ message: bloqueos[0].mensaje, bloqueos });
+      const { tipo, bloqueos, predecesor } = await this.evaluar(orm, ppto, tx);
+      // Primero lo de estado (409), luego que el presupuesto esté completo (400) y por último que todo ítem tenga proveedor (409):
+      // así quien arma el presupuesto ve primero qué le falta y recién después se le pide adjudicar.
+      const porAdjudicar = ['ITEMS_SIN_ADJUDICAR', 'COMPROMISO_EN_CONFLICTO'];
+      const duros = bloqueos.filter((b) => !porAdjudicar.includes(b.codigo));
+      if (duros.length > 0) throw new ConflictException({ message: duros[0].mensaje, bloqueos: duros });
       const arbol = await this.arbol(orm, ppto);
       const problemas = validarPresupuesto(arbol);
       if (problemas.length > 0) {
@@ -166,6 +219,8 @@ export class AprobacionPresupuestoHandler {
           problemas,
         });
       }
+      const pendientes = bloqueos.filter((b) => porAdjudicar.includes(b.codigo));
+      if (pendientes.length > 0) throw new ConflictException({ message: pendientes[0].mensaje, bloqueos: pendientes });
 
       const cc = await orm.CentroCostos.first({ id: idCc });
       const inicio = cc?.fecha_inicio ? readDateOnly(cc.fecha_inicio) : '';
@@ -189,6 +244,11 @@ export class AprobacionPresupuestoHandler {
       // El monto aprobado es la suma de los ítems: se recalcula antes de capturar (la cabecera pudo quedar atrás).
       await this.recalcularCostos(orm, ppto, arbol, new Set());
 
+      // Plan 09: las órdenes provisionales generadas al grabar se cierran: pasan a REGISTRADO y entran a programación y pago.
+      const bloqueado = await bloquearPresupuesto(this.sql, tx, ppto.id);
+      await this.conciliacion.conciliar(tx, bloqueado, user);
+      const documentosCerrados = await this.conciliacion.cerrar(tx, bloqueado);
+
       await orm.ppto_Principal.where({ id: ppto.id }).update({
         estado_ppto: 'APROBADO',
         Estado: toVarchar<50>(textoLegado('APROBADO')),
@@ -203,6 +263,12 @@ export class AprobacionPresupuestoHandler {
           Estado: toVarchar<50>(textoLegado('ANULADO')),
         });
         reemplaza = { id: predecesor.id, id_presupuesto: predecesor.IdPresupuesto ?? null };
+        // Plan 09 (T-52): el FUR y las órdenes provisionales de la versión que se reemplaza se anulan; las registradas se conservan.
+        await this.conciliacion.anularProvisionales(
+          tx,
+          { id: predecesor.id, codigo: predecesor.IdPresupuesto ?? '', estado: 'ANULADO', id_centro_costo: predecesor.id_centro_costo ?? null },
+          `Reemplazado por la versión ${codigo}`,
+        );
       }
 
       let estructura: EstructuraCapturadaDto;
@@ -244,7 +310,7 @@ export class AprobacionPresupuestoHandler {
       }
 
       await sincronizarPresupuestoCc(orm, idCc);
-      return { id: ppto.id, codigo, tipo, estructura, reemplaza };
+      return { id: ppto.id, codigo, tipo, estructura, reemplaza, documentosCerrados };
     });
 
     // La respuesta se arma después del commit.
@@ -255,6 +321,7 @@ export class AprobacionPresupuestoHandler {
       tipo: r.tipo,
       estructura: r.estructura,
       ...(r.reemplaza ? { reemplaza: r.reemplaza } : {}),
+      documentos_cerrados: r.documentosCerrados,
     };
   }
 
@@ -370,10 +437,12 @@ export class AprobacionPresupuestoHandler {
         ]);
         const stamp = Date.now();
         const idFaseNueva = new Map<string, string>();
+        const faseNuevaPorId = new Map<number, number>();
+        const itemNuevoPorId = new Map<number, number>();
         for (const [i, f] of [...fases].sort((a, b) => a.id - b.id).entries()) {
           const idDetalle = `DF-${stamp}-${i}`;
           if (f.IdPresupuestoDetalle) idFaseNueva.set(f.IdPresupuestoDetalle, idDetalle);
-          await orm.ppto_DetalleFases.create({
+          const faseCreada = await orm.ppto_DetalleFases.create({
             IdPresupuestoDetalle: toVarchar(idDetalle),
             IdPresupuesto: toVarchar(codigo),
             id_empresa: f.id_empresa,
@@ -386,6 +455,7 @@ export class AprobacionPresupuestoHandler {
             Usuario: quien,
             FechaCreacion: ahora,
           });
+          faseNuevaPorId.set(f.id, faseCreada.id);
         }
         const nuevaCat = new Map<number, number>();
         for (const [j, c] of [...cates].sort((a, b) => a.id - b.id).entries()) {
@@ -411,7 +481,7 @@ export class AprobacionPresupuestoHandler {
           const idCat = nuevaCat.get(it.id_detalle_categoria);
           if (idCat === undefined) continue;
           totalItems++;
-          await orm.ppto_DetalleItems.create({
+          const itemCreado = await orm.ppto_DetalleItems.create({
             id_detalle_categoria: idCat,
             IdPresupuesto: toVarchar(codigo),
             id_producto: it.id_producto,
@@ -423,8 +493,14 @@ export class AprobacionPresupuestoHandler {
             CostoTotal: it.CostoTotal,
             VentaTotal: it.VentaTotal,
             Orden: it.Orden,
+            // Plan 09 (§3.7): de qué ítem viene (para saber lo que las versiones anteriores ya pidieron).
+            id_item_origen: it.id,
           });
+          itemNuevoPorId.set(it.id, itemCreado.id);
         }
+
+        // Las cotizaciones y los proveedores ganadores viajan a la versión nueva (con las líneas mapeadas a los ítems nuevos).
+        const copiado = await this.copiarCotizaciones(tx, origen.id, String(previo.IdPresupuesto), nuevo.id, faseNuevaPorId, itemNuevoPorId, usuario ?? 'SISTEMA');
 
         await sincronizarPresupuestoCc(orm, idCc);
         return {
@@ -435,12 +511,79 @@ export class AprobacionPresupuestoHandler {
           fases: fases.length,
           categorias: cates.length,
           items: totalItems,
+          cotizaciones: copiado.cotizaciones,
+          adjudicaciones: copiado.adjudicaciones,
         };
       });
     } catch (e) {
       throwIfUniqueViolation(e, 'No se pudo crear la versión: el código del presupuesto ya existe, intente de nuevo');
       throw e;
     }
+  }
+
+  /**
+   * Copia las cotizaciones de un presupuesto a su nueva versión (plan 09, §3.7): cabeceras con número nuevo, líneas mapeadas a los ítems
+   * nuevos y el proveedor ganador de cada ítem con su trazabilidad. Devuelve cuántas cotizaciones y adjudicaciones se copiaron.
+   */
+  private async copiarCotizaciones(
+    tx: Parameters<Database['transaction']>[0] extends (tx: infer T) => unknown ? T : never,
+    idOrigen: number,
+    codigoOrigen: string,
+    idNuevo: number,
+    fases: Map<number, number>,
+    items: Map<number, number>,
+    usuario: string,
+  ): Promise<{ cotizaciones: number; adjudicaciones: number }> {
+    const q = sqlTag(this.sql);
+    const cots = await q.rows<{ id: number; id_detalle_fase: number }>({ id: I, id_detalle_fase: I }, tx)`
+      SELECT id, id_detalle_fase FROM ppto_cotizacion WHERE id_presupuesto = ${idOrigen}::int ORDER BY id`;
+    const lineaNueva = new Map<number, number>();
+    let cotizaciones = 0;
+    for (const c of cots) {
+      const faseNueva = fases.get(c.id_detalle_fase);
+      if (faseNueva === undefined) continue;
+      const numero = await this.ledger.siguienteNumero(tx, 'COT');
+      const [nueva] = await q.rows<{ id: number }>({ id: I }, tx)`
+        INSERT INTO ppto_cotizacion (numero, id_presupuesto, id_detalle_fase, id_proveedor, fecha, referencia, moneda_id, moneda_simbolo, incluye_igv,
+                                     afecto_igv, forma_pago, dias_credito, adelanto_porcentaje, medio_pago, plazo_entrega_dias, validez_dias, garantia,
+                                     condiciones, archivo_url, registrado_por)
+        SELECT ${numero}::text, ${idNuevo}::int, ${faseNueva}::int, id_proveedor, fecha, referencia, moneda_id, moneda_simbolo, incluye_igv,
+               afecto_igv, forma_pago, dias_credito, adelanto_porcentaje, medio_pago, plazo_entrega_dias, validez_dias, garantia, condiciones,
+               archivo_url, ${usuario}::text
+          FROM ppto_cotizacion WHERE id = ${c.id}::int
+        RETURNING id`;
+      cotizaciones += 1;
+      const lineas = await q.rows<{ id: number; id_ppto_item: number }>({ id: I, id_ppto_item: I }, tx)`
+        SELECT id, id_ppto_item FROM ppto_cotizacion_detalle WHERE id_cotizacion = ${c.id}::int ORDER BY id`;
+      for (const l of lineas) {
+        const itemNuevo = items.get(l.id_ppto_item);
+        if (itemNuevo === undefined) continue;
+        const [nl] = await q.rows<{ id: number }>({ id: I }, tx)`
+          INSERT INTO ppto_cotizacion_detalle (id_cotizacion, id_ppto_item, cotiza, cantidad, precio_unitario, plazo_entrega_dias, marca_modelo, observaciones)
+          SELECT ${nueva.id}::int, ${itemNuevo}::int, cotiza, cantidad, precio_unitario, plazo_entrega_dias, marca_modelo, observaciones
+            FROM ppto_cotizacion_detalle WHERE id = ${l.id}::int
+          RETURNING id`;
+        lineaNueva.set(l.id, nl.id);
+      }
+    }
+
+    const ganadores = await q.rows<{ id: number; ganadora: number }>({ id: I, ganadora: I }, tx)`
+      SELECT i.id, i.id_ppto_cot_detalle_ganadora AS ganadora FROM "ppto_DetalleItems" i
+       WHERE i."IdPresupuesto" = ${codigoOrigen}::text AND i.id_ppto_cot_detalle_ganadora IS NOT NULL ORDER BY i.id`;
+    let adjudicaciones = 0;
+    for (const g of ganadores) {
+      const itemNuevo = items.get(g.id);
+      const lineaGanadora = lineaNueva.get(g.ganadora);
+      if (itemNuevo === undefined || lineaGanadora === undefined) continue;
+      await q.run(tx)`
+        UPDATE "ppto_DetalleItems" n
+           SET id_ppto_cot_detalle_ganadora = ${lineaGanadora}::int, adjudicado_por = o.adjudicado_por,
+               fecha_adjudicacion = o.fecha_adjudicacion, comentario_adjudicacion = o.comentario_adjudicacion
+          FROM "ppto_DetalleItems" o
+         WHERE n.id = ${itemNuevo}::int AND o.id = ${g.id}::int`;
+      adjudicaciones += 1;
+    }
+    return { cotizaciones, adjudicaciones };
   }
 
   /**
@@ -545,7 +688,7 @@ export class AprobacionPresupuestoHandler {
   }
 
   /** Reglas de negocio que impiden aprobar (aparte de lo que falta completar en el presupuesto). */
-  private async evaluar(orm: Orm, ppto: Ppto): Promise<Evaluacion> {
+  private async evaluar(orm: Orm, ppto: Ppto, tx?: Parameters<typeof itemsSinAdjudicar>[2]): Promise<Evaluacion> {
     const tipo = esAdicional(ppto.TipoPpto, ppto.Concepto) ? 'Adicional' : 'Principal';
     const bloqueos: BloqueoAprobacionDto[] = [];
     if (esAprobado(ppto.estado_ppto)) bloqueos.push({ codigo: 'YA_APROBADO', mensaje: 'El presupuesto ya está aprobado' });
@@ -569,6 +712,26 @@ export class AprobacionPresupuestoHandler {
       }
     } else if (!aprobados.some((p) => !esAdicional(p.TipoPpto, p.Concepto))) {
       bloqueos.push({ codigo: 'SIN_PRINCIPAL', mensaje: 'Apruebe primero el presupuesto Principal del centro de costo' });
+    }
+    // Plan 09 (D-11): todo ítem tiene que tener un proveedor ganador antes de aprobar.
+    if (ppto.IdPresupuesto && !esAprobado(ppto.estado_ppto) && ppto.estado_ppto !== 'ANULADO') {
+      const sin = await itemsSinAdjudicar(this.sql, String(ppto.IdPresupuesto), tx);
+      if (sin.length > 0) {
+        const lista = sin.slice(0, 5).map((i) => i.codigo).join(', ');
+        bloqueos.push({
+          codigo: 'ITEMS_SIN_ADJUDICAR',
+          mensaje: `Faltan ${sin.length} ítem(s) por adjudicar a un proveedor (${lista}${sin.length > 5 ? '…' : ''}): registre sus cotizaciones y elija al ganador`,
+        });
+      }
+      // Plan 09 (§3.7): un ítem que una versión anterior ya pidió con una orden registrada a otro proveedor no se puede pedir de nuevo.
+      const conflictos = await conflictosPorOrigen(this.sql, String(ppto.IdPresupuesto), tx);
+      if (conflictos.length > 0) {
+        const lista = conflictos.slice(0, 5).map((c) => `${c.codigo} (${c.documentos.join(', ')})`).join('; ');
+        bloqueos.push({
+          codigo: 'COMPROMISO_EN_CONFLICTO',
+          mensaje: `${conflictos.length} ítem(s) ya tienen una orden registrada con otro proveedor: ${lista}${conflictos.length > 5 ? '…' : ''}. Anule la orden anterior o vuelva a adjudicar al mismo proveedor`,
+        });
+      }
     }
     return { tipo, bloqueos, predecesor };
   }

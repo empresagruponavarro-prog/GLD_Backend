@@ -167,7 +167,7 @@ export async function cargarGastoObra(sql: AlmacenSql, idCentroCosto: number): P
       FROM "ordenCompraDetalle" od
       JOIN "documentosOrigen" o ON o.id = od.id_orden_compra
       LEFT JOIN requerimiento_detalle rd ON rd.id = od.id_requerimiento_detalle
-     WHERE o.id_centro_costo = ${idCentroCosto}::int AND o.estado::text <> 'ANULADO'`;
+     WHERE o.id_centro_costo = ${idCentroCosto}::int AND o.estado::text = 'REGISTRADO'`;
 
   const salidas = await q.rows<{ subfase: number | null; costo: string }>({ subfase: num, costo: T })`
     SELECT l.id_ppto_detalle_categoria AS subfase, (l.cantidad * COALESCE(l.costo_unitario, 0))::text AS costo

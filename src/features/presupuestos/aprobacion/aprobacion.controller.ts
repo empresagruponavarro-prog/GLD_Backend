@@ -53,7 +53,7 @@ export class AprobacionPresupuestoController {
   @ApiParam({ name: 'idOrCode', description: 'ID numérico o código IdPresupuesto' })
   @ApiOkResponse({ type: AprobarPresupuestoResponseDto })
   aprobar(@Param('idOrCode') idOrCode: string, @CurrentUser() user?: AuthUser) {
-    return this.handler.aprobar(idOrCode, user?.usuario);
+    return this.handler.aprobar(idOrCode, user);
   }
 
   @Post(':idOrCode/nueva-version')

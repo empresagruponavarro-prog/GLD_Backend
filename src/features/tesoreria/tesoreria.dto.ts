@@ -166,6 +166,10 @@ export class ProgramacionItemDto {
   @ApiPropertyOptional()
   @IsOptional() @IsString()
   observaciones?: string;
+
+  @ApiPropertyOptional({ default: false, description: 'Pago de una orden de servicio de un presupuesto por encima de lo que libera el avance de obra: exige el motivo en observaciones' })
+  @IsOptional() @IsBoolean()
+  exceder_avance?: boolean;
 }
 
 export class CreateProgramacionDto {
@@ -199,6 +203,10 @@ export class UpdateProgramacionDto {
 
   @ApiPropertyOptional() @IsOptional() @IsString()
   observaciones?: string;
+
+  @ApiPropertyOptional({ default: false, description: 'Pago de una orden de servicio de un presupuesto por encima de lo que libera el avance de obra: exige el motivo en observaciones' })
+  @IsOptional() @IsBoolean()
+  exceder_avance?: boolean;
 }
 
 export class ListProgramacionQueryDto {

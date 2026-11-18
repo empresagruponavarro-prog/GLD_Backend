@@ -173,6 +173,7 @@ export async function consultarDocumentos(
       FROM (
         SELECT y.*,
                CASE WHEN y.estado = 'ANULADO' THEN 'ANULADO'
+                    WHEN y.estado = 'PROVISIONAL' THEN 'PROVISIONAL'
                     WHEN (y.neto_proveedor > 0.005 OR y.det > 0.005)
                          AND y.pagado_proveedor >= y.neto_proveedor - 0.005 AND y.pagado_detraccion >= y.det - 0.005 THEN 'PAGADO'
                     WHEN y.pagado_proveedor > 0 OR y.pagado_detraccion > 0 THEN 'PARCIAL'

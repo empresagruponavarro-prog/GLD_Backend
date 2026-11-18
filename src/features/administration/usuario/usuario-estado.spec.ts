@@ -179,6 +179,7 @@ describe('PATCH /administration/usuarios/:id/estado', () => {
       activo: false,
       id_area: null,
       area: null,
+      trabajador: null,
       tiene_permisos_personalizados: false,
     });
     expect(res.body).not.toHaveProperty('Clave');

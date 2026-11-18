@@ -137,7 +137,15 @@ export class CreateRequerimientoDto {
 
 export class UpdateRequerimientoDto extends PartialType(CreateRequerimientoDto) {}
 
+export const ORIGENES_REQUERIMIENTO = ['MANUAL', 'PPTO_FASE', 'PPTO_ADJUDICACION'] as const;
+export type OrigenRequerimiento = (typeof ORIGENES_REQUERIMIENTO)[number];
+
 export class ListRequerimientoQueryDto extends PaginationQueryDto {
+  @ApiPropertyOptional({ enum: ORIGENES_REQUERIMIENTO })
+  @IsOptional()
+  @IsIn(ORIGENES_REQUERIMIENTO)
+  origen?: OrigenRequerimiento;
+
   @ApiPropertyOptional({ enum: ESTADOS_REQUERIMIENTO })
   @IsOptional()
   @IsIn(ESTADOS_REQUERIMIENTO)
@@ -243,6 +251,10 @@ export class RequerimientoResponseDto {
   @ApiPropertyOptional({ description: 'Nombre del area de la empresa' }) area_nombre: string | null;
   @ApiPropertyOptional() id_cotizacion_ganadora: number | null;
   @ApiPropertyOptional() comentario_adjudicacion: string | null;
+  @ApiProperty({ enum: ORIGENES_REQUERIMIENTO, description: 'MANUAL, PPTO_FASE (borrador de «Generar FURs») o PPTO_ADJUDICACION (generado al adjudicar cotizaciones)' }) origen: string;
+  @ApiPropertyOptional({ description: 'Presupuesto (`ppto_Principal.id`) del que nació' }) id_ppto_principal: number | null;
+  @ApiPropertyOptional({ example: 'PPTO-2026-001' }) codigo_presupuesto: string | null;
+  @ApiProperty({ description: 'Alguna de sus órdenes es provisional: lo gestiona el presupuesto hasta que se apruebe' }) provisional: boolean;
   @ApiProperty({ example: 2 }) total_cotizaciones: number;
   @ApiProperty() justificacion: string;
   @ApiProperty({ enum: ESTADOS_REQUERIMIENTO }) estado: string;

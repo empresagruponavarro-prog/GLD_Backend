@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { AlmacenSql, B, I, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { AlmacenSql, B, I, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { RequerimientoHandler } from '../requerimiento/requerimiento.handler.js';
 import { RequerimientoResponseDto } from '../requerimiento/requerimiento.dto.js';
@@ -167,6 +167,15 @@ export class FlujoHandler {
       const q = sqlTag(this.sql);
       const actual = await this.bloquearYValidar(tx, id, 'ANULAR');
       if (dto.id_anexo !== undefined) await validarTrabajador(this.sql, tx, dto.id_anexo, 'id_anexo');
+      // Plan 09 (D-15): un FUR cuyas órdenes siguen provisionales lo gestiona el presupuesto que lo generó.
+      const [gestionado] = await q.rows<{ codigo: string | null }>({ codigo: TN }, tx)`
+        SELECT pp."IdPresupuesto"::text AS codigo FROM requerimiento r LEFT JOIN "ppto_Principal" pp ON pp.id = r.id_ppto_principal
+         WHERE r.id = ${id}::int AND EXISTS (SELECT 1 FROM "documentosOrigen" d WHERE d.id_requerimiento = r.id AND d.estado::text = 'PROVISIONAL')`;
+      if (gestionado) {
+        throw new ConflictException(
+          `El requerimiento lo gestiona el presupuesto ${gestionado.codigo ?? ''}: sus órdenes son provisionales. Cambie el proveedor o quite el ítem en el presupuesto, o apruébelo y anule la orden`,
+        );
+      }
       const [oc] = await q.rows<{ existe: boolean }>({ existe: B }, tx)`
         SELECT EXISTS (SELECT 1 FROM "documentosOrigen" WHERE id_requerimiento = ${id}::int AND estado <> 'ANULADO') AS existe`;
       if (oc.existe) {

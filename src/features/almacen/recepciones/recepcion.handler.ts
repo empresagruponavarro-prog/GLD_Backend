@@ -1,5 +1,6 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { exigirNoProvisional } from '../../documentos/shared/estado-documento.js';
 import { DocumentoHandler } from '../documentos/documento.handler.js';
 import { CreateDocumentoDto, DocumentoResponseDto } from '../documentos/documento.dto.js';
 import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
@@ -55,7 +56,7 @@ export class RecepcionHandler {
         LEFT JOIN anexos pr ON pr.id = o.id_anexo
         LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo
         LEFT JOIN requerimiento r ON r.id = o.id_requerimiento
-       WHERE o.estado <> 'ANULADO'
+       WHERE o.estado = 'REGISTRADO'
          AND (${patron}::text = '%%' OR o.numero_oc ILIKE ${patron}::text OR o.id_oc ILIKE ${patron}::text)
       ) t WHERE t.lineas_pendientes > 0
        ORDER BY t.id DESC
@@ -91,6 +92,8 @@ export class RecepcionHandler {
         LEFT JOIN requerimiento r ON r.id = o.id_requerimiento
        WHERE o.id = ${id}::int`;
     if (!oc) throw new NotFoundException(`Orden de compra ${id} no encontrada`);
+    const [est] = await q.rows<{ estado: string }>({ estado: T })`SELECT estado::text AS estado FROM "documentosOrigen" WHERE id = ${id}::int`;
+    exigirNoProvisional(est?.estado, 'recibir la orden de compra');
 
     const lineas = await q.rows<RecepcionOrdenCompraResponseDto['lineas'][number]>({
       id_detalle: I,
@@ -161,6 +164,7 @@ export class RecepcionHandler {
           FROM "documentosOrigen" o WHERE o.id = ${dto.id_orden_compra}::int FOR UPDATE OF o`;
       if (!oc) throw new NotFoundException(`Orden de compra ${dto.id_orden_compra} no encontrada`);
       if (oc.estado === 'ANULADO') throw new ConflictException(`La orden de compra ${dto.id_orden_compra} está anulada`);
+      exigirNoProvisional(oc.estado, 'recibir la orden de compra');
       // Sin tipo de cambio en el body se usa el de venta registrado en Tesorería (el de la fecha o el último anterior).
       let tipoCambio = dto.tipo_cambio;
       if (!oc.es_soles && tipoCambio === undefined) {

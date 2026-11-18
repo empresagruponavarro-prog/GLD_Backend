@@ -8,6 +8,7 @@ import { App } from 'supertest/types';
 import { aDia, deDia, lunesDe } from '../src/features/operaciones-obra/shared/control-avance/calendario.js';
 import { hoyLima } from '../src/features/operaciones-obra/shared/obra-shared.js';
 import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
+import { aprobarE2E } from './helpers/aprobacion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -226,9 +227,11 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
 
       const limpio = (await api().post('/presupuestos/E2E-REC-P1/limpiar-vacios').expect(200)).body;
       expect(limpio).toMatchObject({ items_eliminados: 1, categorias_eliminadas: 1 });
-      expect((await api().get('/presupuestos/E2E-REC-P1/validacion').expect(200)).body.puede_aprobar).toBe(true);
+      const completo = (await api().get('/presupuestos/E2E-REC-P1/validacion').expect(200)).body;
+      expect(completo.problemas).toEqual([]);
+      expect(completo.bloqueos.map((b: { codigo: string }) => b.codigo)).toEqual(['ITEMS_SIN_ADJUDICAR']); // plan 09: solo falta adjudicar
 
-      const ok = (await api().post('/presupuestos/E2E-REC-P1/aprobar').expect(200)).body;
+      const ok = (await aprobarE2E(api(), db, 'E2E-REC-P1')).body;
       expect(ok).toMatchObject({ estado_ppto: 'APROBADO', tipo: 'Principal', estructura: { capturada: true, partidas: 1, subpartidas: 2 } });
     });
   });
@@ -370,7 +373,7 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
     it('un adicional agrega partidas adicionales; una nueva versión con avance se rechaza', async () => {
       await api().post('/presupuestos').send({ IdPresupuesto: 'E2E-REC-A1', id_centro_costo: cc, TipoPpto: 'Adicional', Proyecto: 'adicional', Estado: 'PENDIENTE' }).expect(201);
       await armar('E2E-REC-A1', [{ cat: 'E2E-REC-C1', items: [[producto, 1, 10]] }]);
-      const ad = (await api().post('/presupuestos/E2E-REC-A1/aprobar').expect(200)).body;
+      const ad = (await aprobarE2E(api(), db, 'E2E-REC-A1')).body;
       expect(ad).toMatchObject({ tipo: 'Adicional', estado_ppto: 'APROBADO' });
       const subs = await subpartidas();
       expect(subs.filter((s) => s.tipo === 'ADICIONAL')).toHaveLength(1);

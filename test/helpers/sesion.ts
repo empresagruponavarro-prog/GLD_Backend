@@ -28,6 +28,9 @@ export async function crearUsuarioE2E(db: ClienteSql): Promise<void> {
 /** Borra el Administrador temporal de los e2e (en el `afterAll`). */
 export async function borrarUsuarioE2E(db: ClienteSql): Promise<void> {
   await db.query('DELETE FROM usuarios WHERE "IdUsuario" = $1', [USUARIO_E2E]);
+  // Trabajador y proveedor que crea `aprobarE2E` (helpers/aprobacion.ts), si se usó.
+  await db.query(`DELETE FROM trabajador WHERE id_anexo IN (SELECT id FROM anexos WHERE "Anexo" LIKE 'E2E-ADJ %')`);
+  await db.query(`DELETE FROM anexos WHERE "Anexo" LIKE 'E2E-ADJ %'`);
 }
 
 /**

@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { insertarDocumentoOrigen } from '../../documentos/shared/documento-origen-insert.js';
-import { preciosOferta } from '../cotizaciones/cotizacion.handler.js';
+import { preciosOferta } from './precios-oferta.js';
 import type { ClaseDocumento } from '../../tesoreria/shared/tributos.js';
 
 export interface DocumentoGenerado {

@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'3ee462c8e7bd29067f4ac4cade42f49ce1ac0a34d4bb2d23145ba9d9b70423f9'>;
+  StorageHashBase<'f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1167,7 +1167,7 @@ export type FieldOutputTypes = {
         | 'OTRO'
         | null;
       readonly numero_documento: Varchar<20> | null;
-      readonly estado: 'REGISTRADO' | 'ANULADO';
+      readonly estado: 'PROVISIONAL' | 'REGISTRADO' | 'ANULADO';
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
       readonly afecto_igv: CodecTypes['pg/bool@1']['output'];
       readonly dias_credito: CodecTypes['pg/int4@1']['output'] | null;
@@ -1264,6 +1264,42 @@ export type FieldOutputTypes = {
       readonly PlanillaTotal: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Estado: Varchar<50> | null;
     };
+    readonly ppto_cotizacion: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly numero: Varchar<20>;
+      readonly id_presupuesto: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_fase: CodecTypes['pg/int4@1']['output'];
+      readonly id_proveedor: CodecTypes['pg/int4@1']['output'];
+      readonly fecha: CodecTypes['pg/date-string@1']['output'];
+      readonly referencia: Varchar<50> | null;
+      readonly moneda_id: Varchar<10>;
+      readonly moneda_simbolo: Varchar<10> | null;
+      readonly incluye_igv: CodecTypes['pg/bool@1']['output'];
+      readonly afecto_igv: CodecTypes['pg/bool@1']['output'];
+      readonly forma_pago: Varchar<50>;
+      readonly dias_credito: CodecTypes['pg/int4@1']['output'];
+      readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly medio_pago:
+        'EFECTIVO' | 'CHEQUE' | 'TRANSFERENCIA' | 'DEPOSITO' | 'YAPE' | 'PLIN' | 'OTRO' | null;
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly validez_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly garantia: Varchar<100> | null;
+      readonly condiciones: CodecTypes['pg/text@1']['output'] | null;
+      readonly archivo_url: Varchar<255> | null;
+      readonly registrado_por: Varchar<255> | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
+    readonly ppto_cotizacion_detalle: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_cotizacion: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['output'];
+      readonly cotiza: CodecTypes['pg/bool@1']['output'];
+      readonly cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly precio_unitario: CodecTypes['pg/numeric@1']['output'];
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly marca_modelo: Varchar<100> | null;
+      readonly observaciones: CodecTypes['pg/text@1']['output'] | null;
+    };
     readonly ppto_DetalleFases: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly IdPresupuestoDetalle: Varchar<255> | null;
@@ -1307,6 +1343,11 @@ export type FieldOutputTypes = {
       readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
       readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
       readonly Orden: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['output'] | null;
+      readonly adjudicado_por: Varchar<255> | null;
+      readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly comentario_adjudicacion: CodecTypes['pg/text@1']['output'] | null;
+      readonly id_item_origen: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly ppto_Fases: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1485,6 +1526,8 @@ export type FieldOutputTypes = {
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_cotizacion_ganadora: CodecTypes['pg/int4@1']['output'] | null;
       readonly comentario_adjudicacion: CodecTypes['pg/text@1']['output'] | null;
+      readonly id_ppto_principal: CodecTypes['pg/int4@1']['output'] | null;
+      readonly origen: 'MANUAL' | 'PPTO_FASE' | 'PPTO_ADJUDICACION';
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly requerimiento_detalle: {
@@ -1497,6 +1540,7 @@ export type FieldOutputTypes = {
       readonly observaciones: CodecTypes['pg/text@1']['output'] | null;
       readonly id_beneficiario: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly requerimiento_evento: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -1677,6 +1721,7 @@ export type FieldOutputTypes = {
       readonly Rol: Varchar<255> | null;
       readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_trabajador: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -2624,7 +2669,7 @@ export type FieldInputTypes = {
         | 'OTRO'
         | null;
       readonly numero_documento: CodecTypes['sql/varchar@1']['input'] | null;
-      readonly estado: 'REGISTRADO' | 'ANULADO';
+      readonly estado: 'PROVISIONAL' | 'REGISTRADO' | 'ANULADO';
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
       readonly afecto_igv: CodecTypes['pg/bool@1']['input'];
       readonly dias_credito: CodecTypes['pg/int4@1']['input'] | null;
@@ -2721,6 +2766,42 @@ export type FieldInputTypes = {
       readonly PlanillaTotal: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Estado: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly ppto_cotizacion: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly numero: CodecTypes['sql/varchar@1']['input'];
+      readonly id_presupuesto: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_fase: CodecTypes['pg/int4@1']['input'];
+      readonly id_proveedor: CodecTypes['pg/int4@1']['input'];
+      readonly fecha: CodecTypes['pg/date-string@1']['input'];
+      readonly referencia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly moneda_id: CodecTypes['sql/varchar@1']['input'];
+      readonly moneda_simbolo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly incluye_igv: CodecTypes['pg/bool@1']['input'];
+      readonly afecto_igv: CodecTypes['pg/bool@1']['input'];
+      readonly forma_pago: CodecTypes['sql/varchar@1']['input'];
+      readonly dias_credito: CodecTypes['pg/int4@1']['input'];
+      readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly medio_pago:
+        'EFECTIVO' | 'CHEQUE' | 'TRANSFERENCIA' | 'DEPOSITO' | 'YAPE' | 'PLIN' | 'OTRO' | null;
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly validez_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly garantia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly condiciones: CodecTypes['pg/text@1']['input'] | null;
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+    };
+    readonly ppto_cotizacion_detalle: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_cotizacion: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['input'];
+      readonly cotiza: CodecTypes['pg/bool@1']['input'];
+      readonly cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly precio_unitario: CodecTypes['pg/numeric@1']['input'];
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly marca_modelo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly observaciones: CodecTypes['pg/text@1']['input'] | null;
+    };
     readonly ppto_DetalleFases: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly IdPresupuestoDetalle: CodecTypes['sql/varchar@1']['input'] | null;
@@ -2764,6 +2845,11 @@ export type FieldInputTypes = {
       readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
       readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
       readonly Orden: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['input'] | null;
+      readonly adjudicado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly comentario_adjudicacion: CodecTypes['pg/text@1']['input'] | null;
+      readonly id_item_origen: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly ppto_Fases: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -2942,6 +3028,8 @@ export type FieldInputTypes = {
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_cotizacion_ganadora: CodecTypes['pg/int4@1']['input'] | null;
       readonly comentario_adjudicacion: CodecTypes['pg/text@1']['input'] | null;
+      readonly id_ppto_principal: CodecTypes['pg/int4@1']['input'] | null;
+      readonly origen: 'MANUAL' | 'PPTO_FASE' | 'PPTO_ADJUDICACION';
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly requerimiento_detalle: {
@@ -2954,6 +3042,7 @@ export type FieldInputTypes = {
       readonly observaciones: CodecTypes['pg/text@1']['input'] | null;
       readonly id_beneficiario: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly requerimiento_evento: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3134,6 +3223,7 @@ export type FieldInputTypes = {
       readonly Rol: CodecTypes['sql/varchar@1']['input'] | null;
       readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_trabajador: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly UsuariosMenus: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -3694,7 +3784,7 @@ export type StorageColumnTypes = {
       readonly dscto_compras: CodecTypes['pg/numeric@1']['output'] | null;
       readonly dscto_intervencion: CodecTypes['pg/numeric@1']['output'] | null;
       readonly dscto_otros: CodecTypes['pg/numeric@1']['output'] | null;
-      readonly estado: 'REGISTRADO' | 'ANULADO';
+      readonly estado: 'PROVISIONAL' | 'REGISTRADO' | 'ANULADO';
       readonly fecha_creacion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly fecha_emision: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly fecha_vencimiento: CodecTypes['pg/date-string@1']['output'] | null;
@@ -4175,6 +4265,42 @@ export type StorageColumnTypes = {
       readonly Semana: Varchar<255> | null;
       readonly TipoContratacion: Varchar<255> | null;
     };
+    readonly ppto_cotizacion: {
+      readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly afecto_igv: CodecTypes['pg/bool@1']['output'];
+      readonly archivo_url: Varchar<255> | null;
+      readonly condiciones: CodecTypes['pg/text@1']['output'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly dias_credito: CodecTypes['pg/int4@1']['output'];
+      readonly fecha: CodecTypes['pg/date-string@1']['output'];
+      readonly forma_pago: Varchar<50>;
+      readonly garantia: Varchar<100> | null;
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_fase: CodecTypes['pg/int4@1']['output'];
+      readonly id_presupuesto: CodecTypes['pg/int4@1']['output'];
+      readonly id_proveedor: CodecTypes['pg/int4@1']['output'];
+      readonly incluye_igv: CodecTypes['pg/bool@1']['output'];
+      readonly medio_pago:
+        'EFECTIVO' | 'CHEQUE' | 'TRANSFERENCIA' | 'DEPOSITO' | 'YAPE' | 'PLIN' | 'OTRO' | null;
+      readonly moneda_id: Varchar<10>;
+      readonly moneda_simbolo: Varchar<10> | null;
+      readonly numero: Varchar<20>;
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly referencia: Varchar<50> | null;
+      readonly registrado_por: Varchar<255> | null;
+      readonly validez_dias: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly ppto_cotizacion_detalle: {
+      readonly cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly cotiza: CodecTypes['pg/bool@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_cotizacion: CodecTypes['pg/int4@1']['output'];
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['output'];
+      readonly marca_modelo: Varchar<100> | null;
+      readonly observaciones: CodecTypes['pg/text@1']['output'] | null;
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly precio_unitario: CodecTypes['pg/numeric@1']['output'];
+    };
     readonly ppto_DetalleFases: {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
@@ -4206,11 +4332,16 @@ export type StorageColumnTypes = {
       readonly Usuario: Varchar<255> | null;
     };
     readonly ppto_DetalleItems: {
+      readonly adjudicado_por: Varchar<255> | null;
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
+      readonly comentario_adjudicacion: CodecTypes['pg/text@1']['output'] | null;
       readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
       readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'];
+      readonly id_item_origen: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['output'];
       readonly id_unidad_medida: CodecTypes['pg/int4@1']['output'];
       readonly IdPresupuesto: Varchar<255>;
@@ -4386,9 +4517,11 @@ export type StorageColumnTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'];
       readonly id_cotizacion_ganadora: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_fase: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_ppto_principal: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_solicitante: CodecTypes['pg/int4@1']['output'];
       readonly justificacion: CodecTypes['pg/text@1']['output'];
       readonly numero: Varchar<20>;
+      readonly origen: 'MANUAL' | 'PPTO_FASE' | 'PPTO_ADJUDICACION';
       readonly tipo:
         | 'COMPRA'
         | 'PLANILLA_PERSONAL'
@@ -4404,6 +4537,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_beneficiario: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['output'];
       readonly id_requerimiento: CodecTypes['pg/int4@1']['output'];
       readonly observaciones: CodecTypes['pg/text@1']['output'] | null;
@@ -4584,6 +4718,7 @@ export type StorageColumnTypes = {
       readonly activo: CodecTypes['pg/bool@1']['output'];
       readonly Clave: Varchar<255> | null;
       readonly id_area: CodecTypes['pg/int4@1']['output'] | null;
+      readonly id_trabajador: CodecTypes['pg/int4@1']['output'] | null;
       readonly IdUsuario: Varchar<255>;
       readonly Nombres: Varchar<255> | null;
       readonly Rol: Varchar<255> | null;
@@ -5151,7 +5286,7 @@ export type StorageColumnInputTypes = {
       readonly dscto_compras: CodecTypes['pg/numeric@1']['input'] | null;
       readonly dscto_intervencion: CodecTypes['pg/numeric@1']['input'] | null;
       readonly dscto_otros: CodecTypes['pg/numeric@1']['input'] | null;
-      readonly estado: 'REGISTRADO' | 'ANULADO';
+      readonly estado: 'PROVISIONAL' | 'REGISTRADO' | 'ANULADO';
       readonly fecha_creacion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly fecha_emision: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly fecha_vencimiento: CodecTypes['pg/date-string@1']['input'] | null;
@@ -5632,6 +5767,42 @@ export type StorageColumnInputTypes = {
       readonly Semana: CodecTypes['sql/varchar@1']['input'] | null;
       readonly TipoContratacion: CodecTypes['sql/varchar@1']['input'] | null;
     };
+    readonly ppto_cotizacion: {
+      readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly afecto_igv: CodecTypes['pg/bool@1']['input'];
+      readonly archivo_url: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly condiciones: CodecTypes['pg/text@1']['input'] | null;
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly dias_credito: CodecTypes['pg/int4@1']['input'];
+      readonly fecha: CodecTypes['pg/date-string@1']['input'];
+      readonly forma_pago: CodecTypes['sql/varchar@1']['input'];
+      readonly garantia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_fase: CodecTypes['pg/int4@1']['input'];
+      readonly id_presupuesto: CodecTypes['pg/int4@1']['input'];
+      readonly id_proveedor: CodecTypes['pg/int4@1']['input'];
+      readonly incluye_igv: CodecTypes['pg/bool@1']['input'];
+      readonly medio_pago:
+        'EFECTIVO' | 'CHEQUE' | 'TRANSFERENCIA' | 'DEPOSITO' | 'YAPE' | 'PLIN' | 'OTRO' | null;
+      readonly moneda_id: CodecTypes['sql/varchar@1']['input'];
+      readonly moneda_simbolo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly numero: CodecTypes['sql/varchar@1']['input'];
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly referencia: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly validez_dias: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly ppto_cotizacion_detalle: {
+      readonly cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly cotiza: CodecTypes['pg/bool@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_cotizacion: CodecTypes['pg/int4@1']['input'];
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['input'];
+      readonly marca_modelo: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly observaciones: CodecTypes['pg/text@1']['input'] | null;
+      readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly precio_unitario: CodecTypes['pg/numeric@1']['input'];
+    };
     readonly ppto_DetalleFases: {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
@@ -5663,11 +5834,16 @@ export type StorageColumnInputTypes = {
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
     };
     readonly ppto_DetalleItems: {
+      readonly adjudicado_por: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
+      readonly comentario_adjudicacion: CodecTypes['pg/text@1']['input'] | null;
       readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
       readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'];
+      readonly id_item_origen: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['input'];
       readonly id_unidad_medida: CodecTypes['pg/int4@1']['input'];
       readonly IdPresupuesto: CodecTypes['sql/varchar@1']['input'];
@@ -5843,9 +6019,11 @@ export type StorageColumnInputTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'];
       readonly id_cotizacion_ganadora: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_fase: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_ppto_principal: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_solicitante: CodecTypes['pg/int4@1']['input'];
       readonly justificacion: CodecTypes['pg/text@1']['input'];
       readonly numero: CodecTypes['sql/varchar@1']['input'];
+      readonly origen: 'MANUAL' | 'PPTO_FASE' | 'PPTO_ADJUDICACION';
       readonly tipo:
         | 'COMPRA'
         | 'PLANILLA_PERSONAL'
@@ -5861,6 +6039,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_beneficiario: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_ppto_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_ppto_item: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_producto: CodecTypes['pg/int4@1']['input'];
       readonly id_requerimiento: CodecTypes['pg/int4@1']['input'];
       readonly observaciones: CodecTypes['pg/text@1']['input'] | null;
@@ -6041,6 +6220,7 @@ export type StorageColumnInputTypes = {
       readonly activo: CodecTypes['pg/bool@1']['input'];
       readonly Clave: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_area: CodecTypes['pg/int4@1']['input'] | null;
+      readonly id_trabajador: CodecTypes['pg/int4@1']['input'] | null;
       readonly IdUsuario: CodecTypes['sql/varchar@1']['input'];
       readonly Nombres: CodecTypes['sql/varchar@1']['input'] | null;
       readonly Rol: CodecTypes['sql/varchar@1']['input'] | null;
@@ -14020,6 +14200,308 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly ppto_cotizacion: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly numero: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 20 };
+                };
+                readonly id_presupuesto: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_detalle_fase: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_proveedor: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly fecha: {
+                  readonly nativeType: 'date';
+                  readonly codecId: 'pg/date-string@1';
+                  readonly nullable: false;
+                };
+                readonly referencia: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly moneda_id: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 10 };
+                };
+                readonly moneda_simbolo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 10 };
+                };
+                readonly incluye_igv: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly afecto_igv: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly forma_pago: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: false;
+                  readonly typeParams: { readonly length: 50 };
+                };
+                readonly dias_credito: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly adelanto_porcentaje: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly medio_pago: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly plazo_entrega_dias: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly validez_dias: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly garantia: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly condiciones: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly archivo_url: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly registrado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [
+                { readonly columns: readonly ['numero'] },
+                { readonly columns: readonly ['id_detalle_fase', 'id_proveedor'] },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_cotizacion_id_presupuesto_idx_c44c4c50';
+                  readonly prefix: 'ppto_cotizacion_id_presupuesto_idx';
+                  readonly columns: readonly ['id_presupuesto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_cotizacion_id_detalle_fase_idx_baca5911';
+                  readonly prefix: 'ppto_cotizacion_id_detalle_fase_idx';
+                  readonly columns: readonly ['id_detalle_fase'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_cotizacion_id_proveedor_idx_4edef4d1';
+                  readonly prefix: 'ppto_cotizacion_id_proveedor_idx';
+                  readonly columns: readonly ['id_proveedor'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion';
+                    readonly columns: readonly ['id_presupuesto'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Principal';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion';
+                    readonly columns: readonly ['id_detalle_fase'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleFases';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion';
+                    readonly columns: readonly ['id_proveedor'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'anexos';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly ppto_cotizacion_detalle: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly id_cotizacion: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly id_ppto_item: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly cotiza: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                };
+                readonly cantidad: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                };
+                readonly precio_unitario: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                };
+                readonly plazo_entrega_dias: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly marca_modelo: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 100 };
+                };
+                readonly observaciones: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['id_cotizacion', 'id_ppto_item'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'ppto_cotizacion_detalle_id_ppto_item_idx_06e4b8fe';
+                  readonly prefix: 'ppto_cotizacion_detalle_id_ppto_item_idx';
+                  readonly columns: readonly ['id_ppto_item'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_cotizacion_detalle_id_cotizacion_idx_49595cf0';
+                  readonly prefix: 'ppto_cotizacion_detalle_id_cotizacion_idx';
+                  readonly columns: readonly ['id_cotizacion'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion_detalle';
+                    readonly columns: readonly ['id_cotizacion'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion_detalle';
+                    readonly columns: readonly ['id_ppto_item'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly ppto_DetalleFases: {
               columns: {
                 readonly id: {
@@ -14466,6 +14948,32 @@ type ContractBase = Omit<
                     readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
                   };
                 };
+                readonly id_ppto_cot_detalle_ganadora: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly adjudicado_por: {
+                  readonly nativeType: 'character varying';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly nullable: true;
+                  readonly typeParams: { readonly length: 255 };
+                };
+                readonly fecha_adjudicacion: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+                readonly comentario_adjudicacion: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly id_item_origen: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -14480,6 +14988,18 @@ type ContractBase = Omit<
                   readonly name: 'ppto_DetalleItems_IdPresupuesto_idx_610007fd';
                   readonly prefix: 'ppto_DetalleItems_IdPresupuesto_idx';
                   readonly columns: readonly ['IdPresupuesto'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx_b8209d48';
+                  readonly prefix: 'ppto_DetalleItems_id_ppto_cot_detalle_ganadora_idx';
+                  readonly columns: readonly ['id_ppto_cot_detalle_ganadora'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_DetalleItems_id_item_origen_idx_0ff49c6d';
+                  readonly prefix: 'ppto_DetalleItems_id_item_origen_idx';
+                  readonly columns: readonly ['id_item_origen'];
                   readonly unique: false;
                 },
                 {
@@ -14505,6 +15025,30 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'ppto_DetalleFasesCate';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id_ppto_cot_detalle_ganadora'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion_detalle';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
+                    readonly columns: readonly ['id_item_origen'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -15910,6 +16454,20 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
                 };
+                readonly id_ppto_principal: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly origen: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'MANUAL'>;
+                  };
+                };
                 readonly created_at: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-temporal@1';
@@ -15924,6 +16482,12 @@ type ContractBase = Omit<
                   readonly name: 'requerimiento_estado_fecha_idx_14aede9c';
                   readonly prefix: 'requerimiento_estado_fecha_idx';
                   readonly columns: readonly ['estado', 'fecha'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'requerimiento_id_ppto_principal_idx_4f26647a';
+                  readonly prefix: 'requerimiento_id_ppto_principal_idx';
+                  readonly columns: readonly ['id_ppto_principal'];
                   readonly unique: false;
                 },
                 {
@@ -15970,6 +16534,18 @@ type ContractBase = Omit<
                 },
               ];
               foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'requerimiento';
+                    readonly columns: readonly ['id_ppto_principal'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_Principal';
+                    readonly columns: readonly ['id'];
+                  };
+                },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
@@ -16107,6 +16683,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                 };
+                readonly id_ppto_item: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -16121,6 +16702,12 @@ type ContractBase = Omit<
                   readonly name: 'requerimiento_detalle_id_ppto_detalle_categoria_idx_5963aa86';
                   readonly prefix: 'requerimiento_detalle_id_ppto_detalle_categoria_idx';
                   readonly columns: readonly ['id_ppto_detalle_categoria'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'requerimiento_detalle_id_ppto_item_idx_06e4b8fe';
+                  readonly prefix: 'requerimiento_detalle_id_ppto_item_idx';
+                  readonly columns: readonly ['id_ppto_item'];
                   readonly unique: false;
                 },
                 {
@@ -16146,6 +16733,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'ppto_DetalleFasesCate';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'requerimiento_detalle';
+                    readonly columns: readonly ['id_ppto_item'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleItems';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -17548,6 +18147,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: true;
                 };
+                readonly id_trabajador: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['IdUsuario'] };
               uniques: readonly [];
@@ -17556,6 +18160,12 @@ type ContractBase = Omit<
                   readonly name: 'usuarios_id_area_idx_2da0f6a6';
                   readonly prefix: 'usuarios_id_area_idx';
                   readonly columns: readonly ['id_area'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'usuarios_id_trabajador_idx_efbff78d';
+                  readonly prefix: 'usuarios_id_trabajador_idx';
+                  readonly columns: readonly ['id_trabajador'];
                   readonly unique: false;
                 },
               ];
@@ -17570,6 +18180,18 @@ type ContractBase = Omit<
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'area';
                     readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'usuarios';
+                    readonly columns: readonly ['id_trabajador'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trabajador';
+                    readonly columns: readonly ['id_anexo'];
                   };
                 },
               ];
@@ -17696,7 +18318,7 @@ type ContractBase = Omit<
             };
             readonly estado_documento_origen: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['REGISTRADO', 'ANULADO'];
+              readonly values: readonly ['PROVISIONAL', 'REGISTRADO', 'ANULADO'];
             };
             readonly estado_obra: {
               readonly kind: 'valueSet';
@@ -17789,6 +18411,10 @@ type ContractBase = Omit<
             readonly naturaleza_documento: {
               readonly kind: 'valueSet';
               readonly values: readonly ['INGRESO', 'SALIDA', 'TRANSFERENCIA'];
+            };
+            readonly origen_requerimiento: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['MANUAL', 'PPTO_FASE', 'PPTO_ADJUDICACION'];
             };
             readonly tipo_cuenta_tesoreria: {
               readonly kind: 'valueSet';
@@ -18143,6 +18769,14 @@ type ContractBase = Omit<
     readonly ppto_DetalleItems: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'ppto_DetalleItems';
+    };
+    readonly ppto_cotizacion: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_cotizacion';
+    };
+    readonly ppto_cotizacion_detalle: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'ppto_cotizacion_detalle';
     };
     readonly area: { readonly namespace: 'public' & NamespaceId; readonly model: 'area' };
     readonly cotizacion: {
@@ -20095,6 +20729,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_anexo'];
+                };
+              };
+              readonly pptoCotizaciones: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_proveedor'];
                 };
               };
               readonly prestamosResponsable: {
@@ -27451,6 +28096,301 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly ppto_cotizacion: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly numero: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 20 };
+                };
+              };
+              readonly id_presupuesto: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_detalle_fase: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_proveedor: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly fecha: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/date-string@1' };
+              };
+              readonly referencia: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly moneda_id: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 10 };
+                };
+              };
+              readonly moneda_simbolo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 10 };
+                };
+              };
+              readonly incluye_igv: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly afecto_igv: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly forma_pago: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 50 };
+                };
+              };
+              readonly dias_credito: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly adelanto_porcentaje: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly medio_pago: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly plazo_entrega_dias: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly validez_dias: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly garantia: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly condiciones: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly archivo_url: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly registrado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly created_at: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly detalleFase: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleFases';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_detalle_fase'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly detalles: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion_detalle';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_cotizacion'];
+                };
+              };
+              readonly presupuesto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Principal';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_presupuesto'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly proveedor: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Anexos';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_proveedor'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_cotizacion';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly numero: { readonly column: 'numero' };
+                readonly id_presupuesto: { readonly column: 'id_presupuesto' };
+                readonly id_detalle_fase: { readonly column: 'id_detalle_fase' };
+                readonly id_proveedor: { readonly column: 'id_proveedor' };
+                readonly fecha: { readonly column: 'fecha' };
+                readonly referencia: { readonly column: 'referencia' };
+                readonly moneda_id: { readonly column: 'moneda_id' };
+                readonly moneda_simbolo: { readonly column: 'moneda_simbolo' };
+                readonly incluye_igv: { readonly column: 'incluye_igv' };
+                readonly afecto_igv: { readonly column: 'afecto_igv' };
+                readonly forma_pago: { readonly column: 'forma_pago' };
+                readonly dias_credito: { readonly column: 'dias_credito' };
+                readonly adelanto_porcentaje: { readonly column: 'adelanto_porcentaje' };
+                readonly medio_pago: { readonly column: 'medio_pago' };
+                readonly plazo_entrega_dias: { readonly column: 'plazo_entrega_dias' };
+                readonly validez_dias: { readonly column: 'validez_dias' };
+                readonly garantia: { readonly column: 'garantia' };
+                readonly condiciones: { readonly column: 'condiciones' };
+                readonly archivo_url: { readonly column: 'archivo_url' };
+                readonly registrado_por: { readonly column: 'registrado_por' };
+                readonly created_at: { readonly column: 'created_at' };
+              };
+            };
+          };
+          readonly ppto_cotizacion_detalle: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_cotizacion: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_ppto_item: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly cotiza: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly cantidad: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly precio_unitario: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly plazo_entrega_dias: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly marca_modelo: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 100 };
+                };
+              };
+              readonly observaciones: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly cotizacion: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_cotizacion'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly ganadoraDe: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_cot_detalle_ganadora'];
+                };
+              };
+              readonly item: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_item'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'ppto_cotizacion_detalle';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly id_cotizacion: { readonly column: 'id_cotizacion' };
+                readonly id_ppto_item: { readonly column: 'id_ppto_item' };
+                readonly cotiza: { readonly column: 'cotiza' };
+                readonly cantidad: { readonly column: 'cantidad' };
+                readonly precio_unitario: { readonly column: 'precio_unitario' };
+                readonly plazo_entrega_dias: { readonly column: 'plazo_entrega_dias' };
+                readonly marca_modelo: { readonly column: 'marca_modelo' };
+                readonly observaciones: { readonly column: 'observaciones' };
+              };
+            };
+          };
           readonly ppto_DetalleFases: {
             readonly fields: {
               readonly id: {
@@ -27562,6 +28502,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id_centro_costo'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly cotizacionesPpto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_detalle_fase'];
                 };
               };
               readonly empresa: {
@@ -27916,8 +28867,79 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly id_ppto_cot_detalle_ganadora: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly adjudicado_por: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'sql/varchar@1';
+                  readonly typeParams: { readonly length: 255 };
+                };
+              };
+              readonly fecha_adjudicacion: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly comentario_adjudicacion: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id_item_origen: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
+              readonly cotDetalleGanadora: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion_detalle';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_cot_detalle_ganadora'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly cotizacionLineas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion_detalle';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_item'];
+                };
+              };
+              readonly itemOrigen: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_item_origen'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly itemsDerivados: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_item_origen'];
+                };
+              };
               readonly partida: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -27938,6 +28960,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id_producto'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly requerimientoLineas: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'requerimiento_detalle';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_item'];
                 };
               };
               readonly unidad_medida: {
@@ -27968,6 +29001,13 @@ type ContractBase = Omit<
                 readonly CostoTotal: { readonly column: 'CostoTotal' };
                 readonly VentaTotal: { readonly column: 'VentaTotal' };
                 readonly Orden: { readonly column: 'Orden' };
+                readonly id_ppto_cot_detalle_ganadora: {
+                  readonly column: 'id_ppto_cot_detalle_ganadora';
+                };
+                readonly adjudicado_por: { readonly column: 'adjudicado_por' };
+                readonly fecha_adjudicacion: { readonly column: 'fecha_adjudicacion' };
+                readonly comentario_adjudicacion: { readonly column: 'comentario_adjudicacion' };
+                readonly id_item_origen: { readonly column: 'id_item_origen' };
               };
             };
           };
@@ -28701,6 +29741,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly cotizacionesPpto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_presupuesto'];
+                };
+              };
               readonly detallesFases: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -28754,6 +29805,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['id_presupuesto_origen'];
+                };
+              };
+              readonly requerimientosPpto: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'requerimiento';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_ppto_principal'];
                 };
               };
               readonly versionDe: {
@@ -29470,6 +30532,14 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly id_ppto_principal: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly origen: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly created_at: {
                 readonly nullable: false;
                 readonly type: {
@@ -29586,6 +30656,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id_requerimiento'];
                 };
               };
+              readonly pptoPrincipal: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_Principal';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_principal'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly solicitante: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -29620,6 +30701,8 @@ type ContractBase = Omit<
                 readonly id_area: { readonly column: 'id_area' };
                 readonly id_cotizacion_ganadora: { readonly column: 'id_cotizacion_ganadora' };
                 readonly comentario_adjudicacion: { readonly column: 'comentario_adjudicacion' };
+                readonly id_ppto_principal: { readonly column: 'id_ppto_principal' };
+                readonly origen: { readonly column: 'origen' };
                 readonly created_at: { readonly column: 'created_at' };
               };
             };
@@ -29659,6 +30742,10 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly id_ppto_detalle_categoria: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id_ppto_item: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
@@ -29708,6 +30795,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly pptoItem: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleItems';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_ppto_item'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly producto: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -29746,6 +30844,7 @@ type ContractBase = Omit<
                 readonly id_ppto_detalle_categoria: {
                   readonly column: 'id_ppto_detalle_categoria';
                 };
+                readonly id_ppto_item: { readonly column: 'id_ppto_item' };
               };
             };
           };
@@ -30644,6 +31743,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly usuarios: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Usuarios';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id_anexo'];
+                  readonly targetFields: readonly ['id_trabajador'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'trabajador';
@@ -31059,6 +32169,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly id_trabajador: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
             };
             readonly relations: {
               readonly area: {
@@ -31091,6 +32205,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['usuario_id'];
                 };
               };
+              readonly trabajador: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'trabajador';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_trabajador'];
+                  readonly targetFields: readonly ['id_anexo'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'usuarios';
@@ -31103,6 +32228,7 @@ type ContractBase = Omit<
                 readonly Rol: { readonly column: 'Rol' };
                 readonly activo: { readonly column: 'activo' };
                 readonly id_area: { readonly column: 'id_area' };
+                readonly id_trabajador: { readonly column: 'id_trabajador' };
               };
             };
           };
@@ -31329,8 +32455,17 @@ type ContractBase = Omit<
           readonly estado_documento_origen: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
+              { readonly name: 'PROVISIONAL'; readonly value: 'PROVISIONAL' },
               { readonly name: 'REGISTRADO'; readonly value: 'REGISTRADO' },
               { readonly name: 'ANULADO'; readonly value: 'ANULADO' },
+            ];
+          };
+          readonly origen_requerimiento: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'MANUAL'; readonly value: 'MANUAL' },
+              { readonly name: 'PPTO_FASE'; readonly value: 'PPTO_FASE' },
+              { readonly name: 'PPTO_ADJUDICACION'; readonly value: 'PPTO_ADJUDICACION' },
             ];
           };
           readonly medio_pago: {

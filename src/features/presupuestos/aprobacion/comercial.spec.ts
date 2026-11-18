@@ -1,4 +1,4 @@
-import { armarComercial, type FaseMeta, type OfertaGanadora } from './comercial.js';
+import { armarComercial, type FaseMeta, type ItemComercialEntrada, type OfertaGanadora } from './comercial.js';
 
 const FASES: FaseMeta[] = [
   { id_fase: 1, nombre_fase: 'ESTRUCTURA', meta: 1000 },
@@ -57,5 +57,75 @@ describe('presupuestos / armarComercial (SP-16)', () => {
 
     expect(r.fases).toHaveLength(1);
     expect(r.total).toEqual({ meta: 0.1, comercial: 0.2, diferencia: 0.1 });
+  });
+});
+
+describe('presupuestos / armarComercial por ítem adjudicado (plan 09)', () => {
+  /** Ítem de la fase 1 (Meta S/ 1000 = 10 × 100). */
+  const item = (id_item: number, costo_meta: number, cantidad: number, precio: number | null | undefined, id_fase = 1): ItemComercialEntrada => ({
+    id_fase,
+    id_item,
+    codigo: `P-${id_item}`,
+    descripcion: `Ítem ${id_item}`,
+    cantidad,
+    costo_meta,
+    adjudicado: precio === undefined ? null : { proveedor: 'CONTRATISTA SAC', precio_sin_igv: precio },
+  });
+
+  it('todos los ítems con proveedor: la fase vale cantidad × precio de cada uno y el Meta no cambia', () => {
+    const r = armarComercial(FASES, [], [item(1, 600, 10, 50), item(2, 400, 4, 90)]);
+
+    expect(r.fases[0]).toMatchObject({ meta: 1000, comercial: 860, fuente: 'ADJUDICACION', items_adjudicados: 2, sin_tipo_cambio: false });
+    expect(r.fases[0].items.map((i) => [i.meta, i.comercial, i.diferencia])).toEqual([[600, 500, -100], [400, 360, -40]]);
+    expect(r.total).toEqual({ meta: 1800, comercial: 1660, diferencia: -140 });
+    expect(r.fases_cotizadas).toBe(1);
+  });
+
+  it('la diferencia por ítem también va en porcentaje (negativa si el proveedor es más barato)', () => {
+    const [i] = armarComercial(FASES, [], [item(1, 600, 10, 50)]).fases[0].items;
+
+    expect(i.diferencia_pct).toBe(-16.67);
+    expect(armarComercial(FASES, [], [item(2, 0, 1, 10)]).fases[0].items[0].diferencia_pct).toBeNull(); // Meta 0: sin porcentaje
+  });
+
+  it('fase mixta: los ítems sin proveedor se quedan al costo del Meta', () => {
+    const r = armarComercial(FASES, [], [item(1, 600, 10, 50), item(2, 400, 4, undefined)]);
+
+    expect(r.fases[0]).toMatchObject({ comercial: 900, fuente: 'MIXTA', items_adjudicados: 1 });
+    expect(r.fases[0].items[1]).toMatchObject({ adjudicado: false, comercial: 400, diferencia: 0 });
+  });
+
+  it('un ganador sin tipo de cambio queda al Meta, se avisa y la fase es mixta', () => {
+    const r = armarComercial(FASES, [], [item(1, 600, 10, 50), item(2, 400, 4, null)]);
+
+    expect(r.fases[0]).toMatchObject({ comercial: 900, fuente: 'MIXTA', sin_tipo_cambio: true, items_adjudicados: 1 });
+    expect(r.fases[0].items[1]).toMatchObject({ adjudicado: false, sin_tipo_cambio: true, comercial: 400 });
+  });
+
+  it('si el único ganador no tiene tipo de cambio la fase queda al Meta y avisa', () => {
+    const r = armarComercial(FASES, [], [item(1, 600, 10, null)]);
+
+    expect(r.fases[0]).toMatchObject({ comercial: 600, sin_tipo_cambio: true });
+  });
+
+  it('con ítems adjudicados, los FUR ganadores de la fase no se suman aparte (no se cuenta dos veces)', () => {
+    const r = armarComercial(FASES, [oferta(1, 777)], [item(1, 1000, 10, 80)]);
+
+    expect(r.fases[0]).toMatchObject({ comercial: 800, fuente: 'ADJUDICACION', requerimientos: [] });
+  });
+
+  it('una fase sin ítems adjudicados mantiene la regla anterior aunque se pidan los ítems', () => {
+    const r = armarComercial(FASES, [oferta(2, 450)], [item(1, 300, 3, undefined, 2)]);
+
+    expect(r.fases[1]).toMatchObject({ comercial: 450, fuente: 'COTIZACION', items_adjudicados: 0 });
+    expect(r.fases[1].items).toHaveLength(1); // los ítems se muestran, con diferencia 0
+    expect(r.fases[1].items[0].diferencia).toBe(0);
+  });
+
+  it('las fases se calculan por separado y los ítems de fases ajenas se ignoran', () => {
+    const r = armarComercial(FASES, [], [item(1, 1000, 10, 90, 1), item(2, 500, 5, 120, 2), item(3, 50, 1, 1, 99)]);
+
+    expect(r.fases.map((f) => [f.comercial, f.fuente])).toEqual([[900, 'ADJUDICACION'], [600, 'ADJUDICACION'], [300, 'META']]);
+    expect(r.total).toEqual({ meta: 1800, comercial: 1800, diferencia: 0 });
   });
 });

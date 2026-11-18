@@ -120,21 +120,28 @@ describe('requerimientos / flujo', () => {
   describe('anular', () => {
     it('rechaza anular un requerimiento con documentos de origen vigentes', async () => {
       conEstado('APROBADO');
-      sqlRows.mockResolvedValueOnce([{ existe: true }]);
+      sqlRows.mockResolvedValueOnce([]).mockResolvedValueOnce([{ existe: true }]); // no es de un presupuesto, y tiene documentos vigentes
       await expect(controller.anular(1, {})).rejects.toThrow(/documentos de origen vigentes/);
+      expect(sqlRun).not.toHaveBeenCalled();
+    });
+
+    it('plan 09 (D-15): un FUR con órdenes provisionales lo gestiona el presupuesto y no se anula a mano', async () => {
+      conEstado('APROBADO');
+      sqlRows.mockResolvedValueOnce([{ codigo: 'PPTO-2026-001' }]);
+      await expect(controller.anular(1, {})).rejects.toThrow(/lo gestiona el presupuesto PPTO-2026-001/);
       expect(sqlRun).not.toHaveBeenCalled();
     });
 
     it('anula un requerimiento aprobado cuyos documentos están anulados', async () => {
       conEstado('APROBADO');
-      sqlRows.mockResolvedValueOnce([{ existe: false }]);
+      sqlRows.mockResolvedValueOnce([]).mockResolvedValueOnce([{ existe: false }]);
       await expect(controller.anular(1, { comentario: 'ya no se necesita' })).resolves.toEqual({ id: 1 });
       expect(sqlRun).toHaveBeenCalledTimes(2); // cambio de estado + evento
     });
 
     it('anula un requerimiento COTIZADO', async () => {
       conEstado('COTIZADO');
-      sqlRows.mockResolvedValueOnce([{ existe: false }]);
+      sqlRows.mockResolvedValueOnce([]).mockResolvedValueOnce([{ existe: false }]);
       await expect(controller.anular(1, {})).resolves.toEqual({ id: 1 });
     });
   });

@@ -1,5 +1,7 @@
 /** Ítem del presupuesto tal como llega de `ppto_DetalleItems`. */
 export interface ItemPresupuesto {
+  /** `ppto_DetalleItems.id` (opcional: lo usa la exclusión de ítems ya pedidos). */
+  id?: number;
   id_producto: number | null;
   /** `ppto_DetalleFasesCate.id`: la subfase (categoría) a la que pertenece el ítem. */
   id_detalle_categoria: number;
@@ -9,6 +11,8 @@ export interface ItemPresupuesto {
 
 /** Una línea del FUR generado: un producto dentro de una subfase. */
 export interface LineaFur {
+  /** Ítem del presupuesto que originó la línea (el primero si se juntaron varios). */
+  id_ppto_item?: number;
   id_producto: number;
   id_ppto_detalle_categoria: number;
   cantidad: number;
@@ -34,8 +38,46 @@ export function agruparLineasFur(items: readonly ItemPresupuesto[]): LineaFur[] 
       previa.cantidad += cantidad;
       previa.costoUnitario = Math.max(previa.costoUnitario, costo);
     } else {
-      lineas.set(clave, { id_producto: it.id_producto, id_ppto_detalle_categoria: it.id_detalle_categoria, cantidad, costoUnitario: costo });
+      lineas.set(clave, {
+        ...(it.id !== undefined ? { id_ppto_item: it.id } : {}),
+        id_producto: it.id_producto,
+        id_ppto_detalle_categoria: it.id_detalle_categoria,
+        cantidad,
+        costoUnitario: costo,
+      });
     }
   }
   return [...lineas.values()];
+}
+
+/** Línea de un FUR vigente que pide algo del presupuesto. */
+export interface LineaPedida {
+  id_ppto_item: number | null;
+  id_producto: number;
+  id_ppto_detalle_categoria: number | null;
+  /** El FUR nació de la adjudicación de cotizaciones (plan 09), no de «Generar FURs». */
+  deAdjudicacion: boolean;
+}
+
+/**
+ * Separa los ítems que «Generar FURs» todavía puede pedir de los que no (plan 09): quedan fuera el que ya tiene un proveedor
+ * ganador (sus FUR y órdenes los genera la adjudicación) y el que ya está en una línea de un FUR vigente. Como una línea de
+ * «Generar FURs» puede juntar varios ítems (mismo producto y subfase) pero guarda uno solo, también queda fuera todo ítem con
+ * el mismo producto y subfase de una línea de ese tipo.
+ */
+export function separarItemsPedidos<T extends ItemPresupuesto & { id: number; id_ppto_cot_detalle_ganadora?: number | null }>(
+  items: readonly T[],
+  pedidas: readonly LineaPedida[],
+): { libres: T[]; excluidos: T[] } {
+  const porItem = new Set(pedidas.filter((l) => l.id_ppto_item !== null).map((l) => l.id_ppto_item));
+  const porPar = new Set(
+    pedidas.filter((l) => !l.deAdjudicacion && l.id_ppto_item !== null && l.id_ppto_detalle_categoria !== null).map((l) => `${l.id_producto}|${l.id_ppto_detalle_categoria}`),
+  );
+  const libres: T[] = [];
+  const excluidos: T[] = [];
+  for (const it of items) {
+    const fuera = (it.id_ppto_cot_detalle_ganadora ?? null) !== null || porItem.has(it.id) || porPar.has(`${it.id_producto}|${it.id_detalle_categoria}`);
+    (fuera ? excluidos : libres).push(it);
+  }
+  return { libres, excluidos };
 }

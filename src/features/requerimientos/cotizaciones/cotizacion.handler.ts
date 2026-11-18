@@ -3,7 +3,8 @@ import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
-import { IGV_PCT, esSoles, redondear } from '../../tesoreria/shared/tributos.js';
+import { esSoles, redondear } from '../../tesoreria/shared/tributos.js';
+import { preciosOferta, totalesCotizacion } from '../shared/precios-oferta.js';
 import { bloquearRequerimiento } from '../shared/requerimiento-eventos.js';
 import {
   CotizacionLineaDto,
@@ -73,26 +74,6 @@ interface LineaRow {
   plazo_entrega_dias: number | null;
   marca_modelo: string | null;
   observaciones: string | null;
-}
-
-/** Precio sin y con IGV de una oferta (el proveedor puede cotizar con o sin IGV; los no afectos no tienen IGV). */
-export function preciosOferta(precio: number, incluyeIgv: boolean, afecto: boolean): { sin: number; con: number } {
-  const sin = incluyeIgv && afecto ? precio / (1 + IGV_PCT / 100) : precio;
-  const con = afecto ? sin * (1 + IGV_PCT / 100) : sin;
-  return { sin, con };
-}
-
-/** Totales de una cotizacion a partir de sus lineas cotizadas. */
-export function totalesCotizacion(
-  lineas: Array<{ cotiza: boolean; cantidad: number; precio: number }>,
-  incluyeIgv: boolean,
-  afecto: boolean,
-): { subtotal: number; igv: number; total: number } {
-  const subtotal = redondear(
-    lineas.filter((l) => l.cotiza).reduce((a, l) => a + l.cantidad * preciosOferta(l.precio, incluyeIgv, afecto).sin, 0),
-  );
-  const igv = afecto ? redondear((subtotal * IGV_PCT) / 100) : 0;
-  return { subtotal, igv, total: redondear(subtotal + igv) };
 }
 
 const f2 = (n: number) => redondear(n, 2).toFixed(2);

@@ -45,6 +45,18 @@ export class AdministracionController {
   }
 
   @LecturaCompartida()
+  @Get(':id/valorizacion')
+  @ApiOperation({
+    summary: 'Valorización de una orden de servicio de un presupuesto: avance de obra por línea, adelanto, lo liberado, pagado y disponible',
+  })
+  @ApiOkResponse({ description: 'Valorización' })
+  @ApiNotFoundResponse({ description: 'No existe' })
+  @ApiBadRequestResponse({ description: 'No es una orden de servicio registrada de un presupuesto' })
+  valorizacion(@Param('id', ParseIntPipe) id: number) {
+    return this.handler.valorizacion(id);
+  }
+
+  @LecturaCompartida()
   @Get(':id/expediente')
   @ApiOperation({ summary: 'Expediente: FUR, cuadro comparativo, documento, recepciones, programaciones y pagos' })
   @ApiOkResponse({ description: 'Expediente' })

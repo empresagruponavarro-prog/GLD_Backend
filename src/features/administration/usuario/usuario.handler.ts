@@ -11,13 +11,13 @@ import { pgErrorCode } from '../../../platform/db/pg-errors.js';
 import { esVarchar } from '../../../platform/db/varchar.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { ordenarRoles } from '../rol/rol.handler.js';
-import { AreaUsuarioInfo, CreateUsuarioDto, UpdateUsuarioDto, UsuarioResponseDto } from './usuario.dto.js';
+import { AreaUsuarioInfo, CreateUsuarioDto, TrabajadorUsuarioInfo, UpdateUsuarioDto, UsuarioResponseDto } from './usuario.dto.js';
 
 type Varchar255 = Varchar<255>;
 /** Transacción de la ORM (lo que recibe el callback de `db.transaction`). */
 type Tx = Parameters<Parameters<Database['transaction']>[0]>[0];
-/** Fila de `usuarios` con su área. */
-type FilaUsuario = UsuarioFila & { id_area: number | null };
+/** Fila de `usuarios` con su área y su trabajador vinculado (plan 09). */
+type FilaUsuario = UsuarioFila & { id_area: number | null; id_trabajador: number | null };
 
 export const NO_DESACTIVARSE = 'No puedes desactivar tu propio usuario';
 export const ULTIMO_ADMINISTRADOR = 'Debe quedar al menos un Administrador activo';
@@ -38,7 +38,12 @@ const infoArea = (area: { id: number; codigo: string; nombre: string }): AreaUsu
 });
 
 /** Mapeo explicito: la clave (hash) nunca sale en una respuesta. */
-function toResponse(row: FilaUsuario, area: AreaUsuarioInfo | null, personalizado: boolean): UsuarioResponseDto {
+function toResponse(
+  row: FilaUsuario,
+  area: AreaUsuarioInfo | null,
+  personalizado: boolean,
+  trabajador: TrabajadorUsuarioInfo | null,
+): UsuarioResponseDto {
   return {
     IdUsuario: row.IdUsuario,
     Nombres: row.Nombres,
@@ -47,6 +52,8 @@ function toResponse(row: FilaUsuario, area: AreaUsuarioInfo | null, personalizad
     activo: row.activo,
     id_area: row.id_area,
     area,
+    id_trabajador: row.id_trabajador,
+    trabajador,
     tiene_permisos_personalizados: personalizado,
   };
 }
@@ -91,8 +98,14 @@ export class UsuarioHandler {
     ]);
     const areaPorId = new Map(areas.map((a) => [a.id, infoArea(a)]));
     const personalizados = new Set(conExcepciones.map((p) => p.usuario_id));
+    const trabajadorPorId = await this.trabajadoresPorId(rows.map((r) => r.id_trabajador));
     return rows.map((r) =>
-      toResponse(r, r.id_area === null ? null : (areaPorId.get(r.id_area) ?? null), personalizados.has(r.IdUsuario)),
+      toResponse(
+        r,
+        r.id_area === null ? null : (areaPorId.get(r.id_area) ?? null),
+        personalizados.has(r.IdUsuario),
+        r.id_trabajador == null ? null : (trabajadorPorId.get(r.id_trabajador) ?? null),
+      ),
     );
   }
 
@@ -100,11 +113,12 @@ export class UsuarioHandler {
     if (!esVarchar(id, 255)) throw noEncontrado(id);
     const row = await this.db.orm.public.Usuarios.first({ IdUsuario: id });
     if (!row) throw noEncontrado(id);
-    const [area, excepcion] = await Promise.all([
+    const [area, excepcion, trabajador] = await Promise.all([
       this.areaInfoDe(row.id_area),
       this.db.orm.public.usuario_permiso.first({ usuario_id: id }),
+      this.trabajadorInfoDe(row.id_trabajador),
     ]);
-    return toResponse(row, area, excepcion !== null);
+    return toResponse(row, area, excepcion !== null, trabajador);
   }
 
   /** Crea el usuario (activo) asignándole el siguiente correlativo USR-NNNN. */
@@ -113,6 +127,8 @@ export class UsuarioHandler {
     await this.assertLoginLibre(dto.Usuario);
     const idArea = dto.id_area ?? null;
     if (idArea !== null) await this.assertAreaExiste(idArea);
+    const idTrabajador = dto.id_trabajador ?? null;
+    if (idTrabajador !== null) await this.assertTrabajadorExiste(idTrabajador);
     const clave = await hashClave(dto.Clave);
 
     for (let intento = 1; ; intento++) {
@@ -127,9 +143,10 @@ export class UsuarioHandler {
           Rol: v255(dto.Rol),
           activo: true,
           id_area: idArea,
+          id_trabajador: idTrabajador,
         });
         this.sesiones.invalidar(id);
-        return toResponse(row, await this.areaInfoDe(row.id_area), false);
+        return toResponse(row, await this.areaInfoDe(row.id_area), false, await this.trabajadorInfoDe(row.id_trabajador));
       } catch (error) {
         // Otra alta tomó el mismo número: se recalcula con el siguiente.
         if (pgErrorCode(error) === '23505' && intento < INTENTOS_ID) continue;
@@ -154,6 +171,7 @@ export class UsuarioHandler {
       Clave?: Varchar255;
       Rol?: Varchar255;
       id_area?: number | null;
+      id_trabajador?: number | null;
     } = {};
 
     if (dto.Rol !== undefined) await this.assertRolExiste(dto.Rol);
@@ -167,6 +185,10 @@ export class UsuarioHandler {
     if (dto.id_area !== undefined) {
       if (dto.id_area !== null) await this.assertAreaExiste(dto.id_area);
       updateData.id_area = dto.id_area;
+    }
+    if (dto.id_trabajador !== undefined) {
+      if (dto.id_trabajador !== null) await this.assertTrabajadorExiste(dto.id_trabajador);
+      updateData.id_trabajador = dto.id_trabajador;
     }
 
     const nuevoRol = dto.Rol;
@@ -185,7 +207,7 @@ export class UsuarioHandler {
     // El rol y el área vigentes los lee JwtAuthGuard de la BD: se aplican sin volver a entrar.
     this.sesiones.invalidar(id);
     const excepcion = await this.db.orm.public.usuario_permiso.first({ usuario_id: id });
-    return toResponse(row, await this.areaInfoDe(row.id_area), excepcion !== null);
+    return toResponse(row, await this.areaInfoDe(row.id_area), excepcion !== null, await this.trabajadorInfoDe(row.id_trabajador));
   }
 
   /**
@@ -245,6 +267,27 @@ export class UsuarioHandler {
     if (idArea === null) return null;
     const area = await this.db.orm.public.area.first({ id: idArea });
     return area ? infoArea(area) : null;
+  }
+
+  /** Nombre del trabajador (anexo) vinculado; `null` si no hay. */
+  private async trabajadorInfoDe(idTrabajador: number | null): Promise<TrabajadorUsuarioInfo | null> {
+    if (idTrabajador == null) return null;
+    return (await this.trabajadoresPorId([idTrabajador])).get(idTrabajador) ?? null;
+  }
+
+  private async trabajadoresPorId(ids: ReadonlyArray<number | null>): Promise<Map<number, TrabajadorUsuarioInfo>> {
+    const resultado = new Map<number, TrabajadorUsuarioInfo>();
+    for (const id of new Set(ids.filter((i): i is number => i != null))) {
+      const anexo = await this.db.orm.public.Anexos.first({ id });
+      if (anexo) resultado.set(id, { id, nombre: String(anexo.NombreComercial ?? anexo.Anexo ?? `Anexo ${id}`) });
+    }
+    return resultado;
+  }
+
+  /** 400 si no existe un trabajador (ficha RR.HH.) con ese anexo. */
+  private async assertTrabajadorExiste(idTrabajador: number): Promise<void> {
+    const ficha = await this.db.orm.public.trabajador.first({ id_anexo: idTrabajador });
+    if (!ficha) throw new BadRequestException(`El trabajador con ID ${idTrabajador} no existe`);
   }
 
   /** 400 si el área no existe en la tabla `area`. */

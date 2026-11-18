@@ -5,8 +5,8 @@ import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
 import { CLASES_DOCUMENTO } from '../../tesoreria/shared/tributos.js';
 
 const FECHA_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-export const ESTADOS_PAGO = ['SIN_PROGRAMAR', 'PROGRAMADO', 'PARCIAL', 'PAGADO', 'ANULADO'] as const;
-export const ESTADOS_DOCUMENTO = ['REGISTRADO', 'ANULADO'] as const;
+export const ESTADOS_PAGO = ['SIN_PROGRAMAR', 'PROGRAMADO', 'PARCIAL', 'PAGADO', 'ANULADO', 'PROVISIONAL'] as const;
+export const ESTADOS_DOCUMENTO = ['PROVISIONAL', 'REGISTRADO', 'ANULADO'] as const;
 /** Clases que se registran directamente, sin lineas ni cotizaciones. */
 export const CLASES_DIRECTAS = CLASES_DOCUMENTO.filter((c) => c !== 'ORDEN_COMPRA' && c !== 'ORDEN_SERVICIO');
 

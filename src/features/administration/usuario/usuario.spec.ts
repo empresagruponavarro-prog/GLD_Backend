@@ -16,7 +16,7 @@ import { UsuarioHandler } from './usuario.handler.js';
 const HASH = '$argon2id$v=19$m=19456,t=2,p=1$c2FsdA$aGFzaA';
 
 function makeRow(IdUsuario = 'U-001', over: Record<string, unknown> = {}) {
-  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', activo: true, id_area: null, ...over };
+  return { IdUsuario, Nombres: 'Juan Pérez', Usuario: 'jperez', Clave: HASH, Rol: 'Usuario', activo: true, id_area: null, id_trabajador: null, ...over };
 }
 
 const nuevo = {
@@ -35,6 +35,8 @@ const respuesta = (IdUsuario: string) => ({
   activo: true,
   id_area: null,
   area: null,
+  id_trabajador: null,
+  trabajador: null,
   tiene_permisos_personalizados: false,
 });
 
@@ -56,6 +58,8 @@ describe('usuario', () => {
   const areaAll = vi.fn();
   const permisoFirst = vi.fn();
   const permisoAll = vi.fn();
+  const trabajadorFirst = vi.fn();
+  const anexoFirst = vi.fn();
   const sesiones = { invalidar: vi.fn(), invalidarTodo: vi.fn() };
 
   beforeEach(async () => {
@@ -70,6 +74,9 @@ describe('usuario', () => {
     areaAll.mockResolvedValue([]);
     permisoFirst.mockResolvedValue(null);
     permisoAll.mockResolvedValue([]);
+    // Por defecto el trabajador pedido existe y su anexo se llama «Ana Torres».
+    trabajadorFirst.mockImplementation(async ({ id_anexo }: { id_anexo: number }) => ({ id_anexo }));
+    anexoFirst.mockImplementation(async ({ id }: { id: number }) => ({ id, NombreComercial: null, Anexo: 'ANA TORRES' }));
 
     const dbMock = {
       // Las operaciones que tocan el rol o borran van en transacción: aquí corre sobre el mismo mock.
@@ -92,6 +99,8 @@ describe('usuario', () => {
           },
           area: { first: areaFirst, all: areaAll },
           usuario_permiso: { first: permisoFirst, all: permisoAll },
+          trabajador: { first: trabajadorFirst },
+          Anexos: { first: anexoFirst },
         },
       },
     } as unknown as Database;
@@ -346,6 +355,58 @@ describe('usuario', () => {
       ['Usuario vacio', { Usuario: '' }],
     ])('update %s -> 400', async (_caso, body) => {
       await expect(validar(UpdateUsuarioDto, body)).rejects.toBeInstanceOf(BadRequestException);
+    });
+  });
+
+  describe('trabajador vinculado (plan 09)', () => {
+    it('create con trabajador lo guarda y devuelve su nombre', async () => {
+      first.mockResolvedValue(null);
+      create.mockResolvedValue(makeRow('USR-0001', { id_trabajador: 12 }));
+      const res = await controller.create({ ...nuevo, id_trabajador: 12 });
+      expect(create.mock.calls[0][0]).toMatchObject({ id_trabajador: 12 });
+      expect(res).toMatchObject({ id_trabajador: 12, trabajador: { id: 12, nombre: 'ANA TORRES' } });
+    });
+
+    it('create sin trabajador lo deja en null y no consulta Anexos', async () => {
+      first.mockResolvedValue(null);
+      create.mockResolvedValue(makeRow('USR-0001'));
+      const res = await controller.create({ ...nuevo });
+      expect(create.mock.calls[0][0]).toMatchObject({ id_trabajador: null });
+      expect(res).toMatchObject({ id_trabajador: null, trabajador: null });
+      expect(anexoFirst).not.toHaveBeenCalled();
+    });
+
+    it('create con un trabajador que no existe -> 400 y no crea nada', async () => {
+      trabajadorFirst.mockResolvedValue(null);
+      await expect(controller.create({ ...nuevo, id_trabajador: 999 })).rejects.toBeInstanceOf(BadRequestException);
+      expect(create).not.toHaveBeenCalled();
+    });
+
+    it('update cambia el trabajador', async () => {
+      update.mockResolvedValue(makeRow('U-001', { id_trabajador: 12 }));
+      const res = await controller.update('U-001', { id_trabajador: 12 });
+      expect(update).toHaveBeenCalledWith({ id_trabajador: 12 });
+      expect(res.trabajador).toEqual({ id: 12, nombre: 'ANA TORRES' });
+    });
+
+    it('update con id_trabajador null quita el vínculo', async () => {
+      update.mockResolvedValue(makeRow('U-001'));
+      const res = await controller.update('U-001', { id_trabajador: null });
+      expect(update).toHaveBeenCalledWith({ id_trabajador: null });
+      expect(res).toMatchObject({ id_trabajador: null, trabajador: null });
+    });
+
+    it('update con un trabajador que no existe -> 400', async () => {
+      trabajadorFirst.mockResolvedValue(null);
+      await expect(controller.update('U-001', { id_trabajador: 999 })).rejects.toBeInstanceOf(BadRequestException);
+      expect(update).not.toHaveBeenCalled();
+    });
+
+    it('la lista trae el trabajador de cada usuario', async () => {
+      all.mockResolvedValue([makeRow('U-001', { id_trabajador: 12 }), makeRow('U-002')]);
+      const res = await controller.list();
+      expect(res[0].trabajador).toEqual({ id: 12, nombre: 'ANA TORRES' });
+      expect(res[1].trabajador).toBeNull();
     });
   });
 

@@ -1,0 +1,9 @@
+{
+  "from": "f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41",
+  "to": "f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41",
+  "providedInvariants": [
+    "ppto-cotizaciones-datos"
+  ],
+  "createdAt": "2026-11-18T02:59:16.599Z",
+  "migrationHash": "af892c92ba5e44dfdf089f890fe5e517bb0edeb2e5c9196670ba94ffc7039873"
+}

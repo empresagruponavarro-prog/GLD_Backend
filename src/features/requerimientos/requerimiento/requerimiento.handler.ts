@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { AlmacenSql, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
 import { validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
@@ -41,6 +41,10 @@ const CABECERA_SPEC = {
   area_nombre: TN,
   id_cotizacion_ganadora: IN,
   comentario_adjudicacion: TN,
+  origen: T,
+  id_ppto_principal: IN,
+  codigo_presupuesto: TN,
+  provisional: B,
   total_cotizaciones: I,
   total_lineas: I,
 } as const;
@@ -69,11 +73,13 @@ export class RequerimientoHandler {
     const patron = `%${query.search ?? ''}%`;
     const tipo = query.tipo ?? '';
     const area = query.id_area ?? 0;
+    const origen = query.origen ?? '';
 
     const [count] = await q.rows<{ total: number }>({ total: I })`
       SELECT count(*)::int AS total FROM requerimiento r
        WHERE r.fecha >= ${desde}::date AND r.fecha <= ${hasta}::date
          AND (${tipo}::text = '' OR r.tipo = ${tipo}::text)
+         AND (${origen}::text = '' OR r.origen::text = ${origen}::text)
          AND (${area}::int = 0 OR r.id_area = ${area}::int)
          AND (${estado}::text = '' OR r.estado = ${estado}::text)
          AND (${cc}::int = 0 OR r.id_centro_costo = ${cc}::int)
@@ -90,6 +96,8 @@ export class RequerimientoHandler {
              r.created_at::text AS created_at,
              r.tipo::text AS tipo, r.id_beneficiario, COALESCE(be."NombreComercial", be."Anexo")::text AS beneficiario,
              r.id_area, ar.nombre::text AS area_nombre, r.id_cotizacion_ganadora, r.comentario_adjudicacion,
+             r.origen::text AS origen, r.id_ppto_principal, pp."IdPresupuesto"::text AS codigo_presupuesto,
+             EXISTS (SELECT 1 FROM "documentosOrigen" dp WHERE dp.id_requerimiento = r.id AND dp.estado::text = 'PROVISIONAL') AS provisional,
              (SELECT count(*)::int FROM cotizacion ct WHERE ct.id_requerimiento = r.id) AS total_cotizaciones,
              (SELECT count(*)::int FROM requerimiento_detalle x WHERE x.id_requerimiento = r.id) AS total_lineas
         FROM requerimiento r
@@ -99,8 +107,10 @@ export class RequerimientoHandler {
         LEFT JOIN anexos ap ON ap.id = r.id_aprobador
         LEFT JOIN anexos be ON be.id = r.id_beneficiario
         LEFT JOIN area ar ON ar.id = r.id_area
+        LEFT JOIN "ppto_Principal" pp ON pp.id = r.id_ppto_principal
        WHERE r.fecha >= ${desde}::date AND r.fecha <= ${hasta}::date
          AND (${tipo}::text = '' OR r.tipo = ${tipo}::text)
+         AND (${origen}::text = '' OR r.origen::text = ${origen}::text)
          AND (${area}::int = 0 OR r.id_area = ${area}::int)
          AND (${estado}::text = '' OR r.estado = ${estado}::text)
          AND (${cc}::int = 0 OR r.id_centro_costo = ${cc}::int)
@@ -126,6 +136,8 @@ export class RequerimientoHandler {
              r.created_at::text AS created_at,
              r.tipo::text AS tipo, r.id_beneficiario, COALESCE(be."NombreComercial", be."Anexo")::text AS beneficiario,
              r.id_area, ar.nombre::text AS area_nombre, r.id_cotizacion_ganadora, r.comentario_adjudicacion,
+             r.origen::text AS origen, r.id_ppto_principal, pp."IdPresupuesto"::text AS codigo_presupuesto,
+             EXISTS (SELECT 1 FROM "documentosOrigen" dp WHERE dp.id_requerimiento = r.id AND dp.estado::text = 'PROVISIONAL') AS provisional,
              (SELECT count(*)::int FROM cotizacion ct WHERE ct.id_requerimiento = r.id) AS total_cotizaciones,
              (SELECT count(*)::int FROM requerimiento_detalle x WHERE x.id_requerimiento = r.id) AS total_lineas
         FROM requerimiento r
@@ -135,6 +147,7 @@ export class RequerimientoHandler {
         LEFT JOIN anexos ap ON ap.id = r.id_aprobador
         LEFT JOIN anexos be ON be.id = r.id_beneficiario
         LEFT JOIN area ar ON ar.id = r.id_area
+        LEFT JOIN "ppto_Principal" pp ON pp.id = r.id_ppto_principal
        WHERE r.estado = 'APROBADO'
          AND EXISTS (
            SELECT 1 FROM requerimiento_detalle d
@@ -157,6 +170,8 @@ export class RequerimientoHandler {
              r.created_at::text AS created_at,
              r.tipo::text AS tipo, r.id_beneficiario, COALESCE(be."NombreComercial", be."Anexo")::text AS beneficiario,
              r.id_area, ar.nombre::text AS area_nombre, r.id_cotizacion_ganadora, r.comentario_adjudicacion,
+             r.origen::text AS origen, r.id_ppto_principal, pp."IdPresupuesto"::text AS codigo_presupuesto,
+             EXISTS (SELECT 1 FROM "documentosOrigen" dp WHERE dp.id_requerimiento = r.id AND dp.estado::text = 'PROVISIONAL') AS provisional,
              (SELECT count(*)::int FROM cotizacion ct WHERE ct.id_requerimiento = r.id) AS total_cotizaciones,
              (SELECT count(*)::int FROM requerimiento_detalle x WHERE x.id_requerimiento = r.id) AS total_lineas
         FROM requerimiento r
@@ -166,6 +181,7 @@ export class RequerimientoHandler {
         LEFT JOIN anexos ap ON ap.id = r.id_aprobador
         LEFT JOIN anexos be ON be.id = r.id_beneficiario
         LEFT JOIN area ar ON ar.id = r.id_area
+        LEFT JOIN "ppto_Principal" pp ON pp.id = r.id_ppto_principal
        WHERE r.id = ${id}::int`;
     if (!row) throw new NotFoundException(`Requerimiento ${id} no encontrado`);
     const [base] = await this.conAvance([row]);

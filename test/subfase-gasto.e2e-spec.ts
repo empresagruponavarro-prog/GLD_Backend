@@ -6,6 +6,7 @@ import { App } from 'supertest/types';
 import { aDia, deDia, lunesDe } from '../src/features/operaciones-obra/shared/control-avance/calendario.js';
 import { hoyLima } from '../src/features/operaciones-obra/shared/obra-shared.js';
 import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
+import { aprobarE2E } from './helpers/aprobacion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -184,7 +185,7 @@ describe('Subfase en compras y almacén, y gasto por subfase (e2e)', () => {
         { cat: 'E2E-SUB-C1', items: [[producto, 10, 5]] },
         { cat: 'E2E-SUB-C2', items: [[producto, 4, 6], [servicio, 2, 15]] },
       ]);
-      await api().post('/presupuestos/E2E-SUB-P1/aprobar').expect(200);
+      await aprobarE2E(api(), db, 'E2E-SUB-P1'); // aprobado y sin adjudicar: el recorrido anterior (Generar FURs)
 
       const preview = (await api().get('/presupuestos/E2E-SUB-P1/furs-preview').expect(200)).body;
       expect(preview.fases).toHaveLength(1);

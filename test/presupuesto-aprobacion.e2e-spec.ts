@@ -8,6 +8,7 @@ import { App } from 'supertest/types';
 import { aDia, deDia, lunesDe } from '../src/features/operaciones-obra/shared/control-avance/calendario.js';
 import { hoyLima } from '../src/features/operaciones-obra/shared/obra-shared.js';
 import { apiConSesion, borrarUsuarioE2E, crearUsuarioE2E } from './helpers/sesion.js';
+import { aprobarE2E } from './helpers/aprobacion.js';
 import { AppModule } from './../src/app.module.js';
 
 /**
@@ -220,7 +221,8 @@ describe('Aprobación del presupuesto (e2e)', () => {
       const { body } = await api().get('/presupuestos/E2E-GRP-P1/validacion').expect(200);
       expect(body.puede_aprobar).toBe(false);
       expect(body.tipo).toBe('Principal');
-      expect(body.bloqueos).toEqual([]);
+      // Plan 09 (D-11): además de lo incompleto, los ítems sin proveedor ganador bloquean la aprobación.
+      expect(body.bloqueos.map((b: { codigo: string }) => b.codigo)).toEqual(['ITEMS_SIN_ADJUDICAR']);
       expect(body.problemas.map((p: { codigo: string }) => p.codigo).sort()).toEqual(['CATEGORIA_SIN_ITEMS', 'FASE_SIN_CATEGORIAS', 'ITEM_VACIO']);
       expect(body.resumen).toMatchObject({ fases: 2, categorias: 3, items: 3 });
 
@@ -244,10 +246,11 @@ describe('Aprobación del presupuesto (e2e)', () => {
       expect(v.problemas.map((p: { codigo: string }) => p.codigo)).toEqual(['FASE_SIN_CATEGORIAS']);
     });
 
-    it('quitada la fase manual, el presupuesto queda listo para aprobar', async () => {
+    it('quitada la fase manual, el presupuesto queda completo y solo falta adjudicar sus ítems', async () => {
       await db.query(`delete from "ppto_DetalleFases" where "IdPresupuestoDetalle" = 'E2E-GRP-DF-E2E-GRP-P1-1'`);
       const v = (await api().get('/presupuestos/E2E-GRP-P1/validacion').expect(200)).body;
-      expect(v).toMatchObject({ puede_aprobar: true, problemas: [], bloqueos: [] });
+      expect(v).toMatchObject({ puede_aprobar: false, problemas: [] });
+      expect(v.bloqueos.map((b: { codigo: string }) => b.codigo)).toEqual(['ITEMS_SIN_ADJUDICAR']);
     });
   });
 
@@ -260,7 +263,7 @@ describe('Aprobación del presupuesto (e2e)', () => {
     });
 
     it('aprueba y captura la estructura de la obra, con su monto, en la misma operación', async () => {
-      const { body } = await api().post('/presupuestos/E2E-GRP-P1/aprobar').expect(200);
+      const { body } = await aprobarE2E(api(), db, 'E2E-GRP-P1');
       expect(body).toMatchObject({
         id: idP1,
         id_presupuesto: 'E2E-GRP-P1',
@@ -311,7 +314,7 @@ describe('Aprobación del presupuesto (e2e)', () => {
     it('un adicional agrega sus partidas aparte, aunque la fase ya exista en el Principal (SP-14)', async () => {
       await crearPpto('E2E-GRP-A1', ccA, 'Adicional');
       await armar('E2E-GRP-A1', ccA, [{ fase: 'E2E-GRP-F1', cats: [{ cat: 'E2E-GRP-C4', items: [[4, 25]] }] }]);
-      const { body } = await api().post('/presupuestos/E2E-GRP-A1/aprobar').expect(200);
+      const { body } = await aprobarE2E(api(), db, 'E2E-GRP-A1');
       expect(body).toMatchObject({ tipo: 'Adicional', estado_ppto: 'APROBADO', estructura: { capturada: true, partidas: 1, subpartidas: 1 } });
 
       const ps = await partidas(ccA);
@@ -336,7 +339,7 @@ describe('Aprobación del presupuesto (e2e)', () => {
     it('aprueba igual, pero no captura la estructura y dice por qué', async () => {
       await crearPpto('E2E-GRP-P3', ccSin, 'Principal');
       await armar('E2E-GRP-P3', ccSin, [{ fase: 'E2E-GRP-F1', cats: [{ cat: 'E2E-GRP-C1', items: [[3, 10]] }] }]);
-      const { body } = await api().post('/presupuestos/E2E-GRP-P3/aprobar').expect(200);
+      const { body } = await aprobarE2E(api(), db, 'E2E-GRP-P3');
       expect(body.estado_ppto).toBe('APROBADO');
       expect(body.estructura).toMatchObject({ capturada: false, partidas: 0, subpartidas: 0 });
       expect(body.estructura.motivo).toMatch(/inicio y fin programado/);
@@ -369,7 +372,7 @@ describe('Aprobación del presupuesto (e2e)', () => {
     });
 
     it('al aprobar la versión, la anterior pasa a ANULADO y se reemplaza solo la estructura contractual', async () => {
-      const { body } = await api().post(`/presupuestos/${codigoV2}/aprobar`).expect(200);
+      const { body } = await aprobarE2E(api(), db, codigoV2);
       expect(body).toMatchObject({ tipo: 'Principal', estructura: { capturada: true, partidas: 1, subpartidas: 1 } });
       expect(body.reemplaza).toEqual({ id: idP1, id_presupuesto: 'E2E-GRP-P1' });
       expect((await estadoDe('E2E-GRP-P1')).estado_ppto).toBe('ANULADO');
@@ -398,7 +401,7 @@ describe('Aprobación del presupuesto (e2e)', () => {
 
       const res = await api().post(`/presupuestos/${codigoV2}/nueva-version`).expect(409);
       expect(res.body.message).toMatch(/avance.*adicional/);
-      const res2 = await api().post(`/presupuestos/${codigoV3}/aprobar`).expect(409);
+      const res2 = await aprobarE2E(api(), db, codigoV3, 409);
       expect(res2.body.message).toMatch(/avance/);
       expect((await estadoDe(codigoV3)).estado_ppto).toBe('EN_DESARROLLO');
       expect((await estadoDe(codigoV2)).estado_ppto).toBe('APROBADO');

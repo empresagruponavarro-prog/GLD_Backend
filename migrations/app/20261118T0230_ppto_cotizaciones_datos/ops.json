@@ -1,0 +1,37 @@
+[
+  {
+    "id": "data.ppto-cotizaciones.fur-origen",
+    "label": "Marca los FUR generados desde un presupuesto con su presupuesto, origen e ítems",
+    "summary": "requerimiento.id_ppto_principal / origen y requerimiento_detalle.id_ppto_item de los FUR «Auto-Ppto»",
+    "operationClass": "data",
+    "invariantId": "ppto-cotizaciones-datos",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "requerimiento"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "FUR «Auto-Ppto»: presupuesto de origen y origen PPTO_FASE",
+        "sql": "UPDATE \"public\".\"requerimiento\" r\n                     SET \"id_ppto_principal\" = p.\"id\", \"origen\" = 'PPTO_FASE'\n                    FROM \"public\".\"ppto_Principal\" p\n                   WHERE r.\"justificacion\" ~ '^\\[Auto-Ppto: ([^\\]]+)\\]'\n                     AND p.\"IdPresupuesto\" = substring(r.\"justificacion\" from '^\\[Auto-Ppto: ([^\\]]+)\\]')\n                     AND r.\"id_ppto_principal\" IS NULL AND r.\"origen\" = 'MANUAL'",
+        "params": []
+      },
+      {
+        "description": "líneas de esos FUR: el ítem del presupuesto, si (presupuesto, producto, subfase) identifica uno solo",
+        "sql": "UPDATE \"public\".\"requerimiento_detalle\" d\n                     SET \"id_ppto_item\" = c.\"id_item\"\n                    FROM (\n                      SELECT rd.\"id\" AS \"id_linea\", (array_agg(i.\"id\"))[1] AS \"id_item\"\n                        FROM \"public\".\"requerimiento_detalle\" rd\n                        JOIN \"public\".\"requerimiento\" r ON r.\"id\" = rd.\"id_requerimiento\" AND r.\"origen\" = 'PPTO_FASE' AND r.\"id_ppto_principal\" IS NOT NULL\n                        JOIN \"public\".\"ppto_Principal\" p ON p.\"id\" = r.\"id_ppto_principal\"\n                        JOIN \"public\".\"ppto_DetalleItems\" i ON i.\"IdPresupuesto\" = p.\"IdPresupuesto\"\n                                                          AND i.\"id_producto\" = rd.\"id_producto\"\n                                                          AND i.\"id_detalle_categoria\" = rd.\"id_ppto_detalle_categoria\"\n                       WHERE rd.\"id_ppto_item\" IS NULL\n                       GROUP BY rd.\"id\" HAVING count(*) = 1\n                    ) c\n                   WHERE d.\"id\" = c.\"id_linea\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "no queda ningún FUR «Auto-Ppto» de un presupuesto existente sin su origen",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"requerimiento\" r\n    JOIN \"public\".\"ppto_Principal\" p ON p.\"IdPresupuesto\" = substring(r.\"justificacion\" from '^\\[Auto-Ppto: ([^\\]]+)\\]')\n   WHERE r.\"justificacion\" ~ '^\\[Auto-Ppto: ([^\\]]+)\\]' AND r.\"id_ppto_principal\" IS NULL AND r.\"origen\" = 'MANUAL') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

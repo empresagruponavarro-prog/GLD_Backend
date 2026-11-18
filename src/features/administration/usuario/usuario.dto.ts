@@ -32,6 +32,15 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsInt()
   id_area?: number | null;
+
+  @ApiPropertyOptional({
+    example: 12,
+    nullable: true,
+    description: 'ID del anexo (tipo Trabajador) que firma como solicitante y aprobador de lo que este usuario registra en el presupuesto',
+  })
+  @IsOptional()
+  @IsInt()
+  id_trabajador?: number | null;
 }
 
 export class UpdateUsuarioDto {
@@ -71,6 +80,15 @@ export class UpdateUsuarioDto {
   @IsOptional()
   @IsInt()
   id_area?: number | null;
+
+  @ApiPropertyOptional({
+    example: 12,
+    nullable: true,
+    description: 'ID del anexo (tipo Trabajador) que firma como solicitante y aprobador de lo que este usuario registra en el presupuesto',
+  })
+  @IsOptional()
+  @IsInt()
+  id_trabajador?: number | null;
 }
 
 export class AreaUsuarioInfo {
@@ -81,6 +99,14 @@ export class AreaUsuarioInfo {
   codigo: string;
 
   @ApiProperty({ example: 'ALMACÉN' })
+  nombre: string;
+}
+
+export class TrabajadorUsuarioInfo {
+  @ApiProperty({ example: 12, description: 'ID del anexo (tipo Trabajador)' })
+  id: number;
+
+  @ApiProperty({ example: 'JUAN PÉREZ' })
   nombre: string;
 }
 
@@ -106,6 +132,12 @@ export class UsuarioResponseDto {
 
   @ApiPropertyOptional({ type: AreaUsuarioInfo, nullable: true, description: 'Área asignada al usuario' })
   area?: AreaUsuarioInfo | null;
+
+  @ApiPropertyOptional({ example: 12, nullable: true, description: 'ID del trabajador vinculado (firma lo que el usuario registra en el presupuesto)' })
+  id_trabajador?: number | null;
+
+  @ApiPropertyOptional({ type: TrabajadorUsuarioInfo, nullable: true, description: 'Trabajador vinculado al usuario' })
+  trabajador?: TrabajadorUsuarioInfo | null;
 
   @ApiProperty({
     example: false,

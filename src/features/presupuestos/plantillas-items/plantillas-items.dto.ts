@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
+import { ConciliacionResponseDto } from '../compromisos/compromisos.dto.js';
 
 // ─── Request ──────────────────────────────────────────────────────────────────
 
@@ -84,6 +85,37 @@ export class PartidaItemUnidadDto {
   @ApiPropertyOptional() simbolo?: string;
 }
 
+export class PartidaItemCompromisoDto {
+  @ApiProperty() id_requerimiento: number;
+  @ApiProperty() numero_requerimiento: string;
+  @ApiProperty() estado_requerimiento: string;
+  @ApiPropertyOptional({ nullable: true, type: Number }) id_documento: number | null;
+  @ApiPropertyOptional({ nullable: true, type: String }) numero_documento: string | null;
+  @ApiPropertyOptional({ nullable: true, type: String, description: 'PROVISIONAL mientras el presupuesto no se aprueba; luego REGISTRADO' })
+  estado_documento: string | null;
+}
+
+export class PartidaItemAdjudicadoDto {
+  @ApiProperty() id_cotizacion: number;
+  @ApiProperty({ description: '`ppto_cotizacion_detalle.id` de la oferta ganadora' }) id_cot_detalle: number;
+  @ApiProperty() numero_cotizacion: string;
+  @ApiProperty() id_proveedor: number;
+  @ApiPropertyOptional({ nullable: true, type: String }) proveedor: string | null;
+  @ApiProperty() moneda_id: string;
+  @ApiPropertyOptional({ nullable: true, type: String }) moneda_simbolo: string | null;
+  @ApiProperty({ description: 'Precio unitario sin IGV del ganador, en su moneda' }) precio_sin_igv: string;
+  @ApiPropertyOptional({ nullable: true, type: String }) adjudicado_por: string | null;
+  @ApiPropertyOptional({ nullable: true, type: String }) fecha_adjudicacion: string | null;
+}
+
+/** Solo en los ítems de un presupuesto (no en los de plantilla). */
+export class PartidaItemCotizacionDto {
+  @ApiProperty({ description: 'Cotizaciones de proveedores que ofrecen este ítem' }) cotizaciones: number;
+  @ApiPropertyOptional({ type: () => PartidaItemAdjudicadoDto, nullable: true }) adjudicado: PartidaItemAdjudicadoDto | null;
+  @ApiPropertyOptional({ type: () => PartidaItemCompromisoDto, nullable: true }) compromiso: PartidaItemCompromisoDto | null;
+  @ApiProperty({ description: 'Ya tiene una orden registrada: no cambia de proveedor' }) cubierto: boolean;
+}
+
 export class PartidaItemResponseDto {
   @ApiProperty() id: number;
   @ApiProperty() id_plantilla_categoria: number;
@@ -98,6 +130,7 @@ export class PartidaItemResponseDto {
   @ApiProperty() PrecioVenta: number;
   @ApiProperty() CostoTotal: number;
   @ApiProperty() VentaTotal: number;
+  @ApiPropertyOptional({ type: () => PartidaItemCotizacionDto }) cotizacion?: PartidaItemCotizacionDto;
 }
 
 export class PartidaItemsResponseDto {
@@ -105,4 +138,6 @@ export class PartidaItemsResponseDto {
   @ApiProperty({ type: () => [PartidaItemResponseDto] }) items: PartidaItemResponseDto[];
   @ApiProperty({ description: 'Suma de CostoTotal (= CostoReferencial de la partida)' }) costoTotal: number;
   @ApiProperty({ description: 'Suma de VentaTotal' }) ventaTotal: number;
+  @ApiPropertyOptional({ type: () => ConciliacionResponseDto, description: 'Solo en el PUT de ítems de un presupuesto: lo que se actualizó en los compromisos' })
+  compromisos?: ConciliacionResponseDto;
 }
