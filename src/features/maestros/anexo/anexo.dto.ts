@@ -126,6 +126,12 @@ export class ListAnexoQueryDto extends PaginationQueryDto {
   @toBoolean()
   @IsBoolean()
   estado?: boolean;
+
+  @ApiPropertyOptional({ description: 'Excluye a los trabajadores (solo proveedores y clientes); se ignora si se indica tipoAnexo' })
+  @IsOptional()
+  @toBoolean()
+  @IsBoolean()
+  sinTrabajadores?: boolean;
 }
 
 export class AnexoSelectQueryDto {

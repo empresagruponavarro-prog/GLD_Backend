@@ -10,8 +10,12 @@ import { defaultMetadataStorage } from 'class-transformer/cjs/storage.js';
 /** Claves cuyo valor no se convierte (insensible a mayúsculas). */
 export const PATRON_CLAVES_EXCLUIDAS = /(correo|email|usuario|password|clave|contrasena|url|ruta|archivo|file|observ|comentario|justificacion|token)/i;
 
-/** Códigos: `IdPresupuesto`, `IdOC`, `id_oc`… (no `identificacion`, que es un texto normal). */
-export const PATRON_CODIGOS = /^(Id[A-Z_]|id_|id$)/;
+/**
+ * Códigos: `IdPresupuesto`, `IdOC`, `id_oc`, `IdpptoFase`, `IdpptoFaseCategoria`… (no `identificacion`, que es un texto normal).
+ * Los `Idppto…` llevan la `p` en minúscula y sus valores (ids de fase y categoría) son minúsculas: pasarlos a mayúsculas
+ * rompe la llave foránea con `ppto_Fases` / `ppto_FasesCategorias`.
+ */
+export const PATRON_CODIGOS = /^(Id[A-Z_]|Idppto|id_|id$)/;
 
 /** Campos marcados con `@SinMayusculasCampo()` (por nombre; se llena al cargar los DTO). */
 export const CAMPOS_SIN_MAYUSCULAS = new Set<string>();

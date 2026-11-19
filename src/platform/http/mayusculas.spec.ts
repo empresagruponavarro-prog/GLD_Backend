@@ -33,6 +33,8 @@ describe('platform/http / aMayusculas', () => {
     ['IdPresupuesto', 'ppto-2026-001'],
     ['IdOC', 'oc-1'],
     ['id_oc', 'oc-1'],
+    ['IdpptoFase', '9c249cf7'],
+    ['IdpptoFaseCategoria', 'b8713cc6'],
   ])('no toca la clave %s', (clave, valor) => {
     expect(aMayusculas({ [clave]: valor })).toEqual({ [clave]: valor });
   });

@@ -61,6 +61,9 @@ export class AnexoHandler {
       ? base.where((t) =>
           and(
             ...(query.tipoAnexo ? [t.tipoAnexo.eq(query.tipoAnexo)] : []),
+            ...(!query.tipoAnexo && query.sinTrabajadores
+              ? [t.tipoAnexo.in([TipoAnexo.Proveedor, TipoAnexo.Cliente])]
+              : []),
             ...(query.AnexoEspecialidadId !== undefined
               ? [t.AnexoEspecialidadId.eq(query.AnexoEspecialidadId)]
               : []),
@@ -179,6 +182,7 @@ function hasFilters(query: ListAnexoQueryDto): boolean {
     query.AnexoTipoDocIdeId !== undefined ||
     query.Anexo !== undefined ||
     query.NombreComercial !== undefined ||
-    query.estado !== undefined
+    query.estado !== undefined ||
+    query.sinTrabajadores === true
   );
 }
