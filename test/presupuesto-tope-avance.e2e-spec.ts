@@ -41,10 +41,6 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
   const redondear2 = (n: number) => Math.round(n * 100) / 100;
   const obra = () => `/operaciones/obra/${cc}`;
   const comercial = async () => (await api().get(`/presupuestos/${idPpto}/comercial`).expect(200)).body;
-  const ofertaDe = async (item: number): Promise<number> => {
-    const c = (await api().get(`/presupuestos/${idPpto}/cuadro-comparativo?id_detalle_fase=${idFase}`).expect(200)).body;
-    return c.lineas.find((l: { id_ppto_item: number }) => l.id_ppto_item === item).ofertas[0].id_cot_detalle;
-  };
   const pendiente = async (id: number) => {
     const r = (await api().get('/tesoreria/programacion/pendientes?pageSize=100').expect(200)).body;
     return r.data.find((d: { id: number }) => d.id === id);
@@ -70,11 +66,14 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
     await crearUsuarioE2E(db);
 
     unidad = (await db.query(`select id from unidad_medida order by id limit 1`)).rows[0].id;
+    const categoria = (await db.query(`select id from categoria order by id limit 1`)).rows[0].id as number;
     const crearProducto = async (tipo: string) =>
       (
-        await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, 1, 1, $3) returning id`, [
+        await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, $3, $4, $5) returning id`, [
           `ZZ-TP-${Math.random().toString(36).slice(2, 8)}`,
           `${tipo} DE PRUEBA TOPE`,
+          categoria,
+          unidad,
           tipo,
         ])
       ).rows[0].id as number;
@@ -173,12 +172,14 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
       expect(c.total).toEqual({ meta: 2100, comercial: 2100, diferencia: 0 });
     });
 
-    it('con un ítem adjudicado la fase es mixta: ese ítem al precio del proveedor y el resto al Meta', async () => {
+    it('con una subpartida adjudicada la fase es mixta: sus ítems al precio del proveedor y el resto al Meta', async () => {
+      // La subpartida 1 (ítems 1 y 3: pesos 1000 y 100 en el Meta) se cotiza con un total de 880: al ítem 1 le tocan 800 y al ítem 3, 80.
       await api()
         .post(`/presupuestos/${idPpto}/cotizaciones`)
         .send({
-          id_detalle_fase: idFase,
+          id_detalle_categoria: sub1,
           id_proveedor: provA,
+          total: '880',
           fecha: hoy,
           moneda_id: 'PEN',
           moneda_simbolo: 'S/',
@@ -186,30 +187,28 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
           adelanto_porcentaje: '30',
           plazo_entrega_dias: 20,
           garantia: '6 MESES',
-          lineas: [
-            { id_ppto_item: item1, cantidad: '4', precio_unitario: '200', adjudicar: true },
-            { id_ppto_item: item2, cantidad: '2', precio_unitario: '400' },
-            { id_ppto_item: item3, cantidad: '1', precio_unitario: '90' },
-          ],
+          adjudicar: true,
         })
         .expect(201);
 
       const c = await comercial();
-      expect(c.fases[0]).toMatchObject({ meta: 2100, comercial: 1900, fuente: 'MIXTA', items_adjudicados: 1, sin_tipo_cambio: false });
+      expect(c.fases[0]).toMatchObject({ meta: 2100, comercial: 1880, fuente: 'MIXTA', items_adjudicados: 2, sin_tipo_cambio: false });
       const i1 = c.fases[0].items.find((i: { id_item: number }) => i.id_item === item1);
       expect(i1).toMatchObject({ meta: 1000, comercial: 800, diferencia: -200, diferencia_pct: -20, adjudicado: true, proveedor: 'E2E-TP Proveedor A' });
+      expect(c.fases[0].items.find((i: { id_item: number }) => i.id_item === item3)).toMatchObject({ meta: 100, comercial: 80, adjudicado: true });
       expect(c.fases[0].items.find((i: { id_item: number }) => i.id_item === item2)).toMatchObject({ comercial: 1000, diferencia: 0, adjudicado: false });
-      expect(c.total).toEqual({ meta: 2100, comercial: 1900, diferencia: -200 });
+      expect(c.total).toEqual({ meta: 2100, comercial: 1880, diferencia: -220 });
     });
 
     it('con todo adjudicado la fase vale la suma de sus ítems; los FUR generados no se suman otra vez', async () => {
+      // La subpartida 2 (ítem 2, 2 × 500 en el Meta) se cotiza con un total de 800.
       await api()
-        .put(`/presupuestos/${idPpto}/adjudicacion`)
-        .send({ items: [{ id_ppto_item: item2, id_cot_detalle: await ofertaDe(item2) }, { id_ppto_item: item3, id_cot_detalle: await ofertaDe(item3) }] })
-        .expect(200);
+        .post(`/presupuestos/${idPpto}/cotizaciones`)
+        .send({ id_detalle_categoria: sub2, id_proveedor: provA, total: '800', fecha: hoy, moneda_id: 'PEN', moneda_simbolo: 'S/', forma_pago: 'Contado', adjudicar: true })
+        .expect(201);
       const c = await comercial();
-      expect(c.fases[0]).toMatchObject({ meta: 2100, comercial: 1690, fuente: 'ADJUDICACION', items_adjudicados: 3, requerimientos: [] });
-      expect(c.total).toEqual({ meta: 2100, comercial: 1690, diferencia: -410 });
+      expect(c.fases[0]).toMatchObject({ meta: 2100, comercial: 1680, fuente: 'ADJUDICACION', items_adjudicados: 3, requerimientos: [] });
+      expect(c.total).toEqual({ meta: 2100, comercial: 1680, diferencia: -420 });
       // El Meta sigue siendo el de la plantilla: no se tocó el costo de ningún ítem.
       expect((await db.query(`select sum("CostoTotal")::float as s from "ppto_DetalleItems" where "IdPresupuesto" = 'E2E-TP-P1'`)).rows[0].s).toBe(2100);
     });

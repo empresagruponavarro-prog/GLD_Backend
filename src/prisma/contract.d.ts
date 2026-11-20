@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41'>;
+  StorageHashBase<'95d8dd49b8d938e3f1d287c0f3d601c004a4b00ba545824b578b5e45d9bf089a'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1269,6 +1269,9 @@ export type FieldOutputTypes = {
       readonly numero: Varchar<20>;
       readonly id_presupuesto: CodecTypes['pg/int4@1']['output'];
       readonly id_detalle_fase: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
+      readonly total_global: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly prorrateada: CodecTypes['pg/bool@1']['output'];
       readonly id_proveedor: CodecTypes['pg/int4@1']['output'];
       readonly fecha: CodecTypes['pg/date-string@1']['output'];
       readonly referencia: Varchar<50> | null;
@@ -2771,6 +2774,9 @@ export type FieldInputTypes = {
       readonly numero: CodecTypes['sql/varchar@1']['input'];
       readonly id_presupuesto: CodecTypes['pg/int4@1']['input'];
       readonly id_detalle_fase: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
+      readonly total_global: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly prorrateada: CodecTypes['pg/bool@1']['input'];
       readonly id_proveedor: CodecTypes['pg/int4@1']['input'];
       readonly fecha: CodecTypes['pg/date-string@1']['input'];
       readonly referencia: CodecTypes['sql/varchar@1']['input'] | null;
@@ -4276,6 +4282,7 @@ export type StorageColumnTypes = {
       readonly forma_pago: Varchar<50>;
       readonly garantia: Varchar<100> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'] | null;
       readonly id_detalle_fase: CodecTypes['pg/int4@1']['output'];
       readonly id_presupuesto: CodecTypes['pg/int4@1']['output'];
       readonly id_proveedor: CodecTypes['pg/int4@1']['output'];
@@ -4286,8 +4293,10 @@ export type StorageColumnTypes = {
       readonly moneda_simbolo: Varchar<10> | null;
       readonly numero: Varchar<20>;
       readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['output'] | null;
+      readonly prorrateada: CodecTypes['pg/bool@1']['output'];
       readonly referencia: Varchar<50> | null;
       readonly registrado_por: Varchar<255> | null;
+      readonly total_global: CodecTypes['pg/numeric@1']['output'] | null;
       readonly validez_dias: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly ppto_cotizacion_detalle: {
@@ -5778,6 +5787,7 @@ export type StorageColumnInputTypes = {
       readonly forma_pago: CodecTypes['sql/varchar@1']['input'];
       readonly garantia: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'] | null;
       readonly id_detalle_fase: CodecTypes['pg/int4@1']['input'];
       readonly id_presupuesto: CodecTypes['pg/int4@1']['input'];
       readonly id_proveedor: CodecTypes['pg/int4@1']['input'];
@@ -5788,8 +5798,10 @@ export type StorageColumnInputTypes = {
       readonly moneda_simbolo: CodecTypes['sql/varchar@1']['input'] | null;
       readonly numero: CodecTypes['sql/varchar@1']['input'];
       readonly plazo_entrega_dias: CodecTypes['pg/int4@1']['input'] | null;
+      readonly prorrateada: CodecTypes['pg/bool@1']['input'];
       readonly referencia: CodecTypes['sql/varchar@1']['input'] | null;
       readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
+      readonly total_global: CodecTypes['pg/numeric@1']['input'] | null;
       readonly validez_dias: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly ppto_cotizacion_detalle: {
@@ -14227,6 +14239,25 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
+                readonly id_detalle_categoria: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly total_global: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly prorrateada: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
                 readonly id_proveedor: {
                   readonly nativeType: 'int4';
                   readonly codecId: 'pg/int4@1';
@@ -14341,7 +14372,7 @@ type ContractBase = Omit<
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [
                 { readonly columns: readonly ['numero'] },
-                { readonly columns: readonly ['id_detalle_fase', 'id_proveedor'] },
+                { readonly columns: readonly ['id_detalle_categoria', 'id_proveedor'] },
               ];
               indexes: readonly [
                 {
@@ -14354,6 +14385,12 @@ type ContractBase = Omit<
                   readonly name: 'ppto_cotizacion_id_detalle_fase_idx_baca5911';
                   readonly prefix: 'ppto_cotizacion_id_detalle_fase_idx';
                   readonly columns: readonly ['id_detalle_fase'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'ppto_cotizacion_id_detalle_categoria_idx_e4765203';
+                  readonly prefix: 'ppto_cotizacion_id_detalle_categoria_idx';
+                  readonly columns: readonly ['id_detalle_categoria'];
                   readonly unique: false;
                 },
                 {
@@ -14385,6 +14422,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'ppto_DetalleFases';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_cotizacion';
+                    readonly columns: readonly ['id_detalle_categoria'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'ppto_DetalleFasesCate';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -28118,6 +28167,18 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly id_detalle_categoria: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly total_global: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly prorrateada: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
               readonly id_proveedor: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -28267,6 +28328,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly subpartida: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_DetalleFasesCate';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['id_detalle_categoria'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'ppto_cotizacion';
@@ -28276,6 +28348,9 @@ type ContractBase = Omit<
                 readonly numero: { readonly column: 'numero' };
                 readonly id_presupuesto: { readonly column: 'id_presupuesto' };
                 readonly id_detalle_fase: { readonly column: 'id_detalle_fase' };
+                readonly id_detalle_categoria: { readonly column: 'id_detalle_categoria' };
+                readonly total_global: { readonly column: 'total_global' };
+                readonly prorrateada: { readonly column: 'prorrateada' };
                 readonly id_proveedor: { readonly column: 'id_proveedor' };
                 readonly fecha: { readonly column: 'fecha' };
                 readonly referencia: { readonly column: 'referencia' };
@@ -28706,6 +28781,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id_centro_costo'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly cotizaciones: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'ppto_cotizacion';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['id_detalle_categoria'];
                 };
               };
               readonly detalleFase: {

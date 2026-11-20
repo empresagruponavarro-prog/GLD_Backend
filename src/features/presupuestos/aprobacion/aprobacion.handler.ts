@@ -5,7 +5,7 @@ import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { AlmacenSql, B, I, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
+import { AlmacenSql, B, I, IN, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
 import { preciosOferta, totalesCotizacion } from '../../requerimientos/shared/precios-oferta.js';
 import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
@@ -500,7 +500,7 @@ export class AprobacionPresupuestoHandler {
         }
 
         // Las cotizaciones y los proveedores ganadores viajan a la versión nueva (con las líneas mapeadas a los ítems nuevos).
-        const copiado = await this.copiarCotizaciones(tx, origen.id, String(previo.IdPresupuesto), nuevo.id, faseNuevaPorId, itemNuevoPorId, usuario ?? 'SISTEMA');
+        const copiado = await this.copiarCotizaciones(tx, origen.id, String(previo.IdPresupuesto), nuevo.id, faseNuevaPorId, nuevaCat, itemNuevoPorId, usuario ?? 'SISTEMA');
 
         await sincronizarPresupuestoCc(orm, idCc);
         return {
@@ -531,25 +531,32 @@ export class AprobacionPresupuestoHandler {
     codigoOrigen: string,
     idNuevo: number,
     fases: Map<number, number>,
+    subpartidas: Map<number, number>,
     items: Map<number, number>,
     usuario: string,
   ): Promise<{ cotizaciones: number; adjudicaciones: number }> {
     const q = sqlTag(this.sql);
-    const cots = await q.rows<{ id: number; id_detalle_fase: number }>({ id: I, id_detalle_fase: I }, tx)`
-      SELECT id, id_detalle_fase FROM ppto_cotizacion WHERE id_presupuesto = ${idOrigen}::int ORDER BY id`;
+    const cots = await q.rows<{ id: number; id_detalle_fase: number; id_detalle_categoria: number | null }>(
+      { id: I, id_detalle_fase: I, id_detalle_categoria: IN },
+      tx,
+    )`
+      SELECT id, id_detalle_fase, id_detalle_categoria FROM ppto_cotizacion WHERE id_presupuesto = ${idOrigen}::int ORDER BY id`;
     const lineaNueva = new Map<number, number>();
     let cotizaciones = 0;
     for (const c of cots) {
       const faseNueva = fases.get(c.id_detalle_fase);
       if (faseNueva === undefined) continue;
+      // La subpartida viaja a la suya en la versión nueva; las cotizaciones antiguas por ítem no tienen (nula).
+      const subpartidaNueva = c.id_detalle_categoria === null ? null : (subpartidas.get(c.id_detalle_categoria) ?? null);
+      if (c.id_detalle_categoria !== null && subpartidaNueva === null) continue;
       const numero = await this.ledger.siguienteNumero(tx, 'COT');
       const [nueva] = await q.rows<{ id: number }>({ id: I }, tx)`
-        INSERT INTO ppto_cotizacion (numero, id_presupuesto, id_detalle_fase, id_proveedor, fecha, referencia, moneda_id, moneda_simbolo, incluye_igv,
-                                     afecto_igv, forma_pago, dias_credito, adelanto_porcentaje, medio_pago, plazo_entrega_dias, validez_dias, garantia,
-                                     condiciones, archivo_url, registrado_por)
-        SELECT ${numero}::text, ${idNuevo}::int, ${faseNueva}::int, id_proveedor, fecha, referencia, moneda_id, moneda_simbolo, incluye_igv,
-               afecto_igv, forma_pago, dias_credito, adelanto_porcentaje, medio_pago, plazo_entrega_dias, validez_dias, garantia, condiciones,
-               archivo_url, ${usuario}::text
+        INSERT INTO ppto_cotizacion (numero, id_presupuesto, id_detalle_fase, id_detalle_categoria, total_global, prorrateada, id_proveedor, fecha,
+                                     referencia, moneda_id, moneda_simbolo, incluye_igv, afecto_igv, forma_pago, dias_credito, adelanto_porcentaje,
+                                     medio_pago, plazo_entrega_dias, validez_dias, garantia, condiciones, archivo_url, registrado_por)
+        SELECT ${numero}::text, ${idNuevo}::int, ${faseNueva}::int, ${subpartidaNueva}::int, total_global, prorrateada, id_proveedor, fecha,
+               referencia, moneda_id, moneda_simbolo, incluye_igv, afecto_igv, forma_pago, dias_credito, adelanto_porcentaje, medio_pago,
+               plazo_entrega_dias, validez_dias, garantia, condiciones, archivo_url, ${usuario}::text
           FROM ppto_cotizacion WHERE id = ${c.id}::int
         RETURNING id`;
       cotizaciones += 1;

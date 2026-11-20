@@ -1,101 +1,62 @@
 import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsBoolean, IsInt, IsOptional, IsString, Matches, MaxLength, Min, ValidateIf, ValidateNested } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString, Matches, Min, ValidateIf } from 'class-validator';
 import { CreateCotizacionDto, CuadroProveedorDto, MEDIOS_PAGO } from '../../requerimientos/cotizaciones/cotizacion.dto.js';
 import { DECIMAL_REGEX } from '../../requerimientos/requerimiento/requerimiento.dto.js';
 import { ConciliacionResponseDto } from '../compromisos/compromisos.dto.js';
 
 // ------------------------------------------------------------------ entrada
 
-export class PptoCotizacionLineaDto {
-  @ApiProperty({ description: '`ppto_DetalleItems.id` que se cotiza (debe ser de la fase de la cotización)' })
+/**
+ * Cotización de UNA subpartida (`ppto_DetalleFasesCate`): el proveedor da un solo total por toda la subpartida y el sistema lo
+ * prorratea entre sus ítems en proporción a su costo en el Meta (las líneas por ítem se calculan, no se envían).
+ * Cabecera = la de la cotización de un FUR.
+ */
+export class CreatePptoCotizacionDto extends OmitType(CreateCotizacionDto, ['lineas'] as const) {
+  @ApiProperty({ description: '`ppto_DetalleFasesCate.id`: la subpartida del presupuesto que se cotiza (un proveedor por subpartida)' })
   @IsInt()
   @Min(1)
-  id_ppto_item: number;
+  id_detalle_categoria: number;
 
-  @ApiPropertyOptional({ default: true, description: 'false = el proveedor no ofrece este ítem' })
-  @IsOptional()
-  @IsBoolean()
-  cotiza?: boolean;
-
-  @ApiProperty({ example: '10', description: 'Cantidad que ofrece (no puede superar la del presupuesto)' })
-  @Matches(DECIMAL_REGEX, { message: 'cantidad debe ser un decimal no negativo' })
-  cantidad: string;
-
-  @ApiProperty({ example: '22.50', description: 'Precio unitario tal como lo dio el proveedor (ver incluye_igv)' })
-  @Matches(DECIMAL_REGEX, { message: 'precio_unitario debe ser un decimal no negativo' })
-  precio_unitario: string;
-
-  @ApiPropertyOptional({ description: 'Días de entrega de este ítem si difiere de la cabecera' })
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  plazo_entrega_dias?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  marca_modelo?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  observaciones?: string;
+  @ApiProperty({
+    example: '1000.00',
+    description: 'Precio total de la subpartida tal como lo dio el proveedor (con IGV si `incluye_igv`, sin IGV si no); debe ser mayor a 0',
+  })
+  @Matches(DECIMAL_REGEX, { message: 'total debe ser un decimal no negativo' })
+  total: string;
 
   @ApiPropertyOptional({
     description:
-      'true = este proveedor gana el ítem (reemplaza al ganador actual). false = si era el ganador, lo suelta. Sin valor = no cambia. ' +
-      'Exige un trabajador vinculado al usuario y que la línea cotice la cantidad completa del ítem.',
+      'true = este proveedor gana la subpartida completa (reemplaza al ganador actual). false = si era el ganador, la suelta. Sin valor = no cambia. ' +
+      'Exige un trabajador vinculado al usuario.',
   })
   @IsOptional()
   @IsBoolean()
   adjudicar?: boolean;
-}
 
-/** Cabecera = la de la cotización de un FUR; las líneas cuelgan de ítems del presupuesto y no de líneas de FUR. */
-export class CreatePptoCotizacionDto extends OmitType(CreateCotizacionDto, ['lineas'] as const) {
-  @ApiProperty({ description: '`ppto_DetalleFases.id`: la fase del presupuesto que se cotiza (un proveedor por fase)' })
-  @IsInt()
-  @Min(1)
-  id_detalle_fase: number;
-
-  @ApiPropertyOptional({ description: 'Motivo de la adjudicación de las líneas marcadas con `adjudicar`' })
+  @ApiPropertyOptional({ description: 'Motivo de la adjudicación si se marca `adjudicar`' })
   @IsOptional()
   @IsString()
   comentario_adjudicacion?: string;
-
-  @ApiProperty({ type: [PptoCotizacionLineaDto] })
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => PptoCotizacionLineaDto)
-  lineas: PptoCotizacionLineaDto[];
 }
 
-/** La fase no se cambia: se crea otra cotización. */
-export class UpdatePptoCotizacionDto extends PartialType(OmitType(CreatePptoCotizacionDto, ['id_detalle_fase'] as const)) {}
+/**
+ * La subpartida no se cambia: se crea otra cotización. Si se cambia `incluye_igv` o `afecto_igv` hay que volver a enviar el `total`,
+ * porque cambia lo que significa; al enviar `total` se vuelve a prorratear con el costo Meta de ese momento.
+ */
+export class UpdatePptoCotizacionDto extends PartialType(OmitType(CreatePptoCotizacionDto, ['id_detalle_categoria'] as const)) {}
 
-export class AdjudicacionItemDto {
-  @ApiProperty({ description: '`ppto_DetalleItems.id`' })
-  @IsInt()
-  @Min(1)
-  id_ppto_item: number;
-
-  @ApiProperty({ nullable: true, type: Number, description: '`ppto_cotizacion_detalle.id` ganador; null = quitar el ganador (debe venir explícito)' })
-  @ValidateIf((o: AdjudicacionItemDto) => o.id_cot_detalle !== null)
-  @IsInt()
-  @Min(1)
-  id_cot_detalle: number | null;
-}
-
+/** Elige (o quita) al ganador de una subpartida completa: sus ítems con cantidad pasan juntos al proveedor elegido. */
 export class AdjudicacionDto {
-  @ApiProperty({ type: [AdjudicacionItemDto] })
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => AdjudicacionItemDto)
-  items: AdjudicacionItemDto[];
+  @ApiProperty({ description: '`ppto_DetalleFasesCate.id`' })
+  @IsInt()
+  @Min(1)
+  id_detalle_categoria: number;
+
+  @ApiProperty({ nullable: true, type: Number, description: '`ppto_cotizacion.id` ganadora de la subpartida; null = quitar el ganador (debe venir explícito)' })
+  @ValidateIf((o: AdjudicacionDto) => o.id_cotizacion !== null)
+  @IsInt()
+  @Min(1)
+  id_cotizacion: number | null;
 
   @ApiPropertyOptional({ description: 'Motivo de la elección (queda en cada ítem adjudicado)' })
   @IsOptional()
@@ -134,6 +95,10 @@ export class PptoCotizacionResponseDto {
   @ApiProperty() id_presupuesto: number;
   @ApiProperty() id_detalle_fase: number;
   @ApiProperty() fase: string;
+  @ApiPropertyOptional({ description: '`ppto_DetalleFasesCate.id`; nulo solo en cotizaciones antiguas por ítem' }) id_detalle_categoria: number | null;
+  @ApiPropertyOptional() subpartida: string | null;
+  @ApiPropertyOptional({ description: 'Total de la subpartida tal como lo dio el proveedor' }) total_global: string | null;
+  @ApiProperty({ description: 'Las líneas por ítem salen del prorrateo del total según el costo Meta' }) prorrateada: boolean;
   @ApiProperty() id_proveedor: number;
   @ApiPropertyOptional() proveedor: string | null;
   @ApiProperty() fecha: string;
@@ -155,7 +120,7 @@ export class PptoCotizacionResponseDto {
   @ApiProperty() total_sin_igv: string;
   @ApiProperty() igv: string;
   @ApiProperty() total: string;
-  @ApiProperty({ description: 'Ítems de esta cotización que ganó este proveedor' }) items_adjudicados: number;
+  @ApiProperty({ description: 'Ítems de esta cotización que ganó este proveedor (toda la subpartida o ninguno)' }) items_adjudicados: number;
   @ApiProperty({ description: 'Alguno de sus ítems ya tiene una orden registrada: la cotización es solo de consulta' }) protegida: boolean;
   @ApiProperty({ type: [PptoCotizacionLineaResponseDto] }) lineas: PptoCotizacionLineaResponseDto[];
   @ApiPropertyOptional({ type: ConciliacionResponseDto, description: 'Solo al grabar: los FUR y órdenes que se generaron o actualizaron' })
@@ -206,17 +171,22 @@ export class PptoCuadroLineaDto {
 }
 
 export class PptoCuadroProveedorDto extends OmitType(CuadroProveedorDto, ['es_ganadora'] as const) {
-  @ApiProperty({ description: 'Ítems de la fase que gana este proveedor' }) items_ganados: number;
+  @ApiProperty({ description: 'Ítems de la subpartida que gana este proveedor' }) items_ganados: number;
+  @ApiProperty({ description: 'Este proveedor es el ganador de la subpartida' }) es_ganadora: boolean;
+  @ApiPropertyOptional({ description: 'Total de la subpartida tal como lo dio el proveedor' }) total_global: string | null;
 }
 
 export class PptoCuadroComparativoDto {
   @ApiProperty() id_presupuesto: number;
   @ApiProperty({ example: 'PPTO-2026-001' }) codigo_presupuesto: string;
   @ApiProperty() estado: string;
+  @ApiProperty({ description: '`ppto_DetalleFasesCate.id`' }) id_detalle_categoria: number;
+  @ApiProperty() subpartida: string;
   @ApiProperty() id_detalle_fase: number;
   @ApiProperty() fase: string;
-  @ApiProperty() items_total: number;
-  @ApiProperty() items_adjudicados: number;
+  @ApiProperty({ description: 'Ítems de la subpartida' }) items_total: number;
+  @ApiProperty({ description: 'Ítems con ganador (todos o ninguno)' }) items_adjudicados: number;
+  @ApiPropertyOptional({ description: '`ppto_cotizacion.id` ganadora de la subpartida' }) id_cotizacion_ganadora: number | null;
   @ApiProperty({ type: [PptoCuadroLineaDto] }) lineas: PptoCuadroLineaDto[];
   @ApiProperty({ type: [PptoCuadroProveedorDto] }) proveedores: PptoCuadroProveedorDto[];
 }

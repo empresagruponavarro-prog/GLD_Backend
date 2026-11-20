@@ -16248,6 +16248,21 @@
                   "namespace": "public"
                 }
               },
+              "cotizaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_detalle_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_cotizacion",
+                  "namespace": "public"
+                }
+              },
               "detalleFase": {
                 "cardinality": "N:1",
                 "on": {
@@ -18212,6 +18227,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_detalle_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id_detalle_fase": {
                 "nullable": false,
                 "type": {
@@ -18290,6 +18312,13 @@
                   "kind": "scalar"
                 }
               },
+              "prorrateada": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "referencia": {
                 "nullable": true,
                 "type": {
@@ -18308,6 +18337,13 @@
                   "typeParams": {
                     "length": 255
                   }
+                }
+              },
+              "total_global": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
                 }
               },
               "validez_dias": {
@@ -18378,6 +18414,21 @@
                   "model": "Anexos",
                   "namespace": "public"
                 }
+              },
+              "subpartida": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_detalle_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "ppto_DetalleFasesCate",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -18412,6 +18463,9 @@
                 "id": {
                   "column": "id"
                 },
+                "id_detalle_categoria": {
+                  "column": "id_detalle_categoria"
+                },
                 "id_detalle_fase": {
                   "column": "id_detalle_fase"
                 },
@@ -18439,11 +18493,17 @@
                 "plazo_entrega_dias": {
                   "column": "plazo_entrega_dias"
                 },
+                "prorrateada": {
+                  "column": "prorrateada"
+                },
                 "referencia": {
                   "column": "referencia"
                 },
                 "registrado_por": {
                   "column": "registrado_por"
+                },
+                "total_global": {
+                  "column": "total_global"
                 },
                 "validez_dias": {
                   "column": "validez_dias"
@@ -33874,6 +33934,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "id_detalle_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id_detalle_fase": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -33938,6 +34003,15 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "prorrateada": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "referencia": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -33953,6 +34027,11 @@
                   "typeParams": {
                     "length": 255
                   }
+                },
+                "total_global": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
                 },
                 "validez_dias": {
                   "codecId": "pg/int4@1",
@@ -33996,6 +34075,23 @@
                   }
                 },
                 {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_detalle_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_cotizacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ppto_DetalleFasesCate"
+                  }
+                },
+                {
                   "source": {
                     "columns": [
                       "id_proveedor"
@@ -34013,6 +34109,14 @@
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "id_detalle_categoria"
+                  ],
+                  "name": "ppto_cotizacion_id_detalle_categoria_idx_e4765203",
+                  "prefix": "ppto_cotizacion_id_detalle_categoria_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "id_detalle_fase"
@@ -34051,7 +34155,7 @@
                 },
                 {
                   "columns": [
-                    "id_detalle_fase",
+                    "id_detalle_categoria",
                     "id_proveedor"
                   ]
                 }
@@ -37551,7 +37655,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f2b3f6cff647e74653da2b2af207be04dc1081128532faf01e7f553cab1a2d41"
+    "storageHash": "95d8dd49b8d938e3f1d287c0f3d601c004a4b00ba545824b578b5e45d9bf089a"
   },
   "capabilities": {
     "postgres": {

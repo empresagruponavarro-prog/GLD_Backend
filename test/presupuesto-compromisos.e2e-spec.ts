@@ -30,35 +30,35 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
   let provB = 0;
   let trabajadorId = 0;
   let idPpto = 0;
-  let idFase1 = 0;
-  let idFase2 = 0;
   let idFaseMaestra1 = 0;
-  let item1 = 0; // producto 10 × S/ 5
-  let item2 = 0; // servicio 2 × S/ 15
-  let item3 = 0; // producto 4 × S/ 6
-  let item4 = 0; // fase 2: producto 3 × S/ 8
-  let cotA = 0;
-  let cotB = 0;
+  // Cada ítem es su propia subpartida (la cotización es por subpartida: un total por proveedor, aquí igual a cantidad × precio).
+  let item1 = 0; // producto 10 × S/ 5, subpartida c1
+  let item2 = 0; // servicio 2 × S/ 15, subpartida c2
+  let item3 = 0; // producto 4 × S/ 6, subpartida c3
+  let item4 = 0; // fase 2: producto 3 × S/ 8, subpartida c4
+  let c1 = 0;
+  let c2 = 0;
+  let c3 = 0;
+  let c4 = 0;
+  let cotA = 0; // proveedor A en c1
+  let cotA2 = 0; // proveedor A en c2
+  let cotA3 = 0; // proveedor A en c3
+  let cotB = 0; // proveedor B en c3
 
   const api = () => apiConSesion(app);
   const redondear2 = (n: number) => Math.round(n * 100) / 100;
-  const cuerpo = (idFase: number, idProveedor: number, lineas: Array<Record<string, unknown>>, extra: Record<string, unknown> = {}) => ({
-    id_detalle_fase: idFase,
+  const cuerpo = (idSub: number, idProveedor: number, total: string, extra: Record<string, unknown> = {}) => ({
+    id_detalle_categoria: idSub,
     id_proveedor: idProveedor,
+    total,
     fecha: hoy,
     moneda_id: 'PEN',
     moneda_simbolo: 'S/',
     forma_pago: 'Contado',
     ...extra,
-    lineas,
   });
-  const linea = (id_ppto_item: number, cantidad: string, precio_unitario: string, extra: Record<string, unknown> = {}) => ({ id_ppto_item, cantidad, precio_unitario, ...extra });
-  const ofertaDe = async (item: number, cot: number, idFase = idFase1): Promise<number> => {
-    const c = (await api().get(`/presupuestos/${idPpto}/cuadro-comparativo?id_detalle_fase=${idFase}`).expect(200)).body;
-    return c.lineas.find((l: { id_ppto_item: number }) => l.id_ppto_item === item).ofertas.find((o: { id_cotizacion: number }) => o.id_cotizacion === cot).id_cot_detalle;
-  };
-  const adjudicar = (items: Array<[number, number | null]>) =>
-    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ items: items.map(([id_ppto_item, id_cot_detalle]) => ({ id_ppto_item, id_cot_detalle })) });
+  const adjudicar = (idSub: number, idCotizacion: number | null) =>
+    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ id_detalle_categoria: idSub, id_cotizacion: idCotizacion });
 
   // ─── lecturas directas de la BD ─────────────────────────────────────────────
   const furs = async (soloVigentes = false) =>
@@ -87,6 +87,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
       )
     ).rows[0].id as number;
     const items: number[] = [];
+    const subfases: number[] = [];
     for (const [j, c] of cats.entries()) {
       const id = (
         await db.query(
@@ -95,6 +96,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
           [`E2E-PK-DC-${codigo}-${fase}-${j}`, codigo, idDetalle, idCc, fase, c.cat, costoCats[j]],
         )
       ).rows[0].id as number;
+      subfases.push(id);
       for (const [k, [idProd, q, p]] of c.items.entries()) {
         items.push(
           (
@@ -107,14 +109,17 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
         );
       }
     }
-    return { idFase, items };
+    return { idFase, items, subfases };
   };
 
   async function crearProducto(tipo: 'PRODUCTO' | 'SERVICIO'): Promise<number> {
+    const categoria = (await db.query(`select id from categoria order by id limit 1`)).rows[0].id as number;
     return (
-      await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, 1, 1, $3) returning id`, [
+      await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, $3, $4, $5) returning id`, [
         `ZZ-PK-${Math.random().toString(36).slice(2, 8)}`,
         `${tipo} DE PRUEBA COMPROMISOS`,
+        categoria,
+        unidad,
         tipo,
       ])
     ).rows[0].id;
@@ -148,7 +153,8 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     idFaseMaestra1 = (await db.query(`insert into "ppto_Fases" ("IdpptoFase", "FaseProyecto") values ('E2E-PK-F1', 'E2E PK FASE 1') returning id`)).rows[0].id;
     await db.query(`insert into "ppto_Fases" ("IdpptoFase", "FaseProyecto") values ('E2E-PK-F2', 'E2E PK FASE 2')`);
     await db.query(
-      `insert into "ppto_FasesCategorias" ("IdpptoFaseCategoria", "IdpptoFase", "Descripcion") values ('E2E-PK-C1', 'E2E-PK-F1', 'E2E PK MATERIALES'), ('E2E-PK-C2', 'E2E-PK-F1', 'E2E PK OTROS')`,
+      `insert into "ppto_FasesCategorias" ("IdpptoFaseCategoria", "IdpptoFase", "Descripcion")
+       values ('E2E-PK-C1', 'E2E-PK-F1', 'E2E PK MATERIALES'), ('E2E-PK-C2', 'E2E-PK-F1', 'E2E PK SERVICIOS'), ('E2E-PK-C3', 'E2E-PK-F1', 'E2E PK OTROS')`,
     );
 
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -158,14 +164,15 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
 
     idPpto = (await api().post('/presupuestos').send({ IdPresupuesto: 'E2E-PK-P1', id_centro_costo: ccObra, TipoPpto: 'Principal', Proyecto: 'E2E PK', Estado: 'PENDIENTE' }).expect(201)).body.id;
     const f1 = await armar('E2E-PK-P1', ccObra, 'E2E-PK-F1', [
-      { cat: 'E2E-PK-C1', items: [[producto, 10, 5], [servicio, 2, 15]] },
-      { cat: 'E2E-PK-C2', items: [[producto, 4, 6]] },
+      { cat: 'E2E-PK-C1', items: [[producto, 10, 5]] },
+      { cat: 'E2E-PK-C2', items: [[servicio, 2, 15]] },
+      { cat: 'E2E-PK-C3', items: [[producto, 4, 6]] },
     ]);
-    idFase1 = f1.idFase;
     [item1, item2, item3] = f1.items;
+    [c1, c2, c3] = f1.subfases;
     const f2 = await armar('E2E-PK-P1', ccObra, 'E2E-PK-F2', [{ cat: 'E2E-PK-C1', items: [[producto, 3, 8]] }]);
-    idFase2 = f2.idFase;
     [item4] = f2.items;
+    [c4] = f2.subfases;
   });
 
   afterAll(async () => {
@@ -196,13 +203,19 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
   // ─── Generar al grabar ──────────────────────────────────────────────────────
   describe('al grabar, el FUR aprobado y sus órdenes provisionales se generan solos', () => {
     it('cotizar y adjudicar genera un FUR por fase y proveedor, con una OC (bienes) y una OS (servicios) provisionales', async () => {
-      const res = await api()
-        .post(`/presupuestos/${idPpto}/cotizaciones`)
-        .send(cuerpo(idFase1, provA, [linea(item1, '10', '4.5', { adjudicar: true }), linea(item2, '2', '20', { adjudicar: true }), linea(item3, '4', '5', { adjudicar: true })]))
-        .expect(201);
+      // El proveedor A gana las tres subpartidas de la fase: la primera crea el FUR; las demás lo completan.
+      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c1, provA, '45', { adjudicar: true })).expect(201); // 10 × 4.50
       cotA = res.body.id;
       expect(res.body.compromisos.creados).toHaveLength(1);
-      expect(res.body.compromisos.creados[0].documentos.map((d: { clase: string }) => d.clase).sort()).toEqual(['ORDEN_COMPRA', 'ORDEN_SERVICIO']);
+      expect(res.body.compromisos.creados[0].documentos.map((d: { clase: string }) => d.clase)).toEqual(['ORDEN_COMPRA']);
+      const r2 = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c2, provA, '40', { adjudicar: true })).expect(201); // 2 × 20
+      cotA2 = r2.body.id;
+      expect(r2.body.compromisos.creados).toEqual([]);
+      expect(r2.body.compromisos.actualizados).toHaveLength(1);
+      expect(r2.body.compromisos.actualizados[0].documentos.map((d: { clase: string }) => d.clase).sort()).toEqual(['ORDEN_COMPRA', 'ORDEN_SERVICIO']);
+      const r3 = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c3, provA, '20', { adjudicar: true })).expect(201); // 4 × 5
+      cotA3 = r3.body.id;
+      expect(r3.body.compromisos.actualizados).toHaveLength(1);
 
       const [fur, ...otros] = await furs();
       expect(otros).toHaveLength(0);
@@ -252,7 +265,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     it('grabar sin cambios no escribe nada: mismos FUR, mismas órdenes y mismos números', async () => {
       const antes = await furs();
       const docsAntes = await docs(antes[0].id);
-      const r = (await adjudicar([[item1, await ofertaDe(item1, cotA)]]).expect(200)).body;
+      const r = (await adjudicar(c1, cotA).expect(200)).body;
       expect(r.compromisos).toEqual({ creados: [], actualizados: [], anulados: [], sin_cambio: 1 });
       expect(await furs()).toEqual(antes);
       expect(await docs(antes[0].id)).toEqual(docsAntes);
@@ -261,10 +274,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     it('cambiar un precio actualiza el mismo FUR y las mismas órdenes (no crea números nuevos)', async () => {
       const [fur] = await furs();
       const ocAntes = (await docs(fur.id)).find((d) => claseDe(d) === 'ORDEN_COMPRA');
-      const res = await api()
-        .patch(`/presupuestos/${idPpto}/cotizaciones/${cotA}`)
-        .send({ lineas: [linea(item1, '10', '4'), linea(item2, '2', '20'), linea(item3, '4', '5')] })
-        .expect(200);
+      const res = await api().patch(`/presupuestos/${idPpto}/cotizaciones/${cotA}`).send({ total: '40' }).expect(200); // 10 × 4
       expect(res.body.compromisos.actualizados).toHaveLength(1);
       expect(res.body.compromisos.actualizados[0].numero).toBe(fur.numero);
       expect(await furs()).toHaveLength(1);
@@ -316,10 +326,10 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
   // ─── Cambiar de proveedor, quitar ítems ─────────────────────────────────────
   describe('cambiar de proveedor o quitar ítems mantiene los FUR al día', () => {
     it('el ítem que pasa a otro proveedor sale de un FUR y entra en el del nuevo (se crea el FUR del nuevo)', async () => {
-      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(idFase1, provB, [linea(item3, '4', '4')])).expect(201);
+      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c3, provB, '16')).expect(201); // 4 × 4
       cotB = res.body.id;
       expect(res.body.compromisos.creados).toEqual([]); // cotizar sin adjudicar no genera nada
-      const r = (await adjudicar([[item3, await ofertaDe(item3, cotB)]]).expect(200)).body;
+      const r = (await adjudicar(c3, cotB).expect(200)).body;
       expect(r.compromisos.creados).toHaveLength(1);
       expect(r.compromisos.actualizados).toHaveLength(1);
 
@@ -336,7 +346,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
 
     it('una clase que queda sin ítems anula su orden y deja la otra', async () => {
       const [deA] = await furs(true);
-      const r = (await adjudicar([[item2, null]]).expect(200)).body;
+      const r = (await adjudicar(c2, null).expect(200)).body;
       expect(r.liberados).toBe(1);
       expect(r.compromisos.actualizados).toHaveLength(1);
       const ds = await docs(deA.id);
@@ -356,8 +366,11 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     });
 
     it('un FUR que se queda sin ítems adjudicados se anula con todas sus órdenes (y queda su historial)', async () => {
-      const r = (await adjudicar([[item1, null], [item3, null]]).expect(200)).body;
-      expect(r.compromisos.anulados).toHaveLength(2);
+      // Se quita el proveedor de las dos subpartidas que quedaban adjudicadas: cada FUR se anula al quedarse sin ítems.
+      const r1 = (await adjudicar(c1, null).expect(200)).body;
+      expect(r1.compromisos.anulados).toHaveLength(1);
+      const r2 = (await adjudicar(c3, null).expect(200)).body;
+      expect(r2.compromisos.anulados).toHaveLength(1);
       expect(await furs(true)).toHaveLength(0);
       for (const f of await furs()) {
         expect(f.estado).toBe('ANULADO');
@@ -372,7 +385,9 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
 
     it('volver a adjudicar crea un FUR nuevo con número nuevo (los anulados se conservan)', async () => {
       const anulados = await furs();
-      const r = (await adjudicar([[item1, await ofertaDe(item1, cotA)], [item2, await ofertaDe(item2, cotA)], [item3, await ofertaDe(item3, cotA)]]).expect(200)).body;
+      const r = (await adjudicar(c1, cotA).expect(200)).body;
+      await adjudicar(c2, cotA2).expect(200);
+      await adjudicar(c3, cotA3).expect(200);
       expect(r.compromisos.creados).toHaveLength(1);
       const numeroNuevo = r.compromisos.creados[0].numero;
       expect(anulados.map((f) => f.numero)).not.toContain(numeroNuevo);
@@ -415,7 +430,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     });
 
     it('con todo adjudicado, aprueba y las órdenes provisionales pasan a REGISTRADO', async () => {
-      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(idFase2, provA, [linea(item4, '3', '7', { adjudicar: true })])).expect(201);
+      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c4, provA, '21', { adjudicar: true })).expect(201); // 3 × 7
       expect(res.body.compromisos.creados).toHaveLength(1);
 
       const provisionales = async () => (await db.query(`select count(*)::int as n from "documentosOrigen" where estado = 'PROVISIONAL' and id_centro_costo = $1`, [ccObra])).rows[0].n as number;
@@ -467,7 +482,7 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
       await api().post(`/requerimientos/${idFur}/anular`).send({}).expect(200);
 
       // El proveedor B cotiza el ítem 4 y gana: la orden nace directamente REGISTRADO (el presupuesto ya está aprobado).
-      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(idFase2, provB, [linea(item4, '3', '6.5', { adjudicar: true })])).expect(201);
+      const res = await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c4, provB, '19.5', { adjudicar: true })).expect(201); // 3 × 6.50
       expect(res.body.compromisos.creados).toHaveLength(1);
       const nuevo = res.body.compromisos.creados[0];
       expect(nuevo.id_requerimiento).not.toBe(idFur);
@@ -478,8 +493,8 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     });
 
     it('el ítem con orden registrada no se puede readjudicar (409)', async () => {
-      await adjudicar([[item1, null]]).expect(409);
-      await adjudicar([[item1, await ofertaDe(item1, cotA)]]).expect(200); // el mismo ganador no cambia nada
+      await adjudicar(c1, null).expect(409);
+      await adjudicar(c1, cotA).expect(200); // el mismo ganador no cambia nada
     });
   });
 });

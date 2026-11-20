@@ -132,6 +132,52 @@ export async function itemsDeFase(sql: AlmacenSql, codigoPpto: string, idFase: n
      ORDER BY c.id, i."Orden", i.id`;
 }
 
+export interface SubpartidaPresupuesto {
+  /** `ppto_DetalleFasesCate.id`. */
+  id: number;
+  nombre: string;
+  /** `ppto_DetalleFases.id` de la fase a la que pertenece. */
+  id_detalle_fase: number;
+  fase: string;
+}
+
+/** La subpartida (`ppto_DetalleFasesCate`) debe ser del presupuesto: 400 si no existe o es de otro. */
+export async function subpartidaPresupuesto(sql: AlmacenSql, codigoPpto: string, idSubpartida: number, tx?: Tx): Promise<SubpartidaPresupuesto> {
+  const q = sqlTag(sql);
+  const [s] = await q.rows<SubpartidaPresupuesto>({ id: I, nombre: T, id_detalle_fase: I, fase: T }, tx)`
+    SELECT c.id,
+           COALESCE((SELECT fc."Descripcion" FROM "ppto_FasesCategorias" fc WHERE fc."IdpptoFaseCategoria" = c."IdpptoFaseCategoria" LIMIT 1),
+                    'Subpartida #' || c.id::text)::text AS nombre,
+           f.id AS id_detalle_fase,
+           COALESCE(m."FaseProyecto", f."IdpptoFase", 'Fase #' || f.id::text)::text AS fase
+      FROM "ppto_DetalleFasesCate" c
+      JOIN "ppto_DetalleFases" f ON f."IdPresupuestoDetalle" = c."IdPresupuestoDetalle"
+      LEFT JOIN "ppto_Fases" m ON m."IdpptoFase" = f."IdpptoFase"
+     WHERE c.id = ${idSubpartida}::int AND c."IdPresupuesto" = ${codigoPpto}::text AND f."IdPresupuesto" = ${codigoPpto}::text`;
+  if (!s) throw new BadRequestException(`La subpartida ${idSubpartida} no pertenece al presupuesto ${codigoPpto}`);
+  return s;
+}
+
+/** Ítems de una subpartida del presupuesto (con producto y ganador actual), en el orden del presupuesto. */
+export async function itemsDeSubpartida(sql: AlmacenSql, codigoPpto: string, idSubpartida: number, tx?: Tx): Promise<ItemDeFase[]> {
+  const q = sqlTag(sql);
+  return q.rows<ItemDeFase>(ITEM_SPEC, tx)`
+    SELECT i.id, i."Item"::text AS numero, c.id AS id_subfase,
+           COALESCE((SELECT fc."Descripcion" FROM "ppto_FasesCategorias" fc WHERE fc."IdpptoFaseCategoria" = c."IdpptoFaseCategoria" LIMIT 1),
+                    'Subfase #' || c.id::text)::text AS subfase,
+           i.id_producto, p.codigo::text AS codigo, p.descripcion::text AS descripcion, COALESCE(u.simbolo, u.codigo)::text AS unidad,
+           p.tipo_producto::text AS tipo_producto, i."Cantidad"::text AS cantidad, i."CostoUnitario"::text AS costo_unitario,
+           i."CostoTotal"::text AS costo_total, i.id_ppto_cot_detalle_ganadora AS id_cot_detalle_ganadora,
+           i.adjudicado_por::text AS adjudicado_por, i.fecha_adjudicacion::text AS fecha_adjudicacion,
+           i.comentario_adjudicacion
+      FROM "ppto_DetalleItems" i
+      JOIN "ppto_DetalleFasesCate" c ON c.id = i.id_detalle_categoria
+      JOIN producto p ON p.id = i.id_producto
+      JOIN unidad_medida u ON u.id = i.id_unidad_medida
+     WHERE c.id = ${idSubpartida}::int AND c."IdPresupuesto" = ${codigoPpto}::text AND i."IdPresupuesto" = ${codigoPpto}::text
+     ORDER BY i."Orden", i.id`;
+}
+
 /** FUR y documento que ya nacieron de un ítem. */
 export interface CompromisoItem {
   id_ppto_item: number;

@@ -39,47 +39,53 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
       await db.query(`insert into "CentroCostos" (centro_costo, estado, fecha_inicio, fecha_fin_prog, periodo, id_anexo) values ($1, 'ABIERTO', $2, $3, 2026, $4) returning id`, [nombre, inicio, fin, cliente])
     ).rows[0].id as number;
 
-  /** Presupuesto Principal con una fase y los ítems indicados (una subfase); devuelve ids. */
+  /** Presupuesto Principal con una fase y los ítems indicados (cada ítem es su propia subpartida); devuelve ids. */
   const crearPpto = async (codigo: string, idCc: number, items: Array<[number, number, number]>) => {
     const id = (await api().post('/presupuestos').send({ IdPresupuesto: codigo, id_centro_costo: idCc, TipoPpto: 'Principal', Proyecto: 'E2E PV', Estado: 'PENDIENTE' }).expect(201)).body.id as number;
     const costo = redondear2(items.reduce((a, [, q, p]) => a + redondear2(q * p), 0));
     const idFase = (
       await db.query(`insert into "ppto_DetalleFases" ("IdPresupuestoDetalle", "IdPresupuesto", id_centro_costo, "IdpptoFase", "CostoDirecto") values ($1, $2, $3, 'E2E-PV-F1', $4) returning id`, [`E2E-PV-DF-${codigo}`, codigo, idCc, costo])
     ).rows[0].id as number;
-    const idCat = (
-      await db.query(
-        `insert into "ppto_DetalleFasesCate" ("IdPresupuestoDetalleCategoria", "IdPresupuesto", "IdPresupuestoDetalle", id_centro_costo, "IdpptoFase", "IdpptoFaseCategoria", "CostoDirecto")
-         values ($1, $2, $3, $4, 'E2E-PV-F1', 'E2E-PV-C1', $5) returning id`,
-        [`E2E-PV-DC-${codigo}`, codigo, `E2E-PV-DF-${codigo}`, idCc, costo],
-      )
-    ).rows[0].id as number;
     const ids: number[] = [];
+    const subs: number[] = [];
     for (const [k, [idProd, q, p]] of items.entries()) {
+      const idCat = (
+        await db.query(
+          `insert into "ppto_DetalleFasesCate" ("IdPresupuestoDetalleCategoria", "IdPresupuesto", "IdPresupuestoDetalle", id_centro_costo, "IdpptoFase", "IdpptoFaseCategoria", "CostoDirecto")
+           values ($1, $2, $3, $4, 'E2E-PV-F1', $5, $6) returning id`,
+          [`E2E-PV-DC-${codigo}-${k}`, codigo, `E2E-PV-DF-${codigo}`, idCc, `E2E-PV-C${k + 1}`, redondear2(q * p)],
+        )
+      ).rows[0].id as number;
+      subs.push(idCat);
       ids.push(
         (
           await db.query(
             `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "Orden")
              values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`,
-            [idCat, codigo, idProd, unidad, q, p, redondear2(q * p), k],
+            [idCat, codigo, idProd, unidad, q, p, redondear2(q * p), 0],
           )
         ).rows[0].id as number,
       );
     }
-    return { id, idFase, idCat, items: ids };
+    return { id, idFase, subs, items: ids };
   };
 
-  const cotizar = (idPpto: number, idFase: number, idProveedor: number, lineas: Array<[number, string, string, boolean?]>) =>
+  /** Cotiza una subpartida con un total (con `adjudicar`, el proveedor gana la subpartida completa). */
+  const cotizar = (idPpto: number, idSubpartida: number, idProveedor: number, total: string, adjudicar = false) =>
     api()
       .post(`/presupuestos/${idPpto}/cotizaciones`)
       .send({
-        id_detalle_fase: idFase,
+        id_detalle_categoria: idSubpartida,
         id_proveedor: idProveedor,
+        total,
         fecha: hoy,
         moneda_id: 'PEN',
         moneda_simbolo: 'S/',
         forma_pago: 'Contado',
-        lineas: lineas.map(([id_ppto_item, cantidad, precio_unitario, adjudicar]) => ({ id_ppto_item, cantidad, precio_unitario, ...(adjudicar ? { adjudicar: true } : {}) })),
+        ...(adjudicar ? { adjudicar: true } : {}),
       });
+  const adjudicar = (idPpto: number, idSubpartida: number, idCotizacion: number | null) =>
+    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ id_detalle_categoria: idSubpartida, id_cotizacion: idCotizacion });
 
   const dos = async (codigo: string) =>
     (
@@ -97,11 +103,14 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     await crearUsuarioE2E(db);
 
     unidad = (await db.query(`select id from unidad_medida order by id limit 1`)).rows[0].id;
+    const categoria = (await db.query(`select id from categoria order by id limit 1`)).rows[0].id as number;
     const crearProducto = async (tipo: string) =>
       (
-        await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, 1, 1, $3) returning id`, [
+        await db.query(`insert into producto (codigo, descripcion, id_categoria, id_unidad_medida, tipo_producto) values ($1, $2, $3, $4, $5) returning id`, [
           `ZZ-PV-${Math.random().toString(36).slice(2, 8)}`,
           `${tipo} DE PRUEBA VERSIONES`,
+          categoria,
+          unidad,
           tipo,
         ])
       ).rows[0].id as number;
@@ -116,7 +125,7 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     await db.query(`insert into trabajador (id_anexo) values ($1)`, [trabajadorId]);
     await db.query(`update usuarios set id_trabajador = $1 where "IdUsuario" = $2`, [trabajadorId, USUARIO_E2E]);
     await db.query(`insert into "ppto_Fases" ("IdpptoFase", "FaseProyecto") values ('E2E-PV-F1', 'E2E PV FASE 1')`);
-    await db.query(`insert into "ppto_FasesCategorias" ("IdpptoFaseCategoria", "IdpptoFase", "Descripcion") values ('E2E-PV-C1', 'E2E-PV-F1', 'E2E PV SUBFASE')`);
+    await db.query(`insert into "ppto_FasesCategorias" ("IdpptoFaseCategoria", "IdpptoFase", "Descripcion") values ('E2E-PV-C1', 'E2E-PV-F1', 'E2E PV SUBFASE 1'), ('E2E-PV-C2', 'E2E-PV-F1', 'E2E PV SUBFASE 2')`);
 
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
@@ -149,8 +158,8 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
 
   // ─── Escenario 1: una versión del Principal ya aprobado, con órdenes registradas ──────────────
   describe('versión de un presupuesto aprobado: lo ya pedido no se vuelve a pedir', () => {
-    let v1: { id: number; idFase: number; items: number[] };
-    let v2 = { id: 0, codigo: '', idFase: 0, items: [] as number[] };
+    let v1: { id: number; idFase: number; subs: number[]; items: number[] };
+    let v2 = { id: 0, codigo: '', idFase: 0, subs: [] as number[], items: [] as number[] };
 
     beforeAll(async () => {
       const cc = await crearCc('E2E-PV-OBRA-1');
@@ -158,7 +167,8 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     });
 
     it('con todo adjudicado se aprueba: la OC y la OS quedan registradas', async () => {
-      await cotizar(v1.id, v1.idFase, provA, [[v1.items[0], '10', '4.5', true], [v1.items[1], '2', '20', true]]).expect(201);
+      await cotizar(v1.id, v1.subs[0], provA, '45', true).expect(201); // 10 × 4.50
+      await cotizar(v1.id, v1.subs[1], provA, '40', true).expect(201); // 2 × 20
       await api().post('/presupuestos/E2E-PV-P1/aprobar').expect(200);
       expect((await dos('E2E-PV-P1')).map((d) => [d.clase_documento, d.estado])).toEqual(expect.arrayContaining([['ORDEN_COMPRA', 'REGISTRADO'], ['ORDEN_SERVICIO', 'REGISTRADO']]));
     });
@@ -166,35 +176,42 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     it('la nueva versión copia ítems (con su origen), cotizaciones y proveedores ganadores, y no genera nada nuevo', async () => {
       const res = (await api().post(`/presupuestos/${v1.id}/nueva-version`).expect(201)).body;
       v2 = { ...v2, id: res.id, codigo: res.id_presupuesto };
-      expect(res).toMatchObject({ numero_version: 2, items: 2, cotizaciones: 1, adjudicaciones: 2 });
+      expect(res).toMatchObject({ numero_version: 2, items: 2, cotizaciones: 2, adjudicaciones: 2 });
 
       const items = (await db.query(`select id, id_item_origen, id_ppto_cot_detalle_ganadora as g, adjudicado_por from "ppto_DetalleItems" where "IdPresupuesto" = $1 order by "Orden"`, [v2.codigo])).rows;
       expect(items.map((i) => i.id_item_origen)).toEqual(v1.items);
       expect(items.every((i) => i.g !== null && i.adjudicado_por === 'e2e-admin')).toBe(true);
       v2.items = items.map((i) => i.id);
       v2.idFase = (await db.query(`select id from "ppto_DetalleFases" where "IdPresupuesto" = $1`, [v2.codigo])).rows[0].id;
+      v2.subs = (await db.query(`select id from "ppto_DetalleFasesCate" where "IdPresupuesto" = $1 order by id`, [v2.codigo])).rows.map((r) => r.id as number);
 
-      const cots = (await db.query(`select numero, id_proveedor, registrado_por, (select count(*)::int from ppto_cotizacion_detalle where id_cotizacion = c.id) as lineas from ppto_cotizacion c where id_presupuesto = $1`, [v2.id])).rows;
-      expect(cots).toHaveLength(1);
-      expect(cots[0]).toMatchObject({ id_proveedor: provA, lineas: 2, registrado_por: 'e2e-admin' });
-      expect(cots[0].numero).not.toBe((await db.query(`select numero from ppto_cotizacion where id_presupuesto = $1`, [v1.id])).rows[0].numero);
+      // Cada cotización viaja a la subpartida nueva que le corresponde, con su total y su marca de prorrateo.
+      const cots = (await db.query(`select numero, id_proveedor, id_detalle_categoria as sub, prorrateada, total_global::float as total, registrado_por, (select count(*)::int from ppto_cotizacion_detalle where id_cotizacion = c.id) as lineas from ppto_cotizacion c where id_presupuesto = $1 order by id`, [v2.id])).rows;
+      expect(cots).toHaveLength(2);
+      expect(cots[0]).toMatchObject({ id_proveedor: provA, sub: v2.subs[0], prorrateada: true, total: 45, lineas: 1, registrado_por: 'e2e-admin' });
+      expect(cots[1]).toMatchObject({ id_proveedor: provA, sub: v2.subs[1], prorrateada: true, total: 40, lineas: 1 });
+      const numerosV1 = (await db.query(`select numero from ppto_cotizacion where id_presupuesto = $1`, [v1.id])).rows.map((r) => r.numero);
+      expect(numerosV1).not.toContain(cots[0].numero);
       // Las cotizaciones de la versión anterior se conservan.
-      expect((await db.query(`select count(*)::int as n from ppto_cotizacion where id_presupuesto = $1`, [v1.id])).rows[0].n).toBe(1);
+      expect(numerosV1).toHaveLength(2);
 
       const panel = (await api().get(`/presupuestos/${v2.id}/compromisos`).expect(200)).body;
       expect(panel).toMatchObject({ items_total: 2, items_adjudicados: 2, items_sin_adjudicar: [], conflictos: [], compromisos: [] });
     });
 
     it('si un ítem crece, se pide solo la diferencia a su mismo proveedor; si baja, nada', async () => {
-      const idCat = (await db.query(`select id_detalle_categoria as c from "ppto_DetalleItems" where id = $1`, [v2.items[0]])).rows[0].c;
-      const actuales = (await api().get(`/presupuestos/categorias-asignadas/${idCat}/items`).expect(200)).body.items as Array<{ id: number; id_producto: number; id_unidad_medida: number; Cantidad: number; CostoUnitario: number; PrecioVenta: number }>;
-      const envio = (cant: Record<number, number>) =>
-        actuales.map((i) => ({ id: i.id, id_producto: i.id_producto, id_unidad_medida: i.id_unidad_medida, Cantidad: cant[i.id] ?? i.Cantidad, CostoUnitario: i.CostoUnitario, PrecioVenta: i.PrecioVenta }));
+      const cambiarCantidad = async (idCat: number, item: number, cantidad: number) => {
+        const actuales = (await api().get(`/presupuestos/categorias-asignadas/${idCat}/items`).expect(200)).body.items as Array<{ id: number; id_producto: number; id_unidad_medida: number; Cantidad: number; CostoUnitario: number; PrecioVenta: number }>;
+        const envio = actuales.map((i) => ({ id: i.id, id_producto: i.id_producto, id_unidad_medida: i.id_unidad_medida, Cantidad: i.id === item ? cantidad : i.Cantidad, CostoUnitario: i.CostoUnitario, PrecioVenta: i.PrecioVenta }));
+        return api().put(`/presupuestos/categorias-asignadas/${idCat}/items`).send({ items: envio }).expect(200);
+      };
 
       // 10 → 13 bienes y 2 → 1 servicio: se pide una OC por 3 unidades; el servicio sigue cubierto.
-      const res = await api().put(`/presupuestos/categorias-asignadas/${idCat}/items`).send({ items: envio({ [v2.items[0]]: 13, [v2.items[1]]: 1 }) }).expect(200);
+      const res = await cambiarCantidad(v2.subs[0], v2.items[0], 13);
       expect(res.body.compromisos.creados).toHaveLength(1);
       expect(res.body.compromisos.creados[0].documentos.map((d: { clase: string }) => d.clase)).toEqual(['ORDEN_COMPRA']);
+      const baja = await cambiarCantidad(v2.subs[1], v2.items[1], 1);
+      expect(baja.body.compromisos.creados).toEqual([]);
 
       const nuevos = (await dos(v2.codigo)).filter((d) => d.estado !== 'ANULADO');
       expect(nuevos).toHaveLength(1);
@@ -204,12 +221,9 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     });
 
     it('cambiar el proveedor de un ítem ya pedido es un conflicto: no genera nada y bloquea la aprobación', async () => {
-      await cotizar(v2.id, v2.idFase, provB, [[v2.items[1], '1', '30']]).expect(201);
-      const oferta = (
-        await api().get(`/presupuestos/${v2.id}/cuadro-comparativo?id_detalle_fase=${v2.idFase}`).expect(200)
-      ).body.lineas.find((l: { id_ppto_item: number }) => l.id_ppto_item === v2.items[1]).ofertas.find((o: { id_cotizacion: number }) => o.id_cotizacion !== undefined && o.cantidad_completa && o.precio_sin_igv === '30.0000').id_cot_detalle;
+      const cotB = (await cotizar(v2.id, v2.subs[1], provB, '30').expect(201)).body.id as number; // 1 × 30
       const antes = (await dos(v2.codigo)).filter((d) => d.estado !== 'ANULADO').length;
-      const r = (await api().put(`/presupuestos/${v2.id}/adjudicacion`).send({ items: [{ id_ppto_item: v2.items[1], id_cot_detalle: oferta }] }).expect(200)).body;
+      const r = (await adjudicar(v2.id, v2.subs[1], cotB).expect(200)).body;
       expect(r.compromisos.creados).toEqual([]); // el servicio ya se pidió a otro proveedor
       expect((await dos(v2.codigo)).filter((d) => d.estado !== 'ANULADO')).toHaveLength(antes);
 
@@ -225,15 +239,12 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
 
     it('al volver al mismo proveedor el conflicto desaparece y la versión se aprueba: la anterior pasa a ANULADO y sus órdenes registradas se conservan', async () => {
       // El servicio bajó a 1 unidad: para que A vuelva a ganarlo, su cotización debe ofrecer esa cantidad completa (un ítem va completo a un proveedor).
-      const cotA = (await db.query(`select id from ppto_cotizacion where id_presupuesto = $1 and id_proveedor = $2`, [v2.id, provA])).rows[0].id;
-      await api()
-        .patch(`/presupuestos/${v2.id}/cotizaciones/${cotA}`)
-        .send({ lineas: [{ id_ppto_item: v2.items[0], cantidad: '13', precio_unitario: '4.5' }, { id_ppto_item: v2.items[1], cantidad: '1', precio_unitario: '20' }] })
-        .expect(200);
-      const ofertaA = (
-        await api().get(`/presupuestos/${v2.id}/cuadro-comparativo?id_detalle_fase=${v2.idFase}`).expect(200)
-      ).body.lineas.find((l: { id_ppto_item: number }) => l.id_ppto_item === v2.items[1]).ofertas.find((o: { precio_sin_igv: string }) => o.precio_sin_igv === '20.0000').id_cot_detalle;
-      await api().put(`/presupuestos/${v2.id}/adjudicacion`).send({ items: [{ id_ppto_item: v2.items[1], id_cot_detalle: ofertaA }] }).expect(200);
+      const cotsA = (await db.query(`select id, id_detalle_categoria as sub from ppto_cotizacion where id_presupuesto = $1 and id_proveedor = $2 order by id`, [v2.id, provA])).rows as Array<{ id: number; sub: number }>;
+      const cotA0 = cotsA.find((c) => c.sub === v2.subs[0])!.id;
+      const cotA1 = cotsA.find((c) => c.sub === v2.subs[1])!.id;
+      await api().patch(`/presupuestos/${v2.id}/cotizaciones/${cotA0}`).send({ total: '58.5' }).expect(200); // 13 × 4.50
+      await api().patch(`/presupuestos/${v2.id}/cotizaciones/${cotA1}`).send({ total: '20' }).expect(200); // 1 × 20
+      await adjudicar(v2.id, v2.subs[1], cotA1).expect(200);
       expect((await api().get(`/presupuestos/${v2.id}/compromisos`).expect(200)).body.conflictos).toEqual([]);
 
       const ok = (await api().post(`/presupuestos/${v2.codigo}/aprobar`).expect(200)).body;
@@ -250,7 +261,7 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     it('al aprobar la versión, el FUR y las órdenes provisionales de la anterior se anulan y la versión genera las suyas', async () => {
       const cc = await crearCc('E2E-PV-OBRA-2');
       const p = await crearPpto('E2E-PV-P2', cc, [[producto, 4, 10]]);
-      await cotizar(p.id, p.idFase, provA, [[p.items[0], '4', '9', true]]).expect(201);
+      await cotizar(p.id, p.subs[0], provA, '36', true).expect(201); // 4 × 9
       const provisionales = (await dos('E2E-PV-P2')).filter((d) => d.estado === 'PROVISIONAL');
       expect(provisionales).toHaveLength(1);
 

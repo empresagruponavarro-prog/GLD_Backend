@@ -24,7 +24,7 @@ import {
   UpdatePptoCotizacionDto,
 } from './cotizacion-ppto.dto.js';
 
-@ApiTags('presupuestos / cotizaciones por ítem')
+@ApiTags('presupuestos / cotizaciones por subpartida')
 @Controller('presupuestos/:id')
 @Modulo('presupuestos')
 @ApiParam({ name: 'id', type: Number, description: 'ID del presupuesto (`ppto_Principal.id`)' })
@@ -35,26 +35,30 @@ export class CotizacionPptoController {
   ) {}
 
   @Get('cotizaciones')
-  @ApiOperation({ summary: 'Cotizaciones del presupuesto (todas o de una fase), con líneas y totales sin/con IGV' })
+  @ApiOperation({ summary: 'Cotizaciones del presupuesto (todas, de una fase o de una subpartida), con líneas y totales sin/con IGV' })
   @ApiQuery({ name: 'id_detalle_fase', required: false, type: Number })
+  @ApiQuery({ name: 'id_detalle_categoria', required: false, type: Number, description: '`ppto_DetalleFasesCate.id` (la subpartida)' })
   @ApiOkResponse({ type: PptoCotizacionResponseDto, isArray: true })
   @ApiNotFoundResponse({ description: 'El presupuesto no existe' })
   list(
     @Param('id', ParseIntPipe) id: number,
     @Query('id_detalle_fase', new ParseIntPipe({ optional: true })) idFase?: number,
+    @Query('id_detalle_categoria', new ParseIntPipe({ optional: true })) idSubpartida?: number,
   ): Promise<PptoCotizacionResponseDto[]> {
-    return this.handler.list(id, idFase);
+    return this.handler.list(id, idFase, idSubpartida);
   }
 
   @Post('cotizaciones')
   @Accion('editar')
   @ApiOperation({
-    summary: 'Registra la cotización de un proveedor para una fase del presupuesto (una línea por ítem)',
-    description: 'Con `adjudicar: true` en una línea, ese proveedor gana el ítem. Un proveedor por fase.',
+    summary: 'Registra la cotización de un proveedor para una subpartida del presupuesto (un total que se prorratea entre sus ítems)',
+    description:
+      'El proveedor da un solo total por toda la subpartida; el sistema lo reparte entre sus ítems según el costo Meta. ' +
+      'Con `adjudicar: true` ese proveedor gana la subpartida completa. Un proveedor por subpartida.',
   })
   @ApiCreatedResponse({ type: PptoCotizacionResponseDto })
-  @ApiBadRequestResponse({ description: 'Ítems que no son de la fase, cantidades inválidas o proveedor que no es un Proveedor' })
-  @ApiConflictResponse({ description: 'El proveedor ya cotizó la fase, el presupuesto no admite cambios o falta el trabajador vinculado' })
+  @ApiBadRequestResponse({ description: 'Subpartida que no es del presupuesto, total inválido, subpartida sin costo Meta o proveedor que no es un Proveedor' })
+  @ApiConflictResponse({ description: 'El proveedor ya cotizó la subpartida, el presupuesto no admite cambios o falta el trabajador vinculado' })
   create(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: CreatePptoCotizacionDto,
@@ -64,15 +68,15 @@ export class CotizacionPptoController {
   }
 
   @Get('cuadro-comparativo')
-  @ApiOperation({ summary: 'Cuadro comparativo ítem × proveedor de una fase (no sugiere ganador)' })
-  @ApiQuery({ name: 'id_detalle_fase', required: true, type: Number })
+  @ApiOperation({ summary: 'Cuadro comparativo de una subpartida: un total por proveedor y su desglose por ítem (no sugiere ganador)' })
+  @ApiQuery({ name: 'id_detalle_categoria', required: true, type: Number })
   @ApiOkResponse({ type: PptoCuadroComparativoDto })
-  @ApiBadRequestResponse({ description: 'La fase no es del presupuesto' })
+  @ApiBadRequestResponse({ description: 'La subpartida no es del presupuesto' })
   cuadro(
     @Param('id', ParseIntPipe) id: number,
-    @Query('id_detalle_fase', ParseIntPipe) idFase: number,
+    @Query('id_detalle_categoria', ParseIntPipe) idSubpartida: number,
   ): Promise<PptoCuadroComparativoDto> {
-    return this.handler.cuadroComparativo(id, idFase);
+    return this.handler.cuadroComparativo(id, idSubpartida);
   }
 
   @Get('cotizaciones/:idCot')
@@ -84,7 +88,7 @@ export class CotizacionPptoController {
   }
 
   @Patch('cotizaciones/:idCot')
-  @ApiOperation({ summary: 'Edita la cotización; si llegan líneas las reemplaza conservando el ganador de las que siguen' })
+  @ApiOperation({ summary: 'Edita la cotización; si llega un `total` se vuelve a prorratear conservando el ganador si sigue valiendo' })
   @ApiOkResponse({ type: PptoCotizacionResponseDto })
   @ApiConflictResponse({ description: 'Alguno de sus ítems ya tiene una orden registrada' })
   update(
@@ -110,8 +114,8 @@ export class CotizacionPptoController {
 
   @Put('adjudicacion')
   @ApiOperation({
-    summary: 'Elige o quita el ganador de ítems del presupuesto',
-    description: 'Cada ítem va completo a un solo proveedor. El sistema no sugiere ni exige el más barato.',
+    summary: 'Elige o quita el ganador de una subpartida del presupuesto',
+    description: 'La subpartida completa va a un solo proveedor. El sistema no sugiere ni exige el más barato.',
   })
   @ApiOkResponse({ type: AdjudicacionResponseDto })
   @ApiConflictResponse({ description: 'Un ítem ya tiene una orden registrada, o el usuario no tiene un trabajador vinculado' })

@@ -1,0 +1,293 @@
+[
+  {
+    "id": "dropConstraint.ppto_cotizacion.ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+    "label": "Drop constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" on \"ppto_cotizacion\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" DROP CONSTRAINT \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_cotizacion_id_detalle_fase_id_proveedor_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_fase_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_cotizacion.id_detalle_categoria",
+    "label": "Add column \"id_detalle_categoria\" to \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_detalle_categoria",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_detalle_categoria\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "id_detalle_categoria"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_detalle_categoria\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD COLUMN \"id_detalle_categoria\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_detalle_categoria\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "id_detalle_categoria"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_cotizacion.prorrateada",
+    "label": "Add column \"prorrateada\" to \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "prorrateada",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"prorrateada\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "prorrateada"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"prorrateada\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD COLUMN \"prorrateada\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"prorrateada\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "prorrateada"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_cotizacion.total_global",
+    "label": "Add column \"total_global\" to \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "total_global",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"total_global\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "total_global"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"total_global\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD COLUMN \"total_global\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"total_global\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_cotizacion",
+          "total_global"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.ppto_cotizacion.ppto_cotizacion_id_detalle_categoria_id_proveedor_key",
+    "label": "Add unique constraint on \"ppto_cotizacion\" (id_detalle_categoria, id_proveedor)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "ppto_cotizacion_id_detalle_categoria_id_proveedor_key",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ppto_cotizacion_id_detalle_categoria_id_proveedor_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_categoria_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"ppto_cotizacion_id_detalle_categoria_id_proveedor_key\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\" ADD CONSTRAINT \"ppto_cotizacion_id_detalle_categoria_id_proveedor_key\" UNIQUE (\"id_detalle_categoria\", \"id_proveedor\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"ppto_cotizacion_id_detalle_categoria_id_proveedor_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_categoria_id_proveedor_key",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.ppto_cotizacion.ppto_cotizacion_id_detalle_categoria_idx_e4765203",
+    "label": "Create index \"ppto_cotizacion_id_detalle_categoria_idx_e4765203\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "ppto_cotizacion_id_detalle_categoria_idx_e4765203",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"ppto_cotizacion_id_detalle_categoria_idx_e4765203\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_detalle_categoria_idx_e4765203\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"ppto_cotizacion_id_detalle_categoria_idx_e4765203\"",
+        "sql": "CREATE INDEX \"ppto_cotizacion_id_detalle_categoria_idx_e4765203\" ON \"public\".\"ppto_cotizacion\" (\"id_detalle_categoria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"ppto_cotizacion_id_detalle_categoria_idx_e4765203\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"ppto_cotizacion_id_detalle_categoria_idx_e4765203\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.ppto_cotizacion.ppto_cotizacion_id_detalle_categoria_fkey",
+    "label": "Add foreign key \"ppto_cotizacion_id_detalle_categoria_fkey\" on \"ppto_cotizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "ppto_cotizacion_id_detalle_categoria_fkey",
+        "table": "ppto_cotizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"ppto_cotizacion_id_detalle_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"ppto_cotizacion_id_detalle_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_cotizacion\"\nADD CONSTRAINT \"ppto_cotizacion_id_detalle_categoria_fkey\"\nFOREIGN KEY (\"id_detalle_categoria\")\nREFERENCES \"public\".\"ppto_DetalleFasesCate\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"ppto_cotizacion_id_detalle_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ppto_cotizacion_id_detalle_categoria_fkey",
+          "public",
+          "\"public\".\"ppto_cotizacion\""
+        ]
+      }
+    ]
+  }
+]
