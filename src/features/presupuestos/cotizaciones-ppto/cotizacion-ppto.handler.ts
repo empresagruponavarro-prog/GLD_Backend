@@ -19,13 +19,7 @@ import {
 } from './cotizacion-ppto.dto.js';
 import { ConciliarCompromisosService, type ResultadoConciliacion } from '../compromisos/conciliar-compromisos.service.js';
 import { aplicarAdjudicacion, type CambioAdjudicacion } from './aplicar-adjudicacion.js';
-import {
-  cantidadCompleta,
-  modoCotizacion,
-  sigueSiendoGanadora,
-  validarLineasCotizacion,
-  type ItemFase,
-} from './adjudicacion.js';
+import { cantidadCompleta, modoCotizacion, validarLineasCotizacion } from './adjudicacion.js';
 import {
   bloquearPresupuesto,
   compromisosDeItems,
@@ -36,7 +30,7 @@ import {
   type CompromisoItem,
   type PresupuestoBloqueado,
 } from './contexto-ppto.js';
-import { prorratearTotal, type LineaProrrateada } from './prorrateo.js';
+import { ReprorrateoService } from './reprorrateo.service.js';
 
 const f2 = (n: number) => redondear(n, 2).toFixed(2);
 const f4 = (n: number) => redondear(n, 4).toFixed(4);
@@ -163,6 +157,7 @@ export class CotizacionPptoHandler {
     private readonly sql: AlmacenSql,
     private readonly ledger: InventarioLedger,
     private readonly conciliacion: ConciliarCompromisosService,
+    private readonly reprorrateo: ReprorrateoService,
   ) {}
 
   // ---------------------------------------------------------------- lectura
@@ -313,7 +308,7 @@ export class CotizacionPptoHandler {
       const [dup] = await q.rows<{ id: number }>({ id: I }, tx)`
         SELECT id FROM ppto_cotizacion WHERE id_detalle_categoria = ${sub.id}::int AND id_proveedor = ${dto.id_proveedor}::int`;
       if (dup) throw new ConflictException('Ese proveedor ya tiene una cotización en esta subpartida; edite la existente');
-      const { items, lineas } = await this.prorratear(tx, ppto, sub.id, dto.total);
+      const { items, lineas } = await this.reprorrateo.prorratear(tx, ppto, sub.id, dto.total);
       validarLineasCotizacion(lineas, items, modo);
 
       const numero = await this.ledger.siguienteNumero(tx, 'COT');
@@ -331,7 +326,7 @@ export class CotizacionPptoHandler {
                 NULLIF(${dto.garantia ?? ''}::text, ''), NULLIF(${dto.condiciones ?? ''}::text, ''), NULLIF(${dto.archivo_url ?? ''}::text, ''),
                 ${quien}::text)
         RETURNING id`;
-      for (const l of lineas) await this.insertarLinea(tx, cot.id, l);
+      for (const l of lineas) await this.reprorrateo.insertarLinea(tx, cot.id, l);
 
       await this.aplicarMarcaDeAdjudicacion(tx, ppto, cot.id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null);
       return { id: cot.id, compromisos: await this.conciliacion.conciliar(tx, ppto, user) };
@@ -365,7 +360,7 @@ export class CotizacionPptoHandler {
           SELECT id FROM ppto_cotizacion WHERE id_detalle_categoria = ${actual.id_detalle_categoria}::int AND id_proveedor = ${dto.id_proveedor}::int`;
         if (dup) throw new ConflictException('Ese proveedor ya tiene una cotización en esta subpartida');
       }
-      const prorrateo = dto.total !== undefined ? await this.prorratear(tx, ppto, actual.id_detalle_categoria, dto.total) : null;
+      const prorrateo = dto.total !== undefined ? await this.reprorrateo.prorratear(tx, ppto, actual.id_detalle_categoria, dto.total) : null;
       if (prorrateo) validarLineasCotizacion(prorrateo.lineas, prorrateo.items, modo);
 
       await q.run(tx)`
@@ -390,10 +385,10 @@ export class CotizacionPptoHandler {
           archivo_url = CASE WHEN ${dto.archivo_url !== undefined}::boolean THEN NULLIF(${dto.archivo_url ?? ''}::text, '') ELSE archivo_url END
          WHERE id = ${id}::int`;
 
-      if (prorrateo) await this.reemplazarLineas(tx, id, prorrateo.lineas, prorrateo.items);
+      if (prorrateo) await this.reprorrateo.reemplazarLineas(tx, id, prorrateo.lineas, prorrateo.items);
       await this.aplicarMarcaDeAdjudicacion(tx, ppto, id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null);
       // Si ya ganaba la subpartida y al volver a prorratear entró un ítem nuevo, la gana completa (nunca queda a medias).
-      if (prorrateo && dto.adjudicar === undefined) await this.completarGanadora(tx, ppto, id, user);
+      if (prorrateo && dto.adjudicar === undefined) await this.reprorrateo.completarGanadora(tx, ppto, id, user);
       // Cambiar el total o las condiciones de la cotización ganadora también actualiza el FUR y sus órdenes provisionales.
       return this.conciliacion.conciliar(tx, ppto, user);
     });
@@ -410,7 +405,7 @@ export class CotizacionPptoHandler {
       if (!cot) throw new NotFoundException(`Cotización ${id} no encontrada en el presupuesto ${idPresupuesto}`);
       await this.exigirNoProtegida(tx, id, 'eliminar');
       const lineas = await q.rows<{ id: number }>({ id: I }, tx)`SELECT id FROM ppto_cotizacion_detalle WHERE id_cotizacion = ${id}::int`;
-      await this.soltarGanadorDeLineas(
+      await this.reprorrateo.soltarGanadorDeLineas(
         tx,
         lineas.map((l) => l.id),
       );
@@ -429,108 +424,15 @@ export class CotizacionPptoHandler {
     if (!p || !p.ok) throw new BadRequestException(`id_proveedor (${idProveedor}) no es un Anexo de tipo Proveedor`);
   }
 
-  /**
-   * Reparte el total de la subpartida entre sus ítems según el costo Meta y devuelve las líneas que se guardan, junto con los ítems
-   * de la subpartida tal como los ve la validación (cantidad y si ya tienen una orden registrada).
-   */
-  private async prorratear(tx: Tx, ppto: PresupuestoBloqueado, idSubpartida: number, total: string): Promise<{ items: Map<number, ItemFase>; lineas: LineaProrrateada[] }> {
-    const delaSubpartida = await itemsDeSubpartida(this.sql, ppto.codigo, idSubpartida, tx);
-    const compromisos = await compromisosDeItems(
-      this.sql,
-      delaSubpartida.map((i) => i.id),
-      tx,
-    );
-    const items = new Map<number, ItemFase>(
-      delaSubpartida.map((i) => [i.id, { id: i.id, cantidad: Number(i.cantidad), cubierto: estaCubierto(compromisos.get(i.id)), etiqueta: i.codigo }]),
-    );
-    const lineas = prorratearTotal(
-      Number(total),
-      delaSubpartida.map((i) => ({ id: i.id, cantidad: Number(i.cantidad), costoTotal: Number(i.costo_total) })),
-    );
-    return { items, lineas };
-  }
-
   /** Una cotización que cubre un ítem con orden registrada es evidencia de esa compra: no se edita ni se elimina. */
   private async exigirNoProtegida(tx: Tx, idCotizacion: number, accion: string): Promise<void> {
-    const q = sqlTag(this.sql);
-    const items = await q.rows<{ id: number }>({ id: I }, tx)`SELECT id_ppto_item AS id FROM ppto_cotizacion_detalle WHERE id_cotizacion = ${idCotizacion}::int`;
-    const compromisos = await compromisosDeItems(
-      this.sql,
-      items.map((i) => i.id),
-      tx,
-    );
-    const cubiertos = items.filter((i) => estaCubierto(compromisos.get(i.id)));
-    if (cubiertos.length > 0) {
-      const docs = [...new Set(cubiertos.map((i) => compromisos.get(i.id)?.numero_documento).filter((n): n is string => !!n))];
+    const { cubiertos, documentos } = await this.reprorrateo.itemsCubiertosDeCotizacion(tx, idCotizacion);
+    if (cubiertos > 0) {
       throw new ConflictException(
-        `No se puede ${accion} la cotización: ${cubiertos.length} de sus ítems ya tienen una orden registrada (${docs.join(', ')}). Anule la orden primero`,
+        `No se puede ${accion} la cotización: ${cubiertos} de sus ítems ya tienen una orden registrada (${documentos.join(', ')}). Anule la orden primero`,
       );
     }
   }
-
-  private async insertarLinea(tx: Tx, idCotizacion: number, l: LineaProrrateada): Promise<number> {
-    const q = sqlTag(this.sql);
-    const [fila] = await q.rows<{ id: number }>({ id: I }, tx)`
-      INSERT INTO ppto_cotizacion_detalle (id_cotizacion, id_ppto_item, cotiza, cantidad, precio_unitario)
-      VALUES (${idCotizacion}::int, ${l.id_ppto_item}::int, ${l.cotiza}::boolean, ${l.cantidad}::numeric, ${l.precio_unitario}::numeric)
-      RETURNING id`;
-    return fila.id;
-  }
-
-  /**
-   * Deja las líneas de la cotización como las calculó el prorrateo **sin perder el ganador** de las que siguen: actualiza las que
-   * ya estaban, agrega las nuevas y quita las que faltan (liberando su ítem). El ganador de una línea que dejó de ofrecer la
-   * cantidad completa se suelta. Devuelve ítem -> línea.
-   */
-  private async reemplazarLineas(tx: Tx, idCotizacion: number, lineas: LineaProrrateada[], items: Map<number, ItemFase>): Promise<Map<number, number>> {
-    const q = sqlTag(this.sql);
-    const existentes = await q.rows<{ id: number; id_ppto_item: number }>({ id: I, id_ppto_item: I }, tx)`
-      SELECT id, id_ppto_item FROM ppto_cotizacion_detalle WHERE id_cotizacion = ${idCotizacion}::int`;
-    const idLineaDeItem = new Map(existentes.map((e) => [e.id_ppto_item, e.id]));
-    const nuevosItems = new Set(lineas.map((l) => l.id_ppto_item));
-
-    // Las líneas que ya no vienen se quitan y sus ítems quedan sin ganador.
-    const sobran = existentes.filter((e) => !nuevosItems.has(e.id_ppto_item)).map((e) => e.id);
-    if (sobran.length > 0) {
-      await this.soltarGanadorDeLineas(tx, sobran);
-      await q.run(tx)`DELETE FROM ppto_cotizacion_detalle WHERE id = ANY(string_to_array(${csv(sobran)}::text, ',')::int[])`;
-    }
-
-    const resultado = new Map<number, number>();
-    for (const l of lineas) {
-      const idExistente = idLineaDeItem.get(l.id_ppto_item);
-      if (idExistente === undefined) {
-        resultado.set(l.id_ppto_item, await this.insertarLinea(tx, idCotizacion, l));
-        continue;
-      }
-      await q.run(tx)`
-        UPDATE ppto_cotizacion_detalle
-           SET cotiza = ${l.cotiza}::boolean, cantidad = ${l.cantidad}::numeric, precio_unitario = ${l.precio_unitario}::numeric
-         WHERE id = ${idExistente}::int`;
-      resultado.set(l.id_ppto_item, idExistente);
-
-      // ¿Seguía ganando este ítem? Si ya no ofrece la cantidad completa, lo pierde.
-      const item = items.get(l.id_ppto_item);
-      if (item && !sigueSiendoGanadora({ cotiza: l.cotiza, cantidad: Number(l.cantidad) }, item.cantidad)) {
-        await q.run(tx)`
-          UPDATE "ppto_DetalleItems"
-             SET id_ppto_cot_detalle_ganadora = NULL, adjudicado_por = NULL, fecha_adjudicacion = NULL, comentario_adjudicacion = NULL
-           WHERE id = ${l.id_ppto_item}::int AND id_ppto_cot_detalle_ganadora = ${idExistente}::int`;
-      }
-    }
-    return resultado;
-  }
-
-  /** Quita el ganador (y su trazabilidad) de los ítems cuyo ganador es alguna de estas líneas de cotización. */
-  private async soltarGanadorDeLineas(tx: Tx, idsLinea: number[]): Promise<void> {
-    if (idsLinea.length === 0) return;
-    const q = sqlTag(this.sql);
-    await q.run(tx)`
-      UPDATE "ppto_DetalleItems"
-         SET id_ppto_cot_detalle_ganadora = NULL, adjudicado_por = NULL, fecha_adjudicacion = NULL, comentario_adjudicacion = NULL
-       WHERE id_ppto_cot_detalle_ganadora = ANY(string_to_array(${csv(idsLinea)}::text, ',')::int[])`;
-  }
-
   /**
    * Marca «Adjudicar» de la cotización: `true` = este proveedor gana la subpartida completa (todos sus ítems que cotiza);
    * `false` = si era el ganador, la suelta. Sin valor, no cambia nada. Gana quien pide adjudicar, y solo si tiene un
@@ -562,25 +464,6 @@ export class CotizacionPptoHandler {
       for (const g of ganaba) cambios.push({ idItem: g.id, idCotDetalle: null });
     }
     await aplicarAdjudicacion(this.sql, tx, { presupuesto: ppto, cambios, usuario: user?.usuario ?? 'SISTEMA', comentario });
-  }
-
-  /**
-   * Una cotización que ya gana la subpartida y se vuelve a prorratear puede traer líneas de ítems nuevos (se agregaron a la subpartida
-   * después de cotizar): esos ítems pasan también a su proveedor, para que la subpartida no quede ganada a medias. Solo exige el
-   * trabajador vinculado si de verdad hay algo que adjudicar.
-   */
-  private async completarGanadora(tx: Tx, ppto: PresupuestoBloqueado, idCotizacion: number, user: AuthUser | undefined): Promise<void> {
-    const q = sqlTag(this.sql);
-    const filas = await q.rows<{ id: number; id_ppto_item: number; gana: boolean; libre: boolean }>({ id: I, id_ppto_item: I, gana: B, libre: B }, tx)`
-      SELECT d.id, d.id_ppto_item, COALESCE(i.id_ppto_cot_detalle_ganadora = d.id, false) AS gana, (i.id_ppto_cot_detalle_ganadora IS NULL) AS libre
-        FROM ppto_cotizacion_detalle d JOIN "ppto_DetalleItems" i ON i.id = d.id_ppto_item
-       WHERE d.id_cotizacion = ${idCotizacion}::int AND d.cotiza`;
-    if (!filas.some((f) => f.gana)) return;
-    const cambios: CambioAdjudicacion[] = filas.filter((f) => f.libre).map((f) => ({ idItem: f.id_ppto_item, idCotDetalle: f.id }));
-    if (cambios.length === 0) return;
-    if (user) await trabajadorDelUsuario(tx.orm.public, user.id, user.usuario);
-    else exigirTrabajadorVinculado(null, '(sin sesión)');
-    await aplicarAdjudicacion(this.sql, tx, { presupuesto: ppto, cambios, usuario: user?.usuario ?? 'SISTEMA', comentario: null });
   }
 
   /** Cotizaciones (con sus líneas y totales) de un presupuesto, filtradas por fase, subpartida o cotización. */

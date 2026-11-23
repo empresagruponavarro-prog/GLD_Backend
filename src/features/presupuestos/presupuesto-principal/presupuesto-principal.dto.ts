@@ -228,8 +228,14 @@ export class PresupuestoPrincipalResponseDto {
   @ApiPropertyOptional({ example: '2026-06-30' })
   FechaEntrega: string | null;
 
-  @ApiPropertyOptional({ example: '150000.00' })
+  @ApiPropertyOptional({ example: '150000.00', description: 'Costo directo del Presupuesto BASE (sobre él se calculan GG, utilidad, IGV y total)' })
   CostoDirecto: string | null;
+
+  @ApiPropertyOptional({
+    example: '132000.00',
+    description: 'Costo directo del Presupuesto META (plan 11): suma del Meta efectivo de sus fases; null = igual al Base. No entra en GG, utilidad, IGV ni total',
+  })
+  CostoDirectoMeta: string | null;
 
   @ApiPropertyOptional({ example: '10.00' })
   GGPorcentaje: string | null;

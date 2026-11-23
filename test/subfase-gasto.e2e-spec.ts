@@ -61,8 +61,8 @@ describe('Subfase en compras y almacén, y gasto por subfase (e2e)', () => {
       ids.push(id);
       for (const [k, [idProd, q, p]] of c.items.entries()) {
         await db.query(
-          `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "Orden")
-           values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "CostoTotalMeta", "Orden")
+           values ($1, $2, $3, $4, $5, $6, $7, $7, $8)`,
           [id, codigo, idProd, unidad, q, p, redondear2(q * p), k],
         );
       }

@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers.js';
+import { puMetaEfectivo } from '../shared/costos-meta.js';
 import type { PartidaItemResponseDto, PartidaItemsResponseDto, SyncPartidaItemsDto } from './plantillas-items.dto.js';
 
 /** Redondeo comercial a 2 decimales (evita 1.005 → 1.00 por coma flotante). */
@@ -60,6 +61,9 @@ export async function mapearItemsConCatalogo(
     const p: any = prodPorId.get(i.id_producto);
     const u: any = uniPorId.get(i.id_unidad_medida);
     const c: any = p ? catPorId.get(p.id_categoria) : undefined;
+    // Plan 11: solo los ítems de un presupuesto tienen Meta; los de plantilla no traen estas columnas.
+    const conMeta = 'CostoTotalMeta' in i;
+    const puMeta = i.CostoUnitarioMeta === null || i.CostoUnitarioMeta === undefined ? null : Number(i.CostoUnitarioMeta);
     return {
       id: i.id,
       id_plantilla_categoria: i[idPartidaCampo],
@@ -90,6 +94,13 @@ export async function mapearItemsConCatalogo(
       PrecioVenta: Number(i.PrecioVenta) || 0,
       CostoTotal: Number(i.CostoTotal) || 0,
       VentaTotal: Number(i.VentaTotal) || 0,
+      ...(conMeta
+        ? {
+            CostoUnitarioMeta: puMeta,
+            CostoUnitarioMetaEfectivo: puMetaEfectivo(Number(i.CostoUnitario) || 0, puMeta),
+            CostoTotalMeta: Number(i.CostoTotalMeta) || 0,
+          }
+        : {}),
     };
   });
 }

@@ -28,6 +28,7 @@ import { armarComercial, type ItemComercialEntrada, type FaseMeta, type OfertaGa
 import { conflictosPorOrigen } from '../compromisos/cobertura-origen.js';
 import { ConciliarCompromisosService } from '../compromisos/conciliar-compromisos.service.js';
 import { bloquearPresupuesto, itemsSinAdjudicar } from '../cotizaciones-ppto/contexto-ppto.js';
+import { recalcularMeta } from '../shared/recalcular-meta.js';
 import { ESTADOS_EDITABLES, esAdicional, esAprobado, textoLegado, type EstadoPpto } from './estados.js';
 import { sincronizarPresupuestoCc } from './sincronizar-cc.js';
 import {
@@ -92,7 +93,7 @@ export class AprobacionPresupuestoHandler {
     const q = sqlTag(this.sql);
     const fases = await q.rows<{ id_fase: number; nombre: string; meta: string }>({ id_fase: I, nombre: T, meta: T })`
       SELECT COALESCE(f.id, df.id) AS id_fase, COALESCE(f."FaseProyecto", df."IdpptoFase", 'Fase #' || df.id)::text AS nombre,
-             COALESCE(df."CostoDirecto", 0)::text AS meta
+             COALESCE(df."CostoDirectoMeta", df."CostoDirecto", 0)::text AS meta
         FROM "ppto_DetalleFases" df
         LEFT JOIN "ppto_Fases" f ON f."IdpptoFase" = df."IdpptoFase"
        WHERE df."IdPresupuesto" = ${ppto.IdPresupuesto ?? ''}::text
@@ -163,7 +164,7 @@ export class AprobacionPresupuestoHandler {
       precio: string | null; moneda_id: string | null; simbolo: string | null; incluye_igv: boolean | null; afecto_igv: boolean | null; fecha: string | null;
     }>({ id_fase: I, id_item: I, codigo: T, descripcion: T, cantidad: T, costo_meta: T, proveedor: TN, precio: TN, moneda_id: TN, simbolo: TN, incluye_igv: { codecId: 'pg/bool@1', nullable: true }, afecto_igv: { codecId: 'pg/bool@1', nullable: true }, fecha: TN })`
       SELECT COALESCE(m.id, df.id) AS id_fase, i.id AS id_item, p.codigo::text AS codigo, p.descripcion::text AS descripcion,
-             i."Cantidad"::text AS cantidad, i."CostoTotal"::text AS costo_meta, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor,
+             i."Cantidad"::text AS cantidad, i."CostoTotalMeta"::text AS costo_meta, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor,
              g.precio_unitario::text AS precio, q.moneda_id::text AS moneda_id, q.moneda_simbolo::text AS simbolo, q.incluye_igv, q.afecto_igv, q.fecha::text AS fecha
         FROM "ppto_DetalleItems" i
         JOIN "ppto_DetalleFasesCate" c ON c.id = i.id_detalle_categoria
@@ -243,6 +244,8 @@ export class AprobacionPresupuestoHandler {
 
       // El monto aprobado es la suma de los ítems: se recalcula antes de capturar (la cabecera pudo quedar atrás).
       await this.recalcularCostos(orm, ppto, arbol, new Set());
+      // Plan 11: el Meta también se deja al día antes de capturar la estructura de la obra.
+      await recalcularMeta(this.sql, tx, codigo);
 
       // Plan 09: las órdenes provisionales generadas al grabar se cierran: pasan a REGISTRADO y entran a programación y pago.
       const bloqueado = await bloquearPresupuesto(this.sql, tx, ppto.id);
@@ -343,6 +346,8 @@ export class AprobacionPresupuestoHandler {
       }
 
       const costoPresupuesto = await this.recalcularCostos(orm, ppto, arbol, new Set(plan.categoriasABorrar));
+      // Plan 11: lo que se borró también sale del Meta.
+      await recalcularMeta(this.sql, tx, String(ppto.IdPresupuesto));
       if (ppto.id_centro_costo) await sincronizarPresupuestoCc(orm, ppto.id_centro_costo);
 
       return {
@@ -404,6 +409,7 @@ export class AprobacionPresupuestoHandler {
           FechaRequerimiento: origen.FechaRequerimiento,
           FechaEntrega: origen.FechaEntrega,
           CostoDirecto: origen.CostoDirecto,
+          CostoDirectoMeta: origen.CostoDirectoMeta, // plan 11: el Meta viaja con el Base
           GGPorcentaje: origen.GGPorcentaje,
           GastosGenerales: origen.GastosGenerales,
           UtiliPorcentaje: origen.UtiliPorcentaje,
@@ -451,6 +457,7 @@ export class AprobacionPresupuestoHandler {
             id_centro_costo: f.id_centro_costo,
             IdpptoFase: f.IdpptoFase,
             CostoDirecto: f.CostoDirecto,
+            CostoDirectoMeta: f.CostoDirectoMeta,
             id_categoria: f.id_categoria,
             Usuario: quien,
             FechaCreacion: ahora,
@@ -470,6 +477,7 @@ export class AprobacionPresupuestoHandler {
             IdpptoFase: c.IdpptoFase,
             IdpptoFaseCategoria: c.IdpptoFaseCategoria,
             CostoDirecto: c.CostoDirecto,
+            CostoDirectoMeta: c.CostoDirectoMeta,
             id_categoria: c.id_categoria,
             Usuario: quien,
             FechaCreacion: ahora,
@@ -489,8 +497,10 @@ export class AprobacionPresupuestoHandler {
             Item: it.Item,
             Cantidad: it.Cantidad,
             CostoUnitario: it.CostoUnitario,
+            CostoUnitarioMeta: it.CostoUnitarioMeta,
             PrecioVenta: it.PrecioVenta,
             CostoTotal: it.CostoTotal,
+            CostoTotalMeta: it.CostoTotalMeta,
             VentaTotal: it.VentaTotal,
             Orden: it.Orden,
             // Plan 09 (§3.7): de qué ítem viene (para saber lo que las versiones anteriores ya pidieron).

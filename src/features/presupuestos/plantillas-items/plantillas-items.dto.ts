@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength, Min, ValidateNested } from 'class-validator';
 import { ConciliacionResponseDto } from '../compromisos/compromisos.dto.js';
+import { ReprorrateoResponseDto } from '../cotizaciones-ppto/reprorrateo.dto.js';
 
 // ─── Request ──────────────────────────────────────────────────────────────────
 
@@ -126,10 +127,19 @@ export class PartidaItemResponseDto {
   @ApiProperty() id_unidad_medida: number;
   @ApiPropertyOptional({ type: () => PartidaItemUnidadDto }) unidad?: PartidaItemUnidadDto;
   @ApiProperty() Cantidad: number;
-  @ApiProperty() CostoUnitario: number;
+  @ApiProperty({ description: 'Precio unitario BASE (en un presupuesto, el que se arma en «Presupuesto Base»)' }) CostoUnitario: number;
   @ApiProperty() PrecioVenta: number;
-  @ApiProperty() CostoTotal: number;
+  @ApiProperty({ description: 'Total BASE: cantidad × costo unitario' }) CostoTotal: number;
   @ApiProperty() VentaTotal: number;
+  @ApiPropertyOptional({
+    nullable: true,
+    type: Number,
+    description: 'Solo en un presupuesto (plan 11): precio unitario Meta propio del ítem; null = igual al Base',
+  })
+  CostoUnitarioMeta?: number | null;
+  @ApiPropertyOptional({ description: 'Solo en un presupuesto (plan 11): precio unitario Meta efectivo (el propio o, si no hay, el Base)' })
+  CostoUnitarioMetaEfectivo?: number;
+  @ApiPropertyOptional({ description: 'Solo en un presupuesto (plan 11): cantidad × precio Meta efectivo' }) CostoTotalMeta?: number;
   @ApiPropertyOptional({ type: () => PartidaItemCotizacionDto }) cotizacion?: PartidaItemCotizacionDto;
 }
 
@@ -138,6 +148,12 @@ export class PartidaItemsResponseDto {
   @ApiProperty({ type: () => [PartidaItemResponseDto] }) items: PartidaItemResponseDto[];
   @ApiProperty({ description: 'Suma de CostoTotal (= CostoReferencial de la partida)' }) costoTotal: number;
   @ApiProperty({ description: 'Suma de VentaTotal' }) ventaTotal: number;
+  @ApiPropertyOptional({ description: 'Solo en un presupuesto (plan 11): suma de CostoTotalMeta' }) costoTotalMeta?: number;
+  @ApiPropertyOptional({
+    type: () => ReprorrateoResponseDto,
+    description: 'Solo al guardar ítems o el Meta de una subfase de un presupuesto (plan 11): lo que pasó con las cotizaciones de la subfase al cambiar sus pesos',
+  })
+  reprorrateo?: ReprorrateoResponseDto;
   @ApiPropertyOptional({ type: () => ConciliacionResponseDto, description: 'Solo en el PUT de ítems de un presupuesto: lo que se actualizó en los compromisos' })
   compromisos?: ConciliacionResponseDto;
 }

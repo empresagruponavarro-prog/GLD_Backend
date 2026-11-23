@@ -105,9 +105,13 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
         ?? (fase.IdpptoFase ? fasesByNameMap.get(fase.IdpptoFase.trim().toUpperCase()) : null);
             const sumCategorias = categorias.reduce((acc, c) => acc + (Number(c.CostoDirecto) || 0), 0);
       const costoDirectoCalculado = categorias.length > 0 ? toDecimalString(sumCategorias) : (fase.CostoDirecto || '0.00');
+      // Plan 11: Meta efectivo de la fase = suma del Meta efectivo de sus subfases (el propio o, si no tiene, su Base); sin subfases, su Base.
+      const sumCategoriasMeta = categorias.reduce((acc, c) => acc + (Number(c.CostoDirectoMeta ?? c.CostoDirecto) || 0), 0);
+      const costoDirectoMetaCalculado = categorias.length > 0 ? toDecimalString(sumCategoriasMeta) : costoDirectoCalculado;
       return {
         ...fase,
         CostoDirecto: costoDirectoCalculado,
+        CostoDirectoMeta: costoDirectoMetaCalculado,
         id_fase: faseMaestra?.id ?? null,
         NombreFase: faseMaestra?.FaseProyecto || fase.IdpptoFase || null,
         categorias,
@@ -422,7 +426,8 @@ const [centroCosto, detallesFases, historiales, todasCategorias, pptoFases, ppto
           id_producto: it.id_producto,
           id_detalle_categoria: it.id_detalle_categoria,
           Cantidad: it.Cantidad,
-          CostoUnitario: it.CostoUnitario,
+          // Plan 11: el precio referencial del FUR es el del Meta (el propio del ítem o, si no tiene, el Base).
+          CostoUnitario: it.CostoUnitarioMeta ?? it.CostoUnitario,
         })),
       );
 

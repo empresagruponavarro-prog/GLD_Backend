@@ -84,7 +84,9 @@ export interface ItemDeFase {
   unidad: string;
   tipo_producto: string;
   cantidad: string;
+  /** Precio unitario **Meta** efectivo (plan 11): el propio del ítem o, si no tiene, el Base. */
   costo_unitario: string;
+  /** Total **Meta** del ítem (plan 11): el peso con el que se reparte el total de una cotización. */
   costo_total: string;
   id_cot_detalle_ganadora: number | null;
   adjudicado_por: string | null;
@@ -119,8 +121,8 @@ export async function itemsDeFase(sql: AlmacenSql, codigoPpto: string, idFase: n
            COALESCE((SELECT fc."Descripcion" FROM "ppto_FasesCategorias" fc WHERE fc."IdpptoFaseCategoria" = c."IdpptoFaseCategoria" LIMIT 1),
                     'Subfase #' || c.id::text)::text AS subfase,
            i.id_producto, p.codigo::text AS codigo, p.descripcion::text AS descripcion, COALESCE(u.simbolo, u.codigo)::text AS unidad,
-           p.tipo_producto::text AS tipo_producto, i."Cantidad"::text AS cantidad, i."CostoUnitario"::text AS costo_unitario,
-           i."CostoTotal"::text AS costo_total, i.id_ppto_cot_detalle_ganadora AS id_cot_detalle_ganadora,
+           p.tipo_producto::text AS tipo_producto, i."Cantidad"::text AS cantidad, COALESCE(i."CostoUnitarioMeta", i."CostoUnitario")::text AS costo_unitario,
+           i."CostoTotalMeta"::text AS costo_total, i.id_ppto_cot_detalle_ganadora AS id_cot_detalle_ganadora,
            i.adjudicado_por::text AS adjudicado_por, i.fecha_adjudicacion::text AS fecha_adjudicacion,
            i.comentario_adjudicacion
       FROM "ppto_DetalleItems" i
@@ -166,8 +168,8 @@ export async function itemsDeSubpartida(sql: AlmacenSql, codigoPpto: string, idS
            COALESCE((SELECT fc."Descripcion" FROM "ppto_FasesCategorias" fc WHERE fc."IdpptoFaseCategoria" = c."IdpptoFaseCategoria" LIMIT 1),
                     'Subfase #' || c.id::text)::text AS subfase,
            i.id_producto, p.codigo::text AS codigo, p.descripcion::text AS descripcion, COALESCE(u.simbolo, u.codigo)::text AS unidad,
-           p.tipo_producto::text AS tipo_producto, i."Cantidad"::text AS cantidad, i."CostoUnitario"::text AS costo_unitario,
-           i."CostoTotal"::text AS costo_total, i.id_ppto_cot_detalle_ganadora AS id_cot_detalle_ganadora,
+           p.tipo_producto::text AS tipo_producto, i."Cantidad"::text AS cantidad, COALESCE(i."CostoUnitarioMeta", i."CostoUnitario")::text AS costo_unitario,
+           i."CostoTotalMeta"::text AS costo_total, i.id_ppto_cot_detalle_ganadora AS id_cot_detalle_ganadora,
            i.adjudicado_por::text AS adjudicado_por, i.fecha_adjudicacion::text AS fecha_adjudicacion,
            i.comentario_adjudicacion
       FROM "ppto_DetalleItems" i

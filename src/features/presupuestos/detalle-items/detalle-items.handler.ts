@@ -6,7 +6,11 @@ import { ESTADOS_EDITABLES, type EstadoPpto } from '../aprobacion/estados.js';
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { ConciliarCompromisosService, type ResultadoConciliacion } from '../compromisos/conciliar-compromisos.service.js';
 import { bloquearPresupuestoPorCodigo } from '../cotizaciones-ppto/contexto-ppto.js';
+import type { ResultadoReprorrateo } from '../cotizaciones-ppto/reprorrateo.js';
+import { ReprorrateoService } from '../cotizaciones-ppto/reprorrateo.service.js';
 import { resumenCotizacionDeItems } from '../cotizaciones-ppto/resumen-items.js';
+import { sumarImportes } from '../shared/costos-meta.js';
+import { recalcularMeta } from '../shared/recalcular-meta.js';
 import {
   calcularTotalesItem,
   mapearItemsConCatalogo,
@@ -29,6 +33,7 @@ export class PptoDetalleItemsHandler {
     @Inject(DB) private readonly db: Database,
     private readonly sql: AlmacenSql,
     private readonly conciliacion: ConciliarCompromisosService,
+    private readonly reprorrateo: ReprorrateoService,
   ) {}
 
   async list(idPartida: number): Promise<PartidaItemsResponseDto> {
@@ -42,7 +47,13 @@ export class PptoDetalleItemsHandler {
 
     const resultado = await mapearItemsConCatalogo(this.db, items, 'id_detalle_categoria');
     await this.agregarCotizaciones(resultado);
-    return { id_plantilla_categoria: idPartida, items: resultado, ...sumarTotales(resultado) };
+    return {
+      id_plantilla_categoria: idPartida,
+      items: resultado,
+      ...sumarTotales(resultado),
+      // Plan 11: total Meta de la partida (los ítems sin precio Meta propio ya traen su total Base).
+      costoTotalMeta: sumarImportes(resultado.map((i) => i.CostoTotalMeta ?? 0)),
+    };
   }
 
   /**
@@ -65,7 +76,7 @@ export class PptoDetalleItemsHandler {
       entrada.map((i) => i.id_unidad_medida),
     );
 
-    const compromisos = await this.db.transaction(async (tx): Promise<ResultadoConciliacion | undefined> => {
+    const { compromisos, reprorrateo } = await this.db.transaction(async (tx): Promise<{ compromisos?: ResultadoConciliacion; reprorrateo?: ResultadoReprorrateo }> => {
       const orm = tx.orm.public;
       const ppto = partida.IdPresupuesto ? await bloquearPresupuestoPorCodigo(this.sql, tx, String(partida.IdPresupuesto)) : null;
       if (ppto && !ESTADOS_EDITABLES.includes(ppto.estado as EstadoPpto)) {
@@ -75,9 +86,12 @@ export class PptoDetalleItemsHandler {
       }
       const actuales = await orm.ppto_DetalleItems.where((i: any) => i.id_detalle_categoria.eq(idPartida)).all();
       const productoPrevio = new Map(actuales.map((i: any) => [i.id as number, i.id_producto as number]));
+      // Plan 11: precio Base y precio Meta propio de cada ítem antes de guardar, para saber si se movió algún precio Meta efectivo.
+      const preciosPrevios = new Map(actuales.map((i: any) => [i.id as number, { base: Number(i.CostoUnitario) || 0, metaPropio: i.CostoUnitarioMeta != null }]));
       const idsActuales = new Set(actuales.map((i: any) => i.id as number));
       const conservados = new Set<number>();
       let costo = 0;
+      let cambioPrecioMeta = false;
 
       for (const [orden, it] of entrada.entries()) {
         const { CostoTotal, VentaTotal } = calcularTotalesItem(it.Cantidad, it.CostoUnitario, it.PrecioVenta);
@@ -100,6 +114,9 @@ export class PptoDetalleItemsHandler {
 
         if (it.id && idsActuales.has(it.id) && !conservados.has(it.id)) {
           const cambiaProducto = productoPrevio.get(it.id) !== it.id_producto;
+          const previo = preciosPrevios.get(it.id);
+          // Un ítem sin precio Meta propio vale su Base: si el Base cambió, su precio Meta efectivo se movió.
+          if (previo && !previo.metaPropio && previo.base !== redondear2(it.CostoUnitario)) cambioPrecioMeta = true;
           await orm.ppto_DetalleItems.where({ id: it.id }).update((cambiaProducto ? { ...datos, ...SIN_GANADOR } : datos) as any);
           conservados.add(it.id);
         } else {
@@ -129,12 +146,26 @@ export class PptoDetalleItemsHandler {
           .update({ CostoDirecto: toDecimalString(redondear2(suma)) });
       }
 
+      // Plan 11: el Meta sigue al Base (los ítems sin precio Meta propio copian su total Base) y se rearma en subfase, fase y presupuesto.
+      if (partida.IdPresupuesto) {
+        await recalcularMeta(this.sql, tx, String(partida.IdPresupuesto), {
+          // Si se quitaron todos los ítems de una subfase que los tenía, su Meta (la suma de ellos) vuelve al Base.
+          reiniciarSubfaseSinItems: actuales.length > 0 && entrada.length === 0 ? idPartida : undefined,
+        });
+      }
+
+      if (!ppto) return {};
+      // Plan 11 (D-5): si cambió el precio Meta efectivo de algún ítem (un ítem sin Meta propio cuyo precio Base cambió), los pesos del
+      // reparto cambiaron y las cotizaciones de la subfase se vuelven a repartir (salvo las que ya tienen una orden registrada). Las
+      // cantidades, los ítems nuevos o quitados y los cambios de producto siguen como antes del plan 11 (plan 09, D-14): la línea de la
+      // cotización conserva su cantidad y el FUR toma la del ítem al precio unitario cotizado.
+      const reprorrateo = cambioPrecioMeta ? await this.reprorrateo.reprorratearSubpartida(tx, ppto, idPartida, user) : undefined;
       // Los cambios de cantidad, producto o de ítems dejan al día el FUR y las órdenes provisionales ya generadas.
-      return ppto ? this.conciliacion.conciliar(tx, ppto, user) : undefined;
+      return { ...(reprorrateo ? { reprorrateo } : {}), compromisos: await this.conciliacion.conciliar(tx, ppto, user) };
     });
 
     const respuesta = await this.list(idPartida);
-    return compromisos ? { ...respuesta, compromisos } : respuesta;
+    return { ...respuesta, ...(compromisos ? { compromisos } : {}), ...(reprorrateo ? { reprorrateo } : {}) };
   }
 
   /** Agrega a cada ítem sus cotizaciones, el proveedor ganador y el FUR/orden que ya nació de él. */

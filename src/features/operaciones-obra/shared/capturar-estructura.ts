@@ -24,7 +24,7 @@ export interface CategoriaOrigen {
   id: number;
   idPresupuestoDetalle: string | null;
   nombre: string | null;
-  /** Costo directo de la categoría (texto decimal); es el monto de la subpartida. */
+  /** Costo directo **Meta** de la categoría (texto decimal; el Base si no tiene Meta propio); es el monto de la subpartida (plan 11, D-4). */
   costoDirecto: string | null;
 }
 
@@ -150,7 +150,8 @@ export async function capturarEstructura(orm: OrmObra, o: OpcionesCaptura): Prom
       id: c.id,
       idPresupuestoDetalle: c.IdPresupuestoDetalle ?? null,
       nombre: (c.IdpptoFaseCategoria ? nombreCat.get(c.IdpptoFaseCategoria) : null) ?? null,
-      costoDirecto: c.CostoDirecto ?? null,
+      // Plan 11 (D-4): la obra se controla contra el Meta; sin Meta propio la subfase vale su Base.
+      costoDirecto: c.CostoDirectoMeta ?? c.CostoDirecto ?? null,
     })),
     modo: o.modo,
     existente: {
