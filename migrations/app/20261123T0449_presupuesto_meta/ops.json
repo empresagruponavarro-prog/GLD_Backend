@@ -1,0 +1,251 @@
+[
+  {
+    "id": "column.public.ppto_DetalleFases.CostoDirectoMeta",
+    "label": "Add column \"CostoDirectoMeta\" to \"ppto_DetalleFases\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CostoDirectoMeta",
+        "table": "ppto_DetalleFases"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CostoDirectoMeta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "CostoDirectoMeta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"CostoDirectoMeta\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFases\" ADD COLUMN \"CostoDirectoMeta\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CostoDirectoMeta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFases",
+          "CostoDirectoMeta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleFasesCate.CostoDirectoMeta",
+    "label": "Add column \"CostoDirectoMeta\" to \"ppto_DetalleFasesCate\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CostoDirectoMeta",
+        "table": "ppto_DetalleFasesCate"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CostoDirectoMeta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "CostoDirectoMeta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"CostoDirectoMeta\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleFasesCate\" ADD COLUMN \"CostoDirectoMeta\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CostoDirectoMeta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleFasesCate",
+          "CostoDirectoMeta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.CostoTotalMeta",
+    "label": "Add column \"CostoTotalMeta\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CostoTotalMeta",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CostoTotalMeta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "CostoTotalMeta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"CostoTotalMeta\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"CostoTotalMeta\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CostoTotalMeta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "CostoTotalMeta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_DetalleItems.CostoUnitarioMeta",
+    "label": "Add column \"CostoUnitarioMeta\" to \"ppto_DetalleItems\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CostoUnitarioMeta",
+        "table": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CostoUnitarioMeta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "CostoUnitarioMeta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"CostoUnitarioMeta\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_DetalleItems\" ADD COLUMN \"CostoUnitarioMeta\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CostoUnitarioMeta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_DetalleItems",
+          "CostoUnitarioMeta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.ppto_Principal.CostoDirectoMeta",
+    "label": "Add column \"CostoDirectoMeta\" to \"ppto_Principal\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "CostoDirectoMeta",
+        "table": "ppto_Principal"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"CostoDirectoMeta\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "CostoDirectoMeta"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"CostoDirectoMeta\"",
+        "sql": "ALTER TABLE \"public\".\"ppto_Principal\" ADD COLUMN \"CostoDirectoMeta\" numeric"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"CostoDirectoMeta\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "ppto_Principal",
+          "CostoDirectoMeta"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.presupuesto-meta.meta-igual-al-base",
+    "label": "Deja el Meta de los presupuestos existentes igual a su Base",
+    "summary": "ppto_DetalleItems.CostoTotalMeta y ppto_DetalleFasesCate.CostoDirectoMeta (subfases con ítems)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "ppto_DetalleItems"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "ítems sin precio Meta propio: su total Meta es el total Base",
+        "sql": "UPDATE \"public\".\"ppto_DetalleItems\"\n                     SET \"CostoTotalMeta\" = \"CostoTotal\"\n                   WHERE \"CostoUnitarioMeta\" IS NULL AND \"CostoTotalMeta\" IS DISTINCT FROM \"CostoTotal\"",
+        "params": []
+      },
+      {
+        "description": "subfases con ítems: su Meta es la suma del Meta de sus ítems",
+        "sql": "UPDATE \"public\".\"ppto_DetalleFasesCate\" c\n                     SET \"CostoDirectoMeta\" = s.\"total\"\n                    FROM (\n                      SELECT \"id_detalle_categoria\" AS \"id\", sum(\"CostoTotalMeta\") AS \"total\"\n                        FROM \"public\".\"ppto_DetalleItems\"\n                       GROUP BY \"id_detalle_categoria\"\n                    ) s\n                   WHERE c.\"id\" = s.\"id\" AND c.\"CostoDirectoMeta\" IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "ningún ítem sin precio Meta propio queda con un total Meta distinto del Base",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"ppto_DetalleItems\"\n   WHERE \"CostoUnitarioMeta\" IS NULL AND \"CostoTotalMeta\" IS DISTINCT FROM \"CostoTotal\") AS \"result\"",
+        "params": []
+      },
+      {
+        "description": "ninguna subfase con ítems queda sin su Meta",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"ppto_DetalleFasesCate\" c\n   WHERE c.\"CostoDirectoMeta\" IS NULL\n     AND EXISTS (SELECT 1 FROM \"public\".\"ppto_DetalleItems\" i WHERE i.\"id_detalle_categoria\" = c.\"id\")) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

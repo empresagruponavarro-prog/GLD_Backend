@@ -94,8 +94,8 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
       ids.push(id);
       for (const [k, [idProd, q, p]] of c.items.entries()) {
         await db.query(
-          `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "Orden")
-           values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "CostoTotalMeta", "Orden")
+           values ($1, $2, $3, $4, $5, $6, $7, $7, $8)`,
           [id, codigo, idProd, unidad, q, p, redondear2(q * p), k],
         );
       }
@@ -418,6 +418,7 @@ describe('Recorrido GRP: del presupuesto a la liquidación (e2e)', () => {
 
       const dosier = (await api().get(`${obra()}/dosier`).expect(200)).body;
       const por = (c: string) => dosier.secciones.find((s: { codigo: string }) => s.codigo === c);
+      expect(por('PRESUPUESTO_BASE').referencias).toEqual(expect.arrayContaining(['E2E-REC-P1', 'E2E-REC-A1']));
       expect(por('PRESUPUESTO_META').referencias).toEqual(expect.arrayContaining(['E2E-REC-P1', 'E2E-REC-A1']));
       expect(por('PRESUPUESTO_COMERCIAL')).toMatchObject({ disponible: true, referencias: ['E2E-REC-P1'] });
       expect(por('FICHA_OBRA').disponible).toBe(true);

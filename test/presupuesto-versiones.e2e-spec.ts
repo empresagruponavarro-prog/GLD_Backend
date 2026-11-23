@@ -60,8 +60,8 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
       ids.push(
         (
           await db.query(
-            `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "Orden")
-             values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`,
+            `insert into "ppto_DetalleItems" (id_detalle_categoria, "IdPresupuesto", id_producto, id_unidad_medida, "Cantidad", "CostoUnitario", "CostoTotal", "CostoTotalMeta", "Orden")
+             values ($1, $2, $3, $4, $5, $6, $7, $7, $8) returning id`,
             [idCat, codigo, idProd, unidad, q, p, redondear2(q * p), 0],
           )
         ).rows[0].id as number,

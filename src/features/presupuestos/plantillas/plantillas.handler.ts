@@ -11,11 +11,16 @@ import {
   FusionarPlantillaResultDto,
 } from './plantillas.dto.js';
 import { toVarchar, toDecimalString } from '../../../platform/db/varchar-helpers.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
 import { sumarTotales } from '../plantillas-items/plantillas-items.handler.js';
+import { recalcularMeta } from '../shared/recalcular-meta.js';
 
 @Injectable()
 export class PlantillasHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+  ) {}
 
   async listActivas(): Promise<any[]> {
     const plantillas = await this.db.orm.public.ppto_Plantillas
@@ -251,6 +256,9 @@ export class PlantillasHandler {
           .where((f: any) => f.IdPresupuestoDetalle.eq(toVarchar(idDetalle)))
           .update({ CostoDirecto: toDecimalString(suma) });
       }
+
+      // Plan 11: los ítems copiados nacen sin precio Meta propio (su Meta es el Base) y el Meta se rearma en subfases, fases y presupuesto.
+      await recalcularMeta(this.sql, tx, idPresupuesto);
 
       return { success: true, modo, fasesAgregadas, categoriasAgregadas, fasesOmitidas, categoriasOmitidas };
     });

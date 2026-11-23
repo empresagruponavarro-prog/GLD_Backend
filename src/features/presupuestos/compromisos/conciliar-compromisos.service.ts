@@ -220,7 +220,7 @@ export class ConciliarCompromisosService {
       SELECT i.id AS id_item, f.id AS id_detalle_fase, m.id AS id_fase_maestra,
              COALESCE(m."FaseProyecto", f."IdpptoFase", 'Fase #' || f.id::text)::text AS fase, c.id AS id_subfase,
              i.id_producto, p.codigo::text AS codigo, p.tipo_producto::text AS tipo_producto, p.id_categoria,
-             i."Cantidad"::text AS cantidad, i."CostoUnitario"::text AS costo_unitario, g.precio_unitario::text AS precio,
+             i."Cantidad"::text AS cantidad, COALESCE(i."CostoUnitarioMeta", i."CostoUnitario")::text AS costo_unitario, g.precio_unitario::text AS precio,
              g.plazo_entrega_dias AS g_plazo, g.marca_modelo::text AS g_marca, g.observaciones AS g_obs,
              q.id AS id_cotizacion, q.id_proveedor, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor,
              q.fecha::text AS fecha, q.referencia::text AS referencia, q.moneda_id::text AS moneda_id, q.moneda_simbolo::text AS moneda_simbolo,

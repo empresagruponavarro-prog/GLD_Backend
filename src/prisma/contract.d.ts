@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'95d8dd49b8d938e3f1d287c0f3d601c004a4b00ba545824b578b5e45d9bf089a'>;
+  StorageHashBase<'4ada217dde77de1c97fc3f38b647aa59c886e577f9d6fa7954ae829842fa2fc9'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -1313,6 +1313,7 @@ export type FieldOutputTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['output'] | null;
       readonly IdpptoFase: Varchar<255> | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Usuario: Varchar<255> | null;
       readonly FechaCreacion: Varchar<255> | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
@@ -1329,6 +1330,7 @@ export type FieldOutputTypes = {
       readonly IdpptoFase: Varchar<255> | null;
       readonly IdpptoFaseCategoria: Varchar<255> | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Usuario: Varchar<255> | null;
       readonly FechaCreacion: Varchar<255> | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
@@ -1346,6 +1348,8 @@ export type FieldOutputTypes = {
       readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
       readonly VentaTotal: CodecTypes['pg/numeric@1']['output'];
       readonly Orden: CodecTypes['pg/int4@1']['output'];
+      readonly CostoUnitarioMeta: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoTotalMeta: CodecTypes['pg/numeric@1']['output'];
       readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['output'] | null;
       readonly adjudicado_por: Varchar<255> | null;
       readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -1416,6 +1420,7 @@ export type FieldOutputTypes = {
       readonly FechaRequerimiento: Varchar<255> | null;
       readonly FechaEntrega: Varchar<255> | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly GGPorcentaje: CodecTypes['pg/numeric@1']['output'] | null;
       readonly GastosGenerales: CodecTypes['pg/numeric@1']['output'] | null;
       readonly UtiliPorcentaje: CodecTypes['pg/numeric@1']['output'] | null;
@@ -2818,6 +2823,7 @@ export type FieldInputTypes = {
       readonly id_centro_costo: CodecTypes['pg/int4@1']['input'] | null;
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaCreacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
@@ -2834,6 +2840,7 @@ export type FieldInputTypes = {
       readonly IdpptoFase: CodecTypes['sql/varchar@1']['input'] | null;
       readonly IdpptoFaseCategoria: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Usuario: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaCreacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
@@ -2851,6 +2858,8 @@ export type FieldInputTypes = {
       readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
       readonly VentaTotal: CodecTypes['pg/numeric@1']['input'];
       readonly Orden: CodecTypes['pg/int4@1']['input'];
+      readonly CostoUnitarioMeta: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoTotalMeta: CodecTypes['pg/numeric@1']['input'];
       readonly id_ppto_cot_detalle_ganadora: CodecTypes['pg/int4@1']['input'] | null;
       readonly adjudicado_por: CodecTypes['sql/varchar@1']['input'] | null;
       readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -2921,6 +2930,7 @@ export type FieldInputTypes = {
       readonly FechaRequerimiento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly FechaEntrega: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly GGPorcentaje: CodecTypes['pg/numeric@1']['input'] | null;
       readonly GastosGenerales: CodecTypes['pg/numeric@1']['input'] | null;
       readonly UtiliPorcentaje: CodecTypes['pg/numeric@1']['input'] | null;
@@ -4314,6 +4324,7 @@ export type StorageColumnTypes = {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly FechaCreacion: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
@@ -4328,6 +4339,7 @@ export type StorageColumnTypes = {
       readonly CodCentroCto: Varchar<255> | null;
       readonly CodCentroCtoPrincipal: Varchar<255> | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly FechaCreacion: Varchar<255> | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_categoria: CodecTypes['pg/int4@1']['output'] | null;
@@ -4345,7 +4357,9 @@ export type StorageColumnTypes = {
       readonly Cantidad: CodecTypes['pg/numeric@1']['output'];
       readonly comentario_adjudicacion: CodecTypes['pg/text@1']['output'] | null;
       readonly CostoTotal: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoTotalMeta: CodecTypes['pg/numeric@1']['output'];
       readonly CostoUnitario: CodecTypes['pg/numeric@1']['output'];
+      readonly CostoUnitarioMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly id_detalle_categoria: CodecTypes['pg/int4@1']['output'];
@@ -4415,6 +4429,7 @@ export type StorageColumnTypes = {
       readonly Comentarios: CodecTypes['pg/text@1']['output'] | null;
       readonly Concepto: CodecTypes['pg/text@1']['output'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['output'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['output'] | null;
       readonly DsctoComercial: CodecTypes['pg/numeric@1']['output'] | null;
       readonly Estado: Varchar<50> | null;
       readonly estado_ppto:
@@ -5819,6 +5834,7 @@ export type StorageColumnInputTypes = {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly FechaCreacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
@@ -5833,6 +5849,7 @@ export type StorageColumnInputTypes = {
       readonly CodCentroCto: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CodCentroCtoPrincipal: CodecTypes['sql/varchar@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly FechaCreacion: CodecTypes['sql/varchar@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_categoria: CodecTypes['pg/int4@1']['input'] | null;
@@ -5850,7 +5867,9 @@ export type StorageColumnInputTypes = {
       readonly Cantidad: CodecTypes['pg/numeric@1']['input'];
       readonly comentario_adjudicacion: CodecTypes['pg/text@1']['input'] | null;
       readonly CostoTotal: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoTotalMeta: CodecTypes['pg/numeric@1']['input'];
       readonly CostoUnitario: CodecTypes['pg/numeric@1']['input'];
+      readonly CostoUnitarioMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly fecha_adjudicacion: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly id_detalle_categoria: CodecTypes['pg/int4@1']['input'];
@@ -5920,6 +5939,7 @@ export type StorageColumnInputTypes = {
       readonly Comentarios: CodecTypes['pg/text@1']['input'] | null;
       readonly Concepto: CodecTypes['pg/text@1']['input'] | null;
       readonly CostoDirecto: CodecTypes['pg/numeric@1']['input'] | null;
+      readonly CostoDirectoMeta: CodecTypes['pg/numeric@1']['input'] | null;
       readonly DsctoComercial: CodecTypes['pg/numeric@1']['input'] | null;
       readonly Estado: CodecTypes['sql/varchar@1']['input'] | null;
       readonly estado_ppto:
@@ -14607,6 +14627,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
                 };
+                readonly CostoDirectoMeta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
                 readonly Usuario: {
                   readonly nativeType: 'character varying';
                   readonly codecId: 'sql/varchar@1';
@@ -14786,6 +14811,11 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly CostoDirecto: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly CostoDirectoMeta: {
                   readonly nativeType: 'numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
@@ -14995,6 +15025,20 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly CostoUnitarioMeta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly CostoTotalMeta: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
                   };
                 };
                 readonly id_ppto_cot_detalle_ganadora: {
@@ -15684,6 +15728,11 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly length: 255 };
                 };
                 readonly CostoDirecto: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: true;
+                };
+                readonly CostoDirectoMeta: {
                   readonly nativeType: 'numeric';
                   readonly codecId: 'pg/numeric@1';
                   readonly nullable: true;
@@ -28524,6 +28573,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
+              readonly CostoDirectoMeta: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
               readonly Usuario: {
                 readonly nullable: true;
                 readonly type: {
@@ -28648,6 +28701,7 @@ type ContractBase = Omit<
                 readonly id_centro_costo: { readonly column: 'id_centro_costo' };
                 readonly IdpptoFase: { readonly column: 'IdpptoFase' };
                 readonly CostoDirecto: { readonly column: 'CostoDirecto' };
+                readonly CostoDirectoMeta: { readonly column: 'CostoDirectoMeta' };
                 readonly Usuario: { readonly column: 'Usuario' };
                 readonly FechaCreacion: { readonly column: 'FechaCreacion' };
                 readonly id_categoria: { readonly column: 'id_categoria' };
@@ -28725,6 +28779,10 @@ type ContractBase = Omit<
                 };
               };
               readonly CostoDirecto: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoDirectoMeta: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
@@ -28889,6 +28947,7 @@ type ContractBase = Omit<
                 readonly IdpptoFase: { readonly column: 'IdpptoFase' };
                 readonly IdpptoFaseCategoria: { readonly column: 'IdpptoFaseCategoria' };
                 readonly CostoDirecto: { readonly column: 'CostoDirecto' };
+                readonly CostoDirectoMeta: { readonly column: 'CostoDirectoMeta' };
                 readonly Usuario: { readonly column: 'Usuario' };
                 readonly FechaCreacion: { readonly column: 'FechaCreacion' };
                 readonly id_categoria: { readonly column: 'id_categoria' };
@@ -28952,6 +29011,14 @@ type ContractBase = Omit<
               readonly Orden: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly CostoUnitarioMeta: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
+              readonly CostoTotalMeta: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
               readonly id_ppto_cot_detalle_ganadora: {
                 readonly nullable: true;
@@ -29087,6 +29154,8 @@ type ContractBase = Omit<
                 readonly CostoTotal: { readonly column: 'CostoTotal' };
                 readonly VentaTotal: { readonly column: 'VentaTotal' };
                 readonly Orden: { readonly column: 'Orden' };
+                readonly CostoUnitarioMeta: { readonly column: 'CostoUnitarioMeta' };
+                readonly CostoTotalMeta: { readonly column: 'CostoTotalMeta' };
                 readonly id_ppto_cot_detalle_ganadora: {
                   readonly column: 'id_ppto_cot_detalle_ganadora';
                 };
@@ -29684,6 +29753,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
+              readonly CostoDirectoMeta: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
               readonly GGPorcentaje: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
@@ -29946,6 +30019,7 @@ type ContractBase = Omit<
                 readonly FechaRequerimiento: { readonly column: 'FechaRequerimiento' };
                 readonly FechaEntrega: { readonly column: 'FechaEntrega' };
                 readonly CostoDirecto: { readonly column: 'CostoDirecto' };
+                readonly CostoDirectoMeta: { readonly column: 'CostoDirectoMeta' };
                 readonly GGPorcentaje: { readonly column: 'GGPorcentaje' };
                 readonly GastosGenerales: { readonly column: 'GastosGenerales' };
                 readonly UtiliPorcentaje: { readonly column: 'UtiliPorcentaje' };

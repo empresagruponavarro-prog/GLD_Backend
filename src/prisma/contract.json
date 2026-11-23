@@ -15830,6 +15830,13 @@
                   "kind": "scalar"
                 }
               },
+              "CostoDirectoMeta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "FechaCreacion": {
                 "nullable": true,
                 "type": {
@@ -16042,6 +16049,9 @@
                 "CostoDirecto": {
                   "column": "CostoDirecto"
                 },
+                "CostoDirectoMeta": {
+                  "column": "CostoDirectoMeta"
+                },
                 "FechaCreacion": {
                   "column": "FechaCreacion"
                 },
@@ -16097,6 +16107,13 @@
                 }
               },
               "CostoDirecto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoDirectoMeta": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/numeric@1",
@@ -16380,6 +16397,9 @@
                 "CostoDirecto": {
                   "column": "CostoDirecto"
                 },
+                "CostoDirectoMeta": {
+                  "column": "CostoDirectoMeta"
+                },
                 "FechaCreacion": {
                   "column": "FechaCreacion"
                 },
@@ -16434,8 +16454,22 @@
                   "kind": "scalar"
                 }
               },
+              "CostoTotalMeta": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "CostoUnitario": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "CostoUnitarioMeta": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/numeric@1",
                   "kind": "scalar"
@@ -16679,8 +16713,14 @@
                 "CostoTotal": {
                   "column": "CostoTotal"
                 },
+                "CostoTotalMeta": {
+                  "column": "CostoTotalMeta"
+                },
                 "CostoUnitario": {
                   "column": "CostoUnitario"
+                },
+                "CostoUnitarioMeta": {
+                  "column": "CostoUnitarioMeta"
                 },
                 "IdPresupuesto": {
                   "column": "IdPresupuesto"
@@ -17496,6 +17536,13 @@
                   "kind": "scalar"
                 }
               },
+              "CostoDirectoMeta": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "DsctoComercial": {
                 "nullable": true,
                 "type": {
@@ -17945,6 +17992,9 @@
                 },
                 "CostoDirecto": {
                   "column": "CostoDirecto"
+                },
+                "CostoDirectoMeta": {
+                  "column": "CostoDirectoMeta"
                 },
                 "DsctoComercial": {
                   "column": "DsctoComercial"
@@ -32055,6 +32105,11 @@
                   "nativeType": "numeric",
                   "nullable": true
                 },
+                "CostoDirectoMeta": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
                 "FechaCreacion": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -32281,6 +32336,11 @@
                   }
                 },
                 "CostoDirecto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "CostoDirectoMeta": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
                   "nullable": true
@@ -32528,6 +32588,15 @@
                   "nativeType": "numeric",
                   "nullable": false
                 },
+                "CostoTotalMeta": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
                 "CostoUnitario": {
                   "codecId": "pg/numeric@1",
                   "default": {
@@ -32536,6 +32605,11 @@
                   },
                   "nativeType": "numeric",
                   "nullable": false
+                },
+                "CostoUnitarioMeta": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
                 },
                 "IdPresupuesto": {
                   "codecId": "sql/varchar@1",
@@ -33428,6 +33502,11 @@
                   "nullable": true
                 },
                 "CostoDirecto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "CostoDirectoMeta": {
                   "codecId": "pg/numeric@1",
                   "nativeType": "numeric",
                   "nullable": true
@@ -37655,7 +37734,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "95d8dd49b8d938e3f1d287c0f3d601c004a4b00ba545824b578b5e45d9bf089a"
+    "storageHash": "4ada217dde77de1c97fc3f38b647aa59c886e577f9d6fa7954ae829842fa2fc9"
   },
   "capabilities": {
     "postgres": {

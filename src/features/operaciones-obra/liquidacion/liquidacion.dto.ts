@@ -21,7 +21,7 @@ export class LiquidacionObraDto {
 }
 
 export class SeccionDosierDto {
-  @ApiProperty({ enum: ['PRESUPUESTO_META', 'PRESUPUESTO_COMERCIAL', 'FICHA_OBRA', 'INFORME_AVANCE', 'PLANOS', 'DOCUMENTOS'] }) codigo: string;
+  @ApiProperty({ enum: ['PRESUPUESTO_BASE', 'PRESUPUESTO_META', 'PRESUPUESTO_COMERCIAL', 'FICHA_OBRA', 'INFORME_AVANCE', 'PLANOS', 'DOCUMENTOS'] }) codigo: string;
   @ApiProperty() titulo: string;
   @ApiProperty({ description: 'Hay algo que imprimir en esta sección' }) disponible: boolean;
   @ApiProperty({ type: [String], description: 'Códigos o referencias de lo que entra (presupuestos, cantidad de planos y documentos…)' }) referencias: string[];

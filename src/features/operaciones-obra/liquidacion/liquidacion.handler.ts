@@ -105,8 +105,11 @@ export class LiquidacionHandler {
     const codigos = vigentes.map((p) => p.IdPresupuesto as string);
     const principales = vigentes.filter((p) => !esAdicional(p.TipoPpto ?? null, p.Concepto ?? null)).map((p) => p.IdPresupuesto as string);
     const seccion = (s: SeccionDosierDto): SeccionDosierDto => s;
+    const sinPresupuesto = codigos.length === 0 ? { nota: 'El centro de costo no tiene presupuesto' } : {};
     const secciones: SeccionDosierDto[] = [
-      seccion({ codigo: 'PRESUPUESTO_META', titulo: 'Presupuesto Meta', disponible: codigos.length > 0, referencias: codigos, ...(codigos.length === 0 ? { nota: 'El centro de costo no tiene presupuesto' } : {}) }),
+      // Plan 11: el Base (fases, ítems y la liquidación financiera) y el Meta (Base vs Meta por ítem) se imprimen de los mismos presupuestos.
+      seccion({ codigo: 'PRESUPUESTO_BASE', titulo: 'Presupuesto Base', disponible: codigos.length > 0, referencias: codigos, ...sinPresupuesto }),
+      seccion({ codigo: 'PRESUPUESTO_META', titulo: 'Presupuesto Meta', disponible: codigos.length > 0, referencias: codigos, ...sinPresupuesto }),
       // El Comercial se calcula del Meta Principal y de las cotizaciones ganadoras (SP-16); mientras una fase no tenga ganadora iguala al Meta.
       seccion({
         codigo: 'PRESUPUESTO_COMERCIAL',

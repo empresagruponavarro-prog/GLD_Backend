@@ -1,9 +1,11 @@
-﻿import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+﻿import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../../../platform/db/varchar-helpers.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
+import { recalcularMeta } from '../shared/recalcular-meta.js';
 import {
   CreatePptoDetalleFaseCateDto,
   ListPptoDetalleFaseCateQueryDto,
@@ -13,7 +15,12 @@ import {
 
 @Injectable()
 export class PptoDetalleFasesCateHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  private readonly logger = new Logger(PptoDetalleFasesCateHandler.name);
+
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+  ) {}
 
   private async resolveCentroCostoId(dto: {
     id_centro_costo?: number;
@@ -70,6 +77,7 @@ export class PptoDetalleFasesCateHandler {
         FechaCreacion: toVarchar(new Date().toISOString()),
       });
       await this.syncFaseCostoDirecto(dto.IdPresupuestoDetalle);
+      await this.actualizarMeta(dto.IdPresupuesto);
       return created as unknown as PptoDetalleFaseCateResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalleCategoria "${dto.IdPresupuestoDetalleCategoria}" ya existe`);
@@ -113,6 +121,9 @@ export class PptoDetalleFasesCateHandler {
       const row = await this.db.orm.public.ppto_DetalleFasesCate.where({ id }).update(data);
       if (!row) throw new NotFoundException(`Detalle de categoria ${id} no encontrado`);
       await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle ?? dto.IdPresupuestoDetalle);
+      await this.actualizarMeta(current.IdPresupuesto);
+      // Si cambió de presupuesto, también el de origen queda sin esta subfase.
+      if (dto.IdPresupuesto !== undefined && dto.IdPresupuesto !== current.IdPresupuesto) await this.actualizarMeta(dto.IdPresupuesto);
       return row as unknown as PptoDetalleFaseCateResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalleCategoria ya existe`);
@@ -128,7 +139,21 @@ export class PptoDetalleFasesCateHandler {
     if (!current) throw new NotFoundException(`Detalle de categoria "${idOrCode}" no encontrado`);
     await this.db.orm.public.ppto_DetalleFasesCate.where({ id: current.id }).delete();
     await this.syncFaseCostoDirecto(current.IdPresupuestoDetalle);
+    await this.actualizarMeta(current.IdPresupuesto);
     return { deleted: true, id: current.id, code: current.IdPresupuestoDetalleCategoria };
+  }
+
+  /**
+   * Plan 11: deja al día el Meta del presupuesto (la fase y el presupuesto suman el Meta efectivo de sus subfases). Igual que la
+   * sincronización del Base, no bloquea la respuesta si falla; queda en el log y el siguiente cambio lo vuelve a calcular.
+   */
+  private async actualizarMeta(codigoPresupuesto?: string | null): Promise<void> {
+    if (!codigoPresupuesto) return;
+    try {
+      await this.db.transaction((tx) => recalcularMeta(this.sql, tx, String(codigoPresupuesto)));
+    } catch (error) {
+      this.logger.warn(`No se pudo recalcular el Meta del presupuesto ${codigoPresupuesto}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
   private async syncFaseCostoDirecto(idPresupuestoDetalle?: string | null): Promise<void> {
     if (!idPresupuestoDetalle) return;

@@ -1454,6 +1454,8 @@ model ppto_DetalleFases {
   centroCosto           CentroCostos? @relation(fields: [id_centro_costo], references: [id], onDelete: SetNull)
   IdpptoFase            VarChar(255)?
   CostoDirecto          Decimal?
+  // Plan 11: CostoDirecto es el Base. Σ Meta efectivo de sus subfases; NULL = igual al Base.
+  CostoDirectoMeta      Decimal?
   Usuario               VarChar(255)?
   FechaCreacion         VarChar(255)?
   fase                  ppto_Fases?           @relation(fields: [IdpptoFase], references: [IdpptoFase], onDelete: SetNull)
@@ -1480,6 +1482,8 @@ model ppto_DetalleFasesCate {
   IdpptoFase                    VarChar(255)?
   IdpptoFaseCategoria           VarChar(255)?
   CostoDirecto                  Decimal?
+  // Plan 11: CostoDirecto es el Base. Con ítems = Σ CostoTotalMeta; sin ítems = monto Meta a mano. NULL = igual al Base.
+  CostoDirectoMeta              Decimal?
   Usuario                       VarChar(255)?
   FechaCreacion                 VarChar(255)?
   detalleFase                   ppto_DetalleFases?  @relation(fields: [IdPresupuestoDetalle], references: [IdPresupuestoDetalle], onDelete: Cascade)
@@ -1537,6 +1541,8 @@ model ppto_Principal {
   FechaRequerimiento    VarChar(255)?
   FechaEntrega          VarChar(255)?
   CostoDirecto          Decimal?
+  // Plan 11: CostoDirecto es el Base (sobre él se calculan GG, utilidad, IGV y total). Σ Meta efectivo de sus fases; no entra en esos cálculos.
+  CostoDirectoMeta      Decimal?
   GGPorcentaje          Decimal?
   GastosGenerales       Decimal?
   UtiliPorcentaje       Decimal?
@@ -1907,6 +1913,11 @@ model ppto_DetalleItems {
   CostoTotal             Decimal  @default("0")
   VentaTotal             Decimal  @default("0")
   Orden                  Int      @default(0)
+  // Plan 11: CostoUnitario/CostoTotal son el precio BASE. El Meta se estima en el paso «Presupuesto Meta».
+  // CostoUnitarioMeta: precio Meta escrito por el usuario; NULL = igual al Base.
+  // CostoTotalMeta: cantidad × (CostoUnitarioMeta ?? CostoUnitario); siempre al día (presupuestos/shared/recalcular-meta.ts).
+  CostoUnitarioMeta      Decimal?
+  CostoTotalMeta         Decimal  @default("0")
   // Plan 09: ganador del ítem (uno solo), quién lo eligió y el ítem de la versión anterior del que viene.
   id_ppto_cot_detalle_ganadora Int?
   adjudicado_por         VarChar(255)?

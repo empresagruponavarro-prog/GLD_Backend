@@ -1,9 +1,11 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { and } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toDecimalString, toVarchar, type Varchar255 } from '../../../platform/db/varchar-helpers.js';
+import { AlmacenSql } from '../../almacen/shared/almacen-sql.js';
+import { recalcularMeta } from '../shared/recalcular-meta.js';
 import {
   CreatePptoDetalleFaseDto,
   FasePorCentroCostoResponseDto,
@@ -14,7 +16,25 @@ import {
 
 @Injectable()
 export class PptoDetalleFasesHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  private readonly logger = new Logger(PptoDetalleFasesHandler.name);
+
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+  ) {}
+
+  /**
+   * Plan 11: deja al día el Meta del presupuesto (la fase sin subfases vale su Base y el presupuesto suma el Meta efectivo de sus fases).
+   * No bloquea la respuesta si falla; queda en el log y el siguiente cambio lo vuelve a calcular.
+   */
+  private async actualizarMeta(codigoPresupuesto?: string | null): Promise<void> {
+    if (!codigoPresupuesto) return;
+    try {
+      await this.db.transaction((tx) => recalcularMeta(this.sql, tx, String(codigoPresupuesto)));
+    } catch (error) {
+      this.logger.warn(`No se pudo recalcular el Meta del presupuesto ${codigoPresupuesto}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
 
   private async resolveCentroCostoId(dto: {
     id_centro_costo?: number;
@@ -95,6 +115,7 @@ export class PptoDetalleFasesHandler {
         Usuario: toVarchar(dto.Usuario),
         FechaCreacion: toVarchar(new Date().toISOString()),
       });
+      await this.actualizarMeta(dto.IdPresupuesto);
       return created as unknown as PptoDetalleFaseResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalle "${dto.IdPresupuestoDetalle}" ya existe`);
@@ -134,6 +155,9 @@ export class PptoDetalleFasesHandler {
     try {
       const row = await this.db.orm.public.ppto_DetalleFases.where({ id }).update(data);
       if (!row) throw new NotFoundException(`Detalle de fase ${id} no encontrado`);
+      await this.actualizarMeta(current.IdPresupuesto);
+      // Si cambió de presupuesto, también el de origen queda sin esta fase.
+      if (dto.IdPresupuesto !== undefined && dto.IdPresupuesto !== current.IdPresupuesto) await this.actualizarMeta(dto.IdPresupuesto);
       return row as unknown as PptoDetalleFaseResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdPresupuestoDetalle ya existe`);
@@ -155,6 +179,7 @@ export class PptoDetalleFasesHandler {
     }
 
     await this.db.orm.public.ppto_DetalleFases.where({ id: row.id }).delete();
+    await this.actualizarMeta(row.IdPresupuesto);
     return { deleted: true, id: row.id, code: row.IdPresupuestoDetalle };
   }
 

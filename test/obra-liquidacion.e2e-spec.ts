@@ -305,9 +305,19 @@ describe('Catálogos, directorio, planos y liquidación (e2e)', () => {
       await api().put(`${obra()}/planos-requeridos/${p2}`).send({ entregado: true }).expect(200);
       const d = (await api().get(`${obra()}/dosier`).expect(200)).body;
       expect(d).toMatchObject({ id_centro_costo: cc, nombre_obra: 'E2E-LIQ-OBRA', fecha: hoy });
-      expect(d.secciones.map((s: { codigo: string }) => s.codigo)).toEqual(['PRESUPUESTO_META', 'PRESUPUESTO_COMERCIAL', 'FICHA_OBRA', 'INFORME_AVANCE', 'PLANOS', 'DOCUMENTOS']);
+      expect(d.secciones.map((s: { codigo: string }) => s.codigo)).toEqual([
+        'PRESUPUESTO_BASE',
+        'PRESUPUESTO_META',
+        'PRESUPUESTO_COMERCIAL',
+        'FICHA_OBRA',
+        'INFORME_AVANCE',
+        'PLANOS',
+        'DOCUMENTOS',
+      ]);
       const seccion = (c: string) => d.secciones.find((s: { codigo: string }) => s.codigo === c);
-      expect(seccion('PRESUPUESTO_META')).toMatchObject({ disponible: true, referencias: ['E2E-LIQ-PPTO'] });
+      // Plan 11: el Base y el Meta se imprimen de los mismos presupuestos.
+      expect(seccion('PRESUPUESTO_BASE')).toMatchObject({ titulo: 'Presupuesto Base', disponible: true, referencias: ['E2E-LIQ-PPTO'] });
+      expect(seccion('PRESUPUESTO_META')).toMatchObject({ titulo: 'Presupuesto Meta', disponible: true, referencias: ['E2E-LIQ-PPTO'] });
       expect(seccion('INFORME_AVANCE')).toMatchObject({ disponible: true, referencias: ['01'] });
       expect(seccion('PLANOS').referencias[0]).toBe('2/2 obligatorios');
       expect(d.planos.completo).toBe(true);
