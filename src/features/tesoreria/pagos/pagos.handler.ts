@@ -7,6 +7,7 @@ import { validarTrabajador } from '../../requerimientos/shared/requerimiento-eve
 import { bloquearYConsultar, type DocumentoConsultado } from '../shared/documentos-consulta.js';
 import { claveMoneda, tcVigente } from '../shared/tipo-cambio.js';
 import { esSoles, esViernes, redondear } from '../shared/tributos.js';
+import { marcarExceso, verificarTope } from '../shared/verificar-tope.js';
 import {
   AnularPagoDto,
   EjecutarPagoDto,
@@ -127,13 +128,21 @@ export class PagosHandler {
           `El monto (${dto.monto}) supera el saldo por pagar (${redondear(Math.max(disponible, 0)).toFixed(2)}) de ${concepto}`,
         );
       }
+      // El pago directo no se salta el tope por avance de obra de una orden de servicio de presupuesto.
+      const excede = await verificarTope(this.sql, this.db.orm.public, doc, {
+        concepto,
+        monto: Number(dto.monto),
+        exceder: dto.exceder_avance ?? false,
+        motivo: dto.observaciones,
+      });
+      const observacionesProg = excede ? marcarExceso(dto.observaciones) : 'Pago directo';
       const urgente = !esViernes(dto.fecha_pago);
       const [prog] = await q.rows<{ id: number }>({ id: I }, tx)`
         INSERT INTO pago_programado (id_documento_origen, concepto, fecha_programada, urgente, monto, medio_pago, id_cuenta,
                                      cuenta_destino, id_programado_por, observaciones)
         VALUES (${dto.id_documento_origen}::int, ${concepto}::text, ${dto.fecha_pago}::date, ${urgente}::boolean, ${dto.monto}::numeric,
                 ${dto.medio_pago}::text, ${dto.id_cuenta}::int, NULLIF(${dto.cuenta_destino ?? ''}::text, ''),
-                NULLIF(${dto.id_ejecutado_por ?? 0}::int, 0), 'Pago directo')
+                NULLIF(${dto.id_ejecutado_por ?? 0}::int, 0), ${observacionesProg}::text)
         RETURNING id`;
       return this.ejecutarEnTx(tx, {
         id_pago_programado: prog.id,

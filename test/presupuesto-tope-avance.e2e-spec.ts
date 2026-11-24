@@ -35,6 +35,7 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
   let idOs = 0;
   let idOc = 0;
   let netoOs = 0;
+  let cuenta = 0;
 
   const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
@@ -49,6 +50,10 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
     api()
       .post('/tesoreria/programacion')
       .send({ items: [{ id_documento_origen: id, fecha_programada: '2026-12-04', monto: monto.toFixed(2), medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E', ...extra }] });
+  const pagarDirecto = (id: number, monto: number, extra: Record<string, unknown> = {}) =>
+    api()
+      .post('/tesoreria/pagos/directo')
+      .send({ id_documento_origen: id, fecha_pago: '2026-12-04', monto: monto.toFixed(2), medio_pago: 'TRANSFERENCIA', id_cuenta: cuenta, numero_operacion: 'E2E-TP', ...extra });
   const avance = async (semana: number, porSubfase: Array<[number, number]>) => {
     const subs = (await db.query(`select id, id_ppto_detalle_categoria as sub from obra_subpartida where id_centro_costo = $1`, [cc])).rows as Array<{ id: number; sub: number }>;
     await api()
@@ -86,6 +91,8 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
     trabajadorId = await anexo('Trabajador', 'E2E-TP Trabajador');
     await db.query(`insert into trabajador (id_anexo) values ($1)`, [trabajadorId]);
     await db.query(`update usuarios set id_trabajador = $1 where "IdUsuario" = $2`, [trabajadorId, USUARIO_E2E]);
+
+    cuenta = (await db.query(`insert into cuenta_tesoreria (codigo, nombre, tipo, moneda_id) values ('E2E-TP-CTA', 'E2E TP CUENTA', 'BANCO', 'PEN') returning id`)).rows[0].id;
 
     cc = (
       await db.query(
@@ -144,7 +151,9 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
   afterAll(async () => {
     if (db) {
       const ccs = `(select id from "CentroCostos" where centro_costo like 'E2E-TP-%')`;
+      await db.query(`delete from pago where id_documento_origen in (select id from "documentosOrigen" where id_centro_costo in ${ccs})`);
       await db.query(`delete from pago_programado where id_documento_origen in (select id from "documentosOrigen" where id_centro_costo in ${ccs})`);
+      await db.query(`delete from cuenta_tesoreria where codigo = 'E2E-TP-CTA'`);
       await db.query(`delete from "ordenCompraDetalle" where id_orden_compra in (select id from "documentosOrigen" where id_centro_costo in ${ccs})`);
       await db.query(`delete from "documentosOrigen" where id_centro_costo in ${ccs}`);
       await db.query(`update requerimiento set id_cotizacion_ganadora = null where id_centro_costo in ${ccs}`);
@@ -257,6 +266,28 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
       await api().post(`/tesoreria/programacion/${fila.id}/cancelar`).expect(200);
     });
 
+    it('el pago directo tampoco pasa el tope: 409; con «exceder_avance» exige el motivo y queda marcado', async () => {
+      // El adelanto ya está programado completo: no queda nada liberado.
+      const res = await pagarDirecto(idOs, 10).expect(409);
+      expect(res.body.message).toMatch(/supera lo que libera el avance de obra/);
+      await pagarDirecto(idOs, 10, { exceder_avance: true }).expect(400);
+      const pago = (await pagarDirecto(idOs, 10, { exceder_avance: true, observaciones: 'URGE EL MATERIAL' }).expect(201)).body;
+      const prog = (await db.query(`select g.id, g.observaciones from pago p join pago_programado g on g.id = p.id_pago_programado where p.id = $1`, [pago.id])).rows[0];
+      expect(prog.observaciones).toBe('[POR ENCIMA DEL AVANCE] URGE EL MATERIAL');
+      // Se deshace para que los casos siguientes partan de lo mismo.
+      await api().post(`/tesoreria/pagos/${pago.id}/anular`).send({}).expect(200);
+      await api().post(`/tesoreria/programacion/${prog.id}/cancelar`).expect(200);
+    });
+
+    it('la orden de compra (bienes) y la detracción no llevan tope en el pago directo', async () => {
+      const oc = (await pagarDirecto(idOc, 1).expect(201)).body;
+      const prog = (await db.query(`select g.observaciones from pago p join pago_programado g on g.id = p.id_pago_programado where p.id = $1`, [oc.id])).rows[0];
+      expect(prog.observaciones).toBe('Pago directo');
+      const det = (await api().get(`/administracion/documentos-origen/${idOs}`).expect(200)).body;
+      expect(num(det.detraccion_monto)).toBeGreaterThan(0);
+      await pagarDirecto(idOs, 1, { concepto: 'DETRACCION', medio_pago: 'DEPOSITO' }).expect(201);
+    });
+
     it('al registrar avance de obra se libera más: el tope sigue al avance ponderado por el monto', async () => {
       // La ficha necesita al menos el jefe de proyecto para entrar al control de avance; se pone la obra en ejecución.
       await api().patch(`${obra()}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: trabajadorId }).expect(200);
@@ -308,5 +339,23 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
       expect(p.tope_avance.tope).toBeCloseTo(netoOs, 2);
       expect(p.tope_avance.disponible).toBeCloseTo(netoOs * 0.5, 2);
     });
+
+    it('dentro de lo liberado, el pago directo se registra y consume el tope', async () => {
+      await pagarDirecto(idOs, 25).expect(201);
+      const p = await pendiente(idOs);
+      expect(p.tope_avance.pagado).toBeCloseTo(25, 2);
+      expect(p.tope_avance.disponible).toBeCloseTo(netoOs * 0.5 - 25, 2);
+    });
+  });
+
+  it('el adelanto de una cotización va de 0 a 100 %', async () => {
+    const enviar = (adelanto_porcentaje: string) =>
+      api()
+        .post(`/presupuestos/${idPpto}/cotizaciones`)
+        .send({ id_detalle_categoria: sub1, id_proveedor: provA, total: '880', fecha: hoy, moneda_id: 'PEN', forma_pago: 'Contado', adelanto_porcentaje });
+    for (const malo of ['100.01', '150', '-1']) {
+      const res = await enviar(malo).expect(400);
+      expect(String(res.body.message)).toMatch(/entre 0 y 100/);
+    }
   });
 });
