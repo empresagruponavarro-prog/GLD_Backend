@@ -30,6 +30,7 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
   let provB = 0;
   let trabajadorId = 0;
   let cliente = 0;
+  let ccObra1 = 0;
 
   const api = () => apiConSesion(app);
   const redondear2 = (n: number) => Math.round(n * 100) / 100;
@@ -162,7 +163,7 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
     let v2 = { id: 0, codigo: '', idFase: 0, subs: [] as number[], items: [] as number[] };
 
     beforeAll(async () => {
-      const cc = await crearCc('E2E-PV-OBRA-1');
+      const cc = (ccObra1 = await crearCc('E2E-PV-OBRA-1'));
       v1 = await crearPpto('E2E-PV-P1', cc, [[producto, 10, 5], [servicio, 2, 15]]);
     });
 
@@ -253,6 +254,23 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
       // Las órdenes de la versión 1 siguen registradas (compromisos con el proveedor) y la OC por la diferencia de la versión 2 también.
       expect((await dos('E2E-PV-P1')).every((d) => d.estado === 'REGISTRADO')).toBe(true);
       expect((await dos(v2.codigo)).filter((d) => d.estado !== 'ANULADO').map((d) => d.estado)).toEqual(['REGISTRADO']);
+    });
+
+    it('el avance que se registra en la versión vigente llega a la orden de servicio de la versión anterior (C-5)', async () => {
+      // La obra entra al control de avance con la estructura de la versión 2: sus subpartidas tienen ids nuevos, distintos de los que
+      // imputó la orden de la versión 1.
+      const obra = `/operaciones/obra/${ccObra1}`;
+      await api().patch(`${obra}/generales`).send({ id_distrito: '150101', id_jefe_proyecto: trabajadorId }).expect(200);
+      await api().post(`${obra}/estado`).send({ estado: 'EN_EJECUCION' }).expect(201);
+      const subs = (await db.query(`select id, id_ppto_detalle_categoria as sub from obra_subpartida where id_centro_costo = $1`, [ccObra1])).rows as Array<{ id: number; sub: number }>;
+      expect(subs.map((s) => s.sub).sort()).toEqual([...v2.subs].sort()); // la estructura es la de la versión 2
+      await api().put(`${obra}/avance/semanas/1`).send({ lineas: [{ idSubpartida: subs.find((s) => s.sub === v2.subs[1])!.id, avance: 60 }] }).expect(200);
+
+      const os = (await dos('E2E-PV-P1')).find((d) => d.clase_documento === 'ORDEN_SERVICIO')!;
+      const det = (await api().get(`/administracion/documentos-origen/${os.id}`).expect(200)).body;
+      expect(det.tope_avance).toMatchObject({ avance_pct: 60 });
+      const v = (await api().get(`/administracion/documentos-origen/${os.id}/valorizacion`).expect(200)).body;
+      expect(v.lineas[0]).toMatchObject({ avance_pct: 60 });
     });
   });
 

@@ -1,9 +1,7 @@
 import { AlmacenSql, I, IN, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
-import { cargarObra } from '../../operaciones-obra/shared/control-avance/carga-obra.js';
-import { calcularObra } from '../../operaciones-obra/shared/control-avance/motor.js';
+import { avanceDeLinea, avancesPorSubfase, subfasesDeLineas } from '../../operaciones-obra/shared/avances-subfase.js';
 import type { OrmObra } from '../../operaciones-obra/shared/control-avance/orm.js';
-import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
 import { disponibleAvance, montoSugerido, topeAvance, type LineaTope } from './tope-avance.js';
 import { redondear } from './tributos.js';
 
@@ -44,19 +42,6 @@ export interface InfoTope {
   lineas: LineaValorizada[];
 }
 
-/** Avance real por subfase (`ppto_DetalleFasesCate.id`) de la obra de un centro de costo; vacío si no está en el control de avance. */
-async function avancesPorSubfase(orm: OrmObra, idCentroCosto: number): Promise<Map<number, number>> {
-  const mapa = new Map<number, number>();
-  const carga = await cargarObra(orm, idCentroCosto).catch(() => null);
-  if (!carga?.entrada) return mapa;
-  const resultado = calcularObra(carga.entrada, hoyLima());
-  const realPorItem = new Map(resultado.partidas.flatMap((p) => p.subpartidas.map((s) => [s.item, s.real] as const)));
-  for (const s of carga.filas.subs) {
-    if (s.id_ppto_detalle_categoria != null) mapa.set(s.id_ppto_detalle_categoria, realPorItem.get(s.item) ?? 0);
-  }
-  return mapa;
-}
-
 /**
  * Topes por avance de las órdenes de servicio que nacieron de un presupuesto (plan 09, D-13). Solo devuelve entrada para esas
  * órdenes (`ORDEN_SERVICIO` registrada, de un FUR de adjudicación): las demás se pagan como siempre (las OC de bienes, desde la recepción).
@@ -92,6 +77,8 @@ export async function cargarTopesAvance(sql: AlmacenSql, orm: OrmObra, docs: rea
      WHERE od.id_orden_compra = ANY(string_to_array(${csv(delPresupuesto.map((d) => d.id))}::text, ',')::int[])
      ORDER BY od.id`;
 
+  // Una versión nueva del presupuesto reemplaza las subfases de la obra: la línea de una orden anterior busca también las de sus descendientes.
+  const equivalentes = await subfasesDeLineas(sql, lineas.map((l) => l.id));
   const cacheObra = new Map<number, Map<number, number>>();
   for (const d of candidatos) {
     if (!adelanto.has(d.id)) continue;
@@ -103,7 +90,7 @@ export async function cargarTopesAvance(sql: AlmacenSql, orm: OrmObra, docs: rea
     const detalle: LineaValorizada[] = lineas
       .filter((l) => l.id_doc === d.id)
       .map((l) => {
-        const avance = l.id_subfase !== null && avances.has(l.id_subfase) ? avances.get(l.id_subfase)! : null;
+        const avance = avanceDeLinea(l.id_subfase, equivalentes.get(l.id) ?? [], avances);
         const monto = Number(l.monto);
         return {
           id: l.id,
