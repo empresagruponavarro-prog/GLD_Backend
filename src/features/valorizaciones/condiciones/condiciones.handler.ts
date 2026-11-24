@@ -11,13 +11,14 @@ export interface CondicionFila {
   garantia_porcentaje: number;
   numero_valorizaciones: number;
   meses_garantia: number;
+  descuento_fuera_lima: number;
   condiciones_generales: string | null;
   condiciones_comerciales: string | null;
   estado: boolean;
 }
 
 const SPEC = {
-  id: I, id_categoria: IN, categoria: TN, adelanto: T, garantia: T, numero: I, meses: I, generales: TN, comerciales: TN, estado: B,
+  id: I, id_categoria: IN, categoria: TN, adelanto: T, garantia: T, numero: I, meses: I, fuera: T, generales: TN, comerciales: TN, estado: B,
 } as const;
 
 @Injectable()
@@ -31,7 +32,7 @@ export class CondicionesHandler {
     const q = sqlTag(this.sql);
     const filas = await q.rows<Record<string, string | number | boolean | null>>(SPEC)`
       SELECT s.id, s.id_categoria, c.descripcion::text AS categoria, s.adelanto_porcentaje::text AS adelanto, s.garantia_porcentaje::text AS garantia,
-             s.numero_valorizaciones AS numero, s.meses_garantia AS meses, s.condiciones_generales AS generales, s.condiciones_comerciales AS comerciales, s.estado
+             s.numero_valorizaciones AS numero, s.meses_garantia AS meses, s.descuento_fuera_lima::text AS fuera, s.condiciones_generales AS generales, s.condiciones_comerciales AS comerciales, s.estado
         FROM condicion_servicio s LEFT JOIN categoria c ON c.id = s.id_categoria
        ORDER BY (s.id_categoria IS NOT NULL), c.descripcion, s.id`;
     return filas.map((f) => ({
@@ -42,6 +43,7 @@ export class CondicionesHandler {
       garantia_porcentaje: Number(f['garantia']),
       numero_valorizaciones: f['numero'] as number,
       meses_garantia: f['meses'] as number,
+      descuento_fuera_lima: Number(f['fuera']),
       condiciones_generales: f['generales'] as string | null,
       condiciones_comerciales: f['comerciales'] as string | null,
       estado: f['estado'] as boolean,
@@ -59,9 +61,9 @@ export class CondicionesHandler {
         if (!c) throw new BadRequestException(`La categoría ${dto.id_categoria} no existe`);
       }
       const [fila] = await q.rows<{ id: number }>({ id: I }, tx)`
-        INSERT INTO condicion_servicio (id_categoria, adelanto_porcentaje, garantia_porcentaje, numero_valorizaciones, meses_garantia, condiciones_generales, condiciones_comerciales, estado)
+        INSERT INTO condicion_servicio (id_categoria, adelanto_porcentaje, garantia_porcentaje, numero_valorizaciones, meses_garantia, descuento_fuera_lima, condiciones_generales, condiciones_comerciales, estado)
         VALUES (NULLIF(${dto.id_categoria ?? 0}::int, 0), ${String(dto.adelanto_porcentaje)}::numeric, ${String(dto.garantia_porcentaje)}::numeric, ${dto.numero_valorizaciones}::int,
-                ${dto.meses_garantia}::int, NULLIF(${dto.condiciones_generales ?? ''}::text, ''), NULLIF(${dto.condiciones_comerciales ?? ''}::text, ''), ${dto.estado ?? true}::boolean)
+                ${dto.meses_garantia}::int, ${String(dto.descuento_fuera_lima ?? 0)}::numeric, NULLIF(${dto.condiciones_generales ?? ''}::text, ''), NULLIF(${dto.condiciones_comerciales ?? ''}::text, ''), ${dto.estado ?? true}::boolean)
         RETURNING id`;
       return fila.id;
     });
@@ -81,6 +83,7 @@ export class CondicionesHandler {
           garantia_porcentaje = CASE WHEN ${dto.garantia_porcentaje !== undefined}::boolean THEN ${String(dto.garantia_porcentaje ?? 0)}::numeric ELSE garantia_porcentaje END,
           numero_valorizaciones = CASE WHEN ${dto.numero_valorizaciones !== undefined}::boolean THEN ${dto.numero_valorizaciones ?? 3}::int ELSE numero_valorizaciones END,
           meses_garantia = CASE WHEN ${dto.meses_garantia !== undefined}::boolean THEN ${dto.meses_garantia ?? 3}::int ELSE meses_garantia END,
+          descuento_fuera_lima = CASE WHEN ${dto.descuento_fuera_lima !== undefined}::boolean THEN ${String(dto.descuento_fuera_lima ?? 0)}::numeric ELSE descuento_fuera_lima END,
           condiciones_generales = CASE WHEN ${dto.condiciones_generales !== undefined}::boolean THEN ${dto.condiciones_generales ?? ''}::text ELSE condiciones_generales END,
           condiciones_comerciales = CASE WHEN ${dto.condiciones_comerciales !== undefined}::boolean THEN ${dto.condiciones_comerciales ?? ''}::text ELSE condiciones_comerciales END,
           estado = CASE WHEN ${dto.estado !== undefined}::boolean THEN ${dto.estado ?? true}::boolean ELSE estado END

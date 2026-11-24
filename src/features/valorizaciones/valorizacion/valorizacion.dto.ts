@@ -32,6 +32,10 @@ export class CrearCuotaDto {
   @IsOptional() @IsArray() @IsInt({ each: true })
   deductivos?: number[];
 
+  @ApiPropertyOptional({ description: 'Reajuste (R) con signo, en bruto: se suma al neto de la cuota. Un reajuste negativo no puede dejar el neto bajo cero' })
+  @IsOptional() @IsNumber({ maxDecimalPlaces: 2 }) @Min(-1000000000) @Max(1000000000)
+  reajuste?: number;
+
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(30)
   factura_numero?: string;
 
@@ -46,6 +50,18 @@ export class CrearCuotaDto {
 }
 
 export class ActualizarCuotaDto extends PartialType(CrearCuotaDto) {}
+
+/** Factura que el contratista presenta por una cuota ya aprobada (control de facturas de Administración). */
+export class RegistrarFacturaDto {
+  @ApiProperty({ example: 'F001-123' }) @IsString() @MinLength(1) @MaxLength(30)
+  factura_numero: string;
+
+  @ApiPropertyOptional() @IsOptional() @Matches(FECHA_REGEX)
+  factura_fecha?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(255)
+  factura_url?: string;
+}
 
 export class AnularCuotaDto {
   @ApiProperty() @IsString() @MinLength(3) @MaxLength(500)

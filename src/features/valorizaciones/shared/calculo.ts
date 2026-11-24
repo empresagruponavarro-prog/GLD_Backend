@@ -53,6 +53,8 @@ export interface EntradaCalculo {
   avancesManuales?: ReadonlyMap<number, number>;
   /** Deductivos que se descuentan; sin él, todos los pendientes. */
   deductivoIds?: readonly number[];
+  /** Reajuste (R) con signo que el supervisor suma a esta cuota. */
+  reajuste?: number;
 }
 
 export interface LineaCalculada extends LineaValorizada {
@@ -161,9 +163,9 @@ export async function calcularValorizacion(ctx: ContextoCalculo, e: EntradaCalcu
   const todos = await leerDeductivos(sql, doc.id, tx);
   let pendientes = todos.filter((d) => d.estado === 'PENDIENTE' && d.pendiente > 0.005);
   if (e.deductivoIds) pendientes = pendientes.filter((d) => e.deductivoIds!.includes(d.id));
-  const sinDescuentos = calcularCuota(montos, condiciones, previo, { numero, valorizado, esUltima, descuentos: 0 });
+  const sinDescuentos = calcularCuota(montos, condiciones, previo, { numero, valorizado, esUltima, descuentos: 0, reajuste: e.reajuste });
   const reparto = repartirDeductivos(netoSinDescuentos(sinDescuentos), pendientes.map((d) => ({ id: d.id, pendiente: d.pendiente })));
-  const cuota = calcularCuota(montos, condiciones, previo, { numero, valorizado, esUltima, descuentos: reparto.total });
+  const cuota = calcularCuota(montos, condiciones, previo, { numero, valorizado, esUltima, descuentos: reparto.total, reajuste: e.reajuste });
 
   const repartidas = valorizarLineas(entradaLineas, cuota.valorizado, montos.total);
   const lineas = repartidas.map<LineaCalculada>((l, i) => ({

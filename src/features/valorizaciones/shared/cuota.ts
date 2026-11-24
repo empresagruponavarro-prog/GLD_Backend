@@ -51,6 +51,8 @@ export interface CuotaCalculada {
   retencionIgv: number;
   garantia: number;
   descuentos: number;
+  /** Reajuste (R) con signo: se suma al neto sin tocar el reparto de tributos. */
+  reajuste: number;
   neto: number;
 }
 
@@ -129,6 +131,7 @@ export function calcularAdelanto(doc: MontosDocumento, c: CondicionesCalculo): C
     ...t,
     garantia: 0,
     descuentos: 0,
+    reajuste: 0,
     neto: redondear2(facturable - t.renta4ta - t.detraccion - t.retencionIgv),
   };
 }
@@ -140,6 +143,8 @@ export interface ParametrosCuota {
   esUltima: boolean;
   /** Descuentos extraordinarios que se aplican a esta cuota (ya repartidos con `repartirDeductivos`). */
   descuentos?: number;
+  /** Reajuste con signo; un reajuste negativo no puede dejar el neto bajo cero. */
+  reajuste?: number;
 }
 
 /**
@@ -157,6 +162,8 @@ export function calcularCuota(doc: MontosDocumento, c: CondicionesCalculo, previ
   const t = tributosDe(doc, redondear2(previo.facturable + facturable), previo);
   const garantia = Math.max(redondear2(acumuladoObjetivo(garantiaTotal, valorizadoAcumulado, doc.total) - previo.garantia), 0);
   const descuentos = redondear2(p.descuentos ?? 0);
+  const baseNeto = redondear2(facturable - t.renta4ta - t.detraccion - t.retencionIgv - garantia);
+  const reajuste = Math.max(redondear2(p.reajuste ?? 0), -Math.max(baseNeto, 0));
   return {
     tipo: 'VALORIZACION',
     numero: p.numero,
@@ -166,7 +173,8 @@ export function calcularCuota(doc: MontosDocumento, c: CondicionesCalculo, previ
     ...t,
     garantia,
     descuentos,
-    neto: redondear2(facturable - t.renta4ta - t.detraccion - t.retencionIgv - garantia - descuentos),
+    reajuste,
+    neto: redondear2(baseNeto - descuentos + reajuste),
   };
 }
 

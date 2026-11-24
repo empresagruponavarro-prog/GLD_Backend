@@ -1,4 +1,5 @@
 import { AlmacenSql, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
 import { contratoDeDocumento, leerDocumento } from './datos.js';
 import { altaAutomatica as modoAutomatico } from './modo-alta.js';
 
@@ -20,6 +21,8 @@ export interface CondicionesPropuestas {
   garantiaPorcentaje: number;
   numeroValorizaciones: number;
   mesesGarantia: number;
+  /** Descuento fijo (S/ con IGV) si la obra queda fuera de Lima Metropolitana; 0 = no aplica. */
+  descuentoFueraLima: number;
   alcances: string | null;
   condicionesGenerales: string | null;
   condicionesComerciales: string | null;
@@ -28,10 +31,10 @@ export interface CondicionesPropuestas {
 export async function condicionesPorDefecto(sql: AlmacenSql, idDocumento: number, idCotizacion: number | null, tx?: Tx): Promise<CondicionesPropuestas> {
   const q = sqlTag(sql);
   const [c] = await q.rows<Record<string, string | number | null>>(
-    { adelanto: T, garantia: T, numero: I, meses: I, generales: TN, comerciales: TN },
+    { adelanto: T, garantia: T, numero: I, meses: I, fuera: T, generales: TN, comerciales: TN },
     tx,
   )`
-    SELECT cs.adelanto_porcentaje::text AS adelanto, cs.garantia_porcentaje::text AS garantia, cs.numero_valorizaciones AS numero, cs.meses_garantia AS meses,
+    SELECT cs.adelanto_porcentaje::text AS adelanto, cs.garantia_porcentaje::text AS garantia, cs.numero_valorizaciones AS numero, cs.meses_garantia AS meses, cs.descuento_fuera_lima::text AS fuera,
            cs.condiciones_generales AS generales, cs.condiciones_comerciales AS comerciales
       FROM condicion_servicio cs
      WHERE cs.estado AND (cs.id_categoria IS NULL OR cs.id_categoria = (
@@ -44,10 +47,26 @@ export async function condicionesPorDefecto(sql: AlmacenSql, idDocumento: number
     garantiaPorcentaje: c ? Number(c['garantia']) : 10,
     numeroValorizaciones: c ? (c['numero'] as number) : 3,
     mesesGarantia: c ? (c['meses'] as number) : 3,
+    descuentoFueraLima: c ? Number(c['fuera']) : 0,
     alcances: null,
     condicionesGenerales: (c?.['generales'] as string | null) ?? null,
     condicionesComerciales: (c?.['comerciales'] as string | null) ?? null,
   };
+}
+
+/** Descripción del deductivo que se carga solo a los contratos de obras fuera de Lima Metropolitana. */
+export const DESCUENTO_FUERA_LIMA = 'DESCUENTO FIJO POR INSTALACIÓN FUERA DE LIMA METROPOLITANA';
+
+/**
+ * ¿La obra está fuera de Lima Metropolitana? Lima Metropolitana es la provincia de Lima (ubigeo 1501). Sin distrito en la ficha de la obra
+ * no se sabe: no se descuenta nada.
+ */
+export async function obraFueraDeLima(sql: AlmacenSql, idCentroCosto: number | null, tx?: Tx): Promise<boolean> {
+  if (idCentroCosto === null) return false;
+  const q = sqlTag(sql);
+  const [r] = await q.rows<{ id: string | null }>({ id: TN }, tx)`
+    SELECT d.id_provincia::text AS id FROM obra_datos_generales og JOIN distrito d ON d.id = og.id_distrito WHERE og.id_centro_costo = ${idCentroCosto}::int`;
+  return r?.id != null && r.id !== '1501';
 }
 
 /** Supervisor por defecto: el residente, si no el coordinador y si no el jefe de proyecto de la obra. */
@@ -82,7 +101,13 @@ export async function altaContrato(sql: AlmacenSql, tx: Tx, idDocumento: number,
             ${c.mesesGarantia}::int, NULLIF(${supervisor ?? 0}::int, 0), NULLIF(${c.condicionesGenerales ?? ''}::text, ''), NULLIF(${c.condicionesComerciales ?? ''}::text, ''), ${quien}::text)
     ON CONFLICT (id_documento_origen) DO NOTHING
     RETURNING id`;
-  return fila ? { id: fila.id, creado: true, motivo: null } : no('La orden ya tiene contrato de valorización');
+  if (!fila) return no('La orden ya tiene contrato de valorización');
+  if (c.descuentoFueraLima > 0.005 && (await obraFueraDeLima(sql, doc.id_centro_costo, tx))) {
+    await q.run(tx)`
+      INSERT INTO deductivo_proveedor (id_documento_origen, motivo, fecha, descripcion, monto, estado, registrado_por)
+      VALUES (${idDocumento}::int, 'OTRO', ${hoyLima()}::date, ${DESCUENTO_FUERA_LIMA}::text, ${String(c.descuentoFueraLima)}::numeric, 'PENDIENTE', ${quien}::text)`;
+  }
+  return { id: fila.id, creado: true, motivo: null };
 }
 
 /** Alta automática: solo con `VALORIZACIONES_ALTA=automatica`. No falla nunca; se usa dentro de la transacción que registra las órdenes. */

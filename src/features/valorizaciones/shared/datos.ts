@@ -201,7 +201,7 @@ export interface CuotaFila extends CuotaCalculada {
 
 const CUOTA_SPEC = {
   id: I, numero_documento: TN, id_contrato: I, tipo: T, numero: I, estado: T, fecha_corte: TN, avance_pct: TN, origen_monto: T, observaciones: TN, motivo_monto: TN,
-  valorizado: T, amortizacion: T, facturable: T, renta_4ta: T, detraccion: T, detraccion_soles: T, retencion_igv: T, garantia: T, descuentos: T, neto: T,
+  valorizado: T, amortizacion: T, facturable: T, renta_4ta: T, detraccion: T, detraccion_soles: T, retencion_igv: T, garantia: T, descuentos: T, reajuste: T, neto: T,
   factura_numero: TN, factura_fecha: TN, factura_url: TN, registrado_por: TN, aprobado_por: TN, aprobado_en: TN, motivo_anulacion: TN,
 } as const;
 
@@ -213,7 +213,7 @@ export async function leerCuotas(sql: AlmacenSql, idContrato: number, tx?: Tx): 
            avance_pct::text AS avance_pct, origen_monto::text AS origen_monto, observaciones, motivo_monto,
            valorizado::text AS valorizado, amortizacion::text AS amortizacion, facturable::text AS facturable, renta_4ta::text AS renta_4ta,
            detraccion::text AS detraccion, detraccion_soles::text AS detraccion_soles, retencion_igv::text AS retencion_igv, garantia::text AS garantia,
-           descuentos::text AS descuentos, neto::text AS neto, factura_numero::text AS factura_numero, factura_fecha::text AS factura_fecha,
+           descuentos::text AS descuentos, reajuste::text AS reajuste, neto::text AS neto, factura_numero::text AS factura_numero, factura_fecha::text AS factura_fecha,
            factura_url::text AS factura_url, registrado_por::text AS registrado_por, aprobado_por::text AS aprobado_por,
            aprobado_en::text AS aprobado_en, motivo_anulacion
       FROM valorizacion WHERE id_contrato = ${idContrato}::int AND estado::text <> 'ANULADA'
@@ -243,6 +243,7 @@ export async function leerCuotas(sql: AlmacenSql, idContrato: number, tx?: Tx): 
       retencionIgv: num(s('retencion_igv')),
       garantia: num(s('garantia')),
       descuentos: num(s('descuentos')),
+      reajuste: num(s('reajuste')),
       neto: num(s('neto')),
       factura_numero: s('factura_numero'),
       factura_fecha: s('factura_fecha'),

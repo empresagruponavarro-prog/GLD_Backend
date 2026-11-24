@@ -19,6 +19,10 @@ export class CreateCondicionDto {
   @ApiProperty({ minimum: 0, maximum: 36 }) @IsInt() @Min(0) @Max(36)
   meses_garantia: number;
 
+  @ApiPropertyOptional({ description: 'Descuento fijo (S/ con IGV) que se carga como deductivo al crear el contrato de una obra fuera de Lima Metropolitana (p. ej. instalación de puertas). 0 = no aplica' })
+  @IsOptional() @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) @Max(1000000)
+  descuento_fuera_lima?: number;
+
   @ApiPropertyOptional() @IsOptional() @IsString() @SinMayusculasCampo()
   condiciones_generales?: string;
 

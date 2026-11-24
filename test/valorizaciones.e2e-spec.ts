@@ -308,6 +308,35 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     expect(despues.cuotas.filter((c: { tipo: string; estado: string }) => c.tipo === 'VALORIZACION' && c.estado === 'APROBADA')).toHaveLength(1);
   });
 
+  it('el contrato muestra el tope de consumo y el control de facturas, que se llena al anotar cada factura', async () => {
+    const d = await detalle();
+    const v1 = d.cuotas.find((c: { tipo: string; estado: string }) => c.tipo === 'VALORIZACION' && c.estado === 'APROBADA');
+    const adelanto = d.cuotas.find((c: { tipo: string }) => c.tipo === 'ADELANTO');
+    // Tope = 11 800 − 10 % de garantía; lo consumido es lo valorizado (la penalidad no consume contrato).
+    expect(d.tope.tope).toBe('10620.00');
+    expect(num(d.tope.consumido)).toBeCloseTo(num(v1.valorizado), 2);
+    expect(num(d.tope.saldo_hasta_tope)).toBeCloseTo(10620 - num(v1.valorizado), 2);
+    expect(d.tope.exceso).toBe('0.00');
+    expect(['DENTRO', 'CERCA']).toContain(d.tope.estado);
+    const lista = (await api().get('/valorizaciones/contratos').query({ id_centro_costo: cc, estado: 'VIGENTE' }).expect(200)).body;
+    expect(lista.data[0].tope).toBe('10620.00');
+    expect(lista.data[0].cuotas_sin_factura).toBe(2);
+
+    // Facturas: ninguna anotada y la última cuota ya tiene una anterior sin factura = atrasado.
+    expect(d.facturas.estado).toBe('ATRASADO');
+    expect(d.facturas.filas).toHaveLength(2);
+    const f1 = (await api().patch(`/valorizaciones/administracion/cuotas/${adelanto.id}/factura`).send({ factura_numero: 'F001-1', factura_fecha: hoy }).expect(200)).body;
+    expect(f1.factura.numero).toBe('F001-1');
+    expect((await detalle()).facturas.estado).toBe('FALTA_ACTUAL');
+    await api().patch(`/valorizaciones/administracion/cuotas/${v1.id}/factura`).send({ factura_numero: 'F001-2' }).expect(200);
+    const al = (await detalle()).facturas;
+    expect(al.estado).toBe('AL_DIA');
+    expect(al.pendiente).toBe('0.00');
+    expect(al.valorizado).toBe(al.facturado);
+    await api().patch(`/valorizaciones/administracion/cuotas/${v1.id}/factura`).send({}).expect(400);
+    await api().patch('/valorizaciones/administracion/cuotas/99999999/factura').send({ factura_numero: 'F001-3' }).expect(404);
+  });
+
   it('la orden con valorizaciones aprobadas no se anula ni cambia sus montos', async () => {
     await api().post(`/administracion/documentos-origen/${idOs}/anular`).send({ motivo: 'Prueba' }).expect(409);
     await api().patch(`/administracion/documentos-origen/${idOs}/deducciones`).send({ renta_4ta: 10 }).expect(409);
@@ -317,7 +346,15 @@ describe('Valorizaciones de contratistas (e2e)', () => {
   it('la última cuota toma todo lo pendiente y liquida el contrato; luego se devuelve la garantía', async () => {
     const dos = (await api().post(`/valorizaciones/contratos/${idContrato}/cuotas`).send({ fecha_corte: hoy, lineas: avances(90, 90) }).expect(201)).body;
     expect(dos.numero).toBe(2);
-    await api().post(`/valorizaciones/cuotas/${dos.id}/aprobar`).expect(200);
+    // El reajuste (R) se suma al neto sin tocar lo valorizado.
+    const conR = (await api().patch(`/valorizaciones/cuotas/${dos.id}`).send({ reajuste: 25.5 }).expect(200)).body;
+    expect(num(conR.cuota.reajuste)).toBe(25.5);
+    expect(num(conR.cuota.neto)).toBeCloseTo(num(dos.cuota.neto) + 25.5, 2);
+    expect(conR.cuota.valorizado).toBe(dos.cuota.valorizado);
+    const aprobadaR = (await api().post(`/valorizaciones/cuotas/${dos.id}/aprobar`).expect(200)).body;
+    expect(num(aprobadaR.cuota.reajuste)).toBe(25.5);
+    // Con la cuota aprobada el reajuste ya no se cambia.
+    await api().patch(`/valorizaciones/cuotas/${dos.id}`).send({ reajuste: 1 }).expect(409);
 
     const tres = (await api().post(`/valorizaciones/contratos/${idContrato}/cuotas`).send({ fecha_corte: hoy, lineas: avances(100, 100) }).expect(201)).body;
     expect(tres.numero).toBe(3);
@@ -356,6 +393,8 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     const lista = (await api().get('/valorizaciones/contratos').query({ id_centro_costo: cc, estado: 'LIQUIDADO' }).expect(200)).body;
     expect(lista.data).toHaveLength(1);
     expect(lista.data[0].estado).toBe('LIQUIDADO');
+    expect(lista.data[0].estado_tope).toBe('LIQUIDADO');
+    expect(lista.data[0].cuotas_sin_factura).toBe(2); // el adelanto y la valorización 1 se facturaron; faltan la 2 y la 3
     const consulta = (await api().get('/valorizaciones/consulta').query({ agrupar: 'obra', id_centro_costo: cc }).expect(200)).body;
     expect(consulta.filas).toHaveLength(1);
     expect(num(consulta.filas[0].contratado)).toBe(11800);
@@ -391,5 +430,50 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     const general = lista.find((c: { id_categoria: number | null }) => c.id_categoria === null);
     expect(general).toBeDefined();
     await api().post('/valorizaciones/administracion/condiciones').send({ adelanto_porcentaje: 10, garantia_porcentaje: 5, numero_valorizaciones: 2, meses_garantia: 1 }).expect(409);
+  });
+
+  it('el descuento fijo del tipo de servicio se carga como deductivo solo si la obra está fuera de Lima Metropolitana', async () => {
+    const categoria = (await db.query(`select id from categoria order by id limit 1`)).rows[0].id as number;
+    const lista = (await api().get('/valorizaciones/administracion/condiciones').expect(200)).body as Array<{ id: number; id_categoria: number | null; descuento_fuera_lima: number }>;
+    let propia = lista.find((c) => c.id_categoria === categoria);
+    let creada = false;
+    if (!propia) {
+      const nueva = (await api().post('/valorizaciones/administracion/condiciones').send({ id_categoria: categoria, adelanto_porcentaje: 15, garantia_porcentaje: 10, numero_valorizaciones: 3, meses_garantia: 3 }).expect(201)).body;
+      propia = nueva;
+      creada = true;
+    }
+    const original = propia!.descuento_fuera_lima;
+    try {
+      const editada = (await api().patch(`/valorizaciones/administracion/condiciones/${propia!.id}`).send({ descuento_fuera_lima: 150 }).expect(200)).body;
+      expect(editada.descuento_fuera_lima).toBe(150);
+      await api().patch(`/valorizaciones/administracion/condiciones/${propia!.id}`).send({ descuento_fuera_lima: -1 }).expect(400);
+      const distrito = async (enLima: boolean) =>
+        (await db.query(`select id from distrito where ${enLima ? "id_provincia = '1501'" : "id_provincia <> '1501'"} order by id limit 1`)).rows[0].id as string;
+      const conObra = async (id_distrito: string | null) => {
+        await db.query(`delete from obra_datos_generales where id_centro_costo = $1`, [cc]);
+        if (id_distrito) await db.query(`insert into obra_datos_generales (id_centro_costo, id_distrito) values ($1, $2)`, [cc, id_distrito]);
+      };
+      const deductivosDe = async (idc: number) => (await api().get(`/valorizaciones/contratos/${idc}/deductivos`).expect(200)).body as Array<{ motivo: string; monto: string; estado: string; descripcion: string }>;
+
+      // En Lima Metropolitana no se descuenta nada.
+      await conObra(await distrito(true));
+      const enLima = (await api().post('/valorizaciones/contratos').send({ id_documento_origen: await crearOs() }).expect(201)).body.contrato.id as number;
+      expect(await deductivosDe(enLima)).toHaveLength(0);
+      // Sin distrito en la ficha tampoco: no se sabe dónde está.
+      await conObra(null);
+      const sinDato = (await api().post('/valorizaciones/contratos').send({ id_documento_origen: await crearOs() }).expect(201)).body.contrato.id as number;
+      expect(await deductivosDe(sinDato)).toHaveLength(0);
+      // Fuera de Lima: el deductivo queda pendiente por el monto fijo.
+      await conObra(await distrito(false));
+      const fuera = (await api().post('/valorizaciones/contratos').send({ id_documento_origen: await crearOs() }).expect(201)).body.contrato.id as number;
+      const ded = await deductivosDe(fuera);
+      expect(ded).toHaveLength(1);
+      expect(ded[0]).toMatchObject({ motivo: 'OTRO', estado: 'PENDIENTE' });
+      expect(num(ded[0].monto)).toBe(150);
+      expect(ded[0].descripcion).toContain('FUERA DE LIMA');
+    } finally {
+      if (creada) await db.query(`delete from condicion_servicio where id = $1`, [propia!.id]);
+      else await api().patch(`/valorizaciones/administracion/condiciones/${propia!.id}`).send({ descuento_fuera_lima: original });
+    }
   });
 });

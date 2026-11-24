@@ -16,6 +16,7 @@ export interface CuotaJson {
   retencion_igv: string;
   garantia: string;
   descuentos: string;
+  reajuste: string;
   neto: string;
 }
 
@@ -33,6 +34,7 @@ export function cuotaJson(c: CuotaCalculada): CuotaJson {
     retencion_igv: m2(c.retencionIgv),
     garantia: m2(c.garantia),
     descuentos: m2(c.descuentos),
+    reajuste: m2(c.reajuste),
     neto: m2(c.neto),
   };
 }

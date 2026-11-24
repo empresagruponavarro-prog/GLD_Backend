@@ -21,7 +21,7 @@ import {
 } from '../shared/datos.js';
 import { liberarDeductivosDeCuota, marcarAplicados } from '../shared/deductivos-estado.js';
 import { cuotaJson, m2 } from '../shared/serializar.js';
-import type { ActualizarCuotaDto, AnularCuotaDto, CrearCuotaDto } from './valorizacion.dto.js';
+import type { ActualizarCuotaDto, AnularCuotaDto, CrearCuotaDto, RegistrarFacturaDto } from './valorizacion.dto.js';
 
 /** Textos libres que viajan junto con los montos al guardar una cuota. */
 interface DatosCuota {
@@ -209,7 +209,7 @@ export class ValorizacionHandler {
       }
       this.validarCorte(dto.fecha_corte);
       const avancesManuales = await this.avancesManuales(tx, contrato.id_documento_origen, dto.lineas);
-      const calc = await calcularValorizacion({ ...this.ctx, tx }, { idContrato, corte: dto.fecha_corte, valorizado: dto.valorizado, avancesManuales, deductivoIds: dto.deductivos });
+      const calc = await calcularValorizacion({ ...this.ctx, tx }, { idContrato, corte: dto.fecha_corte, valorizado: dto.valorizado, avancesManuales, deductivoIds: dto.deductivos, reajuste: dto.reajuste });
       const q = sqlTag(this.sql);
       const [fila] = await q.rows<{ id: number }>({ id: I }, tx)`
         INSERT INTO valorizacion (id_contrato, tipo, numero, estado, registrado_por) VALUES (${idContrato}::int, 'VALORIZACION', ${calc.numero}::int, 'BORRADOR', ${quien}::text)
@@ -233,7 +233,7 @@ export class ValorizacionHandler {
       this.validarCorte(corte);
       const manuales = dto.lineas ? await this.avancesManuales(tx, contrato.id_documento_origen, dto.lineas) : (previa.avancesManuales as Map<number, number>);
       const valorizado = dto.valorizado !== undefined ? dto.valorizado : previa.valorizado;
-      const calc = await calcularValorizacion({ ...this.ctx, tx }, { idContrato: contrato.id, corte, valorizado, avancesManuales: manuales, deductivoIds: dto.deductivos ?? previa.deductivoIds });
+      const calc = await calcularValorizacion({ ...this.ctx, tx }, { idContrato: contrato.id, corte, valorizado, avancesManuales: manuales, deductivoIds: dto.deductivos ?? previa.deductivoIds, reajuste: dto.reajuste !== undefined ? dto.reajuste : previa.reajuste });
       await this.escribir(tx, id, calc, this.datos(dto, actual, corte), manuales);
     });
     return this.obtener(id);
@@ -285,6 +285,22 @@ export class ValorizacionHandler {
           usuario: quien,
         });
       }
+    });
+    return this.obtener(id);
+  }
+
+  /** Anota la factura de una cuota ya aprobada (el adelanto o una valorización). Se puede cambiar mientras el contrato siga abierto o liquidado. */
+  async registrarFactura(id: number, dto: RegistrarFacturaDto) {
+    await this.db.transaction(async (tx) => {
+      const cuota0 = await this.cuotaPorId(id, tx);
+      await this.bloquear(tx, cuota0.id_contrato);
+      const cuota = await this.cuotaPorId(id, tx);
+      if (cuota.estado !== 'APROBADA' || cuota.tipoBD === 'GARANTIA') throw new ConflictException('Solo se factura una cuota aprobada (el adelanto o una valorización)');
+      const q = sqlTag(this.sql);
+      await q.run(tx)`
+        UPDATE valorizacion SET factura_numero = ${dto.factura_numero.trim()}::text, factura_fecha = NULLIF(${dto.factura_fecha ?? ''}::text, '')::date,
+               factura_url = NULLIF(${dto.factura_url ?? ''}::text, '')
+         WHERE id = ${id}::int`;
     });
     return this.obtener(id);
   }
@@ -391,6 +407,7 @@ export class ValorizacionHandler {
       valorizado: cuota.origen_monto === 'SUPERVISOR' ? cuota.valorizado : undefined,
       avancesManuales: new Map(manuales.map((m) => [m.id, Number(m.avance)] as const)) as ReadonlyMap<number, number>,
       deductivoIds: deductivos.map((d) => d.id) as readonly number[] | undefined,
+      reajuste: cuota.reajuste,
     };
   }
 
@@ -404,7 +421,7 @@ export class ValorizacionHandler {
         observaciones = NULLIF(${d.observaciones ?? ''}::text, ''), motivo_monto = NULLIF(${d.motivo_monto ?? ''}::text, ''),
         valorizado = ${String(c.valorizado)}::numeric, amortizacion = ${String(c.amortizacion)}::numeric, facturable = ${String(c.facturable)}::numeric,
         renta_4ta = ${String(c.renta4ta)}::numeric, detraccion = ${String(c.detraccion)}::numeric, detraccion_soles = ${String(c.detraccionSoles)}::numeric,
-        retencion_igv = ${String(c.retencionIgv)}::numeric, garantia = ${String(c.garantia)}::numeric, descuentos = ${String(c.descuentos)}::numeric, neto = ${String(c.neto)}::numeric,
+        retencion_igv = ${String(c.retencionIgv)}::numeric, garantia = ${String(c.garantia)}::numeric, descuentos = ${String(c.descuentos)}::numeric, reajuste = ${String(c.reajuste)}::numeric, neto = ${String(c.neto)}::numeric,
         factura_numero = NULLIF(${d.factura_numero ?? ''}::text, ''), factura_fecha = NULLIF(${d.factura_fecha ?? ''}::text, '')::date, factura_url = NULLIF(${d.factura_url ?? ''}::text, '')
        WHERE id = ${id}::int`;
     await q.run(tx)`DELETE FROM valorizacion_linea WHERE id_valorizacion = ${id}::int`;

@@ -7,6 +7,8 @@ import { CondicionesHandler } from '../condiciones/condiciones.handler.js';
 import { CreateCondicionDto, UpdateCondicionDto } from '../condiciones/condiciones.dto.js';
 import { ContratosHandler } from '../contratos/contratos.handler.js';
 import { DevolverGarantiaDto } from '../contratos/contratos.dto.js';
+import { RegistrarFacturaDto } from '../valorizacion/valorizacion.dto.js';
+import { ValorizacionHandler } from '../valorizacion/valorizacion.handler.js';
 
 /** Lo de Administración sobre valorizaciones (módulo `valorizaciones.administracion`): condiciones por tipo de servicio, segundo visto y devolución de garantía. */
 @ApiTags('valorizaciones / administración')
@@ -16,6 +18,7 @@ export class ValorizacionesAdministracionController {
   constructor(
     private readonly condiciones: CondicionesHandler,
     private readonly contratos: ContratosHandler,
+    private readonly cuotas: ValorizacionHandler,
   ) {}
 
   @Get('condiciones')
@@ -44,6 +47,14 @@ export class ValorizacionesAdministracionController {
   @ApiConflictResponse({ description: 'El contrato no está en borrador o el visto ya está dado' })
   visto(@Param('id', ParseIntPipe) id: number, @CurrentUser() user?: AuthUser) {
     return this.contratos.visto(id, 'ADMINISTRACION', user);
+  }
+
+  @Accion('editar')
+  @Patch('cuotas/:id/factura')
+  @ApiOperation({ summary: 'Anotar la factura que el contratista presenta por una cuota aprobada', description: 'Alimenta el control de facturas del contrato: lo valorizado debe estar facturado' })
+  @ApiConflictResponse({ description: 'La cuota no está aprobada o es la devolución de la garantía' })
+  registrarFactura(@Param('id', ParseIntPipe) id: number, @Body() dto: RegistrarFacturaDto) {
+    return this.cuotas.registrarFactura(id, dto);
   }
 
   @Accion('aprobar')

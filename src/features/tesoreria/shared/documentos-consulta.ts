@@ -201,7 +201,7 @@ export async function consultarDocumentos(
             SELECT x.*,
                    COALESCE(x.detraccion_monto_n, 0) AS det,
                    ROUND(x.total_n - x.renta_n - x.dc_n - x.di_n - x.do_n
-                         - COALESCE(x.total_n * x.detraccion_pct_n / 100, 0) - COALESCE(x.retencion_n, 0) - x.deductivos_n, 2) AS neto_proveedor,
+                         - COALESCE(x.total_n * x.detraccion_pct_n / 100, 0) - COALESCE(x.retencion_n, 0) - x.deductivos_n + x.reajuste_n, 2) AS neto_proveedor,
                    CASE WHEN x.fecha_vencimiento_manual IS NOT NULL THEN x.fecha_vencimiento_manual
                         WHEN x.tiene_contrato THEN (SELECT (min(t.d) + COALESCE(x.dias_efectivos, 0))::text FROM (
                                SELECT v.aprobado_en::date AS d, sum(v.neto) OVER (ORDER BY v.aprobado_en, v.id) AS acum
@@ -246,7 +246,7 @@ export async function consultarDocumentos(
                        (SELECT max(p.fecha_pago)::text FROM pago p WHERE p.id_documento_origen = o.id AND p.estado = 'REGISTRADO') AS fecha_ultimo_pago,
                        cv.id AS id_contrato, (cv.id IS NOT NULL) AS tiene_contrato, cv.estado::text AS estado_contrato,
                        COALESCE(val.liberado, 0) AS liberado_n, COALESCE(val.det_soles, 0) AS liberado_det_n,
-                       COALESCE(val.deductivos, 0) AS deductivos_n, COALESCE(val.garantia, 0) AS garantia_n
+                       COALESCE(val.deductivos, 0) AS deductivos_n, COALESCE(val.garantia, 0) AS garantia_n, COALESCE(val.reajuste, 0) AS reajuste_n
                   FROM "documentosOrigen" o
                   LEFT JOIN anexos a ON a.id = o.id_anexo
                   LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo
@@ -255,7 +255,7 @@ export async function consultarDocumentos(
                   LEFT JOIN requerimiento r ON r.id = o.id_requerimiento
                   LEFT JOIN contrato_valorizacion cv ON cv.id_documento_origen = o.id AND cv.estado::text <> 'ANULADO'
                   LEFT JOIN LATERAL (
-                    SELECT sum(v.neto) AS liberado, sum(v.detraccion_soles) AS det_soles, sum(v.descuentos) AS deductivos, sum(v.garantia) AS garantia
+                    SELECT sum(v.neto) AS liberado, sum(v.detraccion_soles) AS det_soles, sum(v.descuentos) AS deductivos, sum(v.garantia) AS garantia, sum(v.reajuste) AS reajuste
                       FROM valorizacion v WHERE v.id_contrato = cv.id AND v.estado::text = 'APROBADA') val ON true
               ) x
           ) y

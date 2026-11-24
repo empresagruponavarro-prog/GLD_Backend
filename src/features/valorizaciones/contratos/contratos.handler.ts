@@ -24,8 +24,10 @@ import {
 import { armarCuentaCorriente, type Movimiento } from '../shared/cuenta-corriente.js';
 import { marcarAplicados } from '../shared/deductivos-estado.js';
 import { matrizDePagos } from '../shared/esquema.js';
+import { controlarFacturas } from '../shared/control-facturas.js';
 import { imputarPagos } from '../shared/imputar-pagos.js';
 import { cuotaJson, m2, sumarMeses } from '../shared/serializar.js';
+import { calcularTope, mensajeTope, type EstadoTope } from '../shared/tope.js';
 import type { DevolverGarantiaDto, ListContratosQueryDto, UpdateContratoDto } from './contratos.dto.js';
 
 /** Resumen de una fila de la lista de contratos. */
@@ -49,12 +51,22 @@ export interface ContratoResumen {
   visto_operaciones: boolean;
   visto_administracion: boolean;
   con_borrador: boolean;
+  /** Valorizado + descuentos que consumen contrato, el tope (contrato menos garantía) y su semáforo. */
+  consumido: string;
+  tope: string;
+  consumido_pct: number;
+  estado_tope: EstadoTope;
+  /** Cuotas aprobadas que todavía no tienen factura. */
+  cuotas_sin_factura: number;
 }
+
+/** Lo que trae la consulta antes de calcular el tope. */
+type FilaResumen = Omit<ContratoResumen, 'consumido' | 'tope' | 'consumido_pct' | 'estado_tope'> & { valorizado_val: string; deductivos_consumen: string; total_filas: number };
 
 const RESUMEN_SPEC = {
   id: I, id_documento_origen: I, numero_documento: TN, proveedor: TN, centro_costo: TN, cliente: TN, estado: T, moneda_simbolo: TN, total: T,
   adelanto_porcentaje: T, garantia_porcentaje: T, numero_valorizaciones: I, valorizaciones_aprobadas: I, valorizado: T, garantia_retenida: T, pagado: T,
-  visto_operaciones: B, visto_administracion: B, con_borrador: B, total_filas: I,
+  visto_operaciones: B, visto_administracion: B, con_borrador: B, valorizado_val: T, deductivos_consumen: T, cuotas_sin_factura: I, total_filas: I,
 } as const;
 
 @Injectable()
@@ -74,7 +86,7 @@ export class ContratosHandler {
     const estado = query.estado ?? '';
     const cc = query.id_centro_costo ?? 0;
     const anexo = query.id_anexo ?? 0;
-    const filas = await q.rows<ContratoResumen & { total_filas: number }>(RESUMEN_SPEC)`
+    const filas = await q.rows<FilaResumen>(RESUMEN_SPEC)`
       SELECT c.id, c.id_documento_origen, COALESCE(o.numero_documento, o.numero_oc)::text AS numero_documento,
              COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor, cc.centro_costo::text AS centro_costo,
              COALESCE(cl."NombreComercial", cl."Anexo")::text AS cliente, c.estado::text AS estado, o.moneda_simbolo::text AS moneda_simbolo,
@@ -86,6 +98,9 @@ export class ContratosHandler {
              COALESCE((SELECT SUM(p.monto) FROM pago p WHERE p.id_documento_origen = o.id AND p.estado::text = 'REGISTRADO' AND p.concepto::text = 'PROVEEDOR'), 0)::text AS pagado,
              (c.visto_operaciones_en IS NOT NULL) AS visto_operaciones, (c.visto_administracion_en IS NOT NULL) AS visto_administracion,
              EXISTS (SELECT 1 FROM valorizacion v WHERE v.id_contrato = c.id AND v.estado::text = 'BORRADOR' AND v.tipo::text = 'VALORIZACION') AS con_borrador,
+             COALESCE((SELECT SUM(v.valorizado) FROM valorizacion v WHERE v.id_contrato = c.id AND v.estado::text = 'APROBADA' AND v.tipo::text = 'VALORIZACION'), 0)::text AS valorizado_val,
+             COALESCE((SELECT SUM(d.monto) FROM deductivo_proveedor d WHERE d.id_documento_origen = o.id AND d.estado::text <> 'ANULADO' AND d.motivo::text <> 'PENALIDAD'), 0)::text AS deductivos_consumen,
+             (SELECT count(*)::int FROM valorizacion v WHERE v.id_contrato = c.id AND v.estado::text = 'APROBADA' AND v.tipo::text IN ('ADELANTO', 'VALORIZACION') AND COALESCE(v.factura_numero, '') = '') AS cuotas_sin_factura,
              (count(*) OVER ())::int AS total_filas
         FROM contrato_valorizacion c
         JOIN "documentosOrigen" o ON o.id = c.id_documento_origen
@@ -99,7 +114,10 @@ export class ContratosHandler {
               OR a."Anexo" ILIKE ${patron}::text OR a."NombreComercial" ILIKE ${patron}::text OR cc.centro_costo ILIKE ${patron}::text)
        ORDER BY c.id DESC LIMIT ${pageSize}::int OFFSET ${offset}::int`;
     return toPaginated(
-      filas.map(({ total_filas: _t, ...r }) => r),
+      filas.map(({ total_filas: _t, valorizado_val, deductivos_consumen, ...r }) => {
+        const t = calcularTope({ total: Number(r.total), garantiaPct: Number(r.garantia_porcentaje), valorizado: Number(valorizado_val), deductivos: Number(deductivos_consumen), liquidado: r.estado === 'LIQUIDADO' });
+        return { ...r, consumido: m2(t.consumido), tope: m2(t.tope), consumido_pct: t.consumidoPct, estado_tope: t.estado };
+      }),
       filas[0]?.total_filas ?? 0,
       page,
       pageSize,
@@ -138,6 +156,14 @@ export class ContratosHandler {
     const cuenta = armarCuentaCorriente(movimientos);
 
     const borrador = cuotas.find((c) => c.estado === 'BORRADOR' && c.tipoBD === 'VALORIZACION') ?? null;
+    const tope = calcularTope({
+      total: montos.total,
+      garantiaPct: contrato.garantia_porcentaje,
+      valorizado: cuotas.filter((c) => c.estado === 'APROBADA' && c.tipoBD === 'VALORIZACION').reduce((a, c) => a + c.valorizado, 0),
+      deductivos: deductivos.filter((d) => d.estado !== 'ANULADO' && d.motivo !== 'PENALIDAD').reduce((a, d) => a + d.monto, 0),
+      liquidado: contrato.estado === 'LIQUIDADO',
+    });
+    const facturas = controlarFacturas(cuotas.map((c) => ({ id: c.id, tipo: c.tipoBD, numero: c.numero, estado: c.estado, facturable: c.facturable, reajuste: c.reajuste, factura_numero: c.factura_numero })));
     const supervisor = contrato.id_supervisor === null ? null : await this.nombreAnexo(contrato.id_supervisor);
     const vence = contrato.liquidado_en ? sumarMeses(contrato.liquidado_en, contrato.meses_garantia) : null;
     return {
@@ -192,6 +218,24 @@ export class ContratosHandler {
         filas: cuenta.filas.map((f) => ({ ...f, devengado: m2(f.devengado ?? 0), pagado: m2(f.pagado ?? 0), garantia: m2(f.garantia ?? 0), saldo: m2(f.saldo), garantiaRetenida: m2(f.garantiaRetenida) })),
       },
       sobrante_pagos: m2(imputadas.sobrante),
+      tope: {
+        tope: m2(tope.tope),
+        consumido: m2(tope.consumido),
+        consumido_pct: tope.consumidoPct,
+        saldo_hasta_tope: m2(tope.saldoHastaTope),
+        exceso: m2(tope.exceso),
+        estado: tope.estado,
+        mensaje: mensajeTope(tope),
+      },
+      facturas: {
+        estado: facturas.estado,
+        valorizado: m2(facturas.valorizado),
+        facturado: m2(facturas.facturado),
+        pendiente: m2(facturas.pendiente),
+        valorizado_anterior: m2(facturas.valorizadoAnterior),
+        facturado_anterior: m2(facturas.facturadoAnterior),
+        filas: facturas.filas.map((f) => ({ ...f, monto: m2(f.monto) })),
+      },
     };
   }
 
