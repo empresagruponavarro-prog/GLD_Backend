@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'19e91f26d3957aa82fbdb26ed53e1a5016fffce35dd25673ee5407384fce52ca'>;
+  StorageHashBase<'789ecbd62c75f699a93a55e4cfb406987728e84a2e8ac80cc82477398a1b9371'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -581,6 +581,7 @@ export type FieldOutputTypes = {
       readonly garantia_porcentaje: CodecTypes['pg/numeric@1']['output'];
       readonly numero_valorizaciones: CodecTypes['pg/int4@1']['output'];
       readonly meses_garantia: CodecTypes['pg/int4@1']['output'];
+      readonly descuento_fuera_lima: CodecTypes['pg/numeric@1']['output'];
       readonly dias_credito: CodecTypes['pg/int4@1']['output'] | null;
       readonly forma_pago: Varchar<50> | null;
       readonly condiciones_generales: CodecTypes['pg/text@1']['output'] | null;
@@ -1818,6 +1819,7 @@ export type FieldOutputTypes = {
       readonly retencion_igv: CodecTypes['pg/numeric@1']['output'];
       readonly garantia: CodecTypes['pg/numeric@1']['output'];
       readonly descuentos: CodecTypes['pg/numeric@1']['output'];
+      readonly reajuste: CodecTypes['pg/numeric@1']['output'];
       readonly neto: CodecTypes['pg/numeric@1']['output'];
       readonly factura_numero: Varchar<30> | null;
       readonly factura_fecha: CodecTypes['pg/date-string@1']['output'] | null;
@@ -2190,6 +2192,7 @@ export type FieldInputTypes = {
       readonly garantia_porcentaje: CodecTypes['pg/numeric@1']['input'];
       readonly numero_valorizaciones: CodecTypes['pg/int4@1']['input'];
       readonly meses_garantia: CodecTypes['pg/int4@1']['input'];
+      readonly descuento_fuera_lima: CodecTypes['pg/numeric@1']['input'];
       readonly dias_credito: CodecTypes['pg/int4@1']['input'] | null;
       readonly forma_pago: CodecTypes['sql/varchar@1']['input'] | null;
       readonly condiciones_generales: CodecTypes['pg/text@1']['input'] | null;
@@ -3430,6 +3433,7 @@ export type FieldInputTypes = {
       readonly retencion_igv: CodecTypes['pg/numeric@1']['input'];
       readonly garantia: CodecTypes['pg/numeric@1']['input'];
       readonly descuentos: CodecTypes['pg/numeric@1']['input'];
+      readonly reajuste: CodecTypes['pg/numeric@1']['input'];
       readonly neto: CodecTypes['pg/numeric@1']['input'];
       readonly factura_numero: CodecTypes['sql/varchar@1']['input'] | null;
       readonly factura_fecha: CodecTypes['pg/date-string@1']['input'] | null;
@@ -3799,6 +3803,7 @@ export type StorageColumnTypes = {
       readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['output'];
       readonly condiciones_comerciales: CodecTypes['pg/text@1']['output'] | null;
       readonly condiciones_generales: CodecTypes['pg/text@1']['output'] | null;
+      readonly descuento_fuera_lima: CodecTypes['pg/numeric@1']['output'];
       readonly dias_credito: CodecTypes['pg/int4@1']['output'] | null;
       readonly estado: CodecTypes['pg/bool@1']['output'];
       readonly forma_pago: Varchar<50> | null;
@@ -5044,6 +5049,7 @@ export type StorageColumnTypes = {
       readonly numero_documento: Varchar<20> | null;
       readonly observaciones: CodecTypes['pg/text@1']['output'] | null;
       readonly origen_monto: 'PLAN' | 'AVANCE' | 'SUPERVISOR';
+      readonly reajuste: CodecTypes['pg/numeric@1']['output'];
       readonly registrado_por: Varchar<255> | null;
       readonly renta_4ta: CodecTypes['pg/numeric@1']['output'];
       readonly retencion_igv: CodecTypes['pg/numeric@1']['output'];
@@ -5408,6 +5414,7 @@ export type StorageColumnInputTypes = {
       readonly adelanto_porcentaje: CodecTypes['pg/numeric@1']['input'];
       readonly condiciones_comerciales: CodecTypes['pg/text@1']['input'] | null;
       readonly condiciones_generales: CodecTypes['pg/text@1']['input'] | null;
+      readonly descuento_fuera_lima: CodecTypes['pg/numeric@1']['input'];
       readonly dias_credito: CodecTypes['pg/int4@1']['input'] | null;
       readonly estado: CodecTypes['pg/bool@1']['input'];
       readonly forma_pago: CodecTypes['sql/varchar@1']['input'] | null;
@@ -6656,6 +6663,7 @@ export type StorageColumnInputTypes = {
       readonly numero_documento: CodecTypes['sql/varchar@1']['input'] | null;
       readonly observaciones: CodecTypes['pg/text@1']['input'] | null;
       readonly origen_monto: 'PLAN' | 'AVANCE' | 'SUPERVISOR';
+      readonly reajuste: CodecTypes['pg/numeric@1']['input'];
       readonly registrado_por: CodecTypes['sql/varchar@1']['input'] | null;
       readonly renta_4ta: CodecTypes['pg/numeric@1']['input'];
       readonly retencion_igv: CodecTypes['pg/numeric@1']['input'];
@@ -9508,6 +9516,15 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/int4@1', 3>;
+                  };
+                };
+                readonly descuento_fuera_lima: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
                   };
                 };
                 readonly dias_credito: {
@@ -19364,6 +19381,15 @@ type ContractBase = Omit<
                     readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
                   };
                 };
+                readonly reajuste: {
+                  readonly nativeType: 'numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/numeric@1', '0'>;
+                  };
+                };
                 readonly neto: {
                   readonly nativeType: 'numeric';
                   readonly codecId: 'pg/numeric@1';
@@ -23695,6 +23721,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly descuento_fuera_lima: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
               readonly dias_credito: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
@@ -23743,6 +23773,7 @@ type ContractBase = Omit<
                 readonly garantia_porcentaje: { readonly column: 'garantia_porcentaje' };
                 readonly numero_valorizaciones: { readonly column: 'numero_valorizaciones' };
                 readonly meses_garantia: { readonly column: 'meses_garantia' };
+                readonly descuento_fuera_lima: { readonly column: 'descuento_fuera_lima' };
                 readonly dias_credito: { readonly column: 'dias_credito' };
                 readonly forma_pago: { readonly column: 'forma_pago' };
                 readonly condiciones_generales: { readonly column: 'condiciones_generales' };
@@ -34383,6 +34414,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
               };
+              readonly reajuste: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
               readonly neto: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
@@ -34528,6 +34563,7 @@ type ContractBase = Omit<
                 readonly retencion_igv: { readonly column: 'retencion_igv' };
                 readonly garantia: { readonly column: 'garantia' };
                 readonly descuentos: { readonly column: 'descuentos' };
+                readonly reajuste: { readonly column: 'reajuste' };
                 readonly neto: { readonly column: 'neto' };
                 readonly factura_numero: { readonly column: 'factura_numero' };
                 readonly factura_fecha: { readonly column: 'factura_fecha' };

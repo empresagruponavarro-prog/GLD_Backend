@@ -2481,6 +2481,8 @@ model condicion_servicio {
   garantia_porcentaje     Decimal     @default("10")
   numero_valorizaciones   Int         @default(3)
   meses_garantia          Int         @default(3)
+  // Descuento fijo (S/ con IGV) que se carga como deductivo al crear el contrato si la obra queda fuera de Lima Metropolitana (p. ej. instalacion de puertas).
+  descuento_fuera_lima    Decimal     @default("0")
   dias_credito            Int?
   forma_pago              VarChar(50)?
   condiciones_generales   String?
@@ -2543,6 +2545,8 @@ model valorizacion {
   retencion_igv    Decimal             @default("0")
   garantia         Decimal             @default("0")
   descuentos       Decimal             @default("0")
+  // Reajuste (R) con signo, en bruto: se suma al neto de la cuota; no cambia el reparto de tributos del documento.
+  reajuste         Decimal             @default("0")
   neto             Decimal             @default("0")
   factura_numero   VarChar(30)?
   factura_fecha    DateString?

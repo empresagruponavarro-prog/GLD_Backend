@@ -11943,6 +11943,13 @@
                   "kind": "scalar"
                 }
               },
+              "descuento_fuera_lima": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "dias_credito": {
                 "nullable": true,
                 "type": {
@@ -12030,6 +12037,9 @@
                 },
                 "condiciones_generales": {
                   "column": "condiciones_generales"
+                },
+                "descuento_fuera_lima": {
+                  "column": "descuento_fuera_lima"
                 },
                 "dias_credito": {
                   "column": "dias_credito"
@@ -22813,6 +22823,13 @@
                   "plane": "domain"
                 }
               },
+              "reajuste": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
               "registrado_por": {
                 "nullable": true,
                 "type": {
@@ -23006,6 +23023,9 @@
                 },
                 "origen_monto": {
                   "column": "origen_monto"
+                },
+                "reajuste": {
+                  "column": "reajuste"
                 },
                 "registrado_por": {
                   "column": "registrado_por"
@@ -26859,6 +26879,15 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
+                },
+                "descuento_fuera_lima": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
                 },
                 "dias_credito": {
                   "codecId": "pg/int4@1",
@@ -39804,6 +39833,15 @@
                     "plane": "storage"
                   }
                 },
+                "reajuste": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
                 "registrado_por": {
                   "codecId": "sql/varchar@1",
                   "nativeType": "character varying",
@@ -40434,7 +40472,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "19e91f26d3957aa82fbdb26ed53e1a5016fffce35dd25673ee5407384fce52ca"
+    "storageHash": "789ecbd62c75f699a93a55e4cfb406987728e84a2e8ac80cc82477398a1b9371"
   },
   "capabilities": {
     "postgres": {
