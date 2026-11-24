@@ -14,6 +14,12 @@ const ids = process.argv.slice(2).filter((a) => !a.startsWith('--'));
 const PLANTILLAS = ids.length ? ids : ['TPL-TAMBO-OLIVOS-R3', 'TPL-TAMBO-COMAS-R4'];
 const FASE_OG = 'b8713cc6';
 const FASE_OC = 'obrasciv';
+// Si la plantilla aún tiene esas partidas dentro de OBRA GRUESA (recién cargada), se toman de ahí.
+const PARTIDAS = [
+  'CIMIENTO CORRIDO', 'SOBRECIMIENTO', 'ZAPATA', 'MURO DE ALBAÑILERÍA', 'RAMPA', 'COBERTURA',
+  'ESTRUCTURA DE CONCRETO', 'ACERO', 'ESTRUCTURA METÁLICA', 'ESCALERA', 'ZONA DE CONDENSADORES',
+];
+const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim().toUpperCase();
 
 const db = new pg.Client({ connectionString: process.env.DATABASE_URL });
 await db.connect();
@@ -32,9 +38,18 @@ try {
     const [faseOc] = await q('select "IdPlantillaFase" id from "ppto_Plantillas_Fases" where "IdPlantilla"=$1 and "IdpptoFase"=$2', [pl, FASE_OC]);
     const [faseOg] = await q('select "IdPlantillaFase" id from "ppto_Plantillas_Fases" where "IdPlantilla"=$1 and "IdpptoFase"=$2', [pl, FASE_OG]);
     if (!faseOg) throw new Error(`${pl}: no tiene la fase OBRA GRUESA`);
-    if (!faseOc) { console.log(`${pl}: no tiene fase OBRAS CIVILES (nada que hacer)`); continue; }
-    const parts = await q('select id, id_categoria from "ppto_Plantillas_Categorias" where "IdPlantillaFase"=$1 order by id', [faseOc.id]);
-    if (!parts.length) throw new Error(`${pl}: la fase OBRAS CIVILES no tiene partidas`);
+    let parts;
+    if (faseOc) {
+      parts = await q('select id, id_categoria from "ppto_Plantillas_Categorias" where "IdPlantillaFase"=$1 order by id', [faseOc.id]);
+    } else {
+      const todas = await q(
+        `select c.id, c.id_categoria, fc."Descripcion" d from "ppto_Plantillas_Categorias" c join "ppto_FasesCategorias" fc on fc."IdpptoFaseCategoria"=c."IdpptoFaseCategoria" where c."IdPlantillaFase"=$1 order by c.id`,
+        [faseOg.id],
+      );
+      if (todas.some((c) => c.d.toUpperCase() === 'OBRAS CIVILES')) { console.log(`${pl}: ya tiene la subpartida OBRAS CIVILES (nada que hacer)`); continue; }
+      parts = todas.filter((c) => PARTIDAS.includes(norm(c.d)));
+    }
+    if (!parts.length) { console.log(`${pl}: no tiene partidas de obras civiles (nada que hacer)`); continue; }
     const [primera] = parts;
     // La subpartida OBRAS CIVILES reutiliza la fila de la primera (su id queda entre OBRAS PRELIMINARES y las demás).
     await db.query('update "ppto_Plantillas_Categorias" set "IdPlantillaFase"=$1, "IdpptoFaseCategoria"=$2 where id=$3', [faseOg.id, fc.id, primera.id]);
@@ -43,7 +58,7 @@ try {
       await db.query('update "ppto_Plantillas_Items" set id_plantilla_categoria=$1 where id_plantilla_categoria = any($2::int[])', [primera.id, resto]);
       await db.query('delete from "ppto_Plantillas_Categorias" where id = any($1::int[])', [resto]);
     }
-    await db.query('delete from "ppto_Plantillas_Fases" where "IdPlantillaFase"=$1', [faseOc.id]);
+    if (faseOc) await db.query('delete from "ppto_Plantillas_Fases" where "IdPlantillaFase"=$1', [faseOc.id]);
     const [{ n, venta, costo }] = await q('select count(*) n, sum("VentaTotal") venta, sum("CostoTotal") costo from "ppto_Plantillas_Items" where id_plantilla_categoria=$1', [primera.id]);
     console.log(`${pl}: ${parts.length} partidas → 1 subpartida OBRAS CIVILES con ${n} ítems (venta ${venta}, costo meta ${costo})`);
   }
