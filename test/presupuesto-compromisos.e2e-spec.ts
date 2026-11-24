@@ -55,10 +55,14 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     moneda_id: 'PEN',
     moneda_simbolo: 'S/',
     forma_pago: 'Contado',
+    // Estos tests no prueban la regla de 1 o 3 cotizaciones (D-17): quien adjudica con una sola oferta cara lo hace «con motivo».
+    ...(extra['adjudicar'] ? { sin_tres_cotizaciones: true, comentario_adjudicacion: 'PRUEBA E2E: la regla de 3 cotizaciones se prueba aparte' } : {}),
     ...extra,
   });
   const adjudicar = (idSub: number, idCotizacion: number | null) =>
-    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ id_detalle_categoria: idSub, id_cotizacion: idCotizacion });
+    api()
+      .put(`/presupuestos/${idPpto}/adjudicacion`)
+      .send({ id_detalle_categoria: idSub, id_cotizacion: idCotizacion, ...(idCotizacion === null ? {} : { sin_tres_cotizaciones: true, comentario: 'PRUEBA E2E' }) });
 
   // ─── lecturas directas de la BD ─────────────────────────────────────────────
   const furs = async (soloVigentes = false) =>

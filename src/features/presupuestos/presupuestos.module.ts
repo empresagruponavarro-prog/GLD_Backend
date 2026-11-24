@@ -34,6 +34,8 @@ import { PptoDetalleItemsHandler } from './detalle-items/detalle-items.handler.j
 import { ReprorrateoService } from './cotizaciones-ppto/reprorrateo.service.js';
 import { PresupuestoMetaController } from './presupuesto-meta/presupuesto-meta.controller.js';
 import { PresupuestoMetaHandler } from './presupuesto-meta/presupuesto-meta.handler.js';
+import { AdjudicadoController } from './adjudicado/adjudicado.controller.js';
+import { AdjudicadoHandler } from './adjudicado/adjudicado.handler.js';
 
 @Module({
   imports: [PrismaModule, AlmacenModule],
@@ -53,6 +55,7 @@ import { PresupuestoMetaHandler } from './presupuesto-meta/presupuesto-meta.hand
     CotizacionPptoController,
     CompromisosPresupuestoController,
     PresupuestoMetaController,
+    AdjudicadoController,
   ],
   providers: [
     PresupuestoPrincipalHandler,
@@ -72,6 +75,7 @@ import { PresupuestoMetaHandler } from './presupuesto-meta/presupuesto-meta.hand
     CompromisosHandler,
     ReprorrateoService,
     PresupuestoMetaHandler,
+    AdjudicadoHandler,
   ],
   exports: [
     PresupuestoPrincipalHandler,

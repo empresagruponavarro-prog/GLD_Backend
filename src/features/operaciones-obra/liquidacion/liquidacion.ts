@@ -8,7 +8,7 @@ import type { ResumenPlanos } from '../planos-requeridos/planos-requeridos.js';
 export const ESTADO_POR_LIQUIDAR = 'POR LIQUIDAR';
 export const ESTADO_CERRADO = 'CERRADO';
 
-export type CodigoRequisito = 'ESTADO' | 'AVANCE' | 'FIN_REAL' | 'PLANOS';
+export type CodigoRequisito = 'ESTADO' | 'AVANCE' | 'FIN_REAL' | 'PLANOS' | 'VALORIZACIONES';
 
 export interface Requisito {
   codigo: CodigoRequisito;
@@ -21,6 +21,11 @@ export interface EntradaLiquidacion {
   fechaFinReal: string | null;
   avance: AvanceDeObra;
   planos: ResumenPlanos;
+  /**
+   * Órdenes de servicio de la obra con un contrato de valorización sin liquidar (plan 12). Sin este dato el requisito no se evalúa (la obra
+   * no usa valorizaciones); con `[]` se muestra cumplido.
+   */
+  contratosAbiertos?: string[];
 }
 
 export interface SituacionLiquidacion {
@@ -61,5 +66,16 @@ export function evaluarLiquidacion(e: EntradaLiquidacion): SituacionLiquidacion 
         : `Faltan ${e.planos.faltantes.length} plano(s) obligatorio(s): ${e.planos.faltantes.map((f) => `${f.codigo} ${f.nombre}`).join(', ')}`,
     },
   ];
+  if (e.contratosAbiertos !== undefined) {
+    const abiertos = e.contratosAbiertos;
+    requisitos.push({
+      codigo: 'VALORIZACIONES',
+      cumplido: abiertos.length === 0,
+      mensaje:
+        abiertos.length === 0
+          ? 'Todos los contratos de valorización están liquidados'
+          : `Hay ${abiertos.length} contrato(s) de valorización sin liquidar: ${abiertos.join(', ')}. Apruebe su última valorización o anule la orden`,
+    });
+  }
   return { liquidada, puedeLiquidar: !liquidada && requisitos.every((r) => r.cumplido), requisitos };
 }

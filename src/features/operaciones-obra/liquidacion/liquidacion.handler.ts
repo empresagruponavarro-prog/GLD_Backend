@@ -3,6 +3,7 @@ import { and } from '@prisma/orm-postgres/orm-client';
 import { toDateOnly } from '../shared/obra-shared.js';
 import { toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
+import { AlmacenSql, T, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { esAdicional, textoLegado } from '../../presupuestos/aprobacion/estados.js';
 import { sincronizarPresupuestoCc } from '../../presupuestos/aprobacion/sincronizar-cc.js';
 import { cargarPlanosRequeridos, resumenPlanos } from '../planos-requeridos/planos-requeridos.js';
@@ -14,7 +15,10 @@ import { ESTADO_CERRADO, ESTADO_POR_LIQUIDAR, evaluarLiquidacion } from './liqui
 
 @Injectable()
 export class LiquidacionHandler {
-  constructor(@Inject(DB) private readonly db: Database) {}
+  constructor(
+    @Inject(DB) private readonly db: Database,
+    private readonly sql: AlmacenSql,
+  ) {}
 
   /** Requisitos de la liquidación y su estado actual. */
   async obtener(idCentroCosto: number, hoy: string = hoyLima()): Promise<LiquidacionObraDto> {
@@ -23,7 +27,8 @@ export class LiquidacionHandler {
     const [avance, items] = await Promise.all([cargarAvanceObra(orm, idCentroCosto, hoy), cargarPlanosRequeridos(orm, idCentroCosto)]);
     const planos = resumenPlanos(items);
     const fechaFinReal = cc.fecha_fin_real ? readDateOnly(cc.fecha_fin_real) : null;
-    const s = evaluarLiquidacion({ estadoCc: cc.estado ?? null, fechaFinReal, avance, planos });
+    const contratosAbiertos = await this.contratosAbiertos(idCentroCosto);
+    const s = evaluarLiquidacion({ estadoCc: cc.estado ?? null, fechaFinReal, avance, planos, contratosAbiertos });
     return {
       id_centro_costo: idCentroCosto,
       estado_cc: cc.estado ?? null,
@@ -36,6 +41,16 @@ export class LiquidacionHandler {
       requisitos: s.requisitos,
       planos,
     };
+  }
+
+  /** Órdenes de servicio de la obra con un contrato de valorización que aún no se liquidó (borrador o vigente). */
+  private async contratosAbiertos(idCentroCosto: number): Promise<string[]> {
+    const q = sqlTag(this.sql);
+    const filas = await q.rows<{ numero: string }>({ numero: T })`
+      SELECT COALESCE(o.numero_documento, o.numero_oc, '#' || o.id::text)::text AS numero
+        FROM contrato_valorizacion c JOIN "documentosOrigen" o ON o.id = c.id_documento_origen
+       WHERE o.id_centro_costo = ${idCentroCosto}::int AND c.estado::text IN ('BORRADOR', 'VIGENTE') ORDER BY o.id`;
+    return filas.map((f) => f.numero);
   }
 
   /**
@@ -113,7 +128,7 @@ export class LiquidacionHandler {
       // El Comercial se calcula del Meta Principal y de las cotizaciones ganadoras (SP-16); mientras una fase no tenga ganadora iguala al Meta.
       seccion({
         codigo: 'PRESUPUESTO_COMERCIAL',
-        titulo: 'Presupuesto Comercial',
+        titulo: 'Presupuesto Adjudicado',
         disponible: principales.length > 0,
         referencias: principales,
         ...(principales.length === 0 ? { nota: 'Se calcula desde el presupuesto Meta Principal, que la obra aún no tiene' } : {}),

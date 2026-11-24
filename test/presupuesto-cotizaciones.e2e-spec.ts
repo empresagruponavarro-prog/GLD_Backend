@@ -526,6 +526,60 @@ describe('Presupuesto Meta: cotizaciones por subpartida y adjudicación (e2e)', 
     });
   });
 
+  // ─── Regla de 1 o 3 cotizaciones (plan 12, D-17) ────────────────────────────
+  describe('regla de 1 o 3 cotizaciones al adjudicar', () => {
+    let cotDentro = 0;
+    let cotCara = 0;
+
+    it('una oferta dentro del Meta se adjudica con una sola cotización', async () => {
+      cotDentro = (await cuadro(c4)).proveedores.find((p: { id_proveedor: number }) => p.id_proveedor === provA).id_cotizacion;
+      await adjudicar(c4, cotDentro).expect(200); // 24 sin IGV = Meta de 3 × 8
+      await adjudicar(c4, null).expect(200);
+    });
+
+    it('registrar una oferta cara sin adjudicarla se guarda; adjudicarla con menos de 3 cotizaciones es 409', async () => {
+      cotCara = (await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c4, provB, '40')).expect(201)).body.id; // 40 > Meta 24
+      const r = await adjudicar(c4, cotCara).expect(409);
+      expect(r.body.codigo).toBe('COTIZACIONES_INSUFICIENTES');
+      expect(r.body.cotizaciones).toBe(2);
+      expect(r.body.minimas).toBe(3);
+    });
+
+    it('con «sin_tres_cotizaciones» hace falta el motivo, que queda marcado en la adjudicación', async () => {
+      const sinMotivo = await adjudicar(c4, cotCara, { sin_tres_cotizaciones: true }).expect(409);
+      expect(sinMotivo.body.codigo).toBe('MOTIVO_REQUERIDO');
+      await adjudicar(c4, cotCara, { sin_tres_cotizaciones: true, comentario: 'ÚNICO PROVEEDOR DISPONIBLE' }).expect(200);
+      const marca = (await db.query(`select comentario_adjudicacion from "ppto_DetalleItems" where id = $1`, [item4])).rows[0].comentario_adjudicacion as string;
+      expect(marca).toBe('[SIN 3 COTIZACIONES] ÚNICO PROVEEDOR DISPONIBLE');
+      // El mismo ganador otra vez no cambia nada y no vuelve a pedir el motivo.
+      await adjudicar(c4, cotCara).expect(200);
+    });
+
+    it('con 3 cotizaciones la oferta cara se adjudica sin más; subir el total del ganador no esquiva la regla', async () => {
+      const provC = (await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Proveedor', 'E2E-PC Proveedor C', true) returning id`)).rows[0].id as number;
+      await adjudicar(c4, null).expect(200);
+      await api().post(`/presupuestos/${idPpto}/cotizaciones`).send(cuerpo(c4, provC, '90')).expect(201);
+      await adjudicar(c4, cotCara).expect(200); // ya hay 3
+      // Con 3 cotizaciones no hay regla; se vuelve a 2 borrando una y se sube el total del ganador.
+      const cuadroC4 = await cuadro(c4);
+      const idC = cuadroC4.proveedores.find((p: { id_proveedor: number }) => p.id_proveedor === provC).id_cotizacion;
+      await api().delete(`/presupuestos/${idPpto}/cotizaciones/${idC}`).expect(200);
+      await api().patch(`/presupuestos/${idPpto}/cotizaciones/${cotCara}`).send({ total: '45' }).expect(409);
+      await api().patch(`/presupuestos/${idPpto}/cotizaciones/${cotCara}`).send({ total: '45', adjudicar: true, sin_tres_cotizaciones: true, comentario_adjudicacion: 'AJUSTE' }).expect(200);
+    });
+
+    it('el Presupuesto Adjudicado muestra el Meta frente a lo adjudicado, por fase, subfase e ítem', async () => {
+      const r = (await api().get(`/presupuestos/${idPpto}/adjudicado`).expect(200)).body;
+      expect(r.fases.length).toBeGreaterThan(0);
+      expect(r.items_total).toBeGreaterThan(0);
+      expect(r.items_adjudicados).toBeGreaterThanOrEqual(1);
+      const suma = r.fases.reduce((a: number, f: { adjudicado: number }) => a + f.adjudicado, 0);
+      expect(r.totales.adjudicado).toBeCloseTo(suma, 2);
+      expect(r.totales.diferencia).toBeCloseTo(r.totales.adjudicado - r.totales.meta, 2);
+      await api().get('/presupuestos/999999999/adjudicado').expect(404);
+    });
+  });
+
   // ─── Presupuesto aprobado ───────────────────────────────────────────────────
   describe('según el estado del presupuesto', () => {
     it('presupuesto aprobado: no se cambian los ítems (409) y se cotizan solo subpartidas sin orden registrada', async () => {

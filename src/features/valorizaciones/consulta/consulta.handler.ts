@@ -3,8 +3,9 @@ import { IsIn, IsInt, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AlmacenSql, I, IN, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
+import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
 import { redondear2 } from '../shared/cuota.js';
-import { m2 } from '../shared/serializar.js';
+import { m2, sumarMeses } from '../shared/serializar.js';
 
 export const AGRUPACIONES = ['cliente', 'obra', 'contratista'] as const;
 export type Agrupacion = (typeof AGRUPACIONES)[number];
@@ -41,6 +42,49 @@ const vacio = (clave: string, nombre: string): Acumulado => ({ clave, nombre, co
 @Injectable()
 export class ConsultaValorizacionesHandler {
   constructor(private readonly sql: AlmacenSql) {}
+
+  /**
+   * Garantías retenidas de los contratos con algo retenido: cuánto, hasta cuándo (`meses_garantia` después de liquidar el contrato) y si ya se puede
+   * devolver. Un contrato todavía vigente retiene pero no tiene fecha de vencimiento.
+   */
+  async garantias(soloVencidas = false) {
+    const q = sqlTag(this.sql);
+    const filas = await q.rows<Record<string, string | number | null>>(
+      { id: I, id_documento_origen: I, numero: TN, proveedor: TN, obra: TN, moneda: TN, estado: T, retenida: T, liquidado_en: TN, meses: I },
+    )`
+      SELECT c.id, c.id_documento_origen, COALESCE(o.numero_documento, o.numero_oc)::text AS numero, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor,
+             cc.centro_costo::text AS obra, o.moneda_simbolo::text AS moneda, c.estado::text AS estado,
+             COALESCE(SUM(v.garantia) FILTER (WHERE v.estado::text = 'APROBADA'), 0)::text AS retenida, c.liquidado_en::text AS liquidado_en, c.meses_garantia AS meses
+        FROM contrato_valorizacion c
+        JOIN "documentosOrigen" o ON o.id = c.id_documento_origen
+        LEFT JOIN anexos a ON a.id = o.id_anexo
+        LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo
+        LEFT JOIN valorizacion v ON v.id_contrato = c.id
+       WHERE c.estado::text IN ('VIGENTE', 'LIQUIDADO')
+       GROUP BY c.id, o.id, a.id, cc.id
+      HAVING COALESCE(SUM(v.garantia) FILTER (WHERE v.estado::text = 'APROBADA'), 0) > 0.005
+       ORDER BY c.liquidado_en NULLS LAST, c.id`;
+    const hoy = hoyLima();
+    const lista = filas.map((f) => {
+      const vence = f['liquidado_en'] ? sumarMeses(f['liquidado_en'] as string, f['meses'] as number) : null;
+      const vencida = vence !== null && vence <= hoy;
+      return {
+        id_contrato: f['id'] as number,
+        id_documento_origen: f['id_documento_origen'] as number,
+        numero_documento: f['numero'] as string | null,
+        proveedor: f['proveedor'] as string | null,
+        obra: f['obra'] as string | null,
+        moneda: f['moneda'] as string | null,
+        estado_contrato: f['estado'] as string,
+        retenida: m2(Number(f['retenida'])),
+        liquidado_en: f['liquidado_en'] as string | null,
+        vence,
+        vencida,
+        devolvible: f['estado'] === 'LIQUIDADO',
+      };
+    });
+    return soloVencidas ? lista.filter((g) => g.vencida) : lista;
+  }
 
   async consultar(query: ConsultaQueryDto) {
     const agrupar = query.agrupar ?? 'cliente';

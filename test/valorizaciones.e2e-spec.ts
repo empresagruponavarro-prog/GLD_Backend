@@ -264,6 +264,8 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     expect(num(b.cuota.descuentos)).toBe(100);
     expect(num(b.cuota.neto)).toBeGreaterThanOrEqual(0);
     expect(b.deductivos).toHaveLength(1);
+    const abierto = (await api().get(`/operaciones/obra/${cc}/liquidacion`).expect(200)).body;
+    expect(abierto.requisitos.find((r: { codigo: string }) => r.codigo === 'VALORIZACIONES')).toMatchObject({ cumplido: false });
     await api().post(`/valorizaciones/contratos/${idContrato}/cuotas`).send({ fecha_corte: hoy }).expect(409); // ya hay un borrador
 
     // Corte futuro: rechazado.
@@ -330,6 +332,13 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     const amortizado = fin.cuotas.filter((c: { tipo: string; estado: string }) => c.tipo === 'VALORIZACION' && c.estado === 'APROBADA').reduce((a: number, c: { amortizacion: string }) => a + num(c.amortizacion), 0);
     expect(amortizado).toBeCloseTo(1770, 2);
     expect(num(fin.garantia.retenida)).toBeGreaterThan(0);
+    const liquidacion = (await api().get(`/operaciones/obra/${cc}/liquidacion`).expect(200)).body;
+    expect(liquidacion.requisitos.find((r: { codigo: string }) => r.codigo === 'VALORIZACIONES')).toMatchObject({ cumplido: true });
+    const garantias = (await api().get('/valorizaciones/garantias').expect(200)).body;
+    const g = garantias.find((x: { id_contrato: number }) => x.id_contrato === idContrato);
+    expect(g).toMatchObject({ devolvible: true, vencida: false });
+    expect(num(g.retenida)).toBeCloseTo(num(fin.garantia.retenida), 2);
+    expect(g.vence > hoy).toBe(true);
     await api().post(`/valorizaciones/cuotas/${tres.id}/aprobar`).expect(409);
     await api().post(`/valorizaciones/contratos/${idContrato}/cuotas`).send({ fecha_corte: hoy }).expect(409);
 
@@ -338,6 +347,8 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     const dev = (await api().post(`/valorizaciones/administracion/contratos/${idContrato}/devolver-garantia`).send({ motivo: 'Acuerdo de prueba' }).expect(200)).body;
     expect(dev.cuotas.some((c: { tipo: string; estado: string }) => c.tipo === 'GARANTIA' && c.estado === 'APROBADA')).toBe(true);
     expect(num(dev.garantia.retenida)).toBeCloseTo(0, 2);
+    const despues = (await api().get('/valorizaciones/garantias').expect(200)).body;
+    expect(despues.find((x: { id_contrato: number }) => x.id_contrato === idContrato)).toBeUndefined();
     await api().post(`/valorizaciones/administracion/contratos/${idContrato}/devolver-garantia`).send({ motivo: 'Otra vez' }).expect(409);
   });
 

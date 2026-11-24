@@ -56,6 +56,12 @@ export class ContratosController {
     return this.handler.visto(id, 'OPERACIONES', user);
   }
 
+  @Get('garantias')
+  @ApiOperation({ summary: 'Garantías retenidas por contrato, con su fecha de vencimiento y si ya vencieron' })
+  garantias(@Query('solo_vencidas') soloVencidas?: string) {
+    return this.consulta.garantias(soloVencidas === 'true');
+  }
+
   /** Dinero de contratistas: no es lectura compartida. */
   @Get('consulta')
   @ApiOperation({ summary: 'Ejecución de pagos de valorizaciones por cliente, obra o contratista' })

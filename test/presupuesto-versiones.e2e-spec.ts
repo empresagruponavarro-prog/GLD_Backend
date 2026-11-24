@@ -83,10 +83,13 @@ describe('Presupuesto Meta: nuevas versiones con cotizaciones y compromisos (e2e
         moneda_id: 'PEN',
         moneda_simbolo: 'S/',
         forma_pago: 'Contado',
-        ...(adjudicar ? { adjudicar: true } : {}),
+        // Estos tests no prueban la regla de 1 o 3 cotizaciones (D-17): se adjudica «con motivo».
+        ...(adjudicar ? { adjudicar: true, sin_tres_cotizaciones: true, comentario_adjudicacion: 'PRUEBA E2E' } : {}),
       });
   const adjudicar = (idPpto: number, idSubpartida: number, idCotizacion: number | null) =>
-    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ id_detalle_categoria: idSubpartida, id_cotizacion: idCotizacion });
+    api()
+      .put(`/presupuestos/${idPpto}/adjudicacion`)
+      .send({ id_detalle_categoria: idSubpartida, id_cotizacion: idCotizacion, ...(idCotizacion === null ? {} : { sin_tres_cotizaciones: true, comentario: 'PRUEBA E2E' }) });
 
   const dos = async (codigo: string) =>
     (

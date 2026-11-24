@@ -53,3 +53,24 @@ describe('evaluarLiquidacion (S-11, DG6)', () => {
     expect(r).toMatchObject({ liquidada: true, puedeLiquidar: false });
   });
 });
+
+describe('evaluarLiquidacion: contratos de valorización (plan 12)', () => {
+  it('sin el dato, el requisito no se evalúa (la obra no usa valorizaciones)', () => {
+    expect(evaluarLiquidacion(entrada()).requisitos.map((r) => r.codigo)).not.toContain('VALORIZACIONES');
+  });
+
+  it('sin contratos abiertos el requisito está cumplido', () => {
+    const r = evaluarLiquidacion(entrada({ contratosAbiertos: [] }));
+    expect(r.requisitos.find((x) => x.codigo === 'VALORIZACIONES')).toMatchObject({ cumplido: true });
+    expect(r.puedeLiquidar).toBe(true);
+  });
+
+  it('un contrato sin liquidar bloquea la liquidación y dice cuál', () => {
+    const r = evaluarLiquidacion(entrada({ contratosAbiertos: ['OS-000012', 'OS-000015'] }));
+    expect(r.puedeLiquidar).toBe(false);
+    expect(r.requisitos.find((x) => x.codigo === 'VALORIZACIONES')).toMatchObject({
+      cumplido: false,
+      mensaje: expect.stringContaining('OS-000012, OS-000015'),
+    });
+  });
+});

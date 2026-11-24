@@ -6,6 +6,7 @@ import { AlmacenSql, B, I, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { ConciliarCompromisosService } from '../compromisos/conciliar-compromisos.service.js';
 import { modoCotizacion } from './adjudicacion.js';
 import { aplicarAdjudicacion } from './aplicar-adjudicacion.js';
+import { comentarioConMarca, exigirCotizacionesSuficientes, yaGanaLaSubpartida } from './cotizaciones-suficientes.js';
 import { bloquearPresupuesto, itemsDeSubpartida, subpartidaPresupuesto } from './contexto-ppto.js';
 import type { AdjudicacionDto, AdjudicacionResponseDto } from './cotizacion-ppto.dto.js';
 
@@ -50,13 +51,17 @@ export class AdjudicacionHandler {
         }
         if (user) await trabajadorDelUsuario(tx.orm.public, user.id, user.usuario);
         else exigirTrabajadorVinculado(null, '(sin sesión)');
+        // Regla de 1 o 3 cotizaciones (D-17): solo al cambiar de ganador.
+        if (!(await yaGanaLaSubpartida(this.sql, tx, subpartida.id, cot.id))) {
+          await exigirCotizacionesSuficientes(this.sql, tx, subpartida.id, cot.id, { sinTres: dto.sin_tres_cotizaciones, motivo: dto.comentario });
+        }
       }
 
       const resultado = await aplicarAdjudicacion(this.sql, tx, {
         presupuesto: ppto,
         cambios,
         usuario: user?.usuario ?? 'SISTEMA',
-        comentario: dto.comentario ?? null,
+        comentario: comentarioConMarca(dto.comentario, dto.id_cotizacion !== null && dto.sin_tres_cotizaciones),
       });
       return { ...resultado, compromisos: await this.conciliacion.conciliar(tx, ppto, user) };
     });
