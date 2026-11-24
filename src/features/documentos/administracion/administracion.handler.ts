@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { anularContratoDeDocumento, exigirMontosEditables, exigirSinValorizaciones } from '../../valorizaciones/shared/guardas.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { CotizacionHandler } from '../../requerimientos/cotizaciones/cotizacion.handler.js';
 import { exigirNoProvisional } from '../shared/estado-documento.js';
@@ -294,6 +295,10 @@ export class AdministracionHandler {
         dto.detraccion_porcentaje !== undefined ||
         dto.retencion_monto !== undefined ||
         dto.afecto_igv !== undefined;
+      if (cambiaMontos) {
+        const descuentosSueltos = (dto.dscto_compras ?? 0) + (dto.dscto_intervencion ?? 0) + (dto.dscto_otros ?? 0) > 0;
+        await exigirMontosEditables(this.sql, tx, id, descuentosSueltos);
+      }
       const saldos = (await saldosPago(this.sql, [id], tx)).get(id);
       if (cambiaMontos && saldos && (saldos.PROVEEDOR.pagado > 0 || saldos.DETRACCION.pagado > 0)) {
         throw new ConflictException('El documento ya tiene pagos registrados; anule los pagos antes de cambiar montos o deducciones');
@@ -382,6 +387,7 @@ export class AdministracionHandler {
       if (dep.pagos > 0) throw new ConflictException('El documento tiene pagos registrados; anúlelos primero');
       if (dep.prog > 0) throw new ConflictException('El documento tiene pagos programados; cancélelos primero');
       if (dep.recep > 0) throw new ConflictException('El documento tiene recepciones de almacén vigentes; anúlelas primero');
+      await exigirSinValorizaciones(this.sql, tx, id, 'anular el documento');
 
       await q.run(tx)`
         UPDATE "documentosOrigen" SET estado = 'ANULADO',
@@ -389,6 +395,7 @@ export class AdministracionHandler {
                                   THEN COALESCE(comentarios || E'\n', '') || 'ANULADO: ' || ${dto.motivo ?? ''}::text
                                   ELSE comentarios END
          WHERE id = ${id}::int`;
+      await anularContratoDeDocumento(this.sql, tx, id);
     });
     return this.getById(id);
   }
