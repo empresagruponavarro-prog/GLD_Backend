@@ -1,7 +1,7 @@
 // Crea la plantilla "TAMBO – IMPLEMENTACIÓN Y OBRA GRUESA REV 3 (LOS OLIVOS)" a partir de scripts/tambo-olivos-rev3.datos.json
 // (generado del Excel "ITEMIZADO TAMBO MARAÑON 2 - LOS OLIVOS REV 3.xlsx"). NO toca las plantillas existentes.
 //
-//   node scripts/cargar-plantilla-tambo-olivos.js            → simulación: ejecuta todo y revierte (no deja nada)
+//   node scripts/cargar-plantilla-tambo-olivos.js [datos.json]            → simulación (sin archivo usa Los Olivos REV 3; REV 4 Comas: tambo-comas-rev4.datos.json): ejecuta todo y revierte (no deja nada)
 //   node scripts/cargar-plantilla-tambo-olivos.js --aplicar  → carga en UNA transacción
 //
 // - Partidas: si el nombre ya existe como categoría de fase (ppto_FasesCategorias de esa fase) la reutiliza; si no, la crea.
@@ -15,7 +15,8 @@ import pg from 'pg';
 
 const APLICAR = process.argv.includes('--aplicar');
 const aqui = path.dirname(fileURLToPath(import.meta.url));
-const datos = JSON.parse(fs.readFileSync(path.join(aqui, 'tambo-olivos-rev3.datos.json'), 'utf-8'));
+const archivo = process.argv.slice(2).find((a) => !a.startsWith('--')) ?? 'tambo-olivos-rev3.datos.json';
+const datos = JSON.parse(fs.readFileSync(path.resolve(aqui, archivo), 'utf-8'));
 
 const norm = (s) =>
   String(s ?? '')

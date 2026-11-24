@@ -1,0 +1,9 @@
+{
+  "from": "4ada217dde77de1c97fc3f38b647aa59c886e577f9d6fa7954ae829842fa2fc9",
+  "to": "4ada217dde77de1c97fc3f38b647aa59c886e577f9d6fa7954ae829842fa2fc9",
+  "providedInvariants": [
+    "modulo-categorias"
+  ],
+  "createdAt": "2026-11-24T20:15:41.077Z",
+  "migrationHash": "7267135bd6d2697eb70d7d8ed136dea45ad05f3a22fc22199ca39e7814b8851e"
+}

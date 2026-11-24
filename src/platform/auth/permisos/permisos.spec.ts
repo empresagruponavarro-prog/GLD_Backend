@@ -32,6 +32,7 @@ const OPS_JSON_MODULOS_NUEVOS = [
   new URL('../../../../migrations/app/20261102T2119_rrhh_trabajadores/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261102T2142_rrhh_catalogos_modulo/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261105T0241_grp_cadena_obra/ops.json', import.meta.url),
+  new URL('../../../../migrations/app/20261124T1500_modulo_categorias/ops.json', import.meta.url),
 ];
 
 interface Operacion {
@@ -58,6 +59,7 @@ function semillaModulos() {
     sqlDe('data.modulo.rrhh.trabajadores', OPS_JSON_MODULOS_NUEVOS[3]),
     sqlDe('data.modulo.rrhh.catalogos', OPS_JSON_MODULOS_NUEVOS[4]),
     sqlDe('data.modulo.proyectos_catalogos', OPS_JSON_MODULOS_NUEVOS[5]),
+    sqlDe('data.modulo.proyectos_categorias', OPS_JSON_MODULOS_NUEVOS[6]),
   ];
   return sqls.flatMap((sql) => [...sql.matchAll(patron)]).map((m) => ({
     clave: m[1],
@@ -80,8 +82,8 @@ function aprobarHabilitadoPorGrp(): string[] {
 describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   const semilla = semillaModulos();
 
-  it('las semillas traen los 41 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..41', () => {
-    expect(CLAVES_MODULO).toHaveLength(41);
+  it('las semillas traen los 42 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..42', () => {
+    expect(CLAVES_MODULO).toHaveLength(42);
     expect(semilla.map((m) => m.clave)).toEqual([...CLAVES_MODULO]);
     expect(semilla.map((m) => m.orden)).toEqual(CLAVES_MODULO.map((_c, i) => i + 1));
     expect(new Set(CLAVES_MODULO).size).toBe(CLAVES_MODULO.length);

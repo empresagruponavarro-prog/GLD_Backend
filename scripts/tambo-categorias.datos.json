@@ -1,0 +1,410 @@
+[
+ {
+  "descripcion": "ACARREO Y ELIMINACIÓN DE MATERIALES POR IMPLEMENTACIÓN",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "DEMOLICION DE VEREDA EN CALLE",
+  "categoria": "AUCA"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE INODORO TREBOL TOP PIECE BLANCO",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "MANTENIMIENTO DE INODORO EXISTENTE (CAMBIO COMPLETO DE ACCESORIOS Y SISTEMA INTERNO)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE LAVATORIO MARCA TREBOL NUEVO MODELO AMAZONAS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE GRIFERIA VAINSA PARA LAVADERO DE BAÑO.",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE GRIFERIA VAINSA PESADA PARA MUEBLE EN TIENDA (LINEA OCEAN / MODELO ARTIC O SIMILAR / MARCA VAINSA)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE LAVADERO DE ACERO INOXIDABLE EN COUNTER (INCLUYE ACCESORIOS)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE EXTRACTOR DE AIRE PARA BAÑO",
+  "categoria": "ELEC"
+ },
+ {
+  "descripcion": "GRIFERIA EN PASILLO (A SOLICITUD DEL CLIENTE)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE MEZCLADORA DE LAVADERO BAR MONOCOMANDO AL MUEBLE PICO RESORTE LÍNEA OCEAN COLLECIÓN ARTIC CROMO (VAINSA) PARA ALMACÉN",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACION DE NUMEROS PARA LA DIRECCIÓN DE FACHADA ( 3 0 4 SEA EL CASO)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACION DE CINTA ANTIDESLIZANTE",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "CANDADOS ANTICISALLA PARA REJAS, PUERTAS ENRROLLABLES (TRES POR PUERTA)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "CHAPAS DE TRES GOLPES MARCA YALE PARA REJAS (RETIRO DE CHAPAS ANTIGUAS Y SOLDADURA DE LAS CHAPAS NUEVAS)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE EXTINTORES PQS 6KG",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "PEDESTAL PARA EXTINTOR PQS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE EXTINTORES DE CO2 10LB",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN ACETATO DE POTASIO K 6LT",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "BOTIQUIN (INCLUYE CONTENIDO ESTANDAR)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE SEÑALITICA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE LOCKERS (FIJACION DE LOCKERS, 8 CASILLEROS)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE ANGULOS RANURADOS, CON 5 BANDEJAS, PARA PRODUCTOS DE ALTO VALOR (INCLUYE CANDADO O CHAPA)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "MUEBLE DE LIMPIEZA PARA ALMACER ( ARMARIO DE 1 PUERTA)",
+  "categoria": "CAMA"
+ },
+ {
+  "descripcion": "SUMINISTRO DE HORNO MICROONDAS SAMSUNG",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACION DE TOPE PARA AUTO (APLICA A TIENDAS CON ESTACIONAMIENTO EN RETIRO)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "RECOJO DE TABLERO, LUMINARIAS, JUEGO DE SILLAS Y MESAS, UPS, SWITCH, PORCELANATO, ACRÍLICOS,V2 , MERRYCHEF, TV,KIT DE UTENSILIOS, BOXES METALICOS, ETC.",
+  "categoria": "TRANS"
+ },
+ {
+  "descripcion": "CANDADO PARA LOOCKERS DE DEPOSITO",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SEÑALES FOTOLUMINISCENTE PARA EQUIPOS CALIENTES DE 13CM X 20CM ( CAFETERA Y MENUMASTER)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "PAR DE GUANTE NEOPRENO NEGRO (T-MEDIA)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE RACK PARA MONITOR E INSTALACIÓN DE MONITOR EN EL MENU BOARD",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACION DE BURLETE PARA PUERTAS DE INGRESO A TIENDA, PATIO (EXTERIOR)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE ESPEJO PANORAMICO Y ACCESORIO DE FIJACION",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE ESPEJO PANORÁMICO DOMO 360",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE TACHO GRANDE 75L (3)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE TACHO CHICO 11.9L",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "AMPLIACIÓN DE CARGA",
+  "categoria": "AUCA"
+ },
+ {
+  "descripcion": "POR SUMINISTRO E INSTALACIÓN DE EQUIPO DE EXTRACCIÓN PARA TIENDA MOTOR EXTRACTOR TD1000 SOLER & PALAU (SILENT)",
+  "categoria": "CPDU"
+ },
+ {
+  "descripcion": "POR SUMINISTRO E INSTALACIÓN DE EQUIPO DE EXTRACCIÓN PARA TIENDA MOTOR INYECCION TD1000 SOLER & PALAU (SILENT)",
+  "categoria": "CPDU"
+ },
+ {
+  "descripcion": "PLANOS DE ARQUITECTURA ( CORTES, ELEVACIONES, PLANTA, DETALLES, INDECI)",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "PLANOS DE ESPECIALIDADES ( IIEE, IISS, INTRUSION, DETECCION, CCTV, AA, ENTRE OTROS )",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "ESPECIFICACIONES TECNICAS",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "MEMORIA DESCRIPTIVA ( ARQUITECTURA , IIEE )",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "PROTOCOLOS (TABLERO, POZO A TIERRA, MEGADO)",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "CARTA DE GARANTIA DE PROVEEDORES",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "DOCUMENTOS DE APERTURA (PLANOS FIRMADOS Y PROTOCOLOS 3 JUEGOS)",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "PLANO PARA SOLICITUD DE F1",
+  "categoria": "IMPCAL"
+ },
+ {
+  "descripcion": "PALLET 0.90X0.60M",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "ANCLAJE DE CAJA FUERTE EN ALMACEN",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "GESTION MUNICIPAL",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "TRASLADO DE MATERIALES (PORCELANATO,CABLES,TABLERO,ETC)",
+  "categoria": "TRANS"
+ },
+ {
+  "descripcion": "ROLLOS DE CINTA ANTIDESLIZANTE 3M PARA TAMBO",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "TAPAS CIRCULAR PARA EL MUEBLE CAFFE",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISRO DE ESCALERA TIPO BANQUETA (5 PASOS)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISRO DE ESCALERA TIPO BANQUETA (3 PASOS)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "INTERCONEXIÓN DACI ENTRE TIENDA Y EDIFICIO",
+  "categoria": "ECIN"
+ },
+ {
+  "descripcion": "TRABAJOS POR TRASLADO DE MEDIDOR (NO INCLUYE CABLEADO)",
+  "categoria": "ELEC"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE TANQUE ELEVADO + ACCESORIOS",
+  "categoria": "SANI"
+ },
+ {
+  "descripcion": "SUMINISTRO DE BOMBA HIDRONEUMÁTICA DE PRESION MARCA PEDROLLO O SIMILAR 1.5HP POTENCIA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "TASA MUNICIPAL POR REVISION Y EMISION DE LICENCIA DE OBRA",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "PAGO REVISION CAP",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "PAGO REVISION CIP",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "PAGO REVISION COMISION AD HOC",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "TRAMITES PARA PERMISOS MUNICIPALES",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "PAGO SSOMA",
+  "categoria": "SSOMA"
+ },
+ {
+  "descripcion": "PROYECTO DE SEGURIDAD Y DEL PREVENCIONISTA",
+  "categoria": "SSOMA"
+ },
+ {
+  "descripcion": "EXPEDIENTE Y GESTION DE PERMISO DE USO DE VIAS",
+  "categoria": "MUNIG"
+ },
+ {
+  "descripcion": "ELEVADOR DE CARGA PARA ALAMACÉN: PLATAFORMA DE 80 CM X 80 CM, PESO MÁXIMO 25 KG (CUANDO EL ALMACÉN ESTÉ EN UN SEGUNDO NIVEL)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "ANGULO DE ALUMINIO PINTADO AL HORNO PARA PROTEGER ESQUINAS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "RESANE DE VEREDA (POR TRABAJOS DE AMPLIACIÓN DE CARGA)",
+  "categoria": "AUCA"
+ },
+ {
+  "descripcion": "ELEVADOR DE CARGA PARA ALAMACÉN: PLATAFORMA DE 80 CM X 80 CM, PESO MÁXIMO 50 KG",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "CAJA PARA ELEVADOR MONTAPLATOS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "LLAVERO DE COLORES PARA TIENDA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "CABLE ACERADO Y PERNOS/NUDOS DE HIERRO PARA AJUSTE, POR EQUIPO",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "JAULA DE ALTO VALOR + LOCKERS (6), MAS MALLA DE ACUERDO AL ULTIMO MODELO ENVIADO.",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE TACHO 80L (2)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE TACHO BASA 60L (1)",
+  "categoria": "DRYW"
+ },
+ {
+  "descripcion": "SUMINISTRO DE TACHO 35L (1)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "IMPLEMENTOS PARA BOTIQUIN (KIT COMPLETO)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "APOYO METALICO PARA BARRA, PARA COLOCAR LOS PIES",
+  "categoria": "ESTRUC"
+ },
+ {
+  "descripcion": "INDEPENDIZACIÓN DE AGUA DE LA RED DEL PROPIETARIO",
+  "categoria": "SANI"
+ },
+ {
+  "descripcion": "PUERTA CORREDIZA EN MDF (1.00 X 2.10). CON SISTEMA CORREDIZO, ZONA DE TRASTIENDA",
+  "categoria": "MAVI"
+ },
+ {
+  "descripcion": "REJAS PLEGABLES PARA VANOS DE FACHADA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACIÓN DE PAPEL KRAFT PARA LAS MAMPARAS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "PELADO DE PINTURA EXISTENTE EN MUROS Y TECHOS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE MUEBLE AMARILLO",
+  "categoria": "CAMA"
+ },
+ {
+  "descripcion": "TACHOS ECOLOGICOS PARA RECICLAJE DE PLASTICO 75 LTS",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE MALLA RASCHELL, PARA EVITAR QUE EL POLVO SALGA A LAS VIVIENDAS COLINDANTES.",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "TRATAMIENTO ANTISALITRE, PARA PAREDES Y TECHO QUE PRESENTEN FILTRACIONES POR HUMEDAD Y SALITRAJE",
+  "categoria": "CAMA"
+ },
+ {
+  "descripcion": "SUMINISTRO E INSTALACION DE TABLERO ADOSABLE METÁLICO CON UNA LLAVE GENERAL Y UNA LLAVE DE CONTROL, INTERRUPTORES TERMOMAGNETICOS Y DIFERENCIALES, RELES TÉRMICOS, SELECTORES, CON MANDIL DE ACRILICO PARA PROTECCIÓN, PLACAS CON NOMBRES, ATERRADO, CON DIAGRAMA Y LEYENDA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIAS TIPO PANEL LED 5000K CON 5 AÑOS DE GARANTÍA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR SALA DE VENTAS DE 60CM",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR SALA DE VENTAS DE 1.20M",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR ALMACÉN",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIAS TIPO CAMPANA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIAS TIPO CAMPANA PARA DOBLE ALTURA",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE EQUIPO DE EXTRACCIÓN PARA TIENDA  MOTOR EXTRACTOR TD1000 SOLER & PALAU",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "SUMINISTRO DE EQUIPO DE EXTRACCIÓN PARA TIENDA  MOTOR INYECCION TD1000 SOLER & PALAU",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "INSTALACIÓN DE REFLECTORES PASTORALES EN FACHADA",
+  "categoria": "ELEC"
+ },
+ {
+  "descripcion": "INSTALACION DE LUCES DE EMERGENCIA",
+  "categoria": "ELEC"
+ },
+ {
+  "descripcion": "SUMINISTRO DE LUMINARIAS PARA FACHADA (SPOT, EMPOTRADA O ADOSADA)",
+  "categoria": "IMPACT"
+ },
+ {
+  "descripcion": "TAPA METALICA 60X60 PARA CISTERNA (INCLUYE MARCO)",
+  "categoria": "ESTRUC"
+ }
+]

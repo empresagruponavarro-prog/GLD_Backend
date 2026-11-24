@@ -1,0 +1,32 @@
+[
+  {
+    "id": "data.modulo.proyectos_categorias",
+    "label": "Módulo «Catálogo de categorías»",
+    "summary": "Inserta el módulo proyectos.categorias en la tabla modulo",
+    "operationClass": "data",
+    "invariantId": "modulo-categorias",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Módulo proyectos.categorias",
+        "sql": "INSERT INTO \"public\".\"modulo\" (\"clave\", \"nombre\", \"grupo\", \"ruta\", \"orden\", \"admite_aprobar\", \"admite_anular\")\n                  VALUES ('proyectos.categorias', 'Catálogo de categorías', 'Proyectos', '/maestros-generales/categorias', 42, false, false)\n                  ON CONFLICT (\"clave\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "el módulo existe",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"modulo\" WHERE \"clave\" = 'proyectos.categorias') AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

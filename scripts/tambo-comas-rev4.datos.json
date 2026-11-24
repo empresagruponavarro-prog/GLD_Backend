@@ -1,0 +1,4509 @@
+{
+ "plantilla": {
+  "id": "TPL-TAMBO-COMAS-R4",
+  "nombre": "TAMBO – IMPLEMENTACIÓN Y OBRA GRUESA REV 4 (UNGER & COLLIQUE – COMAS)",
+  "descripcion": "Itemizado Tambo Unger & Collique - Comas (precio de venta) con costo meta del archivo PARA META - TAMBO SEPARADORA INDUSTRIAL"
+ },
+ "fases": [
+  {
+   "IdpptoFase": "9c249cf7",
+   "nombre": "IMPLEMENTACIÓN",
+   "hoja": "Implementación Tambo - Contrato",
+   "secciones": [
+    {
+     "nombre": "OBRAS PRELIMINARES",
+     "fila": 2,
+     "items": [
+      {
+       "fila": 3,
+       "item": "1.01",
+       "descripcion": "Cerramiento provisional metálico (puerta calle) h=3.00",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 216.0
+      },
+      {
+       "fila": 4,
+       "item": "1.02",
+       "descripcion": "Cerramiento provisional de triplay h=2.40",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 51.0
+      },
+      {
+       "fila": 5,
+       "item": "1.03",
+       "descripcion": "Guardianía de obra (Nocturna)",
+       "um": "mes",
+       "cantidad": 1.0,
+       "precio": 1440.0
+      },
+      {
+       "fila": 6,
+       "item": "1.04",
+       "descripcion": "Limpieza de obra",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 912.0
+      }
+     ]
+    },
+    {
+     "nombre": "DEMOLICIONES Y DESMONTAJES",
+     "fila": 7,
+     "items": [
+      {
+       "fila": 8,
+       "item": "2.01",
+       "descripcion": "Demolición de tabiqueria de drywall",
+       "um": "m2",
+       "cantidad": 5.55,
+       "precio": 18.0
+      },
+      {
+       "fila": 9,
+       "item": "2.02",
+       "descripcion": "Demolición de paredes de soga",
+       "um": "m2",
+       "cantidad": 22.983,
+       "precio": 18.0
+      },
+      {
+       "fila": 10,
+       "item": "2.03",
+       "descripcion": "Demolición de paredes de cabeza",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 26.0
+      },
+      {
+       "fila": 11,
+       "item": "2.04",
+       "descripcion": "Demolición de paredes de concreto",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 36.0
+      },
+      {
+       "fila": 12,
+       "item": "2.05",
+       "descripcion": "Demolición de sobrecimiento de concreto para llegar a la altura de vereda (ancho = 0.15)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 30.0
+      },
+      {
+       "fila": 13,
+       "item": "2.06",
+       "descripcion": "Demolición de sobrecimiento de concreto para llegar a la altura de vereda (ancho = 0.30 a 0.45)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 14,
+       "item": "2.07",
+       "descripcion": "Demolición de pisos para nivelar con el resto del local",
+       "um": "m2",
+       "cantidad": 2.0,
+       "precio": 12.0
+      },
+      {
+       "fila": 15,
+       "item": "2.08",
+       "descripcion": "Demolición de columnetas de muros existentes",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 57.6
+      },
+      {
+       "fila": 16,
+       "item": "2.09",
+       "descripcion": "Demolición de columna y zapata de concreto",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 226.0
+      },
+      {
+       "fila": 17,
+       "item": "2.10",
+       "descripcion": "Demolición de techo de material noble (concreto)",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 28.8
+      },
+      {
+       "fila": 18,
+       "item": "2.11",
+       "descripcion": "Demolición de sobrecimiento",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 30.72
+      },
+      {
+       "fila": 19,
+       "item": "2.12",
+       "descripcion": "Demolición de cimiento",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 30.11
+      },
+      {
+       "fila": 20,
+       "item": "2.13",
+       "descripcion": "Desmontaje de escaleras metalica",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 380.0
+      },
+      {
+       "fila": 21,
+       "item": "2.14",
+       "descripcion": "Demolición de escalera de concreto",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 114.0
+      },
+      {
+       "fila": 22,
+       "item": "2.15",
+       "descripcion": "Desmontaje de puertas y ventanas del inmueble",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 29.84
+      },
+      {
+       "fila": 23,
+       "item": "2.16",
+       "descripcion": "Desmontaje de vidrios y ventana",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 237.0
+      },
+      {
+       "fila": 24,
+       "item": "2.17",
+       "descripcion": "Desmontaje de puerta enrrollable",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 332.0
+      },
+      {
+       "fila": 25,
+       "item": "2.18",
+       "descripcion": "Desmontaje de cobertura de madera",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 911.0
+      },
+      {
+       "fila": 26,
+       "item": "2.19",
+       "descripcion": "Desmontaje de fcr de drywall",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 14.0
+      },
+      {
+       "fila": 27,
+       "item": "2.20",
+       "descripcion": "Desmontaje de techo de baldosa",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 14.0
+      },
+      {
+       "fila": 28,
+       "item": "2.21",
+       "descripcion": "Desmontaje de tabiquería de madera",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 21.0
+      },
+      {
+       "fila": 29,
+       "item": "2.22",
+       "descripcion": "Demolición de mueble",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 214.0
+      },
+      {
+       "fila": 30,
+       "item": "2.23",
+       "descripcion": "Desmontaje de luminarias",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 142.0
+      },
+      {
+       "fila": 31,
+       "item": "2.24",
+       "descripcion": "Desmontaje de ducto de extraccion",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 237.0
+      },
+      {
+       "fila": 32,
+       "item": "2.25",
+       "descripcion": "Desmontaje de tuberias electricas",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 142.0
+      },
+      {
+       "fila": 33,
+       "item": "2.26",
+       "descripcion": "Desmontaje de tablero electrico",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 95.0
+      },
+      {
+       "fila": 34,
+       "item": "2.27",
+       "descripcion": "Demolición de muro adobe",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 32.0
+      },
+      {
+       "fila": 35,
+       "item": "2.28",
+       "descripcion": "Demolición de muro quincha en 2do nivel",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 27.0
+      },
+      {
+       "fila": 36,
+       "item": "2.29",
+       "descripcion": "Desmontaje de cerco perimetral existente",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 332.0
+      },
+      {
+       "fila": 37,
+       "item": "2.30",
+       "descripcion": "Desmontaje Techo de calamina (área de tienda)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 712.0
+      },
+      {
+       "fila": 38,
+       "item": "2.31",
+       "descripcion": "Demolición de rampa existentes",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 237.0
+      },
+      {
+       "fila": 39,
+       "item": "2.32",
+       "descripcion": "Retiro de adoquin en zona de almacen",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 237.0
+      },
+      {
+       "fila": 40,
+       "item": "2.33",
+       "descripcion": "Retiro de papel vinilico de muros",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 9.0
+      },
+      {
+       "fila": 41,
+       "item": "2.34",
+       "descripcion": "Picado de pisos y contrapiso para tendido de tuberias agua y desague",
+       "um": "ml",
+       "cantidad": 70.0,
+       "precio": 18.0
+      },
+      {
+       "fila": 42,
+       "item": "2.35",
+       "descripcion": "Resanes por picado de paredes y pisos",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 615.0
+      },
+      {
+       "fila": 43,
+       "item": "2.36",
+       "descripcion": "Acarreo y eliminación de materiales por implementación",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1152.0
+      },
+      {
+       "fila": 44,
+       "item": "2.37",
+       "descripcion": "Instalación de una bomba hidroneumática",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 570.0
+      },
+      {
+       "fila": 45,
+       "item": "2.38",
+       "descripcion": "Acabado de piso en cemento pulido",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 18.0
+      },
+      {
+       "fila": 46,
+       "item": "2.39",
+       "descripcion": "Retiro de jardineria existente",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 9.0
+      },
+      {
+       "fila": 47,
+       "item": "2.40",
+       "descripcion": "Demolición de vereda en calle",
+       "um": "m2",
+       "cantidad": 6.0,
+       "precio": 12.0
+      },
+      {
+       "fila": 48,
+       "item": "2.41",
+       "descripcion": "Retiro de enchape existente en muros y pisos",
+       "um": "m2",
+       "cantidad": 69.53,
+       "precio": 11.0
+      },
+      {
+       "fila": 49,
+       "item": "2.42",
+       "descripcion": "Desmontaje de aparatos sanitarios (inodoro, lavatorio, urinario, valvulas, griferias, etc.)",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 21.0
+      }
+     ]
+    },
+    {
+     "nombre": "MURO DE DRYWALL /SUPERBOARD",
+     "fila": 50,
+     "items": [
+      {
+       "fila": 51,
+       "item": "3.01",
+       "descripcion": "Tabiqueria de drywall con plancha de yeso e=1/2\", doble cara",
+       "um": "m2",
+       "cantidad": 10.98,
+       "precio": 69.0
+      },
+      {
+       "fila": 52,
+       "item": "3.02",
+       "descripcion": "Tabiqueria de drywall con 01 plancha de yeso e=1/2\" cajonera de puerta enrrollable con refuerzo listón de madera para cortina de aire, vigas, columnas y cenefa decorativa amarilla",
+       "um": "ml",
+       "cantidad": 35.242,
+       "precio": 120.0
+      },
+      {
+       "fila": 53,
+       "item": "3.03",
+       "descripcion": "Tabiqueria de drywall con 01 plancha yeso e=1/2\" por una cara (se considerar refuerzo para aparatos sanitarios, Menuboard y mobiliario )",
+       "um": "m2",
+       "cantidad": 43.243,
+       "precio": 68.0
+      },
+      {
+       "fila": 54,
+       "item": "3.04",
+       "descripcion": "Suministro e instalacion de drywall de 1/2\" para muros del perimetro (solo aplica si existe perimetro de albañileria)",
+       "um": "m2",
+       "cantidad": 79.17,
+       "precio": 69.0
+      },
+      {
+       "fila": 55,
+       "item": "3.05",
+       "descripcion": "Suministro e instalacion de Superboard de 12 mm. y drywall de 1/2\" para muro perimetro (solo aplica si existe perimetro de albañileria)",
+       "um": "m2",
+       "cantidad": 19.83,
+       "precio": 105.0
+      },
+      {
+       "fila": 56,
+       "item": "3.06",
+       "descripcion": "Refuerzo metalico con tubos cuadrados de 1 x 1 x 2mm para cenefa deposito",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 27.0
+      },
+      {
+       "fila": 57,
+       "item": "3.07",
+       "descripcion": "OSB para Cenefa deposito (interior)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 33.0
+      },
+      {
+       "fila": 58,
+       "item": "3.08",
+       "descripcion": "Suministro e instalacion de Superboard de 12 mm.ambas caras para muro perimetro",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 87.0
+      }
+     ]
+    },
+    {
+     "nombre": "FALSO CIELO RASO",
+     "fila": 59,
+     "items": [
+      {
+       "fila": 60,
+       "item": "4.01",
+       "descripcion": "Suministro e instalacion de Falso cielo raso de drywall con 01 plancha de yeso estandar e=1/2\"",
+       "um": "m2",
+       "cantidad": 15.82,
+       "precio": 67.0
+      },
+      {
+       "fila": 61,
+       "item": "4.02",
+       "descripcion": "Suministro e instalacion de Cielo raso con baldosas acústicas lavables (Baldosa Vinil Gipsum medida)",
+       "um": "m2",
+       "cantidad": 48.61,
+       "precio": 75.0
+      }
+     ]
+    },
+    {
+     "nombre": "PISOS Y CONTRAPISOS",
+     "fila": 62,
+     "items": [
+      {
+       "fila": 63,
+       "item": "5.01",
+       "descripcion": "Poyo de concreto para sector de caja (0.60x0.60 - 280kg/cm2 - fierro 3/8\" como anclaje de nuevo con viejo aditivo de union concreto viejo/nuevo) * NO PASAN TUBERIAS DE NINGUN TIPO EN ESTA ZONA.",
+       "um": "m2",
+       "cantidad": 0.36,
+       "precio": 168.0
+      },
+      {
+       "fila": 64,
+       "item": "5.02",
+       "descripcion": "Poyo de concreto para zona counter",
+       "um": "m2",
+       "cantidad": 11.89,
+       "precio": 56.0
+      },
+      {
+       "fila": 65,
+       "item": "5.03",
+       "descripcion": "Piso de concreto para completar nivel (se considera picado de piso acabado porcelanato)",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 46.0
+      },
+      {
+       "fila": 66,
+       "item": "5.04",
+       "descripcion": "Instalacion de porcelanato 60 x 60cm. (incluye pegamento blanco flexible, mano de obra, crucetas y fragüa).",
+       "um": "m2",
+       "cantidad": 78.47,
+       "precio": 43.0
+      },
+      {
+       "fila": 67,
+       "item": "5.05",
+       "descripcion": "Instalacion de ceramico, en piso y pared para baños",
+       "um": "m2",
+       "cantidad": 10.0,
+       "precio": 46.0
+      }
+     ]
+    },
+    {
+     "nombre": "ZOCALO",
+     "fila": 68,
+     "items": [
+      {
+       "fila": 69,
+       "item": "6.01",
+       "descripcion": "Instalacion de contrazocalo de porcelanato de 0.10x0.60 cm (interno)",
+       "um": "ml",
+       "cantidad": 64.096,
+       "precio": 15.0
+      },
+      {
+       "fila": 70,
+       "item": "6.02",
+       "descripcion": "Instalacion de contrazocalo de porcelanato en fachada (60 cm altura).",
+       "um": "ml",
+       "cantidad": 19.47,
+       "precio": 15.0
+      },
+      {
+       "fila": 71,
+       "item": "6.03",
+       "descripcion": "Instalacion de porcelanato 15 x 30 en muros en fachada (incluye corte especial al agua)",
+       "um": "m2",
+       "cantidad": 20.0,
+       "precio": 38.0
+      }
+     ]
+    },
+    {
+     "nombre": "PUERTAS",
+     "fila": 72,
+     "items": [
+      {
+       "fila": 73,
+       "item": "7.01",
+       "descripcion": "Suministro e instalacion de Puerta contraplacada de mdf ambas caras con pintura al duco (1.00 x 2.10m) incluye chapa de tipo bola (yale o similar) y bisagras pesadas.",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 744.0
+      },
+      {
+       "fila": 74,
+       "item": "7.02",
+       "descripcion": "Suministro e instalacion de Puerta metalica, (1.00 x 2.10m) incluye chapa de 3 golpes",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 1128.0
+      },
+      {
+       "fila": 75,
+       "item": "7.03",
+       "descripcion": "Suministro e instalacion de Puerta contraplacada de mdf ambas caras con pintura al duco (0.70 x 2.10m) incluye chapa tipo bola (yale o similar) y bisagras pesadas",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 684.0
+      },
+      {
+       "fila": 76,
+       "item": "7.04",
+       "descripcion": "Suministro e instalacion de Puerta machimbrada (1.00 x 2.10m) incluye chapa de 3 golpes",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 760.0
+      },
+      {
+       "fila": 77,
+       "item": "7.05",
+       "descripcion": "Modificación y colocacion de puerta de madera existente, inc. Adecuación de marcos en pasadizo",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 114.0
+      },
+      {
+       "fila": 78,
+       "item": "7.06",
+       "descripcion": "Suministro e instalación de Puerta enrollable microperforada con ballestas de 8mm (Cuando se requiera) (10 balletas inferiores sólidas). Tres pestillos por paño.",
+       "um": "m2",
+       "cantidad": 17.58,
+       "precio": 336.0
+      },
+      {
+       "fila": 79,
+       "item": "7.07",
+       "descripcion": "Mantenimiento para puertas enrollables existentes (Cambio de tambor, cintas y sistema completo)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 144.0
+      },
+      {
+       "fila": 80,
+       "item": "7.08",
+       "descripcion": "Suministro e instalación de bisagra de cierre automatico",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 163.0
+      }
+     ]
+    },
+    {
+     "nombre": "PINTURA",
+     "fila": 81,
+     "items": [
+      {
+       "fila": 82,
+       "item": "8.01",
+       "descripcion": "Empaste de muros de fachada e interior (02 manos para recibir pintura de acabado)",
+       "um": "m2",
+       "cantidad": 267.1015,
+       "precio": 7.0
+      },
+      {
+       "fila": 83,
+       "item": "8.02",
+       "descripcion": "Pintura latex satinado en fachada estándar (02 manos)",
+       "um": "m2",
+       "cantidad": 58.4,
+       "precio": 12.0
+      },
+      {
+       "fila": 84,
+       "item": "8.03",
+       "descripcion": "Pintura latex satinado para muros y tabiques interiores (02 manos)",
+       "um": "m2",
+       "cantidad": 249.1965,
+       "precio": 12.0
+      },
+      {
+       "fila": 85,
+       "item": "8.04",
+       "descripcion": "Empaste de cielo raso h= mayor a 2.50 (02 manos para recibir pintura de acabado)",
+       "um": "m2",
+       "cantidad": 40.495,
+       "precio": 7.0
+      },
+      {
+       "fila": 86,
+       "item": "8.05",
+       "descripcion": "Solaqueado de paredes de fachada para mejorar acabado",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 10.0
+      },
+      {
+       "fila": 87,
+       "item": "8.06",
+       "descripcion": "Pintado de columnas metalicas ( se considera masillado y pintura Gloss )",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 20.0
+      },
+      {
+       "fila": 88,
+       "item": "8.07",
+       "descripcion": "Pintura de puerta enrrollable existente",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 19.0
+      }
+     ]
+    },
+    {
+     "nombre": "APARATOS Y ACCESORIOS SANITARIOS",
+     "fila": 89,
+     "items": [
+      {
+       "fila": 90,
+       "item": "9.01",
+       "descripcion": "Suministro e instalación de Inodoro trebol top piece blanco",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 350.0
+      },
+      {
+       "fila": 91,
+       "item": "9.02",
+       "descripcion": "Mantenimiento de inodoro existente (Cambio completo de accesorios y sistema interno)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 95.0
+      },
+      {
+       "fila": 92,
+       "item": "9.03",
+       "descripcion": "Suministro e instalación de Lavatorio marca trebol NUEVO MODELO AMAZONAS",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 237.0
+      },
+      {
+       "fila": 93,
+       "item": "9.04",
+       "descripcion": "Suministro e instalación de Griferia VAINSA para lavadero de baño.",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 113.0
+      },
+      {
+       "fila": 94,
+       "item": "9.05",
+       "descripcion": "Suministro e instalación de Griferia VAINSA pesada para mueble en tienda (LINEA Ocean / MODELO Artic O Similar / MARCA Vainsa)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 275.0
+      },
+      {
+       "fila": 95,
+       "item": "9.06",
+       "descripcion": "Suministro e instalación de lavadero de acero inoxidable en counter (incluye accesorios)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 600.0
+      },
+      {
+       "fila": 96,
+       "item": "9.07",
+       "descripcion": "Suministro e instalación de extractor de aire para baño",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 142.0
+      },
+      {
+       "fila": 97,
+       "item": "9.08",
+       "descripcion": "Griferia en pasillo (a solicitud del cliente)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 47.0
+      },
+      {
+       "fila": 98,
+       "item": "9.09",
+       "descripcion": "Suministro e instalación de mezcladora de lavadero Bar Monocomando al mueble pico resorte línea Ocean Colleción Artic Cromo (Vainsa) para almacén",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 459.0
+      }
+     ]
+    },
+    {
+     "nombre": "VARIOS DE ARQUITECTURA",
+     "fila": 99,
+     "items": [
+      {
+       "fila": 100,
+       "item": "10.01",
+       "descripcion": "Suministro e instalación de puerta batiente de aluminio con vidrio templado de 10 mm, (Dos chapas superiores, dos chapas inferiores, chapa central y freno hidráulico).",
+       "um": "m2",
+       "cantidad": 3.52,
+       "precio": 744.0
+      },
+      {
+       "fila": 101,
+       "item": "10.02",
+       "descripcion": "Vidrio templado para mamparas en fachada, mamparas fijas, vidrio incoloro, e=10mm. con accesorios de aluminio.",
+       "um": "m2",
+       "cantidad": 11.47,
+       "precio": 460.0
+      },
+      {
+       "fila": 102,
+       "item": "10.03",
+       "descripcion": "Suministro e instalacion de hoja de puerta de vidrio con ventana de atencion nocturna con plancha de acero inoxidable perforada y cierre con llave (Incluye candado)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 285.0
+      },
+      {
+       "fila": 103,
+       "item": "10.04",
+       "descripcion": "Espejo para baño (laminado)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 80.0
+      },
+      {
+       "fila": 104,
+       "item": "10.05",
+       "descripcion": "Suministro e instalacion de numeros para la dirección de fachada ( 3 0 4 sea el caso)",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 14.0
+      },
+      {
+       "fila": 105,
+       "item": "10.06",
+       "descripcion": "Suministro e instalacion de cinta antideslizante",
+       "um": "ml",
+       "cantidad": 18.0,
+       "precio": 4.0
+      },
+      {
+       "fila": 106,
+       "item": "10.07",
+       "descripcion": "Lamina de seguridad para las mamparas, puerta de ingreso.",
+       "um": "m2",
+       "cantidad": 14.99,
+       "precio": 52.0
+      },
+      {
+       "fila": 107,
+       "item": "10.08",
+       "descripcion": "Candados anticisalla para rejas, puertas enrrollables (tres por puerta)",
+       "um": "und",
+       "cantidad": 12.0,
+       "precio": 72.0
+      },
+      {
+       "fila": 108,
+       "item": "10.09",
+       "descripcion": "Chapas de tres golpes marca YALE para rejas (retiro de chapas antiguas y soldadura de las chapas nuevas)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 85.0
+      },
+      {
+       "fila": 109,
+       "item": "10.10",
+       "descripcion": "Reja metálica con fierro cuadrado de 1/2 con angulos de 1\"",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 201.0
+      },
+      {
+       "fila": 110,
+       "item": "10.11",
+       "descripcion": "Suministro e Instalación de Extintores PQS 6kg",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 66.73
+      },
+      {
+       "fila": 111,
+       "item": "10.12",
+       "descripcion": "Pedestal para extintor PQS",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 50.85
+      },
+      {
+       "fila": 112,
+       "item": "10.13",
+       "descripcion": "Suministro e Instalación de Extintores de CO2 10LB",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 190.0
+      },
+      {
+       "fila": 113,
+       "item": "10.14",
+       "descripcion": "Suministro e instalación acetato de potasio k 6Lt",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 196.22
+      },
+      {
+       "fila": 114,
+       "item": "10.15",
+       "descripcion": "Botiquin (incluye contenido estandar)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 108.0
+      },
+      {
+       "fila": 115,
+       "item": "10.16",
+       "descripcion": "Suministro e instalación de señalitica",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 290.0
+      },
+      {
+       "fila": 116,
+       "item": "10.17",
+       "descripcion": "Señaletica de SALIDA - Luminosa",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 57.0
+      },
+      {
+       "fila": 117,
+       "item": "10.18",
+       "descripcion": "Suministro e instalación de Lockers (fijacion de Lockers, 8 casilleros)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 432.0
+      },
+      {
+       "fila": 118,
+       "item": "10.19",
+       "descripcion": "Suministro e instalación de Angulos ranurados, con 5 bandejas, para productos de alto valor (incluye candado o chapa)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 792.0
+      },
+      {
+       "fila": 119,
+       "item": "10.20",
+       "descripcion": "Mueble de limpieza para almacer ( armario de 1 puerta)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 267.0
+      },
+      {
+       "fila": 120,
+       "item": "10.21",
+       "descripcion": "Suministro de horno microondas Samsung",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 384.0
+      },
+      {
+       "fila": 121,
+       "item": "10.22",
+       "descripcion": "Suministro e instalacion de tope para auto (aplica a tiendas con estacionamiento en retiro)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 201.0
+      },
+      {
+       "fila": 122,
+       "item": "10.23",
+       "descripcion": "Modificación de reja para aperturar ventana para atencion al publico",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 304.0
+      },
+      {
+       "fila": 123,
+       "item": "10.24",
+       "descripcion": "Baranda metalica ingreso",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 241.0
+      },
+      {
+       "fila": 124,
+       "item": "10.25",
+       "descripcion": "Plancha estriada",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 120.0
+      },
+      {
+       "fila": 125,
+       "item": "10.26",
+       "descripcion": "Pilote metalico de 4\" h=0.9m empotrado y anclado con pernos de expansion para estacionamiento",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 171.0
+      },
+      {
+       "fila": 126,
+       "item": "10.27",
+       "descripcion": "Suministro e instalación de puerta reja para proteccion de caja de medidor de luz. Incluye candado",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 153.0
+      },
+      {
+       "fila": 127,
+       "item": "10.28",
+       "descripcion": "Cubo de aluminio apersianado según medidas 2.50 x 1.10 x 1.10 con tubo de 1/2\" x 1 1/2 para cerramiento a unidades condensadoras (Cuando se requiera)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 1728.0
+      },
+      {
+       "fila": 128,
+       "item": "10.29",
+       "descripcion": "Recojo de Tablero, luminarias, juego de sillas y mesas, Ups, switch, porcelanato, acrílicos,v2 , merrychef, tv,kit de utensilios, boxes metalicos, etc.",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 617.0
+      },
+      {
+       "fila": 129,
+       "item": "10.30",
+       "descripcion": "Cantoneras de 36.5 mm x 28.58 mm de aluminio en poyo de counter, nicho de felpudo, poyo de tablero y fachada",
+       "um": "ml",
+       "cantidad": 22.91,
+       "precio": 14.0
+      },
+      {
+       "fila": 130,
+       "item": "10.31",
+       "descripcion": "Candado para loockers de deposito",
+       "um": "und",
+       "cantidad": 6.0,
+       "precio": 8.0
+      },
+      {
+       "fila": 131,
+       "item": "10.32",
+       "descripcion": "Señales fotoluminiscente para equipos calientes de 13cm x 20cm ( Cafetera y Menumaster)",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 21.0
+      },
+      {
+       "fila": 132,
+       "item": "10.33",
+       "descripcion": "Suministro e instalación de celosía de aluminio color negro para zona de counter",
+       "um": "m2",
+       "cantidad": 13.32,
+       "precio": 380.0
+      },
+      {
+       "fila": 133,
+       "item": "10.34",
+       "descripcion": "Suministro e instalación de celosia de aluminio color negro para zona caliente",
+       "um": "m2",
+       "cantidad": 2.5,
+       "precio": 380.0
+      }
+     ]
+    },
+    {
+     "nombre": "ACCESORIOS VARIOS",
+     "fila": 134,
+     "items": [
+      {
+       "fila": 135,
+       "item": "10.35",
+       "descripcion": "Par de guante Neopreno Negro (T-Media)",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 13.0
+      },
+      {
+       "fila": 136,
+       "item": "10.36",
+       "descripcion": "suministro e instalación de rack para monitor e instalación de monitor en el menu board",
+       "um": "glb",
+       "cantidad": 3.0,
+       "precio": 190.0
+      },
+      {
+       "fila": 137,
+       "item": "10.37",
+       "descripcion": "Suministro e instalacion de burlete para puertas de ingreso a tienda, patio (exterior)",
+       "um": "glb",
+       "cantidad": 4.0,
+       "precio": 76.0
+      },
+      {
+       "fila": 138,
+       "item": "10.38",
+       "descripcion": "Suministro e instalacion de estructura metalica de soporte para cigarreras y otros en counter",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 115.0
+      },
+      {
+       "fila": 139,
+       "item": "10.39",
+       "descripcion": "Suministro de Espejo panoramico y accesorio de fijacion",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 115.0
+      },
+      {
+       "fila": 140,
+       "item": "10.40",
+       "descripcion": "Suministro de espejo panorámico domo 360",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 312.0
+      },
+      {
+       "fila": 141,
+       "item": "10.41",
+       "descripcion": "Suministro de tacho grande 75L (3)",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 40.34
+      },
+      {
+       "fila": 142,
+       "item": "10.42",
+       "descripcion": "Suministro de tacho chico 11.9L",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 9.32
+      }
+     ]
+    },
+    {
+     "nombre": "PICADO PARA TUBERIAS",
+     "fila": 143,
+     "items": [
+      {
+       "fila": 144,
+       "item": "11.01",
+       "descripcion": "Picado de pisos y paredes para empotrar tuberias de IIEE",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 624.0
+      }
+     ]
+    },
+    {
+     "nombre": "SALIDAS PARA LUZ EN TECHO Y PARED",
+     "fila": 145,
+     "items": [
+      {
+       "fila": 146,
+       "item": "12.01",
+       "descripcion": "Salida para luz en techos y pared",
+       "um": "pto",
+       "cantidad": 57.0,
+       "precio": 70.0
+      }
+     ]
+    },
+    {
+     "nombre": "SALIDA PARA DATA E INTERRUPTORES (canalizacion)",
+     "fila": 147,
+     "items": [
+      {
+       "fila": 148,
+       "item": "13.01",
+       "descripcion": "Canalizacion para data, tuberia PVC 1 1/2\", del rack al mueble de caja",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 34.0
+      },
+      {
+       "fila": 149,
+       "item": "13.02",
+       "descripcion": "Canalizacion para fibra óptica, tuberia Conduit 1 1/2\", del rack a fachada de tienda",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 150,
+       "item": "13.03",
+       "descripcion": "Canalizacion para data, tuberia Conduit 1 1/2\", del rack al centro de tienda para equipo WIFI",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 132.0
+      },
+      {
+       "fila": 151,
+       "item": "13.04",
+       "descripcion": "Salida para interruptores dobles y simples, con tuberia EMT de 3/4\"",
+       "um": "pto",
+       "cantidad": 3.0,
+       "precio": 81.0
+      }
+     ]
+    },
+    {
+     "nombre": "TOMACORRIENTES E INTERRUPTORES",
+     "fila": 152,
+     "items": [
+      {
+       "fila": 153,
+       "item": "14.01",
+       "descripcion": "Suministro e instalacion de dados y placa SCHUKO y TRES EN LINEA, en pared, bipolar doble + tierra 15A-220V.( equipos: Mimet, FC-1, FG-1, Hielo, HA, M1, Frigobar, Cigarreras, TV CCTV, V1, V2, V3, Microondas, Cafetera, Quinua, Emoliente, Nestle, mueble de caja) (toma doble redonda + vertical + placa)",
+       "um": "pto",
+       "cantidad": 16.0,
+       "precio": 54.0
+      },
+      {
+       "fila": 154,
+       "item": "14.02",
+       "descripcion": "Suministro e instalacion de dados y placa levinton universal, en pared, bipolar doble + tierra (equipos HD y Tv menuboard)",
+       "um": "pto",
+       "cantidad": 5.0,
+       "precio": 36.0
+      },
+      {
+       "fila": 155,
+       "item": "14.03",
+       "descripcion": "Suministro e instalacion de dados SCHUKO y placa para toma ESTABILIZADA, bipolar doble + tierra, para mueble de caja con cajas modulares y para rack de comunicaciones",
+       "um": "pto",
+       "cantidad": 12.0,
+       "precio": 79.0
+      },
+      {
+       "fila": 156,
+       "item": "14.04",
+       "descripcion": "Suministro e instalacion de interruptores LEVITON",
+       "um": "pto",
+       "cantidad": 3.0,
+       "precio": 30.0
+      },
+      {
+       "fila": 157,
+       "item": "14.05",
+       "descripcion": "Suministro e instalacion de toma trifasica Menekke de 63 Amp.LEVITON (grupo electrogeno)",
+       "um": "pto",
+       "cantidad": 0.0,
+       "precio": 125.0
+      },
+      {
+       "fila": 158,
+       "item": "14.06",
+       "descripcion": "Caja modular metalica para menekke de Grupo Electrogeno.",
+       "um": "pto",
+       "cantidad": 0.0,
+       "precio": 187.0
+      },
+      {
+       "fila": 159,
+       "item": "14.07",
+       "descripcion": "Cambio de enchufes de equipos al tipo Schuko",
+       "um": "und",
+       "cantidad": 14.0,
+       "precio": 26.0
+      },
+      {
+       "fila": 160,
+       "item": "14.08",
+       "descripcion": "Suministro e instalacion de toma trifasica Menekke de 32 Amp.LEVITON (M1)",
+       "um": "pto",
+       "cantidad": 1.0,
+       "precio": 60.0
+      },
+      {
+       "fila": 161,
+       "item": "14.09",
+       "descripcion": "Suministro e instalacion de Pulsador de pánico (corte eléctrico)",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 138.0
+      }
+     ]
+    },
+    {
+     "nombre": "ALIMENTADORES ( TODO CON CABLE LIBRE DE HALOGENOS ) * INC ENTUBADO",
+     "fila": 162,
+     "items": [
+      {
+       "fila": 163,
+       "item": "15.01",
+       "descripcion": "3-1x35mm 2LSOH cable provisional de 35mm de N2XOH",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 112.0
+      },
+      {
+       "fila": 164,
+       "item": "15.02",
+       "descripcion": "3-1x70mm2(F) + 1x35mm2(T)/T - 1 1/2\"øEMT NYY",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 182.0
+      },
+      {
+       "fila": 165,
+       "item": "15.03",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO(ALUMBRADO CIRCUITO A )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 166,
+       "item": "15.04",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (ALUMBRADO CIRCUITO B)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 167,
+       "item": "15.05",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE INDECO (TOMACORRIENTE MIMET)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 168,
+       "item": "15.06",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE FG1)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 169,
+       "item": "15.07",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE FC-1)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 170,
+       "item": "15.08",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( CONGELADORA IGLU )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 171,
+       "item": "15.09",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (MICROONDAS, CAFETERA, NESTLE)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 172,
+       "item": "15.10",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( CIGARRERA - INSECTOCUTOR)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 173,
+       "item": "15.11",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE M1 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 174,
+       "item": "15.12",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( V1 - V5 - V1 de backcounter)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 175,
+       "item": "15.13",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( VITRINA REFRIGERADA, V2 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 176,
+       "item": "15.14",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( VITRINA ABIERTA, V3 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 177,
+       "item": "15.15",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( CONGELADORAS D'ONOFRO Y ARTIKA HD - HA )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 178,
+       "item": "15.16",
+       "descripcion": "3-1x6mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (CONDENSADOR 01 - CONDENSADOR 02 - CONDENSADOR 3)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 179,
+       "item": "15.17",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (BOMBAS DE AGUA PARA AA)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 180,
+       "item": "15.18",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (MENUBOARD,TV DE CAMARAS Y TV DE MENUBOARD)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 181,
+       "item": "15.19",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (LETRERO )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 182,
+       "item": "15.20",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( CORTINA DE AIRE)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 183,
+       "item": "15.21",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO(TOMA EN PISO DE GONDOLA)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 184,
+       "item": "15.22",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (TOMA EN GONDOLA DE PARED)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 185,
+       "item": "15.23",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( PARA PASTORALES)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 186,
+       "item": "15.24",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO(TOMA PARA CAMARAS DE CCTV )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 187,
+       "item": "15.25",
+       "descripcion": "3-1x35mm2(F) + 1x16mm2(T)/T - 50mmøEMT CABLE LIBRE DE HALOGENO (PARA GRUPO ELECTROGENO)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 96.0
+      },
+      {
+       "fila": 188,
+       "item": "15.26",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmø EMT CABLE LIBRE DE HALOGENO (EXTRACCION TRASTIENDA)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 189,
+       "item": "15.27",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmø EMT CABLE LIBRE DE HALOGENO (EXTRACCION DE CENEFA DECORATIVA)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 190,
+       "item": "15.28",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (EXTRACCION M1)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 191,
+       "item": "15.29",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmø EMT CABLE LIBRE DE HALOGENO (INYECCIÓN)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 192,
+       "item": "15.30",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (LUZ DE EMERGENCIA )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 193,
+       "item": "15.31",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (UPS 1 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 194,
+       "item": "15.32",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO (UPS 2 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 195,
+       "item": "15.33",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 1 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 196,
+       "item": "15.34",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 2 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 197,
+       "item": "15.35",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 3 )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 198,
+       "item": "15.36",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( PANEL PCI )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 199,
+       "item": "15.37",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( BOTON PANICO )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 200,
+       "item": "15.38",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT CABLE LIBRE DE HALOGENO ( RACK DE COMUNICACIONES )",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 201,
+       "item": "15.39",
+       "descripcion": "2-1x4mm2LSOH+ 1x4mm2/T- 20mmø EMT CABLE LIBRE DE HALOGENO (F-2P CHINO)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      }
+     ]
+    },
+    {
+     "nombre": "CAJAS",
+     "fila": 202,
+     "items": [
+      {
+       "fila": 203,
+       "item": "16.01",
+       "descripcion": "Caja de pase metálica de 400X400",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 48.0
+      },
+      {
+       "fila": 204,
+       "item": "16.02",
+       "descripcion": "Caja de pase metálica de 350X350",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 40.0
+      },
+      {
+       "fila": 205,
+       "item": "16.03",
+       "descripcion": "Caja de pase metálica de 100X100",
+       "um": "und",
+       "cantidad": 130.0,
+       "precio": 11.0
+      },
+      {
+       "fila": 206,
+       "item": "16.04",
+       "descripcion": "Caja de pase metálica de 150X150",
+       "um": "und",
+       "cantidad": 10.0,
+       "precio": 20.0
+      },
+      {
+       "fila": 207,
+       "item": "16.05",
+       "descripcion": "Caja de pase metálica de 200X200",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 12.0
+      }
+     ]
+    },
+    {
+     "nombre": "TABLEROS Y LLAVES",
+     "fila": 208,
+     "items": [
+      {
+       "fila": 209,
+       "item": "17.01",
+       "descripcion": "Tablero de Módulo (TSGG+ESTABILIZADO Y TRANSFERENCIA) incluye instalación",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 624.0
+      },
+      {
+       "fila": 210,
+       "item": "17.02",
+       "descripcion": "GUARDAFASES PARA EQUIPOS DE AIRE ACONDICIONADO",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 398.0
+      }
+     ]
+    },
+    {
+     "nombre": "ARTEFACTOS (SUMINISTRO E INSTALACION)",
+     "fila": 211,
+     "items": [
+      {
+       "fila": 212,
+       "item": "18.01",
+       "descripcion": "Reflector de emergencia a bateria seca con lamparas (LUCES DE EMERGENCIA) Marca Phillips",
+       "um": "und",
+       "cantidad": 7.0,
+       "precio": 83.0
+      },
+      {
+       "fila": 213,
+       "item": "18.02",
+       "descripcion": "Luminarias tipo panel LED 5000k con 5 años de garantía",
+       "um": "und",
+       "cantidad": 15.0,
+       "precio": 66.99
+      },
+      {
+       "fila": 214,
+       "item": "18.03",
+       "descripcion": "Luminaria lineal hermetica de 28w para adosar sala de ventas de 60cm",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 58.1
+      },
+      {
+       "fila": 215,
+       "item": "18.04",
+       "descripcion": "Luminaria lineal hermetica de 28w para adosar sala de ventas de 1.20m",
+       "um": "und",
+       "cantidad": 7.0,
+       "precio": 80.06
+      },
+      {
+       "fila": 216,
+       "item": "18.05",
+       "descripcion": "Luminaria lineal hermetica de 28w para adosar almacén",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 80.06
+      },
+      {
+       "fila": 217,
+       "item": "18.06",
+       "descripcion": "Luminarias con Foco Ahorrador para baño",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 21.0
+      },
+      {
+       "fila": 218,
+       "item": "18.07",
+       "descripcion": "Luminarias para fachada (spot, empotrada o adosada)",
+       "um": "und",
+       "cantidad": 10.0,
+       "precio": 42.0
+      },
+      {
+       "fila": 219,
+       "item": "18.08",
+       "descripcion": "Estructura para pastorales de luminarias en la fachada",
+       "um": "und",
+       "cantidad": 10.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 220,
+       "item": "18.09",
+       "descripcion": "Luminarias pastorales (incluye brazo de soporte 0.40m, reflector de 100W luz calida y accesorios",
+       "um": "und",
+       "cantidad": 10.0,
+       "precio": 75.72
+      },
+      {
+       "fila": 221,
+       "item": "18.10",
+       "descripcion": "Suministro e instalación de luminarias tipo campana (encima de mueble barra)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 142.0
+      },
+      {
+       "fila": 222,
+       "item": "18.11",
+       "descripcion": "Luminarias tipo campana para doble altura",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 182.0
+      }
+     ]
+    },
+    {
+     "nombre": "VARIOS",
+     "fila": 223,
+     "items": [
+      {
+       "fila": 224,
+       "item": "19.01",
+       "descripcion": "Pozo a Tierra con cemento conductivo",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 1615.0
+      },
+      {
+       "fila": 225,
+       "item": "19.02",
+       "descripcion": "Mantenimiento de pozo a tierra existente",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 432.0
+      },
+      {
+       "fila": 226,
+       "item": "19.03",
+       "descripcion": "Cable de cobre desnudo, de 16 mm. Y accesorios desde pozo a tierra a tablero general TW 10 mm2.",
+       "um": "ml",
+       "cantidad": 6.0,
+       "precio": 22.0
+      },
+      {
+       "fila": 227,
+       "item": "19.04",
+       "descripcion": "Cable provisional desde medidor actual hacia el tablero (antes del F1) (canalizacion y cable)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 58.0
+      },
+      {
+       "fila": 228,
+       "item": "19.05",
+       "descripcion": "Ampliación de carga",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1425.0
+      },
+      {
+       "fila": 229,
+       "item": "19.06",
+       "descripcion": "Suministro e Instalacion de medidor de Energia trifasico (incluye gabinete porta medidor , llave termomagnetica)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 841.0
+      },
+      {
+       "fila": 230,
+       "item": "19.07",
+       "descripcion": "Registros de 6 \" pintado de color amarillo a 6 y 10 m de distancia del pozo a tierra",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 75.0
+      }
+     ]
+    },
+    {
+     "nombre": "SALIDAS PARA INTRUSION, DETECCION Y CCTV",
+     "fila": 231,
+     "items": [
+      {
+       "fila": 232,
+       "item": "20.01",
+       "descripcion": "Salida para sirena de largo alcance de alarma contra incendio",
+       "um": "pto",
+       "cantidad": 1.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 233,
+       "item": "20.02",
+       "descripcion": "Salida para central de Alarma contra Incendio",
+       "um": "pto",
+       "cantidad": 1.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 234,
+       "item": "20.03",
+       "descripcion": "Salida para detectores de Humo",
+       "um": "pto",
+       "cantidad": 4.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 235,
+       "item": "20.04",
+       "descripcion": "Salidas para camaras de CCTV",
+       "um": "pto",
+       "cantidad": 7.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 236,
+       "item": "20.05",
+       "descripcion": "Salidas para detección",
+       "um": "pto",
+       "cantidad": 4.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 237,
+       "item": "20.06",
+       "descripcion": "Salida para monitor de seguridad",
+       "um": "pto",
+       "cantidad": 1.0,
+       "precio": 91.0
+      },
+      {
+       "fila": 238,
+       "item": "20.07",
+       "descripcion": "Salida para Intrusión",
+       "um": "pto",
+       "cantidad": 7.0,
+       "precio": 91.0
+      }
+     ]
+    },
+    {
+     "nombre": "PICADO PARA TUBERIAS",
+     "fila": 239,
+     "items": [
+      {
+       "fila": 240,
+       "item": "21.01",
+       "descripcion": "Picado de empotrado de tuberias para nueva Red de desague IISS",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 758.0
+      }
+     ]
+    },
+    {
+     "nombre": "SALIDA PARA DESAGUE",
+     "fila": 241,
+     "items": [
+      {
+       "fila": 242,
+       "item": "22.01",
+       "descripcion": "Salida para nueva Red de Desague de 6\"",
+       "um": "pto",
+       "cantidad": 0.0,
+       "precio": 71.0
+      },
+      {
+       "fila": 243,
+       "item": "22.02",
+       "descripcion": "Salida para nueva Red de Desague de 4\"",
+       "um": "pto",
+       "cantidad": 1.0,
+       "precio": 55.0
+      },
+      {
+       "fila": 244,
+       "item": "22.03",
+       "descripcion": "Salida para nueva Red de Desague de 2\"",
+       "um": "pto",
+       "cantidad": 3.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 245,
+       "item": "22.04",
+       "descripcion": "Salida para drenaje de Evaporadores 2\"",
+       "um": "pto",
+       "cantidad": 2.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 246,
+       "item": "22.05",
+       "descripcion": "Salida para drenaje de Condensadores 2\"",
+       "um": "pto",
+       "cantidad": 2.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 247,
+       "item": "22.06",
+       "descripcion": "Tuberia Pvc Sal P/desague D=6\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 68.0
+      },
+      {
+       "fila": 248,
+       "item": "22.07",
+       "descripcion": "Tuberia Pvc Sal P/desague D=4\"",
+       "um": "ml",
+       "cantidad": 26.0,
+       "precio": 38.0
+      },
+      {
+       "fila": 249,
+       "item": "22.08",
+       "descripcion": "Tuberia Pvc Sal P/desague D=2\"",
+       "um": "ml",
+       "cantidad": 32.0,
+       "precio": 27.0
+      },
+      {
+       "fila": 250,
+       "item": "22.09",
+       "descripcion": "Tuberia Pvc Sal P/desague para evaporadores",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 251,
+       "item": "22.10",
+       "descripcion": "Tuberia Pvc Sal P/desague para condensadores",
+       "um": "ml",
+       "cantidad": 40.0,
+       "precio": 24.0
+      }
+     ]
+    },
+    {
+     "nombre": "ADITAMENTOS",
+     "fila": 252,
+     "items": [
+      {
+       "fila": 253,
+       "item": "23.01",
+       "descripcion": "Sumidero cromado de 2\"",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 254,
+       "item": "23.02",
+       "descripcion": "Sumidero cromado de 4\"",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 38.0
+      },
+      {
+       "fila": 255,
+       "item": "23.03",
+       "descripcion": "Sumidero cromado de 6\"",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 48.0
+      },
+      {
+       "fila": 256,
+       "item": "23.04",
+       "descripcion": "Valvulas de pase 3/4\" (incluye union universal) SIMBAL",
+       "um": "und",
+       "cantidad": 5.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 257,
+       "item": "23.05",
+       "descripcion": "Tapas de PVC blanco para valvulas.",
+       "um": "und",
+       "cantidad": 5.0,
+       "precio": 51.0
+      }
+     ]
+    },
+    {
+     "nombre": "VARIOS",
+     "fila": 258,
+     "items": [
+      {
+       "fila": 259,
+       "item": "24.01",
+       "descripcion": "Caja de registro de albañileria, de 12\" x 24\", con tapa de concreto",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 142.0
+      },
+      {
+       "fila": 260,
+       "item": "24.02",
+       "descripcion": "Instalacion de Inodoro, Lavadero de trastienda, sala de ventas, y baño.",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 48.0
+      },
+      {
+       "fila": 261,
+       "item": "24.03",
+       "descripcion": "Independización de desagüe de la red del propietario",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 249.0
+      },
+      {
+       "fila": 262,
+       "item": "24.04",
+       "descripcion": "Suministro e Instalacion de medidor de agua",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 172.0
+      }
+     ]
+    },
+    {
+     "nombre": "SALIDA PARA AGUA",
+     "fila": 263,
+     "items": [
+      {
+       "fila": 264,
+       "item": "25.01",
+       "descripcion": "Salida de agua PVC C-10 DE 1/2\"",
+       "um": "und",
+       "cantidad": 5.0,
+       "precio": 56.0
+      },
+      {
+       "fila": 265,
+       "item": "25.02",
+       "descripcion": "Tuberia clase 10 de 3/4\"",
+       "um": "ml",
+       "cantidad": 70.0,
+       "precio": 20.0
+      }
+     ]
+    },
+    {
+     "nombre": "AIRE ACONDICIONADO",
+     "fila": 266,
+     "items": [
+      {
+       "fila": 267,
+       "item": "26.01",
+       "descripcion": "Por suministro e instalación de equipo de extracción para tienda motor extractor TD1000 Soler & Palau (Silent)",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 1766.0
+      },
+      {
+       "fila": 268,
+       "item": "26.02",
+       "descripcion": "Por suministro e instalación de equipo de extracción para tienda motor inyeccion TD1000 Soler & Palau (Silent)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 1766.0
+      },
+      {
+       "fila": 269,
+       "item": "26.03",
+       "descripcion": "Por suministro e instalación de manga de lata galvanizada y manga flexible para extraccion e inyección",
+       "um": "ml",
+       "cantidad": 60.0,
+       "precio": 110.0
+      },
+      {
+       "fila": 270,
+       "item": "26.04",
+       "descripcion": "Suministro e instalacion de campana extractora, en acero inox, para horno rapido (menumaster)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 816.0
+      }
+     ]
+    },
+    {
+     "nombre": "Instalación de punto de red Cat6 a",
+     "fila": 271,
+     "items": [
+      {
+       "fila": 272,
+       "item": "27.01",
+       "descripcion": "* Cableado con cable UTP cat6 a desde mueble de cajas hasta Rack de datos ( considerar que son 2 cajas habilitadas), el precio es por las 2 cajas",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1425.0
+      }
+     ]
+    },
+    {
+     "nombre": "Montaje en pared de Rack de data",
+     "fila": 277,
+     "items": [
+      {
+       "fila": 278,
+       "item": "27.07",
+       "descripcion": "* Nivelación y empernado de rack de data",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 608.0
+      }
+     ]
+    },
+    {
+     "nombre": "Equipos para Rack",
+     "fila": 286,
+     "items": [
+      {
+       "fila": 287,
+       "item": "27.16",
+       "descripcion": "Rack Importado de 10 RU * Para instalacion de equipos",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 415.0
+      },
+      {
+       "fila": 288,
+       "item": "27.17",
+       "descripcion": "Rack importado de 6 RU * Para instalacion de UPS",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 380.0
+      },
+      {
+       "fila": 289,
+       "item": "27.18",
+       "descripcion": "Power Rack de 8 Tomas Metalico",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 94.0
+      },
+      {
+       "fila": 290,
+       "item": "27.19",
+       "descripcion": "Bandejas de 1 RU",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 57.0
+      },
+      {
+       "fila": 291,
+       "item": "27.20",
+       "descripcion": "Ordenador de Cables de 2 RU",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 53.0
+      },
+      {
+       "fila": 292,
+       "item": "27.21",
+       "descripcion": "Patch Cord Utp Cat 6a de 1 mts",
+       "um": "und",
+       "cantidad": 14.0,
+       "precio": 33.0
+      },
+      {
+       "fila": 293,
+       "item": "27.22",
+       "descripcion": "Patch Cord Utp Cat 6a de 2 mts",
+       "um": "und",
+       "cantidad": 6.0,
+       "precio": 37.0
+      },
+      {
+       "fila": 294,
+       "item": "27.24",
+       "descripcion": "Kit de cooler para techo de Rack",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 156.0
+      },
+      {
+       "fila": 295,
+       "item": "27.25",
+       "descripcion": "Patch Panel Cat 6A de 24 puertos",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 201.0
+      },
+      {
+       "fila": 296,
+       "item": "27.26",
+       "descripcion": "Instalacion de red para monitor de publicidad en cat6A",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 144.0
+      }
+     ]
+    },
+    {
+     "nombre": "MUEBLES",
+     "fila": 297,
+     "items": [
+      {
+       "fila": 298,
+       "item": "28.01",
+       "descripcion": "MUEBLE DE COUNTER Mueble en melamine tropicalizado 18mm 3.17 x 0.90 X 0.97, color gris oscuro con tablero Posformado gris, cajones con correderas telescópicas y tiradores de acero inoxidable.",
+       "um": "ml",
+       "cantidad": 3.18,
+       "precio": 1102.0
+      },
+      {
+       "fila": 299,
+       "item": "28.02",
+       "descripcion": "MUEBLE ZONA CALIENTE mueble en melanina 18mm Tropicalizado 3.1 X 0.68 X 0.90 color gris oscuro, 2 puertas batientes, tiradores de acero inoxidable, tablero Posformado gris",
+       "um": "ml",
+       "cantidad": 2.5,
+       "precio": 1004.0
+      },
+      {
+       "fila": 300,
+       "item": "28.03",
+       "descripcion": "MUEBLE DETRAS DE COUNTER mueble en melanina 18mm Tropicalizado 2.41 X 0.74 X 0.90 color gris oscuro, puertas batientes, tiradores de acero inoxidable, tablero Posformado gris",
+       "um": "ml",
+       "cantidad": 2.53,
+       "precio": 1008.0
+      },
+      {
+       "fila": 301,
+       "item": "28.04",
+       "descripcion": "MUEBLE V1 / V5 mueble en melanina 18mm Tropicalizado 1.20 X 0.80 X 0.97 color gris oscuro, 2 puertas batientes, tiradores de acero inoxidable, tablero Posformado gris",
+       "um": "ml",
+       "cantidad": 0.8,
+       "precio": 849.0
+      },
+      {
+       "fila": 302,
+       "item": "28.05",
+       "descripcion": "MUEBLE DETRAS DE COUNTER (LAVADERO) mueble en melanina 18mm Tropicalizado 1.00 X 0.82 X 0.90 color gris oscuro, puertas batientes, tiradores de acero inoxidable, enchapado el tablero en acero inoxidable",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 686.0
+      },
+      {
+       "fila": 303,
+       "item": "28.06",
+       "descripcion": "MUEBLE - BARRA Barra en melanina 18mm Tropicalizado 4.59 X 0.35 color gris oscuro, incluye estructura.",
+       "um": "ml",
+       "cantidad": 2.5,
+       "precio": 653.0
+      },
+      {
+       "fila": 304,
+       "item": "28.07",
+       "descripcion": "MUEBLE- DE PUERTA Barra en melanina 18mm Tropicalizado0.65 X 0.39 color gris oscuro, puertas batientes, tiradores de acero inoxidable, enchapado el tablero Posformado gris",
+       "um": "ml",
+       "cantidad": 3.242,
+       "precio": 458.0
+      },
+      {
+       "fila": 305,
+       "item": "28.08",
+       "descripcion": "SOPORTE METÁLICO PARA BARRA Estructura metalica con tubo redondo de 2\"",
+       "um": "ml",
+       "cantidad": 2.5,
+       "precio": 206.0
+      },
+      {
+       "fila": 306,
+       "item": "28.09",
+       "descripcion": "Sillas altas para barra",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 190.0
+      },
+      {
+       "fila": 307,
+       "item": "28.10",
+       "descripcion": "MUEBLE UPS Fabricacion de mueble de melamine de 18mm de 0.26mx0.77mx0.90m para equipos de UPS (según modelo )",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 702.0
+      },
+      {
+       "fila": 308,
+       "item": "28.11",
+       "descripcion": "Mueble Costado de V1 DE 0.70m x 0.60m x 0.90m",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 469.0
+      },
+      {
+       "fila": 309,
+       "item": "28.12",
+       "descripcion": "Mueble Costado de V2 DE 0.70m x 0.80m x 0.90m",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 469.0
+      },
+      {
+       "fila": 310,
+       "item": "28.13",
+       "descripcion": "Mueble de melamine para sistema hidroneumatico",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 384.0
+      }
+     ]
+    },
+    {
+     "nombre": "DOSSIERES Y DOCUMENTACION",
+     "fila": 311,
+     "items": [
+      {
+       "fila": 312,
+       "item": "29.01",
+       "descripcion": "PLANOS DE ARQUITECTURA ( CORTES, ELEVACIONES, PLANTA, DETALLES, INDECI)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 480.0
+      },
+      {
+       "fila": 313,
+       "item": "29.02",
+       "descripcion": "PLANOS DE ESPECIALIDADES ( IIEE, IISS, INTRUSION, DETECCION, CCTV, AA, entre otros )",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 480.0
+      },
+      {
+       "fila": 314,
+       "item": "29.03",
+       "descripcion": "ESPECIFICACIONES TECNICAS",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 428.0
+      },
+      {
+       "fila": 315,
+       "item": "29.04",
+       "descripcion": "MEMORIA DESCRIPTIVA ( ARQUITECTURA , IIEE )",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 477.0
+      },
+      {
+       "fila": 316,
+       "item": "29.05",
+       "descripcion": "PROTOCOLOS (TABLERO, POZO A TIERRA, MEGADO)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 475.0
+      },
+      {
+       "fila": 317,
+       "item": "29.06",
+       "descripcion": "CARTA DE GARANTIA DE PROVEEDORES",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 388.0
+      },
+      {
+       "fila": 318,
+       "item": "29.07",
+       "descripcion": "DOCUMENTOS DE APERTURA (PLANOS FIRMADOS Y PROTOCOLOS 3 juegos)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 480.0
+      },
+      {
+       "fila": 319,
+       "item": "29.08",
+       "descripcion": "PLANO PARA SOLICITUD DE F1",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 413.0
+      },
+      {
+       "fila": 320,
+       "item": "29.08",
+       "descripcion": "PLANOS SUNARP (sujeto a solicitud)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 960.0
+      }
+     ]
+    },
+    {
+     "nombre": "PARTIDAS ADICIONALES",
+     "fila": 321,
+     "items": [
+      {
+       "fila": 322,
+       "item": "30.01",
+       "descripcion": "Fabricacion y colocacion de reja de proteccion para medidor de luz incluido candado",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 242.0
+      },
+      {
+       "fila": 323,
+       "item": "30.02",
+       "descripcion": "Canalizacion para letrero, tuberia EMT, en exterior",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 194.0
+      },
+      {
+       "fila": 324,
+       "item": "30.03",
+       "descripcion": "Habilitación de energia para tiendas contiguas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 242.0
+      },
+      {
+       "fila": 325,
+       "item": "30.04",
+       "descripcion": "Canalizacion de tuberia para estacion manual",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 353.0
+      },
+      {
+       "fila": 326,
+       "item": "30.05",
+       "descripcion": "Rotulado de tablero",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 220.0
+      },
+      {
+       "fila": 327,
+       "item": "30.06",
+       "descripcion": "Rejillas para inyección (plancha galvanizada pintada al horno)",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 97.0
+      },
+      {
+       "fila": 328,
+       "item": "30.07",
+       "descripcion": "Rejillas para extracción (plancha galvanizada pintada al horno)",
+       "um": "und",
+       "cantidad": 7.0,
+       "precio": 97.0
+      },
+      {
+       "fila": 329,
+       "item": "30.08",
+       "descripcion": "Rejillas para extracción en cenefa (plancha galvanizada pintada al horno)",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 97.0
+      },
+      {
+       "fila": 330,
+       "item": "30.09",
+       "descripcion": "Accesorios de fijación para ducterias de extracción e inyección",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 436.0
+      },
+      {
+       "fila": 331,
+       "item": "30.10",
+       "descripcion": "Embones para ductos metálicos (ducteria expuesta)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 727.0
+      },
+      {
+       "fila": 332,
+       "item": "30.11",
+       "descripcion": "Pintado de tuberias expuestas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 671.0
+      },
+      {
+       "fila": 333,
+       "item": "30.12",
+       "descripcion": "Pintado de ducterias de extracción e inyección",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 875.0
+      },
+      {
+       "fila": 334,
+       "item": "30.13",
+       "descripcion": "Pallet 0.90X0.60m",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 77.0
+      },
+      {
+       "fila": 335,
+       "item": "30.14",
+       "descripcion": "Anclaje de caja fuerte en almacen",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 145.0
+      },
+      {
+       "fila": 336,
+       "item": "30.15",
+       "descripcion": "Timbre ubicado en counter y sirena en almacén (incluye canalizado y cableado",
+       "um": "und",
+       "cantidad": 2.0,
+       "precio": 381.0
+      },
+      {
+       "fila": 337,
+       "item": "30.16",
+       "descripcion": "Suministro e instalación de bomba para cafetera",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 902.0
+      },
+      {
+       "fila": 338,
+       "item": "30.17",
+       "descripcion": "Gestion Municipal",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 2506.0
+      },
+      {
+       "fila": 339,
+       "item": "30.18",
+       "descripcion": "Malla electrosoldada en parte posterior del local",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 724.0
+      },
+      {
+       "fila": 340,
+       "item": "30.19",
+       "descripcion": "Sellado para cobertura",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 242.0
+      },
+      {
+       "fila": 341,
+       "item": "30.20",
+       "descripcion": "Sellado de muebles",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 447.0
+      },
+      {
+       "fila": 342,
+       "item": "30.21",
+       "descripcion": "Tapa de melamine para f1",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 158.0
+      },
+      {
+       "fila": 343,
+       "item": "30.22",
+       "descripcion": "Traslado de materiales (porcelanato,cables,tablero,etc)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1020.0
+      },
+      {
+       "fila": 344,
+       "item": "30.23",
+       "descripcion": "Ventana de registro Gyplac",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 167.0
+      },
+      {
+       "fila": 345,
+       "item": "30.24",
+       "descripcion": "Rollos de cinta antideslizante 3M para tambo",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 225.0
+      },
+      {
+       "fila": 346,
+       "item": "30.25",
+       "descripcion": "Recubrimiento para guias de puerta enrrollable en vanos",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 257.0
+      },
+      {
+       "fila": 347,
+       "item": "30.26",
+       "descripcion": "Tapas circular para el mueble caffe",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 50.0
+      },
+      {
+       "fila": 348,
+       "item": "30.27",
+       "descripcion": "Suministro e instalacion de cinta led",
+       "um": "ml",
+       "cantidad": 2.5,
+       "precio": 64.0
+      },
+      {
+       "fila": 349,
+       "item": "30.28",
+       "descripcion": "Suministro e instalacion de fluorescente en fachada",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 118.0
+      },
+      {
+       "fila": 350,
+       "item": "30.29",
+       "descripcion": "Suministro e instalación de Tomacorriente hidrobox (Suministro e instalacion de dados y placa bticino HIDROBOX, en piso y pared 0.3 cm, bipolar doble + tierra",
+       "um": "und",
+       "cantidad": 3.0,
+       "precio": 160.0
+      },
+      {
+       "fila": 351,
+       "item": "30.30",
+       "descripcion": "Nicho para felpudo",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 242.0
+      },
+      {
+       "fila": 352,
+       "item": "30.31",
+       "descripcion": "Suminisro de escalera tipo banqueta (5 pasos)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 185.0
+      },
+      {
+       "fila": 353,
+       "item": "30.32",
+       "descripcion": "Suminisro de escalera tipo banqueta (3 pasos)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 123.0
+      },
+      {
+       "fila": 354,
+       "item": "30.33",
+       "descripcion": "Canalizado de acometida provisional y acometida del F1 desde el tablero hasta el banco de medidores",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1425.0
+      },
+      {
+       "fila": 355,
+       "item": "30.34",
+       "descripcion": "Corte en mueble por quiebre",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 237.5
+      },
+      {
+       "fila": 356,
+       "item": "30.35",
+       "descripcion": "Interconexión DACI entre tienda y edificio",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 3800.0
+      }
+     ]
+    },
+    {
+     "nombre": "PARTIDAS ADICIONALES",
+     "fila": 357,
+     "items": [
+      {
+       "fila": 358,
+       "item": "31.01",
+       "descripcion": "3-1x35mm 2LSOH cable provisional de 35mm de N2XOH",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 112.0
+      },
+      {
+       "fila": 359,
+       "item": "31.02",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P (AA1)",
+       "um": "ml",
+       "cantidad": 18.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 360,
+       "item": "31.03",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P (AA2)",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 361,
+       "item": "31.04",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P (AA3)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 362,
+       "item": "31.05",
+       "descripcion": "2-1x6mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (VITRINA V1- V5 -V2 - VISICOOLER ALMACEN - V3)",
+       "um": "ml",
+       "cantidad": 35.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 363,
+       "item": "31.06",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P (MAQUINAS DE CAFE - MICROONDAS)",
+       "um": "ml",
+       "cantidad": 35.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 364,
+       "item": "31.07",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (COOLER DE HIELO - CONGELADOS 1P - HELADERAS D-Y)",
+       "um": "ml",
+       "cantidad": 35.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 365,
+       "item": "31.08",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P (HORNO MENU MASTER)",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 366,
+       "item": "31.09",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P ( VISICOOLER 2P - 3P)",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 367,
+       "item": "31.10",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (INYECCIÓN - EXTRACCIÓN - CORTINA DE AIRE)",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 368,
+       "item": "31.11",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (VISICOOLER 1P - GONDOLAS - FG1)",
+       "um": "ml",
+       "cantidad": 30.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 369,
+       "item": "31.12",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (ALUMBRADO TIENDA - LUCES DE EMERG. - LETRERO ABIERTO)",
+       "um": "ml",
+       "cantidad": 125.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 370,
+       "item": "31.13",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (TV - CIGARRERA - INSECTOCUTOR - TIMBRE)",
+       "um": "ml",
+       "cantidad": 30.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 371,
+       "item": "31.14",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P(PASTORALES - LETRERO LUMINOSO)",
+       "um": "ml",
+       "cantidad": 60.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 372,
+       "item": "31.15",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P(BOMBA DE CONDENSADO)",
+       "um": "ml",
+       "cantidad": 45.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 373,
+       "item": "31.16",
+       "descripcion": "2-1x6mm2 NH-90 + 1x4mm2/T - 20mmØ PVC-P(TRANSFORMADOR ESTABILIZADO)",
+       "um": "ml",
+       "cantidad": 8.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 374,
+       "item": "31.17",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P(UPS 1)",
+       "um": "ml",
+       "cantidad": 13.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 375,
+       "item": "31.18",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P(UPS 2)",
+       "um": "ml",
+       "cantidad": 14.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 376,
+       "item": "31.19",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P(CCTV)",
+       "um": "ml",
+       "cantidad": 30.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 377,
+       "item": "31.20",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (RACK DE COMUNICACIONES)",
+       "um": "ml",
+       "cantidad": 16.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 378,
+       "item": "31.21",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (CAJA #1)",
+       "um": "ml",
+       "cantidad": 14.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 379,
+       "item": "31.22",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (PANEL PCI)",
+       "um": "ml",
+       "cantidad": 10.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 380,
+       "item": "31.23",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (CAJA #2)",
+       "um": "ml",
+       "cantidad": 18.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 381,
+       "item": "31.23",
+       "descripcion": "2-1x4mm2 NH-90 + 1x2.5mm2/T - 20mmØ PVC-P (CAJA #3)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "IdpptoFase": "b8713cc6",
+   "nombre": "OBRA GRUESA",
+   "hoja": "Obra gruesa Tambo - Contrato",
+   "secciones": [
+    {
+     "nombre": "Obras Preliminares",
+     "fila": 2,
+     "items": [
+      {
+       "fila": 3,
+       "item": "1.01",
+       "descripcion": "Corte losa existente para cimentacion de nuevo muro",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 19.06
+      },
+      {
+       "fila": 4,
+       "item": "1.02",
+       "descripcion": "Trabajos por traslado de medidor (no incluye cableado)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 384.0
+      },
+      {
+       "fila": 5,
+       "item": "1.03",
+       "descripcion": "Excavacion de zanja para cimientos corridos (0.40x0.80)",
+       "um": "ml",
+       "cantidad": 15.449,
+       "precio": 23.01
+      },
+      {
+       "fila": 6,
+       "item": "1.04",
+       "descripcion": "Excavacion de zanja para zapatas (1.00x1.00x0.80)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 48.38
+      },
+      {
+       "fila": 7,
+       "item": "1.05",
+       "descripcion": "Excavación de zapatas h=1.20 a 1.30m",
+       "um": "m3",
+       "cantidad": 1.536,
+       "precio": 57.0
+      },
+      {
+       "fila": 8,
+       "item": "1.06",
+       "descripcion": "Excavación de zanja para columnetas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 314.0
+      },
+      {
+       "fila": 9,
+       "item": "1.07",
+       "descripcion": "Eliminacion de Desmonte por demolición y excavación de zanjas, zapatas, escaleras, columnas y muros de albañilería, drywall, FCR, entre otros.",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 16.58
+      },
+      {
+       "fila": 10,
+       "item": "1.08",
+       "descripcion": "Excavacion para nivelacion de piso en zona de almacen",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 37.54
+      },
+      {
+       "fila": 11,
+       "item": "1.09",
+       "descripcion": "Relleno y compactacion con material propio",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 12,
+       "item": "1.10",
+       "descripcion": "Relleno con afirmado compactado e=20cm en capas de 20cm",
+       "um": "m3",
+       "cantidad": 15.3852,
+       "precio": 104.0
+      },
+      {
+       "fila": 13,
+       "item": "1.11",
+       "descripcion": "Nivelacion y compactacion de terreno con minicargador y rodillo",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 11.0
+      }
+     ]
+    },
+    {
+     "nombre": "CIMIENTO CORRIDO",
+     "fila": 15,
+     "items": [
+      {
+       "fila": 16,
+       "item": "2.01",
+       "descripcion": "Concreto para cimiento corrido",
+       "um": "m3",
+       "cantidad": 4.9437,
+       "precio": 268.8
+      }
+     ]
+    },
+    {
+     "nombre": "SOBRECIMIENTO",
+     "fila": 17,
+     "items": [
+      {
+       "fila": 18,
+       "item": "2.02",
+       "descripcion": "Encofrado y Desencofrado de Sobrecimiento",
+       "um": "m2",
+       "cantidad": 12.3592,
+       "precio": 43.06
+      },
+      {
+       "fila": 19,
+       "item": "2.03",
+       "descripcion": "Concreto para sobrecimientos",
+       "um": "m3",
+       "cantidad": 1.8539,
+       "precio": 268.8
+      }
+     ]
+    },
+    {
+     "nombre": "ZAPATA",
+     "fila": 20,
+     "items": [
+      {
+       "fila": 21,
+       "item": "2.04",
+       "descripcion": "Concreto para Zapatas",
+       "um": "m3",
+       "cantidad": 1.536,
+       "precio": 336.0
+      },
+      {
+       "fila": 22,
+       "item": "2.05",
+       "descripcion": "Malla 0.80 x 0.80 @0.20",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 23,
+       "item": "2.06",
+       "descripcion": "Concreto para solado 1:10 E=2\"",
+       "um": "m2",
+       "cantidad": 3.24,
+       "precio": 36.48
+      }
+     ]
+    },
+    {
+     "nombre": "MURO DE ALBAÑILERÍA",
+     "fila": 24,
+     "items": [
+      {
+       "fila": 25,
+       "item": "2.07",
+       "descripcion": "Muro de ladrillo king kong para F1, incluye tarrajeo y pintado en obra y post instalacion de medidor",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 767.0
+      },
+      {
+       "fila": 26,
+       "item": "2.08",
+       "descripcion": "Muros de Ladrillo KK soga",
+       "um": "m2",
+       "cantidad": 43.93,
+       "precio": 65.0
+      },
+      {
+       "fila": 27,
+       "item": "2.09",
+       "descripcion": "Muros de Ladrillo KK cabeza",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 69.0
+      },
+      {
+       "fila": 28,
+       "item": "2.10",
+       "descripcion": "Tarrajeo de paredes ( soga y/o cabeza)",
+       "um": "m2",
+       "cantidad": 80.283,
+       "precio": 30.0
+      },
+      {
+       "fila": 29,
+       "item": "2.11",
+       "descripcion": "Derrame en vanos",
+       "um": "ml",
+       "cantidad": 15.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 30,
+       "item": "2.12",
+       "descripcion": "Sardinel",
+       "um": "ml",
+       "cantidad": 6.37,
+       "precio": 62.0
+      }
+     ]
+    },
+    {
+     "nombre": "RAMPA",
+     "fila": 31,
+     "items": [
+      {
+       "fila": 32,
+       "item": "2.13",
+       "descripcion": "Rampa de concreto en ingreso (con bruñas cada 10cm)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 469.0
+      },
+      {
+       "fila": 33,
+       "item": "2.14",
+       "descripcion": "Rampa metálica de ingreso",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 336.0
+      }
+     ]
+    },
+    {
+     "nombre": "COBERTURA",
+     "fila": 34,
+     "items": [
+      {
+       "fila": 35,
+       "item": "2.15",
+       "descripcion": "Losa de concreto armado para estacionamiento de discapacitados (incluye concreto, acero y encofrado)",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 104.0
+      },
+      {
+       "fila": 36,
+       "item": "2.16",
+       "descripcion": "Plancha colaborante",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 243.0
+      },
+      {
+       "fila": 37,
+       "item": "2.17",
+       "descripcion": "concreto 210 kg/cm2",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 389.0
+      },
+      {
+       "fila": 38,
+       "item": "2.18",
+       "descripcion": "Cobertura metálica tipo TR4Xg de 0.25mm, adicionalmente ESW10 - Espuma de polietileno de celda cerrada en un espesor de 10mm laminada en aluminio reforzado y una cara blanca resistente al UV.",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 114.0
+      },
+      {
+       "fila": 39,
+       "item": "2.19",
+       "descripcion": "Techo de losa aligerada",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 172.8
+      },
+      {
+       "fila": 40,
+       "item": "2.20",
+       "descripcion": "Cobertura metalica tipo Termotecho e:1\" color blanco ( se considera la estructura de soporte de techo )",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 164.56
+      },
+      {
+       "fila": 41,
+       "item": "2.21",
+       "descripcion": "Mantenimiento de techo existente",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 42.91
+      },
+      {
+       "fila": 42,
+       "item": "2.22",
+       "descripcion": "Cobertura metálica termotecho sin estructuras de soporte (para casos donde se pueda reutilizar alguna estructura existente)",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 132.34
+      },
+      {
+       "fila": 43,
+       "item": "2.23",
+       "descripcion": "Refuerzo de enmallado con fierros de 3/8, con una separación de 20 cm entre cada uno, debajo de la cobertura TR4",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 83.0
+      },
+      {
+       "fila": 44,
+       "item": "2.24",
+       "descripcion": "Planchas, pernos y accesorios para cobertura",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1084.0
+      },
+      {
+       "fila": 45,
+       "item": "2.25",
+       "descripcion": "Plancha Metalica para techo",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 164.0
+      }
+     ]
+    },
+    {
+     "nombre": "ESTRUCTURA DE CONCRETO",
+     "fila": 46,
+     "items": [
+      {
+       "fila": 47,
+       "item": "2.26",
+       "descripcion": "Columna de confinamiento (incluye fierro, concreto, encofrado y desencofrado)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 432.94
+      },
+      {
+       "fila": 48,
+       "item": "2.27",
+       "descripcion": "Columna de concreto con fierro de 1/2 20cmx20cm (incluye encofrado y desencofrado)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 362.65
+      },
+      {
+       "fila": 49,
+       "item": "2.28",
+       "descripcion": "Columna de concreto con fierro de 1/2 30cmx30cm (incluye encofrado y desencofrado)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 478.94
+      },
+      {
+       "fila": 50,
+       "item": "2.29",
+       "descripcion": "Columna de concreto con fierro de 1/2 40cmx40cm (incluye encofrado y desencofrado)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 484.3
+      },
+      {
+       "fila": 51,
+       "item": "2.30",
+       "descripcion": "Columna de concreto con fierro de 5/8\" 30cmx30cm (incluye encofrado y desencofrado)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 957.0
+      },
+      {
+       "fila": 52,
+       "item": "2.31",
+       "descripcion": "Columna de concreto con fierro de 5/8\" 60cmx35m (incluye encofrado y desencofrado)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 1446.0
+      },
+      {
+       "fila": 53,
+       "item": "2.32",
+       "descripcion": "Viga de confinamiento (incluye fierro, concreto, encofrado y desencofrado)",
+       "um": "m2",
+       "cantidad": 3.0898,
+       "precio": 625.15
+      },
+      {
+       "fila": 54,
+       "item": "2.33",
+       "descripcion": "Viga de concreto con fierro de 1/2 (incluye concreto, encofrado y desencofrado)",
+       "um": "m3",
+       "cantidad": 0.0,
+       "precio": 336.0
+      },
+      {
+       "fila": 55,
+       "item": "2.34",
+       "descripcion": "Viga de concreto con fierro de 5/8\" 30cmx30cm (incluye encofrado y desencofrado)",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 351.0
+      },
+      {
+       "fila": 56,
+       "item": "2.35",
+       "descripcion": "Encofrado y Desencofrado de cimientos y viga solera",
+       "um": "m3",
+       "cantidad": 0.9269,
+       "precio": 38.88
+      }
+     ]
+    },
+    {
+     "nombre": "ACERO",
+     "fila": 57,
+     "items": [
+      {
+       "fila": 58,
+       "item": "2.36",
+       "descripcion": "Acero Fy=4,200 Kg/cm2 Rend:350 Kg/dia",
+       "um": "kg",
+       "cantidad": 69.4528,
+       "precio": 6.02
+      }
+     ]
+    },
+    {
+     "nombre": "ESTRUCTURA METÁLICA",
+     "fila": 59,
+     "items": [
+      {
+       "fila": 60,
+       "item": "2.37",
+       "descripcion": "Columnas metalica de 4\"x 4\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 97.07
+      },
+      {
+       "fila": 61,
+       "item": "2.38",
+       "descripcion": "Columnas metalica de 6\" x 6\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 120.0
+      },
+      {
+       "fila": 62,
+       "item": "2.39",
+       "descripcion": "Columnas metalica de 6\" x 6\" x 4mm",
+       "um": "ml",
+       "cantidad": 1.1,
+       "precio": 226.0
+      },
+      {
+       "fila": 63,
+       "item": "2.40",
+       "descripcion": "Estructura metalica para techos, de tubos de 4\"x 6\"x 3 mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 217.0
+      },
+      {
+       "fila": 64,
+       "item": "2.41",
+       "descripcion": "Columnas y vigas metalicas para reforzamientos tipo H de 12\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 161.66
+      },
+      {
+       "fila": 65,
+       "item": "2.42",
+       "descripcion": "Columnas y vigas metalicas para reforzamientos tipo H de 10\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 315.11
+      },
+      {
+       "fila": 66,
+       "item": "2.43",
+       "descripcion": "Estructura metalica para techos, de tubos de 4\"x 2\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 104.56
+      },
+      {
+       "fila": 67,
+       "item": "2.44",
+       "descripcion": "Estructura metalica para techos, de tubos de 4\"x 3\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 120.77
+      },
+      {
+       "fila": 68,
+       "item": "2.45",
+       "descripcion": "Estructura metalica para techos, de tubos de 4\"x 4\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 131.42
+      },
+      {
+       "fila": 69,
+       "item": "2.46",
+       "descripcion": "Estructura metalica para techos, de tubos de 3\"x 2\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 94.94
+      },
+      {
+       "fila": 70,
+       "item": "2.47",
+       "descripcion": "Estructura metalica para techos, de tubos de 3\"x 3\" x 3 mm.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 98.78
+      },
+      {
+       "fila": 71,
+       "item": "2.48",
+       "descripcion": "Viga metálica de 1\" x 1\" x 2mm",
+       "um": "kg",
+       "cantidad": 0.0,
+       "precio": 10.31
+      },
+      {
+       "fila": 72,
+       "item": "2.49",
+       "descripcion": "Viga metalica de 2\"x 6\" x 2.5 mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 100.0
+      },
+      {
+       "fila": 73,
+       "item": "2.50",
+       "descripcion": "Viga metalica de 2\"x 4\" x 2.5 mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 122.0
+      },
+      {
+       "fila": 74,
+       "item": "2.51",
+       "descripcion": "Viga metálica de 4\" x 4\" x 4.5mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 180.0
+      },
+      {
+       "fila": 75,
+       "item": "2.52",
+       "descripcion": "Viga metálica de 4\" x 6\" x 2.5mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 180.0
+      },
+      {
+       "fila": 76,
+       "item": "2.53",
+       "descripcion": "Viga metálica de 4\" x 6\" x 4.5mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 252.0
+      },
+      {
+       "fila": 77,
+       "item": "2.54",
+       "descripcion": "Viga metálica de 4\" x 8\" x 3mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 226.0
+      },
+      {
+       "fila": 78,
+       "item": "2.55",
+       "descripcion": "Viga metálica de 4\" x 8\" x 3.5mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 210.0
+      },
+      {
+       "fila": 79,
+       "item": "2.56",
+       "descripcion": "Viga metalica de 4\"x 8\" x 4.5 mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 320.0
+      },
+      {
+       "fila": 80,
+       "item": "2.57",
+       "descripcion": "Viga metálica perfil de W 8 x 21",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 221.0
+      },
+      {
+       "fila": 81,
+       "item": "2.58",
+       "descripcion": "Viga metálica perfil de H 12\" x 8\" ASTM A36",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 671.0
+      },
+      {
+       "fila": 82,
+       "item": "2.59",
+       "descripcion": "Refuerzo metalico tuberias de 2\" x 2\" para colgar celosia de aluminio",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 39.0
+      },
+      {
+       "fila": 83,
+       "item": "2.60",
+       "descripcion": "V1 : 20x60:Tijeral metalico angulos 11/2\"x11/2\"x1/8\"",
+       "um": "kg",
+       "cantidad": 0.0,
+       "precio": 10.43
+      },
+      {
+       "fila": 84,
+       "item": "2.61",
+       "descripcion": "V2: 2\"x6\"x2.5mm:Tijeral metalico angulos 11/2\"x11/2\"x1/8\"",
+       "um": "kg",
+       "cantidad": 0.0,
+       "precio": 10.43
+      },
+      {
+       "fila": 85,
+       "item": "2.62",
+       "descripcion": "Arriostres de barras lisas de 1/2\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 11.0
+      },
+      {
+       "fila": 86,
+       "item": "2.63",
+       "descripcion": "Arriostres de barras lisas de 3/8\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 32.0
+      },
+      {
+       "fila": 87,
+       "item": "2.64",
+       "descripcion": "Arriostres de barras lisas de 5/8\"",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 18.0
+      },
+      {
+       "fila": 88,
+       "item": "2.65",
+       "descripcion": "Plancha metalica para anclaje de columnas metalicas",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 41.73
+      },
+      {
+       "fila": 89,
+       "item": "2.66",
+       "descripcion": "Goruting para nivelación en columnas metálicas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 667.0
+      },
+      {
+       "fila": 90,
+       "item": "2.67",
+       "descripcion": "Pedestal para columna metálicas ( incluye encofrado, acero y concreto)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 449.0
+      },
+      {
+       "fila": 91,
+       "item": "2.68",
+       "descripcion": "Columnas metalicas en letrero en fachada",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 135.0
+      }
+     ]
+    },
+    {
+     "nombre": "ESCALERA",
+     "fila": 92,
+     "items": [
+      {
+       "fila": 93,
+       "item": "2.69",
+       "descripcion": "Escalera de concreto ( incluye encofrado, fierro y concreto y desencofrado)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 2862.94
+      },
+      {
+       "fila": 94,
+       "item": "2.70",
+       "descripcion": "Escalera metálica en fierro pintado (incluye acabado e instalacion)",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 2781.51
+      },
+      {
+       "fila": 95,
+       "item": "2.71",
+       "descripcion": "Escalera de caracol en fierro pintado (incluye acabado e instalacion",
+       "um": "unid",
+       "cantidad": 0.0,
+       "precio": 2398.1
+      }
+     ]
+    },
+    {
+     "nombre": "ZONA DE CONDENSADORES",
+     "fila": 96,
+     "items": [
+      {
+       "fila": 97,
+       "item": "2.72",
+       "descripcion": "Estructura metalica para condensadores en techo",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1852.0
+      },
+      {
+       "fila": 98,
+       "item": "2.73",
+       "descripcion": "Puerta de mdf para zona de condensadores",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 436.0
+      },
+      {
+       "fila": 99,
+       "item": "2.74",
+       "descripcion": "Baranda metalica pintada para zona de condensadores",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 180.0
+      },
+      {
+       "fila": 100,
+       "item": "2.75",
+       "descripcion": "Puerta metalica de acceso azotea (zona de condensadores)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 753.0
+      },
+      {
+       "fila": 101,
+       "item": "2.76",
+       "descripcion": "Escalera de gato / Acceso para condensadores",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 232.0
+      },
+      {
+       "fila": 102,
+       "item": "2.77",
+       "descripcion": "Cerco prefabricado en condensadores",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 142.0
+      }
+     ]
+    },
+    {
+     "nombre": "Cisterna Rotoplas 3000L",
+     "fila": 103,
+     "items": [
+      {
+       "fila": 104,
+       "item": "3.01",
+       "descripcion": "Cisterna enterrada de concreto + rebose (incluye excavación, vaceado de concreto fc'=210kg/cm2, encofrado, acero corrugado fy=4200kg/cm2 e impermeabilización) con tapa de concreto",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 4800.0
+      }
+     ]
+    },
+    {
+     "nombre": "Tanque elevado 1100L",
+     "fila": 105,
+     "items": [
+      {
+       "fila": 106,
+       "item": "4.01",
+       "descripcion": "Suministro e instalación de tanque elevado + accesorios",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1032.0
+      },
+      {
+       "fila": 107,
+       "item": "4.02",
+       "descripcion": "Suministro de bomba hidroneumática de presion marca Pedrollo o similar 1.5HP potencia",
+       "um": "Und",
+       "cantidad": 1.0,
+       "precio": 1032.0
+      },
+      {
+       "fila": 108,
+       "item": "4.03",
+       "descripcion": "Instalación de bomba hidroneumática + accesorios",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 836.4
+      },
+      {
+       "fila": 109,
+       "item": "4.04",
+       "descripcion": "Base para tanque elevado de agua incluye escalera metálica h=2.10",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1032.0
+      }
+     ]
+    },
+    {
+     "nombre": "Permisos y Gestiones Municipales",
+     "fila": 110,
+     "items": [
+      {
+       "fila": 111,
+       "item": "5.01",
+       "descripcion": "Tasa Municipal por Revision y emision de Licencia de Obra",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1339.5
+      },
+      {
+       "fila": 112,
+       "item": "5.02",
+       "descripcion": "Pago revision CAP",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 240.0
+      },
+      {
+       "fila": 113,
+       "item": "5.03",
+       "descripcion": "Pago Revision CIP",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 240.0
+      },
+      {
+       "fila": 114,
+       "item": "5.04",
+       "descripcion": "Pago revision Comision Ad Hoc",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 240.0
+      },
+      {
+       "fila": 115,
+       "item": "5.05",
+       "descripcion": "Tramites para permisos municipales",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 2137.5
+      },
+      {
+       "fila": 116,
+       "item": "5.06",
+       "descripcion": "Pago SSOMA",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 2366.36
+      },
+      {
+       "fila": 117,
+       "item": "5.07",
+       "descripcion": "Proyecto de Seguridad y del prevencionista",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1152.0
+      },
+      {
+       "fila": 118,
+       "item": "5.08",
+       "descripcion": "Expediente y Gestion de Permiso de Uso de Vias",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1504.17
+      }
+     ]
+    },
+    {
+     "nombre": "PARTIDAS ADICIONALES",
+     "fila": 119,
+     "items": [
+      {
+       "fila": 120,
+       "item": "6.01",
+       "descripcion": "Perforación de losa con diamantina, con broca de 3\"",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 277.0
+      },
+      {
+       "fila": 121,
+       "item": "6.02",
+       "descripcion": "Perforación de losa con diamantina, con broca de 4\"",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 330.0
+      },
+      {
+       "fila": 122,
+       "item": "6.03",
+       "descripcion": "Estructura metálica para letrero en fachada (Cuando se requiera)",
+       "um": "m2",
+       "cantidad": 29.9875,
+       "precio": 241.14
+      },
+      {
+       "fila": 123,
+       "item": "6.04",
+       "descripcion": "Junta de dilatación entre predios vecinos E=2\" Poliestireno",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 24.0
+      },
+      {
+       "fila": 124,
+       "item": "6.05",
+       "descripcion": "Elevador de carga para alamacén: Plataforma de 80 cm x 80 cm, peso máximo 25 kg (cuando el almacén esté en un segundo nivel)",
+       "um": "Un.",
+       "cantidad": 0.0,
+       "precio": 3360.0
+      },
+      {
+       "fila": 125,
+       "item": "6.06",
+       "descripcion": "Canaleta metalica para drenaje pluvial",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 64.18
+      },
+      {
+       "fila": 126,
+       "item": "6.07",
+       "descripcion": "Flashing metalico en encuentro entre termotecho y drywall",
+       "um": "ml",
+       "cantidad": 23.99,
+       "precio": 65.03
+      },
+      {
+       "fila": 127,
+       "item": "6.08",
+       "descripcion": "Suministro e instalación de bomba hidroneumatica (incluye electrobomba de 1hp, sensor, presostato, manometro, tablero interno)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1536.0
+      },
+      {
+       "fila": 128,
+       "item": "6.09",
+       "descripcion": "Red para conexionado de cisterna con bomba y red principal",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 359.42
+      },
+      {
+       "fila": 129,
+       "item": "6.10",
+       "descripcion": "Angulo de aluminio pintado al horno para proteger esquinas",
+       "um": "ml",
+       "cantidad": 20.0,
+       "precio": 23.0
+      },
+      {
+       "fila": 130,
+       "item": "6.11",
+       "descripcion": "Alquiler de andamios",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1683.0
+      },
+      {
+       "fila": 131,
+       "item": "6.12",
+       "descripcion": "Portico metalico en fachada para soportar puertas enrollables",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1648.0
+      },
+      {
+       "fila": 132,
+       "item": "6.13",
+       "descripcion": "Resane de pisos en muro divisorio de local tambo y local libre debido a la zanja ( incluye enchape)",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 666.0
+      },
+      {
+       "fila": 133,
+       "item": "6.14",
+       "descripcion": "Resane de vereda (por trabajos de ampliación de carga)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 332.0
+      },
+      {
+       "fila": 134,
+       "item": "6.15",
+       "descripcion": "Resane de muros en fachada",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 545.0
+      },
+      {
+       "fila": 135,
+       "item": "6.16",
+       "descripcion": "Picado y resane de columnas cajoneadas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 332.0
+      },
+      {
+       "fila": 136,
+       "item": "6.17",
+       "descripcion": "Reubicacion de puntos sanitarios por modificacion en baño de almacen",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 475.0
+      },
+      {
+       "fila": 137,
+       "item": "6.18",
+       "descripcion": "Anulación y reubicación de punto de gas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 725.0
+      },
+      {
+       "fila": 138,
+       "item": "6.19",
+       "descripcion": "Picado de piso de segundo nivel para vacear vigas de concreto armado",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 475.0
+      },
+      {
+       "fila": 139,
+       "item": "6.20",
+       "descripcion": "Pasos de escalera",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 427.0
+      },
+      {
+       "fila": 140,
+       "item": "6.21",
+       "descripcion": "Tratamiento para humedad de techo y muros",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1637.0
+      },
+      {
+       "fila": 141,
+       "item": "6.22",
+       "descripcion": "Picado de escarificado y tarrajeo de fachada",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 933.0
+      },
+      {
+       "fila": 142,
+       "item": "6.23",
+       "descripcion": "Apuntalamiento",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 740.0
+      },
+      {
+       "fila": 143,
+       "item": "6.24",
+       "descripcion": "Cisterna enterrada de concreto + rebose (incluye excavación, vaceado de concreto fc'=210kg/cm2, encofrado, acero corrugado fy=4200kg/cm2 e impermeabilización) con tapa de concreto",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 7695.0
+      },
+      {
+       "fila": 144,
+       "item": "6.25",
+       "descripcion": "Cisterna de rotoplas de 1200L",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1622.0
+      }
+     ]
+    },
+    {
+     "nombre": "ESTRUCTURA PARA ELEVADOR DE CARGA",
+     "fila": 145,
+     "items": [
+      {
+       "fila": 146,
+       "item": "7.01",
+       "descripcion": "Elevador de carga para alamacén: Plataforma de 80 cm x 80 cm, peso máximo 50 kg",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 5282.04
+      },
+      {
+       "fila": 147,
+       "item": "7.02",
+       "descripcion": "Caja para elevador montaplatos",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1517.24
+      }
+     ]
+    },
+    {
+     "nombre": "ADICIONALES",
+     "fila": 148,
+     "items": [
+      {
+       "fila": 149,
+       "item": "8.01",
+       "descripcion": "Canalizado de pulsador de panico emt 1\"",
+       "um": "ml",
+       "cantidad": 25.0,
+       "precio": 21.0
+      },
+      {
+       "fila": 150,
+       "item": "8.02",
+       "descripcion": "Suministro de cable tierra de 4mm2, para aterramiento de circuitos, según su ultima actualización y formato, los aterrados son independientes a la linea de tierra del mismo canalizado.",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 650.0
+      },
+      {
+       "fila": 151,
+       "item": "8.03",
+       "descripcion": "Prensa estopa 3/4",
+       "um": "und",
+       "cantidad": 60.0,
+       "precio": 4.0
+      },
+      {
+       "fila": 152,
+       "item": "8.04",
+       "descripcion": "Cajas metálicas 10x10x5",
+       "um": "und",
+       "cantidad": 20.0,
+       "precio": 11.0
+      },
+      {
+       "fila": 153,
+       "item": "8.05",
+       "descripcion": "Desmontaje de rejas metalicas",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1102.0
+      },
+      {
+       "fila": 154,
+       "item": "8.06",
+       "descripcion": "Llavero de colores para tienda",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 45.0
+      },
+      {
+       "fila": 155,
+       "item": "8.07",
+       "descripcion": "Suministro e instalación de drywall RH 2 caras",
+       "um": "m2",
+       "cantidad": 9.69,
+       "precio": 106.0
+      },
+      {
+       "fila": 156,
+       "item": "8.08",
+       "descripcion": "Cable acerado y pernos/nudos de hierro para ajuste, por equipo",
+       "um": "uni",
+       "cantidad": 5.0,
+       "precio": 11.0
+      },
+      {
+       "fila": 157,
+       "item": "8.09",
+       "descripcion": "Punto de red para monitor de publicidad",
+       "um": "Unid.",
+       "cantidad": 4.0,
+       "precio": 180.0
+      },
+      {
+       "fila": 158,
+       "item": "8.10",
+       "descripcion": "Acarreo y eliminación de desmonte, picado de piso para ii.ee y ii.ss,productos de liderman, aire acondicionado, fibra optica y aumento de carga",
+       "um": "m3",
+       "cantidad": 40.0,
+       "precio": 135.0
+      },
+      {
+       "fila": 159,
+       "item": "8.11",
+       "descripcion": "Suministro e intalación de estructura de agarra para baldosas",
+       "um": "m2",
+       "cantidad": 64.43,
+       "precio": 35.15
+      },
+      {
+       "fila": 160,
+       "item": "8.12",
+       "descripcion": "Picado para pases de 6 ductos de extracción",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 250.0
+      },
+      {
+       "fila": 161,
+       "item": "8.13",
+       "descripcion": "Pintura para resane de los pases de 6 ductos de extracción y picado de medidor",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 332.5
+      },
+      {
+       "fila": 162,
+       "item": "8.14",
+       "descripcion": "Retiro de contrazocalos",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 147.0
+      },
+      {
+       "fila": 163,
+       "item": "8.15",
+       "descripcion": "Jaula de alto valor + Lockers (6), mas malla de acuerdo al ultimo modelo enviado.",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 950.0
+      },
+      {
+       "fila": 164,
+       "item": "8.16",
+       "descripcion": "Suministro de tacho 80L (2)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 75.06
+      },
+      {
+       "fila": 165,
+       "item": "8.17",
+       "descripcion": "Suministro de tacho BASA 60L (1)",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 62.0
+      },
+      {
+       "fila": 166,
+       "item": "8.18",
+       "descripcion": "Suministro de tacho 35L (1)",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 55.69
+      },
+      {
+       "fila": 167,
+       "item": "8.19",
+       "descripcion": "Implementos para botiquin (KIT COMPLETO)",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 85.0
+      },
+      {
+       "fila": 168,
+       "item": "8.20",
+       "descripcion": "Apoyo metalico para barra, para colocar los pies",
+       "um": "ml",
+       "cantidad": 2.5,
+       "precio": 110.0
+      },
+      {
+       "fila": 169,
+       "item": "8.21",
+       "descripcion": "Independización de agua de la red del propietario",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 250.0
+      },
+      {
+       "fila": 170,
+       "item": "8.22",
+       "descripcion": "Llaves de paso para salidas de agua",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 43.0
+      },
+      {
+       "fila": 171,
+       "item": "8.23",
+       "descripcion": "Puerta corrediza en MDF (1.00 X 2.10). Con sistema corredizo, zona de trastienda",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 1350.0
+      },
+      {
+       "fila": 172,
+       "item": "8.24",
+       "descripcion": "Rejas plegables para vanos de fachada",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 875.0
+      },
+      {
+       "fila": 173,
+       "item": "8.25",
+       "descripcion": "Suministro e instalación de papel kraft para las mamparas",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 420.0
+      },
+      {
+       "fila": 174,
+       "item": "8.26",
+       "descripcion": "Pelado de pintura existente en muros y techos",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 758.0
+      },
+      {
+       "fila": 175,
+       "item": "8.27",
+       "descripcion": "Suministro de mueble amarillo",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 450.0
+      },
+      {
+       "fila": 176,
+       "item": "8.28",
+       "descripcion": "Tachos Ecologicos Para Reciclaje De Plastico 75 Lts",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 61.02
+      },
+      {
+       "fila": 177,
+       "item": "8.29",
+       "descripcion": "Suministro de malla raschell, para evitar que el polvo salga a las viviendas colindantes.",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 750.0
+      },
+      {
+       "fila": 178,
+       "item": "8.30",
+       "descripcion": "Placas de anclaje de 16x340x440 e=8mm, para empotrado de vigas metalicas, inc 4 pernos de anclaje en cada placa.",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 380.0
+      },
+      {
+       "fila": 179,
+       "item": "8.31",
+       "descripcion": "Piso en area de ventas",
+       "um": "m2",
+       "cantidad": 15.01,
+       "precio": 56.0
+      },
+      {
+       "fila": 180,
+       "item": "8.32",
+       "descripcion": "Correas de tubo rectangular de 60x40x2mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 89.71
+      },
+      {
+       "fila": 181,
+       "item": "8.33",
+       "descripcion": "Tarrajeo en columnas mezcla C:A 1.5, E=1.5CM",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 41.77
+      },
+      {
+       "fila": 182,
+       "item": "8.34",
+       "descripcion": "Tratamiento antisalitre, para paredes y techo que presenten filtraciones por humedad y salitraje",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 35.0
+      },
+      {
+       "fila": 183,
+       "item": "8.35",
+       "descripcion": "COLUMNA DE CONCRETO ARMADO DE 0.30x0.45 CON 6 VARILLAS DE 5/8 y 2 VARILLAS DE 1/2, H:4.10M",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 2052.16
+      },
+      {
+       "fila": 184,
+       "item": "8.36",
+       "descripcion": "'Viga H de 12\"X10\"X53LB",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 999.2
+      },
+      {
+       "fila": 185,
+       "item": "8.37",
+       "descripcion": "Columnas metalicas de 8x8x6mm",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 380.0
+      },
+      {
+       "fila": 186,
+       "item": "8.38",
+       "descripcion": "Columna de confinamiento (incluye fierro, concreto, encofrado y desencofrado) h: 4.10m",
+       "um": "und",
+       "cantidad": 4.0,
+       "precio": 808.0
+      },
+      {
+       "fila": 187,
+       "item": "8.39",
+       "descripcion": "Vestidura de derrame de pasos y contrapasos de escaleras",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 30.8
+      },
+      {
+       "fila": 188,
+       "item": "8.40",
+       "descripcion": "Desmontaje de barandas en escalera",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 350.0
+      },
+      {
+       "fila": 189,
+       "item": "8.41",
+       "descripcion": "Suministro y cableado de cable NYY DE 3-1X35MM2",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 70.52
+      },
+      {
+       "fila": 190,
+       "item": "8.42",
+       "descripcion": "Suministro de llave térmica 3x100 Amp.",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 160.0
+      },
+      {
+       "fila": 191,
+       "item": "8.43",
+       "descripcion": "Conexión de tablero a pozo a tierra 1X25MM2 emt 2\", curva emt flexible de 2\", Union emt de 2\", abrazadera unistruck de 2\" para derivar las cargas al pozo a tierra del recinto.",
+       "um": "ml",
+       "cantidad": 0.0,
+       "precio": 79.79
+      },
+      {
+       "fila": 192,
+       "item": "8.44",
+       "descripcion": "Impermeabilización de falso piso",
+       "um": "m2",
+       "cantidad": 0.0,
+       "precio": 45.0
+      },
+      {
+       "fila": 193,
+       "item": "8.45",
+       "descripcion": "COLUMNA DE CONCRETO ARMADO DE 0.45X0.34x4.1 CON 8 VARILLAS DE 5/8 H:4.10M",
+       "um": "UND",
+       "cantidad": 0.0,
+       "precio": 2557.33
+      },
+      {
+       "fila": 194,
+       "item": "8.46",
+       "descripcion": "COLUMNA DE CONCRETO ARMADO DE 0.37X0.25x4.1 CON 8 VARILLAS DE 5/8 H:4.10M",
+       "um": "UND",
+       "cantidad": 0.0,
+       "precio": 2042.04
+      },
+      {
+       "fila": 195,
+       "item": "8.47",
+       "descripcion": "Griferia de pico, para poza de acero",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 255.0
+      },
+      {
+       "fila": 196,
+       "item": "8.48",
+       "descripcion": "Trampa para lavadero de counter",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 25.0
+      },
+      {
+       "fila": 197,
+       "item": "8.49",
+       "descripcion": "tubo de abasto para lavadero de counter",
+       "um": "und",
+       "cantidad": 1.0,
+       "precio": 30.0
+      },
+      {
+       "fila": 198,
+       "item": "8.50",
+       "descripcion": "Demolicion de pircado en muros de adobe",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 1300.0
+      },
+      {
+       "fila": 199,
+       "item": "8.51",
+       "descripcion": "Trampara para sumidero de canaleva pluvial",
+       "um": "und",
+       "cantidad": 0.0,
+       "precio": 75.0
+      }
+     ]
+    },
+    {
+     "nombre": "Complementos de cisterna enterrada o tanque elevado",
+     "fila": 200,
+     "items": [
+      {
+       "fila": 201,
+       "item": "9.01",
+       "descripcion": "Suministro e instalacion de tablero adosable metálico con una llave general y una llave de control, interruptores termomagneticos y diferenciales, reles térmicos, selectores, con mandil de acrilico para protección, placas con nombres, aterrado, con diagrama y leyenda",
+       "um": "uni",
+       "cantidad": 1.0,
+       "precio": 700.0
+      },
+      {
+       "fila": 202,
+       "item": "9.02",
+       "descripcion": "Salida de punto de fuerza empotrada para alimentar tablero de bomba de agua periferica, incluye canalizado y cableado, 2-1x4mm2LSOH+ 1x4mm2/T- 20mmøEMT",
+       "um": "ml",
+       "cantidad": 12.0,
+       "precio": 19.0
+      },
+      {
+       "fila": 203,
+       "item": "9.03",
+       "descripcion": "Instalacion y peinado de tablero de automatizacion, conexión de motor, conexión de electronivel en tanque y puesta en marcha del sistema de agua bombeada",
+       "um": "glb",
+       "cantidad": 1.0,
+       "precio": 400.0
+      },
+      {
+       "fila": 204,
+       "item": "9.04",
+       "descripcion": "Conexión sanitaria de bomba de bomba periferica hacia tanque elevado, incluye accesorio sanitarios, valvulas check, llaves de control y purge",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 700.0
+      },
+      {
+       "fila": 205,
+       "item": "9.05",
+       "descripcion": "Plataforma para condensadores y para tanque elevado",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 5500.0
+      },
+      {
+       "fila": 206,
+       "item": "9.06",
+       "descripcion": "Estructura y techo para tablero electrico",
+       "um": "glb",
+       "cantidad": 0.0,
+       "precio": 290.0
+      },
+      {
+       "fila": 207,
+       "item": "9.07",
+       "descripcion": "Canalizado de tuberia de 2\" para drenaje de tanques",
+       "um": "ml",
+       "cantidad": 12.0,
+       "precio": 25.3
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

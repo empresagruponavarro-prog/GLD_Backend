@@ -31,7 +31,7 @@ import {
   ListCategoriaQueryDto,
   UpdateCategoriaDto,
 } from './categoria.dto.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/categoria')
 @Controller('maestros/categoria')
@@ -39,6 +39,7 @@ import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/per
 export class CategoriaController {
   constructor(private readonly handler: CategoriaHandler) {}
 
+  @TambienDesde('proyectos.categorias')
   @Get()
   @ApiOperation({ summary: 'Listar categorías' })
   @ApiOkResponse({
@@ -60,6 +61,7 @@ export class CategoriaController {
     return this.handler.select();
   }
 
+  @TambienDesde('proyectos.categorias')
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una categoría por id' })
   @ApiParam({ name: 'id', description: 'ID numérico de la categoría', type: Number })
@@ -69,6 +71,7 @@ export class CategoriaController {
     return this.handler.getById(id);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Post()
   @ApiOperation({ summary: 'Crear una categoría' })
   @ApiCreatedResponse({
@@ -81,6 +84,7 @@ export class CategoriaController {
     return this.handler.create(dto);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar una categoría' })
   @ApiParam({ name: 'id', description: 'ID numérico de la categoría', type: Number })
@@ -98,6 +102,7 @@ export class CategoriaController {
     return this.handler.update(id, dto);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Desactivar una categoría (borrado lógico)' })

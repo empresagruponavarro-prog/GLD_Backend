@@ -51,6 +51,8 @@ export const CLAVES_MODULO = [
   'rrhh.catalogos',
   // 41.º: Proyectos › Catálogos de proyecto (tipos de proyecto, tipos de plano y periodos; migración 20261105T0241_grp_cadena_obra).
   'proyectos.catalogos',
+  // 42.º: Proyectos › Catálogo de categorías (migración 20261124T1500_modulo_categorias).
+  'proyectos.categorias',
 ] as const;
 
 export type ClaveModulo = (typeof CLAVES_MODULO)[number];

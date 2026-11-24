@@ -3,7 +3,7 @@
 // Si un ítem tiene suministro e instalación en hojas distintas del META, el costo unitario es la suma.
 // La cantidad es la de la plantilla (no se toca); CostoTotal = cantidad × costo unitario a 2 decimales.
 //
-//   node scripts/cargar-meta-tambo-olivos.js            → simulación (revierte)
+//   node scripts/cargar-meta-tambo-olivos.js [meta.json] [IdPlantilla]            → simulación (revierte); sin argumentos: Los Olivos REV 3. Comas REV 4: tambo-comas-meta.datos.json TPL-TAMBO-COMAS-R4
 //   node scripts/cargar-meta-tambo-olivos.js --aplicar  → aplica en una transacción
 import 'dotenv/config';
 import fs from 'node:fs';
@@ -13,8 +13,8 @@ import pg from 'pg';
 
 const APLICAR = process.argv.includes('--aplicar');
 const aqui = path.dirname(fileURLToPath(import.meta.url));
-const metas = JSON.parse(fs.readFileSync(path.join(aqui, 'tambo-olivos-meta.datos.json'), 'utf-8'));
-const PLANTILLA = 'TPL-TAMBO-OLIVOS-R3';
+const [archivo = 'tambo-olivos-meta.datos.json', PLANTILLA = 'TPL-TAMBO-OLIVOS-R3'] = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const metas = JSON.parse(fs.readFileSync(path.resolve(aqui, archivo), 'utf-8'));
 const norm = (s) =>
   String(s ?? '')
     .normalize('NFD')

@@ -1,0 +1,3628 @@
+[
+ {
+  "fase": 0,
+  "item": "1.01",
+  "desc": "CERRAMIENTO PROVISIONAL METALICO (PUERTA CALLE) H=3.00",
+  "costo": 140,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "1.02",
+  "desc": "CERRAMIENTO PROVISIONAL DE TRIPLAY H=2.40",
+  "costo": 35.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "1.03",
+  "desc": "GUARDIANIA DE OBRA (NOCTURNA)",
+  "costo": 1008.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "1.04",
+  "desc": "LIMPIEZA DE OBRA",
+  "costo": 720,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.01",
+  "desc": "DEMOLICION DE TABIQUERIA DE DRYWALL",
+  "costo": 14.08,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.02",
+  "desc": "DEMOLICION DE PAREDES DE SOGA",
+  "costo": 16.02,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.03",
+  "desc": "DEMOLICION DE PAREDES DE CABEZA",
+  "costo": 20.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.04",
+  "desc": "DEMOLICION DE PAREDES DE CONCRETO",
+  "costo": 25.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.05",
+  "desc": "DEMOLICION DE SOBRECIMIENTO DE CONCRETO PARA LLEGAR A LA ALTURA DE VEREDA (ANCHO = 0.15)",
+  "costo": 18.816,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.06",
+  "desc": "DEMOLICION DE SOBRECIMIENTO DE CONCRETO PARA LLEGAR A LA ALTURA DE VEREDA (ANCHO = 0.30 A 0.45)",
+  "costo": 26.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.07",
+  "desc": "DEMOLICION DE PISOS PARA NIVELAR CON EL RESTO DEL LOCAL",
+  "costo": 7.392,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.08",
+  "desc": "DEMOLICION DE COLUMNETAS DE MUROS EXISTENTES",
+  "costo": 37.632,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.09",
+  "desc": "DEMOLICION DE COLUMNA Y ZAPATA DE CONCRETO",
+  "costo": 154,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.10",
+  "desc": "DEMOLICION DE TECHO DE MATERIAL NOBLE (CONCRETO)",
+  "costo": 18.144,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.11",
+  "desc": "DEMOLICION DE SOBRECIMIENTO",
+  "costo": 18.816,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.12",
+  "desc": "DEMOLICION DE CIMIENTO",
+  "costo": 18.816,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.13",
+  "desc": "DESMONTAJE DE ESCALERAS METALICA",
+  "costo": 239.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.14",
+  "desc": "DEMOLICION DE ESCALERA DE CONCRETO",
+  "costo": 48.384,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.15",
+  "desc": "DESMONTAJE DE PUERTAS Y VENTANAS DEL INMUEBLE",
+  "costo": 18.7972,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.16",
+  "desc": "DESMONTAJE DE VIDRIOS Y VENTANA",
+  "costo": 149.31,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.17",
+  "desc": "DESMONTAJE DE PUERTA ENRROLLABLE",
+  "costo": 209.16,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.18",
+  "desc": "DESMONTAJE DE COBERTURA DE MADERA",
+  "costo": 573.93,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.19",
+  "desc": "DESMONTAJE DE FCR DE DRYWALL",
+  "costo": 8.82,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.20",
+  "desc": "DESMONTAJE DE TECHO DE BALDOSA",
+  "costo": 8.82,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.21",
+  "desc": "DESMONTAJE DE TABIQUERIA DE MADERA",
+  "costo": 14,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.22",
+  "desc": "DEMOLICION DE MUEBLE",
+  "costo": 140,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.23",
+  "desc": "DESMONTAJE DE LUMINARIAS",
+  "costo": 98,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.24",
+  "desc": "DESMONTAJE DE DUCTO DE EXTRACCION",
+  "costo": 149.31,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.25",
+  "desc": "DESMONTAJE DE TUBERIAS ELECTRICAS",
+  "costo": 98,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.26",
+  "desc": "DESMONTAJE DE TABLERO ELECTRICO",
+  "costo": 66.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.27",
+  "desc": "DEMOLICION DE MURO ADOBE",
+  "costo": 18.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.28",
+  "desc": "DEMOLICION DE MURO QUINCHA EN 2DO NIVEL",
+  "costo": 16.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.29",
+  "desc": "DESMONTAJE DE CERCO PERIMETRAL EXISTENTE",
+  "costo": 210,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.30",
+  "desc": "DESMONTAJE TECHO DE CALAMINA (AREA DE TIENDA)",
+  "costo": 490.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.31",
+  "desc": "DEMOLICION DE RAMPA EXISTENTES",
+  "costo": 149.31,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.32",
+  "desc": "RETIRO DE ADOQUIN EN ZONA DE ALMACEN",
+  "costo": 149.31,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.33",
+  "desc": "RETIRO DE PAPEL VINILICO DE MUROS",
+  "costo": 5.67,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.34",
+  "desc": "PICADO DE PISOS Y CONTRAPISO PARA TENDIDO DE TUBERIAS AGUA Y DESAGUE",
+  "costo": 12.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.35",
+  "desc": "RESANES POR PICADO DE PAREDES Y PISOS",
+  "costo": 420,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.36",
+  "desc": "ACARREO Y ELIMINACION DE MATERIALES POR IMPLEMENTACION",
+  "costo": 770,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.37",
+  "desc": "INSTALACION DE UNA BOMBA HIDRONEUMATICA",
+  "costo": 399,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.38",
+  "desc": "ACABADO DE PISO EN CEMENTO PULIDO",
+  "costo": 12.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.39",
+  "desc": "RETIRO DE JARDINERIA EXISTENTE",
+  "costo": 6.048,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.40",
+  "desc": "DEMOLICION DE VEREDA EN CALLE",
+  "costo": 8.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.41",
+  "desc": "RETIRO DE ENCHAPE EXISTENTE EN MUROS Y PISOS",
+  "costo": 7.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "2.42",
+  "desc": "DESMONTAJE DE APARATOS SANITARIOS (INODORO, LAVATORIO, URINARIO, VALVULAS, GRIFERIAS, ETC.)",
+  "costo": 14.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.01",
+  "desc": "TABIQUERIA DE DRYWALL CON PLANCHA DE YESO E=1/2\", DOBLE CARA",
+  "costo": 59.25,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.02",
+  "desc": "TABIQUERIA DE DRYWALL CON 01 PLANCHA DE YESO E=1/2\" CAJONERA DE PUERTA ENRROLLABLE CON REFUERZO LISTON DE MADERA PARA CORTINA DE AIRE, VIGAS, COLUMNAS Y CENEFA DECORATIVA AMARILLA",
+  "costo": 77,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.03",
+  "desc": "TABIQUERIA DE DRYWALL CON 01 PLANCHA YESO E=1/2\" POR UNA CARA (SE CONSIDERAR REFUERZO PARA APARATOS SANITARIOS, MENUBOARD Y MOBILIARIO )",
+  "costo": 54.75,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.04",
+  "desc": "SUMINISTRO E INSTALACION DE DRYWALL DE 1/2\" PARA MUROS DEL PERIMETRO (SOLO APLICA SI EXISTE PERIMETRO DE ALBANILERIA)",
+  "costo": 52.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.05",
+  "desc": "SUMINISTRO E INSTALACION DE SUPERBOARD DE 12 MM. Y DRYWALL DE 1/2\" PARA MURO PERIMETRO (SOLO APLICA SI EXISTE PERIMETRO DE ALBANILERIA)",
+  "costo": 75.75,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.06",
+  "desc": "REFUERZO METALICO CON TUBOS CUADRADOS DE 1 X 1 X 2MM PARA CENEFA DEPOSITO",
+  "costo": 18.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.07",
+  "desc": "OSB PARA CENEFA DEPOSITO (INTERIOR)",
+  "costo": 23.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "3.08",
+  "desc": "SUMINISTRO E INSTALACION DE SUPERBOARD DE 12 MM.AMBAS CARAS PARA MURO PERIMETRO",
+  "costo": 60.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "4.01",
+  "desc": "SUMINISTRO E INSTALACION DE FALSO CIELO RASO DE DRYWALL CON 01 PLANCHA DE YESO ESTANDAR E=1/2\"",
+  "costo": 52.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "4.02",
+  "desc": "SUMINISTRO E INSTALACION DE CIELO RASO CON BALDOSAS ACUSTICAS LAVABLES (BALDOSA VINIL GIPSUM MEDIDA)",
+  "costo": 53.625,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "5.01",
+  "desc": "POYO DE CONCRETO PARA SECTOR DE CAJA (0.60X0.60 - 280KG/CM2 - FIERRO 3/8\" COMO ANCLAJE DE NUEVO CON VIEJO ADITIVO DE UNION CONCRETO VIEJO/NUEVO) * NO PASAN TUBERIAS DE NINGUN TIPO EN ESTA ZONA.",
+  "costo": 105,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "5.02",
+  "desc": "POYO DE CONCRETO PARA ZONA COUNTER",
+  "costo": 40.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "5.03",
+  "desc": "PISO DE CONCRETO PARA COMPLETAR NIVEL (SE CONSIDERA PICADO DE PISO ACABADO PORCELANATO)",
+  "costo": 29.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "5.04",
+  "desc": "INSTALACION DE PORCELANATO 60 X 60CM. (INCLUYE PEGAMENTO BLANCO FLEXIBLE, MANO DE OBRA, CRUCETAS Y FRAGUA).",
+  "costo": 41.25,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "5.05",
+  "desc": "INSTALACION DE CERAMICO, EN PISO Y PARED PARA BANOS",
+  "costo": 41.25,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "6.01",
+  "desc": "INSTALACION DE CONTRAZOCALO DE PORCELANATO DE 0.10X0.60 CM (INTERNO)",
+  "costo": 10.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "6.02",
+  "desc": "INSTALACION DE CONTRAZOCALO DE PORCELANATO EN FACHADA (60 CM ALTURA).",
+  "costo": 10.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "6.03",
+  "desc": "INSTALACION DE PORCELANATO 15 X 30 EN MUROS EN FACHADA (INCLUYE CORTE ESPECIAL AL AGUA)",
+  "costo": 41.25,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.01",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA CONTRAPLACADA DE MDF AMBAS CARAS CON PINTURA AL DUCO (1.00 X 2.10M) INCLUYE CHAPA DE TIPO BOLA (YALE O SIMILAR) Y BISAGRAS PESADAS.",
+  "costo": 592,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.02",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA METALICA, (1.00 X 2.10M) INCLUYE CHAPA DE 3 GOLPES",
+  "costo": 770,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.03",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA CONTRAPLACADA DE MDF AMBAS CARAS CON PINTURA AL DUCO (0.70 X 2.10M) INCLUYE CHAPA TIPO BOLA (YALE O SIMILAR) Y BISAGRAS PESADAS",
+  "costo": 520,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.04",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA MACHIMBRADA (1.00 X 2.10M) INCLUYE CHAPA DE 3 GOLPES",
+  "costo": 504.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.05",
+  "desc": "MODIFICACION Y COLOCACION DE PUERTA DE MADERA EXISTENTE, INC. ADECUACION DE MARCOS EN PASADIZO",
+  "costo": 241.92,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.06",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA ENROLLABLE MICROPERFORADA CON BALLESTAS DE 8MM (CUANDO SE REQUIERA) (10 BALLETAS INFERIORES SOLIDAS). TRES PESTILLOS POR PANO.",
+  "costo": 315,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "7.07",
+  "desc": "MANTENIMIENTO PARA PUERTAS ENROLLABLES EXISTENTES (CAMBIO DE TAMBOR, CINTAS Y SISTEMA COMPLETO)",
+  "costo": 90.72,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.01",
+  "desc": "EMPASTE DE MUROS DE FACHADA E INTERIOR (02 MANOS PARA RECIBIR PINTURA DE ACABADO)",
+  "costo": 7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.02",
+  "desc": "PINTURA LATEX SATINADO EN FACHADA ESTANDAR (02 MANOS)",
+  "costo": 12,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.03",
+  "desc": "PINTURA LATEX SATINADO PARA MUROS Y TABIQUES INTERIORES (02 MANOS)",
+  "costo": 12,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.04",
+  "desc": "EMPASTE DE CIELO RASO H= MAYOR A 2.50 (02 MANOS PARA RECIBIR PINTURA DE ACABADO)",
+  "costo": 4.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.05",
+  "desc": "SOLAQUEADO DE PAREDES DE FACHADA PARA MEJORAR ACABADO",
+  "costo": 7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.06",
+  "desc": "PINTADO DE COLUMNAS METALICAS ( SE CONSIDERA MASILLADO Y PINTURA GLOSS )",
+  "costo": 12.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "8.07",
+  "desc": "PINTURA DE PUERTA ENRROLLABLE EXISTENTE",
+  "costo": 13.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.01",
+  "desc": "SUMINISTRO E INSTALACION DE INODORO TREBOL TOP PIECE BLANCO",
+  "costo": 245.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.02",
+  "desc": "MANTENIMIENTO DE INODORO EXISTENTE (CAMBIO COMPLETO DE ACCESORIOS Y SISTEMA INTERNO)",
+  "costo": 66.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.03",
+  "desc": "SUMINISTRO E INSTALACION DE LAVATORIO MARCA TREBOL NUEVO MODELO AMAZONAS",
+  "costo": 161,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.04",
+  "desc": "SUMINISTRO E INSTALACION DE GRIFERIA VAINSA PARA LAVADERO DE BANO.",
+  "costo": 79.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.05",
+  "desc": "SUMINISTRO E INSTALACION DE GRIFERIA VAINSA PESADA PARA MUEBLE EN TIENDA (LINEA OCEAN / MODELO ARTIC O SIMILAR / MARCA VAINSA)",
+  "costo": 189,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.06",
+  "desc": "SUMINISTRO E INSTALACION DE LAVADERO DE ACERO INOXIDABLE EN COUNTER (INCLUYE ACCESORIOS)",
+  "costo": 1015.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.07",
+  "desc": "SUMINISTRO E INSTALACION DE EXTRACTOR DE AIRE PARA BANO",
+  "costo": 99.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.08",
+  "desc": "GRIFERIA EN PASILLO (A SOLICITUD DEL CLIENTE)",
+  "costo": 32.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "9.09",
+  "desc": "SUMINISTRO E INSTALACION DE MEZCLADORA DE LAVADERO BAR MONOCOMANDO AL MUEBLE PICO RESORTE LINEA OCEAN COLLECION ARTIC CROMO (VAINSA) PARA ALMACEN",
+  "costo": 321.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.01",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA BATIENTE DE ALUMINIO CON VIDRIO TEMPLADO DE 10 MM, (DOS CHAPAS SUPERIORES, DOS CHAPAS INFERIORES, CHAPA CENTRAL Y FRENO HIDRAULICO).",
+  "costo": 667.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.02",
+  "desc": "VIDRIO TEMPLADO PARA MAMPARAS EN FACHADA, MAMPARAS FIJAS, VIDRIO INCOLORO, E=10MM. CON ACCESORIOS DE ALUMINIO.",
+  "costo": 360,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.03",
+  "desc": "SUMINISTRO E INSTALACION DE HOJA DE PUERTA DE VIDRIO CON VENTANA DE ATENCION NOCTURNA CON PLANCHA DE ACERO INOXIDABLE PERFORADA Y CIERRE CON LLAVE (INCLUYE CANDADO)",
+  "costo": 175,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.04",
+  "desc": "ESPEJO PARA BANO (LAMINADO)",
+  "costo": 56,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.05",
+  "desc": "SUMINISTRO E INSTALACION DE NUMEROS PARA LA DIRECCION DE FACHADA ( 3 0 4 SEA EL CASO)",
+  "costo": 9.408,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.06",
+  "desc": "SUMINISTRO E INSTALACION DE CINTA ANTIDESLIZANTE",
+  "costo": 2.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.07",
+  "desc": "LAMINA DE SEGURIDAD PARA LAS MAMPARAS, PUERTA DE INGRESO.",
+  "costo": 35,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.08",
+  "desc": "CANDADOS ANTICISALLA PARA REJAS, PUERTAS ENRROLLABLES (TRES POR PUERTA)",
+  "costo": 49,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.09",
+  "desc": "CHAPAS DE TRES GOLPES MARCA YALE PARA REJAS (RETIRO DE CHAPAS ANTIGUAS Y SOLDADURA DE LAS CHAPAS NUEVAS)",
+  "costo": 59.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.10",
+  "desc": "REJA METALICA CON FIERRO CUADRADO DE 1/2 CON ANGULOS DE 1\"",
+  "costo": 127.008,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.11",
+  "desc": "SUMINISTRO E INSTALACION DE EXTINTORES PQS 6KG",
+  "costo": 66.373,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.12",
+  "desc": "PEDESTAL PARA EXTINTOR PQS",
+  "costo": 50.85,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.13",
+  "desc": "SUMINISTRO E INSTALACION DE EXTINTORES DE CO2 10LB",
+  "costo": 190,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.14",
+  "desc": "SUMINISTRO E INSTALACION ACETATO DE POTASIO K 6LT",
+  "costo": 196.22,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.15",
+  "desc": "BOTIQUIN (INCLUYE CONTENIDO ESTANDAR)",
+  "costo": 108,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.16",
+  "desc": "SUMINISTRO E INSTALACION DE SENALITICA",
+  "costo": 182.784,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.17",
+  "desc": "SENALETICA DE SALIDA - LUMINOSA",
+  "costo": 39.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.18",
+  "desc": "SUMINISTRO E INSTALACION DE LOCKERS (FIJACION DE LOCKERS, 8 CASILLEROS)",
+  "costo": 243.264,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.19",
+  "desc": "SUMINISTRO E INSTALACION DE ANGULOS RANURADOS, CON 5 BANDEJAS, PARA PRODUCTOS DE ALTO VALOR (INCLUYE CANDADO O CHAPA)",
+  "costo": 554.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.20",
+  "desc": "MUEBLE DE LIMPIEZA PARA ALMACER ( ARMARIO DE 1 PUERTA)",
+  "costo": 168.672,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.21",
+  "desc": "SUMINISTRO DE HORNO MICROONDAS SAMSUNG",
+  "costo": 254.688,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.22",
+  "desc": "SUMINISTRO E INSTALACION DE TOPE PARA AUTO (APLICA A TIENDAS CON ESTACIONAMIENTO EN RETIRO)",
+  "costo": 73.248,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.23",
+  "desc": "MODIFICACION DE REJA PARA APERTURAR VENTANA PARA ATENCION AL PUBLICO",
+  "costo": 212.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.24",
+  "desc": "BARANDA METALICA INGRESO",
+  "costo": 151.872,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.25",
+  "desc": "PLANCHA ESTRIADA",
+  "costo": 84,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.26",
+  "desc": "PILOTE METALICO DE 4\" H=0.9M EMPOTRADO Y ANCLADO CON PERNOS DE EXPANSION PARA ESTACIONAMIENTO",
+  "costo": 114.912,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.27",
+  "desc": "SUMINISTRO E INSTALACION DE PUERTA REJA PARA PROTECCION DE CAJA DE MEDIDOR DE LUZ. INCLUYE CANDADO",
+  "costo": 107.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.28",
+  "desc": "CUBO DE ALUMINIO APERSIANADO SEGUN MEDIDAS 2.50 X 1.10 X 1.10 CON TUBO DE 1/2\" X 1 1/2 PARA CERRAMIENTO A UNIDADES CONDENSADORAS (CUANDO SE REQUIERA)",
+  "costo": 1050,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.29",
+  "desc": "RECOJO DE TABLERO, LUMINARIAS, JUEGO DE SILLAS Y MESAS, UPS, SWITCH, PORCELANATO, ACRILICOS,V2 , MERRYCHEF, TV,KIT DE UTENSILIOS, BOXES METALICOS, ETC.",
+  "costo": 431.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.30",
+  "desc": "CANTONERAS DE 36.5 MM X 28.58 MM DE ALUMINIO EN POYO DE COUNTER, NICHO DE FELPUDO, POYO DE TABLERO Y FACHADA",
+  "costo": 9.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.31",
+  "desc": "CANDADO PARA LOOCKERS DE DEPOSITO",
+  "costo": 5.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.32",
+  "desc": "SENALES FOTOLUMINISCENTE PARA EQUIPOS CALIENTES DE 13CM X 20CM ( CAFETERA Y MENUMASTER)",
+  "costo": 12.768,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.33",
+  "desc": "SUMINISTRO E INSTALACION DE CELOSIA DE ALUMINIO COLOR NEGRO PARA ZONA DE COUNTER",
+  "costo": 266,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.34",
+  "desc": "SUMINISTRO E INSTALACION DE CELOSIA DE ALUMINIO COLOR NEGRO PARA ZONA CALIENTE",
+  "costo": 266,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.35",
+  "desc": "PAR DE GUANTE NEOPRENO NEGRO (T-MEDIA)",
+  "costo": 10.752,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.36",
+  "desc": "SUMINISTRO E INSTALACION DE RACK PARA MONITOR E INSTALACION DE MONITOR EN EL MENU BOARD",
+  "costo": 133,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.37",
+  "desc": "SUMINISTRO E INSTALACION DE BURLETE PARA PUERTAS DE INGRESO A TIENDA, PATIO (EXTERIOR)",
+  "costo": 54.432,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.38",
+  "desc": "SUMINISTRO E INSTALACION DE ESTRUCTURA METALICA DE SOPORTE PARA CIGARRERAS Y OTROS EN COUNTER",
+  "costo": 72.576,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.39",
+  "desc": "SUMINISTRO DE ESPEJO PANORAMICO Y ACCESORIO DE FIJACION",
+  "costo": 127.68,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.40",
+  "desc": "SUMINISTRO DE ESPEJO PANORAMICO DOMO 360",
+  "costo": 455.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.41",
+  "desc": "SUMINISTRO DE TACHO GRANDE 75L (3)",
+  "costo": 40.34,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "10.42",
+  "desc": "SUMINISTRO DE TACHO CHICO 11.9L",
+  "costo": 9.32,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "11.01",
+  "desc": "PICADO DE PISOS Y PAREDES PARA EMPOTRAR TUBERIAS DE IIEE",
+  "costo": 393.12,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "12.01",
+  "desc": "SALIDA PARA LUZ EN TECHOS Y PARED",
+  "costo": 38.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "13.01",
+  "desc": "CANALIZACION PARA DATA, TUBERIA PVC 1 1/2\", DEL RACK AL MUEBLE DE CAJA",
+  "costo": 14,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "13.02",
+  "desc": "CANALIZACION PARA FIBRA OPTICA, TUBERIA CONDUIT 1 1/2\", DEL RACK A FACHADA DE TIENDA",
+  "costo": 16.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "13.03",
+  "desc": "CANALIZACION PARA DATA, TUBERIA CONDUIT 1 1/2\", DEL RACK AL CENTRO DE TIENDA PARA EQUIPO WIFI",
+  "costo": 83.328,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "13.04",
+  "desc": "SALIDA PARA INTERRUPTORES DOBLES Y SIMPLES, CON TUBERIA EMT DE 3/4\"",
+  "costo": 56,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.01",
+  "desc": "SUMINISTRO E INSTALACION DE DADOS Y PLACA SCHUKO Y TRES EN LINEA, EN PARED, BIPOLAR DOBLE + TIERRA 15A-220V.( EQUIPOS: MIMET, FC-1, FG-1, HIELO, HA, M1, FRIGOBAR, CIGARRERAS, TV CCTV, V1, V2, V3, MICROONDAS, CAFETERA, QUINUA, EMOLIENTE, NESTLE, MUEBLE DE CAJA) (TOMA DOBLE REDONDA + VERTICAL + PLACA)",
+  "costo": 35.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.02",
+  "desc": "SUMINISTRO E INSTALACION DE DADOS Y PLACA LEVINTON UNIVERSAL, EN PARED, BIPOLAR DOBLE + TIERRA (EQUIPOS HD Y TV MENUBOARD)",
+  "costo": 37.632,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.03",
+  "desc": "SUMINISTRO E INSTALACION DE DADOS SCHUKO Y PLACA PARA TOMA ESTABILIZADA, BIPOLAR DOBLE + TIERRA, PARA MUEBLE DE CAJA CON CAJAS MODULARES Y PARA RACK DE COMUNICACIONES",
+  "costo": 52.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.04",
+  "desc": "SUMINISTRO E INSTALACION DE INTERRUPTORES LEVITON",
+  "costo": 21,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.05",
+  "desc": "SUMINISTRO E INSTALACION DE TOMA TRIFASICA MENEKKE DE 63 AMP.LEVITON (GRUPO ELECTROGENO)",
+  "costo": 80.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.06",
+  "desc": "CAJA MODULAR METALICA PARA MENEKKE DE GRUPO ELECTROGENO.",
+  "costo": 122.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.07",
+  "desc": "CAMBIO DE ENCHUFES DE EQUIPOS AL TIPO SCHUKO",
+  "costo": 17.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.08",
+  "desc": "SUMINISTRO E INSTALACION DE TOMA TRIFASICA MENEKKE DE 32 AMP.LEVITON (M1)",
+  "costo": 56,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "14.09",
+  "desc": "SUMINISTRO E INSTALACION DE PULSADOR DE PANICO (CORTE ELECTRICO)",
+  "costo": 105,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.01",
+  "desc": "3-1X35MM 2LSOH CABLE PROVISIONAL DE 35MM DE N2XOH",
+  "costo": 82.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.02",
+  "desc": "3-1X70MM2(F) + 1X35MM2(T)/T - 1 1/2\"ØEMT NYY",
+  "costo": 136.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.03",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO(ALUMBRADO CIRCUITO A )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.04",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (ALUMBRADO CIRCUITO B)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.05",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE INDECO (TOMACORRIENTE MIMET)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.06",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE FG1)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.07",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE FC-1)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.08",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( CONGELADORA IGLU )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.09",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (MICROONDAS, CAFETERA, NESTLE)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.10",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( CIGARRERA - INSECTOCUTOR)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.11",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (TOMACORRIENTE M1 )",
+  "costo": 16.3363,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.12",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( V1 - V5 - V1 DE BACKCOUNTER)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.13",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( VITRINA REFRIGERADA, V2 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.14",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( VITRINA ABIERTA, V3 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.15",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( CONGELADORAS D'ONOFRO Y ARTIKA HD - HA )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.16",
+  "desc": "3-1X6MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (CONDENSADOR 01 - CONDENSADOR 02 - CONDENSADOR 3)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.17",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (BOMBAS DE AGUA PARA AA)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.18",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (MENUBOARD,TV DE CAMARAS Y TV DE MENUBOARD)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.19",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (LETRERO )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.20",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( CORTINA DE AIRE)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.21",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO(TOMA EN PISO DE GONDOLA)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.22",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (TOMA EN GONDOLA DE PARED)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.23",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( PARA PASTORALES)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.24",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO(TOMA PARA CAMARAS DE CCTV )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.25",
+  "desc": "3-1X35MM2(F) + 1X16MM2(T)/T - 50MMØEMT CABLE LIBRE DE HALOGENO (PARA GRUPO ELECTROGENO)",
+  "costo": 69.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.26",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØ EMT CABLE LIBRE DE HALOGENO (EXTRACCION TRASTIENDA)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.27",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØ EMT CABLE LIBRE DE HALOGENO (EXTRACCION DE CENEFA DECORATIVA)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.28",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (EXTRACCION M1)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.29",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØ EMT CABLE LIBRE DE HALOGENO (INYECCION)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.30",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (LUZ DE EMERGENCIA )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.31",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (UPS 1 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.32",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO (UPS 2 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.33",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 1 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.34",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 2 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.35",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( TOMACORRIENTE CAJA 3 )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.36",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( PANEL PCI )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.37",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( BOTON PANICO )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.38",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT CABLE LIBRE DE HALOGENO ( RACK DE COMUNICACIONES )",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "15.39",
+  "desc": "2-1X4MM2LSOH+ 1X4MM2/T- 20MMØ EMT CABLE LIBRE DE HALOGENO (F-2P CHINO)",
+  "costo": 12.1296,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "16.01",
+  "desc": "CAJA DE PASE METALICA DE 400X400",
+  "costo": 28.896,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "16.02",
+  "desc": "CAJA DE PASE METALICA DE 350X350",
+  "costo": 26.208,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "16.03",
+  "desc": "CAJA DE PASE METALICA DE 100X100",
+  "costo": 7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "16.04",
+  "desc": "CAJA DE PASE METALICA DE 150X150",
+  "costo": 12.096,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "16.05",
+  "desc": "CAJA DE PASE METALICA DE 200X200",
+  "costo": 8.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "17.01",
+  "desc": "TABLERO DE MODULO (TSGG+ESTABILIZADO Y TRANSFERENCIA) INCLUYE INSTALACION",
+  "costo": 393.12,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "17.02",
+  "desc": "GUARDAFASES PARA EQUIPOS DE AIRE ACONDICIONADO",
+  "costo": 96.768,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "18.01",
+  "desc": "REFLECTOR DE EMERGENCIA A BATERIA SECA CON LAMPARAS (LUCES DE EMERGENCIA) MARCA PHILLIPS",
+  "costo": 63,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "18.02",
+  "desc": "LUMINARIAS TIPO PANEL LED 5000K CON 5 ANOS DE GARANTIA",
+  "costo": 46.89,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.03",
+  "desc": "LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR SALA DE VENTAS DE 60CM",
+  "costo": 52.1,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.04",
+  "desc": "LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR SALA DE VENTAS DE 1.20M",
+  "costo": 74.7714,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.05",
+  "desc": "LUMINARIA LINEAL HERMETICA DE 28W PARA ADOSAR ALMACEN",
+  "costo": 56.54,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.06",
+  "desc": "LUMINARIAS CON FOCO AHORRADOR PARA BANO",
+  "costo": 14.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "18.07",
+  "desc": "LUMINARIAS PARA FACHADA (SPOT, EMPOTRADA O ADOSADA)",
+  "costo": 35,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.08",
+  "desc": "ESTRUCTURA PARA PASTORALES DE LUMINARIAS EN LA FACHADA",
+  "costo": 70,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "18.09",
+  "desc": "LUMINARIAS PASTORALES (INCLUYE BRAZO DE SOPORTE 0.40M, REFLECTOR DE 100W LUZ CALIDA Y ACCESORIOS",
+  "costo": 55.72,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "18.10",
+  "desc": "SUMINISTRO E INSTALACION DE LUMINARIAS TIPO CAMPANA (ENCIMA DE MUEBLE BARRA)",
+  "costo": 98.7,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "18.11",
+  "desc": "LUMINARIAS TIPO CAMPANA PARA DOBLE ALTURA",
+  "costo": 14,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.01",
+  "desc": "POZO A TIERRA CON CEMENTO CONDUCTIVO",
+  "costo": 1120,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.02",
+  "desc": "MANTENIMIENTO DE POZO A TIERRA EXISTENTE",
+  "costo": 272.16,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.03",
+  "desc": "CABLE DE COBRE DESNUDO, DE 16 MM. Y ACCESORIOS DESDE POZO A TIERRA A TABLERO GENERAL TW 10 MM2.",
+  "costo": 10.4832,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.04",
+  "desc": "CABLE PROVISIONAL DESDE MEDIDOR ACTUAL HACIA EL TABLERO (ANTES DEL F1) (CANALIZACION Y CABLE)",
+  "costo": 40.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.05",
+  "desc": "AMPLIACION DE CARGA",
+  "costo": 980.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.06",
+  "desc": "SUMINISTRO E INSTALACION DE MEDIDOR DE ENERGIA TRIFASICO (INCLUYE GABINETE PORTA MEDIDOR , LLAVE TERMOMAGNETICA)",
+  "costo": 588.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "19.07",
+  "desc": "REGISTROS DE 6 \" PINTADO DE COLOR AMARILLO A 6 Y 10 M DE DISTANCIA DEL POZO A TIERRA",
+  "costo": 42,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.01",
+  "desc": "SALIDA PARA SIRENA DE LARGO ALCANCE DE ALARMA CONTRA INCENDIO",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.02",
+  "desc": "SALIDA PARA CENTRAL DE ALARMA CONTRA INCENDIO",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.03",
+  "desc": "SALIDA PARA DETECTORES DE HUMO",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.04",
+  "desc": "SALIDAS PARA CAMARAS DE CCTV",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.05",
+  "desc": "SALIDAS PARA DETECCION",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.06",
+  "desc": "SALIDA PARA MONITOR DE SEGURIDAD",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "20.07",
+  "desc": "SALIDA PARA INTRUSION",
+  "costo": 62.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "21.01",
+  "desc": "PICADO DE EMPOTRADO DE TUBERIAS PARA NUEVA RED DE DESAGUE IISS",
+  "costo": 453.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.01",
+  "desc": "SALIDA PARA NUEVA RED DE DESAGUE DE 6\"",
+  "costo": 47.04,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.02",
+  "desc": "SALIDA PARA NUEVA RED DE DESAGUE DE 4\"",
+  "costo": 36.96,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.03",
+  "desc": "SALIDA PARA NUEVA RED DE DESAGUE DE 2\"",
+  "costo": 26.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.04",
+  "desc": "SALIDA PARA DRENAJE DE EVAPORADORES 2\"",
+  "costo": 26.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.05",
+  "desc": "SALIDA PARA DRENAJE DE CONDENSADORES 2\"",
+  "costo": 26.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.06",
+  "desc": "TUBERIA PVC SAL P/DESAGUE D=6\"",
+  "costo": 24.192,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.07",
+  "desc": "TUBERIA PVC SAL P/DESAGUE D=4\"",
+  "costo": 18.144,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.08",
+  "desc": "TUBERIA PVC SAL P/DESAGUE D=2\"",
+  "costo": 11.424,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.09",
+  "desc": "TUBERIA PVC SAL P/DESAGUE PARA EVAPORADORES",
+  "costo": 10.752,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "22.10",
+  "desc": "TUBERIA PVC SAL P/DESAGUE PARA CONDENSADORES",
+  "costo": 10.752,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "23.01",
+  "desc": "SUMIDERO CROMADO DE 2\"",
+  "costo": 12.096,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "23.02",
+  "desc": "SUMIDERO CROMADO DE 4\"",
+  "costo": 21.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "23.04",
+  "desc": "VALVULAS DE PASE 3/4\" (INCLUYE UNION UNIVERSAL) SIMBAL",
+  "costo": 26.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "23.05",
+  "desc": "TAPAS DE PVC BLANCO PARA VALVULAS.",
+  "costo": 32.256,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "24.02",
+  "desc": "INSTALACION DE INODORO, LAVADERO DE TRASTIENDA, SALA DE VENTAS, Y BANO.",
+  "costo": 30.24,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "24.03",
+  "desc": "INDEPENDIZACION DE DESAGUE DE LA RED DEL PROPIETARIO",
+  "costo": 157.248,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "24.04",
+  "desc": "SUMINISTRO E INSTALACION DE MEDIDOR DE AGUA",
+  "costo": 108.864,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "25.01",
+  "desc": "SALIDA DE AGUA PVC C-10 DE 1/2\"",
+  "costo": 21,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "25.02",
+  "desc": "TUBERIA CLASE 10 DE 3/4\"",
+  "costo": 11.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "26.01",
+  "desc": "POR SUMINISTRO E INSTALACION DE EQUIPO DE EXTRACCION PARA TIENDA MOTOR EXTRACTOR TD1000 SOLER & PALAU (SILENT)",
+  "costo": 1201.92,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "26.02",
+  "desc": "POR SUMINISTRO E INSTALACION DE EQUIPO DE EXTRACCION PARA TIENDA MOTOR INYECCION TD1000 SOLER & PALAU (SILENT)",
+  "costo": 1201.92,
+  "fuentes": 2
+ },
+ {
+  "fase": 0,
+  "item": "26.03",
+  "desc": "POR SUMINISTRO E INSTALACION DE MANGA DE LATA GALVANIZADA Y MANGA FLEXIBLE PARA EXTRACCION E INYECCION",
+  "costo": 49,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "26.04",
+  "desc": "SUMINISTRO E INSTALACION DE CAMPANA EXTRACTORA, EN ACERO INOX, PARA HORNO RAPIDO (MENUMASTER)",
+  "costo": 560,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.01",
+  "desc": "* CABLEADO CON CABLE UTP CAT6 A DESDE MUEBLE DE CAJAS HASTA RACK DE DATOS ( CONSIDERAR QUE SON 2 CAJAS HABILITADAS), EL PRECIO ES POR LAS 2 CAJAS",
+  "costo": 931.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.07",
+  "desc": "* NIVELACION Y EMPERNADO DE RACK DE DATA",
+  "costo": 574,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.16",
+  "desc": "RACK IMPORTADO DE 10 RU * PARA INSTALACION DE EQUIPOS",
+  "costo": 272.16,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.17",
+  "desc": "RACK IMPORTADO DE 6 RU * PARA INSTALACION DE UPS",
+  "costo": 219.072,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.18",
+  "desc": "POWER RACK DE 8 TOMAS METALICO",
+  "costo": 59.136,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.19",
+  "desc": "BANDEJAS DE 1 RU",
+  "costo": 40.992,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.20",
+  "desc": "ORDENADOR DE CABLES DE 2 RU",
+  "costo": 29.568,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.21",
+  "desc": "PATCH CORD UTP CAT 6A DE 1 MTS",
+  "costo": 22.176,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.22",
+  "desc": "PATCH CORD UTP CAT 6A DE 2 MTS",
+  "costo": 22.848,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.24",
+  "desc": "KIT DE COOLER PARA TECHO DE RACK",
+  "costo": 98.784,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.25",
+  "desc": "PATCH PANEL CAT 6A DE 24 PUERTOS",
+  "costo": 127.008,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "27.26",
+  "desc": "INSTALACION DE RED PARA MONITOR DE PUBLICIDAD EN CAT6A",
+  "costo": 98.784,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.01",
+  "desc": "MUEBLE DE COUNTER MUEBLE EN MELAMINE TROPICALIZADO 18MM 3.17 X 0.90 X 0.97, COLOR GRIS OSCURO CON TABLERO POSFORMADO GRIS, CAJONES CON CORREDERAS TELESCOPICAS Y TIRADORES DE ACERO INOXIDABLE.",
+  "costo": 770,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.02",
+  "desc": "MUEBLE ZONA CALIENTE MUEBLE EN MELANINA 18MM TROPICALIZADO 3.1 X 0.68 X 0.90 COLOR GRIS OSCURO, 2 PUERTAS BATIENTES, TIRADORES DE ACERO INOXIDABLE, TABLERO POSFORMADO GRIS",
+  "costo": 700,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.03",
+  "desc": "MUEBLE DETRAS DE COUNTER MUEBLE EN MELANINA 18MM TROPICALIZADO 2.41 X 0.74 X 0.90 COLOR GRIS OSCURO, PUERTAS BATIENTES, TIRADORES DE ACERO INOXIDABLE, TABLERO POSFORMADO GRIS",
+  "costo": 705.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.04",
+  "desc": "MUEBLE V1 / V5 MUEBLE EN MELANINA 18MM TROPICALIZADO 1.20 X 0.80 X 0.97 COLOR GRIS OSCURO, 2 PUERTAS BATIENTES, TIRADORES DE ACERO INOXIDABLE, TABLERO POSFORMADO GRIS",
+  "costo": 588,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.05",
+  "desc": "MUEBLE DETRAS DE COUNTER (LAVADERO) MUEBLE EN MELANINA 18MM TROPICALIZADO 1.00 X 0.82 X 0.90 COLOR GRIS OSCURO, PUERTAS BATIENTES, TIRADORES DE ACERO INOXIDABLE, ENCHAPADO EL TABLERO EN ACERO INOXIDABLE",
+  "costo": 479.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.06",
+  "desc": "MUEBLE - BARRA BARRA EN MELANINA 18MM TROPICALIZADO 4.59 X 0.35 COLOR GRIS OSCURO, INCLUYE ESTRUCTURA.",
+  "costo": 455.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.07",
+  "desc": "MUEBLE- DE PUERTA BARRA EN MELANINA 18MM TROPICALIZADO0.65 X 0.39 COLOR GRIS OSCURO, PUERTAS BATIENTES, TIRADORES DE ACERO INOXIDABLE, ENCHAPADO EL TABLERO POSFORMADO GRIS",
+  "costo": 315,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.08",
+  "desc": "SOPORTE METALICO PARA BARRA ESTRUCTURA METALICA CON TUBO REDONDO DE 2\"",
+  "costo": 140,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.09",
+  "desc": "SILLAS ALTAS PARA BARRA",
+  "costo": 133,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.10",
+  "desc": "MUEBLE UPS FABRICACION DE MUEBLE DE MELAMINE DE 18MM DE 0.26MX0.77MX0.90M PARA EQUIPOS DE UPS (SEGUN MODELO )",
+  "costo": 491.232,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.11",
+  "desc": "MUEBLE COSTADO DE V1 DE 0.70M X 0.60M X 0.90M",
+  "costo": 302.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.12",
+  "desc": "MUEBLE COSTADO DE V2 DE 0.70M X 0.80M X 0.90M",
+  "costo": 302.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "28.13",
+  "desc": "MUEBLE DE MELAMINE PARA SISTEMA HIDRONEUMATICO",
+  "costo": 266,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.01",
+  "desc": "PLANOS DE ARQUITECTURA ( CORTES, ELEVACIONES, PLANTA, DETALLES, INDECI)",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.02",
+  "desc": "PLANOS DE ESPECIALIDADES ( IIEE, IISS, INTRUSION, DETECCION, CCTV, AA, ENTRE OTROS )",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.03",
+  "desc": "ESPECIFICACIONES TECNICAS",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.04",
+  "desc": "MEMORIA DESCRIPTIVA ( ARQUITECTURA , IIEE )",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.05",
+  "desc": "PROTOCOLOS (TABLERO, POZO A TIERRA, MEGADO)",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.06",
+  "desc": "CARTA DE GARANTIA DE PROVEEDORES",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.07",
+  "desc": "DOCUMENTOS DE APERTURA (PLANOS FIRMADOS Y PROTOCOLOS 3 JUEGOS)",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.08",
+  "desc": "PLANO PARA SOLICITUD DE F1",
+  "costo": 240.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "29.08",
+  "desc": "PLANOS SUNARP (SUJETO A SOLICITUD)",
+  "costo": 604.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.01",
+  "desc": "FABRICACION Y COLOCACION DE REJA DE PROTECCION PARA MEDIDOR DE LUZ INCLUIDO CANDADO",
+  "costo": 169.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.02",
+  "desc": "CANALIZACION PARA LETRERO, TUBERIA EMT, EN EXTERIOR",
+  "costo": 135.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.03",
+  "desc": "HABILITACION DE ENERGIA PARA TIENDAS CONTIGUAS",
+  "costo": 169.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.04",
+  "desc": "CANALIZACION DE TUBERIA PARA ESTACION MANUAL",
+  "costo": 247.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.05",
+  "desc": "ROTULADO DE TABLERO",
+  "costo": 154,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.06",
+  "desc": "REJILLAS PARA INYECCION (PLANCHA GALVANIZADA PINTADA AL HORNO)",
+  "costo": 67.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.07",
+  "desc": "REJILLAS PARA EXTRACCION (PLANCHA GALVANIZADA PINTADA AL HORNO)",
+  "costo": 67.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.08",
+  "desc": "REJILLAS PARA EXTRACCION EN CENEFA (PLANCHA GALVANIZADA PINTADA AL HORNO)",
+  "costo": 67.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.09",
+  "desc": "ACCESORIOS DE FIJACION PARA DUCTERIAS DE EXTRACCION E INYECCION",
+  "costo": 305.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.10",
+  "desc": "EMBONES PARA DUCTOS METALICOS (DUCTERIA EXPUESTA)",
+  "costo": 508.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.11",
+  "desc": "PINTADO DE TUBERIAS EXPUESTAS",
+  "costo": 469.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.12",
+  "desc": "PINTADO DE DUCTERIAS DE EXTRACCION E INYECCION",
+  "costo": 612.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.13",
+  "desc": "PALLET 0.90X0.60M",
+  "costo": 53.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.14",
+  "desc": "ANCLAJE DE CAJA FUERTE EN ALMACEN",
+  "costo": 101.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.15",
+  "desc": "TIMBRE UBICADO EN COUNTER Y SIRENA EN ALMACEN (INCLUYE CANALIZADO Y CABLEADO",
+  "costo": 266.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.16",
+  "desc": "SUMINISTRO E INSTALACION DE BOMBA PARA CAFETERA",
+  "costo": 631.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.17",
+  "desc": "GESTION MUNICIPAL",
+  "costo": 1754.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.18",
+  "desc": "MALLA ELECTROSOLDADA EN PARTE POSTERIOR DEL LOCAL",
+  "costo": 506.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.19",
+  "desc": "SELLADO PARA COBERTURA",
+  "costo": 169.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.20",
+  "desc": "SELLADO DE MUEBLES",
+  "costo": 312.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.21",
+  "desc": "TAPA DE MELAMINE PARA F1",
+  "costo": 101.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.22",
+  "desc": "TRASLADO DE MATERIALES (PORCELANATO,CABLES,TABLERO,ETC)",
+  "costo": 714,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.23",
+  "desc": "VENTANA DE REGISTRO GYPLAC",
+  "costo": 116.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.24",
+  "desc": "ROLLOS DE CINTA ANTIDESLIZANTE 3M PARA TAMBO",
+  "costo": 157.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.25",
+  "desc": "RECUBRIMIENTO PARA GUIAS DE PUERTA ENRROLLABLE EN VANOS",
+  "costo": 179.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.26",
+  "desc": "TAPAS CIRCULAR PARA EL MUEBLE CAFFE",
+  "costo": 35,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.27",
+  "desc": "SUMINISTRO E INSTALACION DE CINTA LED",
+  "costo": 44.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.28",
+  "desc": "SUMINISTRO E INSTALACION DE FLUORESCENTE EN FACHADA",
+  "costo": 82.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.29",
+  "desc": "SUMINISTRO E INSTALACION DE TOMACORRIENTE HIDROBOX (SUMINISTRO E INSTALACION DE DADOS Y PLACA BTICINO HIDROBOX, EN PISO Y PARED 0.3 CM, BIPOLAR DOBLE + TIERRA",
+  "costo": 112,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.30",
+  "desc": "NICHO PARA FELPUDO",
+  "costo": 169.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.31",
+  "desc": "SUMINISRO DE ESCALERA TIPO BANQUETA (5 PASOS)",
+  "costo": 185,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.32",
+  "desc": "SUMINISRO DE ESCALERA TIPO BANQUETA (3 PASOS)",
+  "costo": 123,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.33",
+  "desc": "CANALIZADO DE ACOMETIDA PROVISIONAL Y ACOMETIDA DEL F1 DESDE EL TABLERO HASTA EL BANCO DE MEDIDORES",
+  "costo": 997.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.34",
+  "desc": "CORTE EN MUEBLE POR QUIEBRE",
+  "costo": 166.25,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "30.35",
+  "desc": "INTERCONEXION DACI ENTRE TIENDA Y EDIFICIO",
+  "costo": 2660,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.01",
+  "desc": "3-1X35MM 2LSOH CABLE PROVISIONAL DE 35MM DE N2XOH",
+  "costo": 84,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.02",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P (AA1)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.03",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P (AA2)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.04",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P (AA3)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.05",
+  "desc": "2-1X6MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (VITRINA V1- V5 -V2 - VISICOOLER ALMACEN - V3)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.06",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P (MAQUINAS DE CAFE - MICROONDAS)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.07",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (COOLER DE HIELO - CONGELADOS 1P - HELADERAS D-Y)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.08",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P (HORNO MENU MASTER)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.09",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P ( VISICOOLER 2P - 3P)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.10",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (INYECCION - EXTRACCION - CORTINA DE AIRE)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.11",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (VISICOOLER 1P - GONDOLAS - FG1)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.12",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (ALUMBRADO TIENDA - LUCES DE EMERG. - LETRERO ABIERTO)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.13",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (TV - CIGARRERA - INSECTOCUTOR - TIMBRE)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.14",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P(PASTORALES - LETRERO LUMINOSO)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.15",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P(BOMBA DE CONDENSADO)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.16",
+  "desc": "2-1X6MM2 NH-90 + 1X4MM2/T - 20MMØ PVC-P(TRANSFORMADOR ESTABILIZADO)",
+  "costo": 16.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.17",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P(UPS 1)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.18",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P(UPS 2)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.19",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P(CCTV)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.20",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (RACK DE COMUNICACIONES)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.21",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (CAJA #1)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.22",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (PANEL PCI)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.23",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (CAJA #2)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 0,
+  "item": "31.23",
+  "desc": "2-1X4MM2 NH-90 + 1X2.5MM2/T - 20MMØ PVC-P (CAJA #3)",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.01",
+  "desc": "CORTE LOSA EXISTENTE PARA CIMENTACION DE NUEVO MURO",
+  "costo": 12.096,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.02",
+  "desc": "TRABAJOS POR TRASLADO DE MEDIDOR (NO INCLUYE CABLEADO)",
+  "costo": 241.92,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.03",
+  "desc": "EXCAVACION DE ZANJA PARA CIMIENTOS CORRIDOS (0.40X0.80)",
+  "costo": 15.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.04",
+  "desc": "EXCAVACION DE ZANJA PARA ZAPATAS (1.00X1.00X0.80)",
+  "costo": 30.24,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.05",
+  "desc": "EXCAVACION DE ZAPATAS H=1.20 A 1.30M",
+  "costo": 37.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.06",
+  "desc": "EXCAVACION DE ZANJA PARA COLUMNETAS",
+  "costo": 182,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.07",
+  "desc": "ELIMINACION DE DESMONTE POR DEMOLICION Y EXCAVACION DE ZANJAS, ZAPATAS, ESCALERAS, COLUMNAS Y MUROS DE ALBANILERIA, DRYWALL, FCR, ENTRE OTROS.",
+  "costo": 10.08,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.08",
+  "desc": "EXCAVACION PARA NIVELACION DE PISO EN ZONA DE ALMACEN",
+  "costo": 25.536,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.09",
+  "desc": "RELLENO Y COMPACTACION CON MATERIAL PROPIO",
+  "costo": 14.784,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.10",
+  "desc": "RELLENO CON AFIRMADO COMPACTADO E=20CM EN CAPAS DE 20CM",
+  "costo": 66.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "1.11",
+  "desc": "NIVELACION Y COMPACTACION DE TERRENO CON MINICARGADOR Y RODILLO",
+  "costo": 5.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.01",
+  "desc": "CONCRETO PARA CIMIENTO CORRIDO",
+  "costo": 175,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.02",
+  "desc": "ENCOFRADO Y DESENCOFRADO DE SOBRECIMIENTO",
+  "costo": 26.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.03",
+  "desc": "CONCRETO PARA SOBRECIMIENTOS",
+  "costo": 48.384,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.04",
+  "desc": "CONCRETO PARA ZAPATAS",
+  "costo": 231.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.05",
+  "desc": "MALLA 0.80 X 0.80 @0.20",
+  "costo": 16.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.06",
+  "desc": "CONCRETO PARA SOLADO 1:10 E=2\"",
+  "costo": 25.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.07",
+  "desc": "MURO DE LADRILLO KING KONG PARA F1, INCLUYE TARRAJEO Y PINTADO EN OBRA Y POST INSTALACION DE MEDIDOR",
+  "costo": 530.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.08",
+  "desc": "MUROS DE LADRILLO KK SOGA",
+  "costo": 43.68,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.09",
+  "desc": "MUROS DE LADRILLO KK CABEZA",
+  "costo": 48.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.10",
+  "desc": "TARRAJEO DE PAREDES ( SOGA Y/O CABEZA)",
+  "costo": 20.65,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.11",
+  "desc": "DERRAME EN VANOS",
+  "costo": 13.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.12",
+  "desc": "SARDINEL",
+  "costo": 38.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.13",
+  "desc": "RAMPA DE CONCRETO EN INGRESO (CON BRUNAS CADA 10CM)",
+  "costo": 275.52,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.14",
+  "desc": "RAMPA METALICA DE INGRESO",
+  "costo": 231.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.15",
+  "desc": "LOSA DE CONCRETO ARMADO PARA ESTACIONAMIENTO DE DISCAPACITADOS (INCLUYE CONCRETO, ACERO Y ENCOFRADO)",
+  "costo": 63.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.16",
+  "desc": "PLANCHA COLABORANTE",
+  "costo": 166.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.17",
+  "desc": "CONCRETO 210 KG/CM2",
+  "costo": 262.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.18",
+  "desc": "COBERTURA METALICA TIPO TR4XG DE 0.25MM, ADICIONALMENTE ESW10 - ESPUMA DE POLIETILENO DE CELDA CERRADA EN UN ESPESOR DE 10MM LAMINADA EN ALUMINIO REFORZADO Y UNA CARA BLANCA RESISTENTE AL UV.",
+  "costo": 72.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.19",
+  "desc": "TECHO DE LOSA ALIGERADA",
+  "costo": 108.864,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.20",
+  "desc": "COBERTURA METALICA TIPO TERMOTECHO E:1\" COLOR BLANCO ( SE CONSIDERA LA ESTRUCTURA DE SOPORTE DE TECHO )",
+  "costo": 110.88,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.21",
+  "desc": "MANTENIMIENTO DE TECHO EXISTENTE",
+  "costo": 20.832,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.22",
+  "desc": "COBERTURA METALICA TERMOTECHO SIN ESTRUCTURAS DE SOPORTE (PARA CASOS DONDE SE PUEDA REUTILIZAR ALGUNA ESTRUCTURA EXISTENTE)",
+  "costo": 92.064,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.23",
+  "desc": "REFUERZO DE ENMALLADO CON FIERROS DE 3/8, CON UNA SEPARACION DE 20 CM ENTRE CADA UNO, DEBAJO DE LA COBERTURA TR4",
+  "costo": 52.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.24",
+  "desc": "PLANCHAS, PERNOS Y ACCESORIOS PARA COBERTURA",
+  "costo": 700,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.25",
+  "desc": "PLANCHA METALICA PARA TECHO",
+  "costo": 105,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.26",
+  "desc": "COLUMNA DE CONFINAMIENTO (INCLUYE FIERRO, CONCRETO, ENCOFRADO Y DESENCOFRADO)",
+  "costo": 273.504,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.27",
+  "desc": "COLUMNA DE CONCRETO CON FIERRO DE 1/2 20CMX20CM (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 235.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.28",
+  "desc": "COLUMNA DE CONCRETO CON FIERRO DE 1/2 30CMX30CM (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 301.728,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.29",
+  "desc": "COLUMNA DE CONCRETO CON FIERRO DE 1/2 40CMX40CM (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 339.01,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.30",
+  "desc": "COLUMNA DE CONCRETO CON FIERRO DE 5/8\" 30CMX30CM (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 644,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.31",
+  "desc": "COLUMNA DE CONCRETO CON FIERRO DE 5/8\" 60CMX35M (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 966.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.32",
+  "desc": "VIGA DE CONFINAMIENTO (INCLUYE FIERRO, CONCRETO, ENCOFRADO Y DESENCOFRADO)",
+  "costo": 437.605,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.33",
+  "desc": "VIGA DE CONCRETO CON FIERRO DE 1/2 (INCLUYE CONCRETO, ENCOFRADO Y DESENCOFRADO)",
+  "costo": 235.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.34",
+  "desc": "VIGA DE CONCRETO CON FIERRO DE 5/8\" 30CMX30CM (INCLUYE ENCOFRADO Y DESENCOFRADO)",
+  "costo": 245.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.35",
+  "desc": "ENCOFRADO Y DESENCOFRADO DE CIMIENTOS Y VIGA SOLERA",
+  "costo": 24.192,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.36",
+  "desc": "ACERO FY=4,200 KG/CM2 REND:350 KG/DIA",
+  "costo": 3.36,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.37",
+  "desc": "COLUMNAS METALICA DE 4\"X 4\" X 3 MM.",
+  "costo": 63.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.38",
+  "desc": "COLUMNAS METALICA DE 6\" X 6\" X 3 MM.",
+  "costo": 75.264,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.39",
+  "desc": "COLUMNAS METALICA DE 6\" X 6\" X 4MM",
+  "costo": 140,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.40",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 4\"X 6\"X 3 MM",
+  "costo": 147,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.41",
+  "desc": "COLUMNAS Y VIGAS METALICAS PARA REFORZAMIENTOS TIPO H DE 12\"",
+  "costo": 101.472,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.42",
+  "desc": "COLUMNAS Y VIGAS METALICAS PARA REFORZAMIENTOS TIPO H DE 10\"",
+  "costo": 220.577,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.43",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 4\"X 2\" X 3 MM.",
+  "costo": 65.856,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.44",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 4\"X 3\" X 3 MM.",
+  "costo": 75.936,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.45",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 4\"X 4\" X 3 MM.",
+  "costo": 82.656,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.46",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 3\"X 2\" X 3 MM.",
+  "costo": 59.808,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.47",
+  "desc": "ESTRUCTURA METALICA PARA TECHOS, DE TUBOS DE 3\"X 3\" X 3 MM.",
+  "costo": 61.824,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.48",
+  "desc": "VIGA METALICA DE 1\" X 1\" X 2MM",
+  "costo": 6.4937,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.49",
+  "desc": "VIGA METALICA DE 2\"X 6\" X 2.5 MM",
+  "costo": 63.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.50",
+  "desc": "VIGA METALICA DE 2\"X 4\" X 2.5 MM",
+  "costo": 76.86,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.51",
+  "desc": "VIGA METALICA DE 4\" X 4\" X 4.5MM",
+  "costo": 113.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.52",
+  "desc": "VIGA METALICA DE 4\" X 6\" X 2.5MM",
+  "costo": 113.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.53",
+  "desc": "VIGA METALICA DE 4\" X 6\" X 4.5MM",
+  "costo": 158.76,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.54",
+  "desc": "VIGA METALICA DE 4\" X 8\" X 3MM",
+  "costo": 142.38,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.55",
+  "desc": "VIGA METALICA DE 4\" X 8\" X 3.5MM",
+  "costo": 132.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.56",
+  "desc": "VIGA METALICA DE 4\"X 8\" X 4.5 MM",
+  "costo": 201.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.57",
+  "desc": "VIGA METALICA PERFIL DE W 8 X 21",
+  "costo": 139.23,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.58",
+  "desc": "VIGA METALICA PERFIL DE H 12\" X 8\" ASTM A36",
+  "costo": 422.73,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.59",
+  "desc": "REFUERZO METALICO TUBERIAS DE 2\" X 2\" PARA COLGAR CELOSIA DE ALUMINIO",
+  "costo": 24.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.60",
+  "desc": "V1 : 20X60:TIJERAL METALICO ANGULOS 11/2\"X11/2\"X1/8\"",
+  "costo": 6.86,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.61",
+  "desc": "V2: 2\"X6\"X2.5MM:TIJERAL METALICO ANGULOS 11/2\"X11/2\"X1/8\"",
+  "costo": 6.86,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.62",
+  "desc": "ARRIOSTRES DE BARRAS LISAS DE 1/2\"",
+  "costo": 6.93,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.63",
+  "desc": "ARRIOSTRES DE BARRAS LISAS DE 3/8\"",
+  "costo": 20.16,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.64",
+  "desc": "ARRIOSTRES DE BARRAS LISAS DE 5/8\"",
+  "costo": 11.34,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.65",
+  "desc": "PLANCHA METALICA PARA ANCLAJE DE COLUMNAS METALICAS",
+  "costo": 28,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.66",
+  "desc": "GORUTING PARA NIVELACION EN COLUMNAS METALICAS",
+  "costo": 420.21,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.67",
+  "desc": "PEDESTAL PARA COLUMNA METALICAS ( INCLUYE ENCOFRADO, ACERO Y CONCRETO)",
+  "costo": 282.87,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.68",
+  "desc": "COLUMNAS METALICAS EN LETRERO EN FACHADA",
+  "costo": 85.05,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.69",
+  "desc": "ESCALERA DE CONCRETO ( INCLUYE ENCOFRADO, FIERRO Y CONCRETO Y DESENCOFRADO)",
+  "costo": 1932.672,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.70",
+  "desc": "ESCALERA METALICA EN FIERRO PINTADO (INCLUYE ACABADO E INSTALACION)",
+  "costo": 1838.592,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.71",
+  "desc": "ESCALERA DE CARACOL EN FIERRO PINTADO (INCLUYE ACABADO E INSTALACION",
+  "costo": 1602.72,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.72",
+  "desc": "ESTRUCTURA METALICA PARA CONDENSADORES EN TECHO",
+  "costo": 1120,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.73",
+  "desc": "PUERTA DE MDF PARA ZONA DE CONDENSADORES",
+  "costo": 305.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.74",
+  "desc": "BARANDA METALICA PINTADA PARA ZONA DE CONDENSADORES",
+  "costo": 126.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.75",
+  "desc": "PUERTA METALICA DE ACCESO AZOTEA (ZONA DE CONDENSADORES)",
+  "costo": 595,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.76",
+  "desc": "ESCALERA DE GATO / ACCESO PARA CONDENSADORES",
+  "costo": 161,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "2.77",
+  "desc": "CERCO PREFABRICADO EN CONDENSADORES",
+  "costo": 89.46,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "3.01",
+  "desc": "CISTERNA ENTERRADA DE CONCRETO + REBOSE (INCLUYE EXCAVACION, VACEADO DE CONCRETO FC'=210KG/CM2, ENCOFRADO, ACERO CORRUGADO FY=4200KG/CM2 E IMPERMEABILIZACION) CON TAPA DE CONCRETO",
+  "costo": 3076.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "4.01",
+  "desc": "SUMINISTRO E INSTALACION DE TANQUE ELEVADO + ACCESORIOS",
+  "costo": 722.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "4.02",
+  "desc": "SUMINISTRO DE BOMBA HIDRONEUMATICA DE PRESION MARCA PEDROLLO O SIMILAR 1.5HP POTENCIA",
+  "costo": 722.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "4.03",
+  "desc": "INSTALACION DE BOMBA HIDRONEUMATICA + ACCESORIOS",
+  "costo": 585.48,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "4.04",
+  "desc": "BASE PARA TANQUE ELEVADO DE AGUA INCLUYE ESCALERA METALICA H=2.10",
+  "costo": 722.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.01",
+  "desc": "TASA MUNICIPAL POR REVISION Y EMISION DE LICENCIA DE OBRA",
+  "costo": 907.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.02",
+  "desc": "PAGO REVISION CAP",
+  "costo": 151.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.03",
+  "desc": "PAGO REVISION CIP",
+  "costo": 151.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.04",
+  "desc": "PAGO REVISION COMISION AD HOC",
+  "costo": 151.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.05",
+  "desc": "TRAMITES PARA PERMISOS MUNICIPALES",
+  "costo": 1952.16,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.06",
+  "desc": "PAGO SSOMA",
+  "costo": 1512,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.07",
+  "desc": "PROYECTO DE SEGURIDAD Y DEL PREVENCIONISTA",
+  "costo": 725.76,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "5.08",
+  "desc": "EXPEDIENTE Y GESTION DE PERMISO DE USO DE VIAS",
+  "costo": 967.68,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.01",
+  "desc": "PERFORACION DE LOSA CON DIAMANTINA, CON BROCA DE 3\"",
+  "costo": 164.815,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.02",
+  "desc": "PERFORACION DE LOSA CON DIAMANTINA, CON BROCA DE 4\"",
+  "costo": 196.35,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.03",
+  "desc": "ESTRUCTURA METALICA PARA LETRERO EN FACHADA (CUANDO SE REQUIERA)",
+  "costo": 143.4781,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.04",
+  "desc": "JUNTA DE DILATACION ENTRE PREDIOS VECINOS E=2\" POLIESTIRENO",
+  "costo": 5.376,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.05",
+  "desc": "ELEVADOR DE CARGA PARA ALAMACEN: PLATAFORMA DE 80 CM X 80 CM, PESO MAXIMO 25 KG (CUANDO EL ALMACEN ESTE EN UN SEGUNDO NIVEL)",
+  "costo": 2310,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.06",
+  "desc": "CANALETA METALICA PARA DRENAJE PLUVIAL",
+  "costo": 40.992,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.07",
+  "desc": "FLASHING METALICO EN ENCUENTRO ENTRE TERMOTECHO Y DRYWALL",
+  "costo": 56,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.08",
+  "desc": "SUMINISTRO E INSTALACION DE BOMBA HIDRONEUMATICA (INCLUYE ELECTROBOMBA DE 1HP, SENSOR, PRESOSTATO, MANOMETRO, TABLERO INTERNO)",
+  "costo": 1075.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.09",
+  "desc": "RED PARA CONEXIONADO DE CISTERNA CON BOMBA Y RED PRINCIPAL",
+  "costo": 225.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.10",
+  "desc": "ANGULO DE ALUMINIO PINTADO AL HORNO PARA PROTEGER ESQUINAS",
+  "costo": 13.685,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.11",
+  "desc": "ALQUILER DE ANDAMIOS",
+  "costo": 1001.385,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.12",
+  "desc": "PORTICO METALICO EN FACHADA PARA SOPORTAR PUERTAS ENROLLABLES",
+  "costo": 980.56,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.13",
+  "desc": "RESANE DE PISOS EN MURO DIVISORIO DE LOCAL TAMBO Y LOCAL LIBRE DEBIDO A LA ZANJA ( INCLUYE ENCHAPE)",
+  "costo": 396.27,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.14",
+  "desc": "RESANE DE VEREDA (POR TRABAJOS DE AMPLIACION DE CARGA)",
+  "costo": 197.54,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.15",
+  "desc": "RESANE DE MUROS EN FACHADA",
+  "costo": 324.275,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.16",
+  "desc": "PICADO Y RESANE DE COLUMNAS CAJONEADAS",
+  "costo": 197.54,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.17",
+  "desc": "REUBICACION DE PUNTOS SANITARIOS POR MODIFICACION EN BANO DE ALMACEN",
+  "costo": 282.625,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.18",
+  "desc": "ANULACION Y REUBICACION DE PUNTO DE GAS",
+  "costo": 431.375,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.19",
+  "desc": "PICADO DE PISO DE SEGUNDO NIVEL PARA VACEAR VIGAS DE CONCRETO ARMADO",
+  "costo": 282.625,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.20",
+  "desc": "PASOS DE ESCALERA",
+  "costo": 254.065,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.21",
+  "desc": "TRATAMIENTO PARA HUMEDAD DE TECHO Y MUROS",
+  "costo": 974.015,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.22",
+  "desc": "PICADO DE ESCARIFICADO Y TARRAJEO DE FACHADA",
+  "costo": 555.135,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.23",
+  "desc": "APUNTALAMIENTO",
+  "costo": 440.3,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.24",
+  "desc": "CISTERNA ENTERRADA DE CONCRETO + REBOSE (INCLUYE EXCAVACION, VACEADO DE CONCRETO FC'=210KG/CM2, ENCOFRADO, ACERO CORRUGADO FY=4200KG/CM2 E IMPERMEABILIZACION) CON TAPA DE CONCRETO",
+  "costo": 5383,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "6.25",
+  "desc": "CISTERNA DE ROTOPLAS DE 1200L",
+  "costo": 965.09,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "7.01",
+  "desc": "ELEVADOR DE CARGA PARA ALAMACEN: PLATAFORMA DE 80 CM X 80 CM, PESO MAXIMO 50 KG",
+  "costo": 3327.6874,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "7.02",
+  "desc": "CAJA PARA ELEVADOR MONTAPLATOS",
+  "costo": 955.8635,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.01",
+  "desc": "CANALIZADO DE PULSADOR DE PANICO EMT 1\"",
+  "costo": 14.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.02",
+  "desc": "SUMINISTRO DE CABLE TIERRA DE 4MM2, PARA ATERRAMIENTO DE CIRCUITOS, SEGUN SU ULTIMA ACTUALIZACION Y FORMATO, LOS ATERRADOS SON INDEPENDIENTES A LA LINEA DE TIERRA DEL MISMO CANALIZADO.",
+  "costo": 455.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.03",
+  "desc": "PRENSA ESTOPA 3/4",
+  "costo": 2.8,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.04",
+  "desc": "CAJAS METALICAS 10X10X5",
+  "costo": 7.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.05",
+  "desc": "DESMONTAJE DE REJAS METALICAS",
+  "costo": 771.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.06",
+  "desc": "LLAVERO DE COLORES PARA TIENDA",
+  "costo": 31.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.07",
+  "desc": "SUMINISTRO E INSTALACION DE DRYWALL RH 2 CARAS",
+  "costo": 74.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.08",
+  "desc": "CABLE ACERADO Y PERNOS/NUDOS DE HIERRO PARA AJUSTE, POR EQUIPO",
+  "costo": 7.7,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.09",
+  "desc": "PUNTO DE RED PARA MONITOR DE PUBLICIDAD",
+  "costo": 126.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.10",
+  "desc": "ACARREO Y ELIMINACION DE DESMONTE, PICADO DE PISO PARA II.EE Y II.SS,PRODUCTOS DE LIDERMAN, AIRE ACONDICIONADO, FIBRA OPTICA Y AUMENTO DE CARGA",
+  "costo": 94.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.11",
+  "desc": "SUMINISTRO E INTALACION DE ESTRUCTURA DE AGARRA PARA BALDOSAS",
+  "costo": 24.605,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.12",
+  "desc": "PICADO PARA PASES DE 6 DUCTOS DE EXTRACCION",
+  "costo": 175,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.13",
+  "desc": "PINTURA PARA RESANE DE LOS PASES DE 6 DUCTOS DE EXTRACCION Y PICADO DE MEDIDOR",
+  "costo": 232.75,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.14",
+  "desc": "RETIRO DE CONTRAZOCALOS",
+  "costo": 102.9,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.15",
+  "desc": "JAULA DE ALTO VALOR + LOCKERS (6), MAS MALLA DE ACUERDO AL ULTIMO MODELO ENVIADO.",
+  "costo": 665,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.16",
+  "desc": "SUMINISTRO DE TACHO 80L (2)",
+  "costo": 52.5424,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.17",
+  "desc": "SUMINISTRO DE TACHO BASA 60L (1)",
+  "costo": 43.4,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.18",
+  "desc": "SUMINISTRO DE TACHO 35L (1)",
+  "costo": 38.9831,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.19",
+  "desc": "IMPLEMENTOS PARA BOTIQUIN (KIT COMPLETO)",
+  "costo": 59.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.20",
+  "desc": "APOYO METALICO PARA BARRA, PARA COLOCAR LOS PIES",
+  "costo": 77,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.21",
+  "desc": "INDEPENDIZACION DE AGUA DE LA RED DEL PROPIETARIO",
+  "costo": 175,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.22",
+  "desc": "LLAVES DE PASO PARA SALIDAS DE AGUA",
+  "costo": 30.1,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.23",
+  "desc": "PUERTA CORREDIZA EN MDF (1.00 X 2.10). CON SISTEMA CORREDIZO, ZONA DE TRASTIENDA",
+  "costo": 945.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.24",
+  "desc": "REJAS PLEGABLES PARA VANOS DE FACHADA",
+  "costo": 612.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.25",
+  "desc": "SUMINISTRO E INSTALACION DE PAPEL KRAFT PARA LAS MAMPARAS",
+  "costo": 294,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.26",
+  "desc": "PELADO DE PINTURA EXISTENTE EN MUROS Y TECHOS",
+  "costo": 530.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.27",
+  "desc": "SUMINISTRO DE MUEBLE AMARILLO",
+  "costo": 315,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.28",
+  "desc": "TACHOS ECOLOGICOS PARA RECICLAJE DE PLASTICO 75 LTS",
+  "costo": 42.7118,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.29",
+  "desc": "SUMINISTRO DE MALLA RASCHELL, PARA EVITAR QUE EL POLVO SALGA A LAS VIVIENDAS COLINDANTES.",
+  "costo": 525,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.30",
+  "desc": "PLACAS DE ANCLAJE DE 16X340X440 E=8MM, PARA EMPOTRADO DE VIGAS METALICAS, INC 4 PERNOS DE ANCLAJE EN CADA PLACA.",
+  "costo": 266,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.31",
+  "desc": "PISO EN AREA DE VENTAS",
+  "costo": 39.2,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.32",
+  "desc": "CORREAS DE TUBO RECTANGULAR DE 60X40X2MM",
+  "costo": 62.797,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.33",
+  "desc": "TARRAJEO EN COLUMNAS MEZCLA C:A 1.5, E=1.5CM",
+  "costo": 29.239,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.34",
+  "desc": "TRATAMIENTO ANTISALITRE, PARA PAREDES Y TECHO QUE PRESENTEN FILTRACIONES POR HUMEDAD Y SALITRAJE",
+  "costo": 24.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.35",
+  "desc": "COLUMNA DE CONCRETO ARMADO DE 0.30X0.45 CON 6 VARILLAS DE 5/8 Y 2 VARILLAS DE 1/2, H:4.10M",
+  "costo": 1436.5115,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.36",
+  "desc": "'VIGA H DE 12\"X10\"X53LB",
+  "costo": 699.44,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.37",
+  "desc": "COLUMNAS METALICAS DE 8X8X6MM",
+  "costo": 266,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.38",
+  "desc": "COLUMNA DE CONFINAMIENTO (INCLUYE FIERRO, CONCRETO, ENCOFRADO Y DESENCOFRADO) H: 4.10M",
+  "costo": 565.6,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.39",
+  "desc": "VESTIDURA DE DERRAME DE PASOS Y CONTRAPASOS DE ESCALERAS",
+  "costo": 21.56,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.40",
+  "desc": "DESMONTAJE DE BARANDAS EN ESCALERA",
+  "costo": 245.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.41",
+  "desc": "SUMINISTRO Y CABLEADO DE CABLE NYY DE 3-1X35MM2",
+  "costo": 49.364,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.42",
+  "desc": "SUMINISTRO DE LLAVE TERMICA 3X100 AMP.",
+  "costo": 112,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.43",
+  "desc": "CONEXION DE TABLERO A POZO A TIERRA 1X25MM2 EMT 2\", CURVA EMT FLEXIBLE DE 2\", UNION EMT DE 2\", ABRAZADERA UNISTRUCK DE 2\" PARA DERIVAR LAS CARGAS AL POZO A TIERRA DEL RECINTO.",
+  "costo": 55.853,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.44",
+  "desc": "IMPERMEABILIZACION DE FALSO PISO",
+  "costo": 31.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.45",
+  "desc": "COLUMNA DE CONCRETO ARMADO DE 0.45X0.34X4.1 CON 8 VARILLAS DE 5/8 H:4.10M",
+  "costo": 1790.1279,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.46",
+  "desc": "COLUMNA DE CONCRETO ARMADO DE 0.37X0.25X4.1 CON 8 VARILLAS DE 5/8 H:4.10M",
+  "costo": 1429.4246,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.47",
+  "desc": "GRIFERIA DE PICO, PARA POZA DE ACERO",
+  "costo": 178.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.48",
+  "desc": "TRAMPA PARA LAVADERO DE COUNTER",
+  "costo": 17.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.49",
+  "desc": "TUBO DE ABASTO PARA LAVADERO DE COUNTER",
+  "costo": 21,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.50",
+  "desc": "DEMOLICION DE PIRCADO EN MUROS DE ADOBE",
+  "costo": 910.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "8.51",
+  "desc": "TRAMPARA PARA SUMIDERO DE CANALEVA PLUVIAL",
+  "costo": 52.5,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.01",
+  "desc": "SUMINISTRO E INSTALACION DE TABLERO ADOSABLE METALICO CON UNA LLAVE GENERAL Y UNA LLAVE DE CONTROL, INTERRUPTORES TERMOMAGNETICOS Y DIFERENCIALES, RELES TERMICOS, SELECTORES, CON MANDIL DE ACRILICO PARA PROTECCION, PLACAS CON NOMBRES, ATERRADO, CON DIAGRAMA Y LEYENDA",
+  "costo": 490.0,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.02",
+  "desc": "SALIDA DE PUNTO DE FUERZA EMPOTRADA PARA ALIMENTAR TABLERO DE BOMBA DE AGUA PERIFERICA, INCLUYE CANALIZADO Y CABLEADO, 2-1X4MM2LSOH+ 1X4MM2/T- 20MMØEMT",
+  "costo": 12.95,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.03",
+  "desc": "INSTALACION Y PEINADO DE TABLERO DE AUTOMATIZACION, CONEXION DE MOTOR, CONEXION DE ELECTRONIVEL EN TANQUE Y PUESTA EN MARCHA DEL SISTEMA DE AGUA BOMBEADA",
+  "costo": 350,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.04",
+  "desc": "CONEXION SANITARIA DE BOMBA DE BOMBA PERIFERICA HACIA TANQUE ELEVADO, INCLUYE ACCESORIO SANITARIOS, VALVULAS CHECK, LLAVES DE CONTROL Y PURGE",
+  "costo": 539,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.05",
+  "desc": "PLATAFORMA PARA CONDENSADORES Y PARA TANQUE ELEVADO",
+  "costo": 3500,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.06",
+  "desc": "ESTRUCTURA Y TECHO PARA TABLERO ELECTRICO",
+  "costo": 203,
+  "fuentes": 1
+ },
+ {
+  "fase": 1,
+  "item": "9.07",
+  "desc": "CANALIZADO DE TUBERIA DE 2\" PARA DRENAJE DE TANQUES",
+  "costo": 17.71,
+  "fuentes": 1
+ }
+]

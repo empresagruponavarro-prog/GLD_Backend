@@ -29,7 +29,7 @@ import {
   TipoCategoriaResponseDto,
   UpdateTipoCategoriaDto,
 } from './tipo-categoria.dto.js';
-import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('maestros/tipo-categoria')
 @Controller('maestros/tipo-categoria')
@@ -37,6 +37,7 @@ import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js'
 export class TipoCategoriaController {
   constructor(private readonly handler: TipoCategoriaHandler) {}
 
+  @TambienDesde('proyectos.categorias')
   @Get()
   @ApiOperation({ summary: 'Listar tipos de categoría' })
   @ApiOkResponse({
