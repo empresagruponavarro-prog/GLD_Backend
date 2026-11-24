@@ -213,7 +213,7 @@ describe('Presupuesto Meta: Comercial por ítem y tope de pago por avance (e2e)'
       // La subpartida 2 (ítem 2, 2 × 500 en el Meta) se cotiza con un total de 800.
       await api()
         .post(`/presupuestos/${idPpto}/cotizaciones`)
-        .send({ id_detalle_categoria: sub2, id_proveedor: provA, total: '800', fecha: hoy, moneda_id: 'PEN', moneda_simbolo: 'S/', forma_pago: 'Contado', adjudicar: true })
+        .send({ id_detalle_categoria: sub2, id_proveedor: provA, total: '800', fecha: hoy, moneda_id: 'PEN', moneda_simbolo: 'S/', forma_pago: 'Contado', adelanto_porcentaje: '30', adjudicar: true }) // mismas condiciones que la primera: una sola orden
         .expect(201);
       const c = await comercial();
       expect(c.fases[0]).toMatchObject({ meta: 2100, comercial: 1680, fuente: 'ADJUDICACION', items_adjudicados: 3, requerimientos: [] });
