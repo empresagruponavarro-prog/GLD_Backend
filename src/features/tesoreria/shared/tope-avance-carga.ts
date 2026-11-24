@@ -14,6 +14,8 @@ export interface DocParaTope {
   neto_proveedor: string;
   pagado_proveedor: string;
   programado_proveedor: string;
+  /** Con contrato de valorización manda lo aprobado (plan 12), no el tope por avance del presupuesto. */
+  tiene_contrato?: boolean;
 }
 
 export interface LineaValorizada {
@@ -48,7 +50,7 @@ export interface InfoTope {
  */
 export async function cargarTopesAvance(sql: AlmacenSql, orm: OrmObra, docs: readonly DocParaTope[]): Promise<Map<number, InfoTope>> {
   const resultado = new Map<number, InfoTope>();
-  const candidatos = docs.filter((d) => d.clase_documento === 'ORDEN_SERVICIO' && d.estado === 'REGISTRADO');
+  const candidatos = docs.filter((d) => d.clase_documento === 'ORDEN_SERVICIO' && d.estado === 'REGISTRADO' && !d.tiene_contrato);
   if (candidatos.length === 0) return resultado;
   const q = sqlTag(sql);
   const lista = csv(candidatos.map((d) => d.id));

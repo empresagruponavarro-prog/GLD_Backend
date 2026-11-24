@@ -27,6 +27,7 @@ describe('Valorizaciones de contratistas (e2e)', () => {
   let lineaA = 0;
   let lineaB = 0;
   let idContrato = 0;
+  let cuenta = 0;
   const api = () => apiConSesion(app);
   const num = (v: string | number) => Number(v);
 
@@ -89,6 +90,7 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     await crearUsuarioE2E(db);
     proveedor = (await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Proveedor', 'E2E-VAL Contratista', true) returning id`)).rows[0].id;
     const cliente = (await db.query(`insert into anexos ("tipoAnexo", "Anexo", estado) values ('Cliente', 'E2E-VAL Cliente', true) returning id`)).rows[0].id;
+    cuenta = (await db.query(`insert into cuenta_tesoreria (codigo, nombre, tipo, moneda_id) values ('E2E-VAL-CTA', 'E2E VAL CUENTA', 'BANCO', 'PEN') returning id`)).rows[0].id;
     cc = (
       await db.query(`insert into "CentroCostos" (centro_costo, estado, fecha_inicio, fecha_fin_prog, periodo, id_anexo) values ('E2E-VAL-OBRA', 'ABIERTO', $1, $1, 2026, $2) returning id`, [hoy, cliente])
     ).rows[0].id;
@@ -105,6 +107,9 @@ describe('Valorizaciones de contratistas (e2e)', () => {
 
   afterAll(async () => {
     const ordenes = `(select id from "documentosOrigen" where comentarios like 'E2E-VAL%')`;
+    await db.query(`delete from pago where id_documento_origen in ${ordenes}`);
+    await db.query(`delete from pago_programado where id_documento_origen in ${ordenes}`);
+    await db.query(`delete from cuenta_tesoreria where codigo = 'E2E-VAL-CTA'`);
     await db.query(`delete from valorizacion_deductivo where id_valorizacion in (select v.id from valorizacion v join contrato_valorizacion c on c.id = v.id_contrato where c.id_documento_origen in ${ordenes})`);
     await db.query(`delete from valorizacion_linea where id_valorizacion in (select v.id from valorizacion v join contrato_valorizacion c on c.id = v.id_contrato where c.id_documento_origen in ${ordenes})`);
     await db.query(`delete from valorizacion where id_contrato in (select id from contrato_valorizacion where id_documento_origen in ${ordenes})`);
@@ -157,6 +162,64 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     const ad = (await api().post(`/valorizaciones/administracion/contratos/${idContrato}/visto`).expect(200)).body;
     expect(ad.contrato.estado).toBe('VIGENTE');
     expect(ad.cuotas.filter((c: { tipo: string; estado: string }) => c.tipo === 'ADELANTO' && c.estado === 'APROBADA')).toHaveLength(1);
+  });
+
+  it('Tesorería: un contrato sin vistos no se programa; con vistos solo se paga lo aprobado, ligado a su cuota', async () => {
+    // Otra orden con contrato en borrador: ni programar ni pagar.
+    const sinVistos = await crearOs();
+    await api().post('/valorizaciones/contratos').send({ id_documento_origen: sinVistos }).expect(201);
+    const bloqueado = await api()
+      .post('/tesoreria/programacion')
+      .send({ items: [{ id_documento_origen: sinVistos, fecha_programada: '2026-12-04', monto: '100.00', medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E' }] });
+    expect(bloqueado.status).toBe(409);
+    expect(bloqueado.body.codigo).toBe('CONTRATO_SIN_VISTOS');
+
+    // La orden vigente: solo está aprobado el adelanto.
+    const d = await detalle();
+    const adelanto = d.cuotas.find((c: { tipo: string }) => c.tipo === 'ADELANTO');
+    const neto = num(adelanto.neto);
+    expect(neto).toBeGreaterThan(0);
+    const sobre = await api()
+      .post('/tesoreria/programacion')
+      .send({ items: [{ id_documento_origen: idOs, fecha_programada: '2026-12-04', monto: (neto + 1).toFixed(2), medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E' }] });
+    expect(sobre.status).toBe(409);
+    expect(sobre.body.codigo).toBe('NO_LIBERADO');
+    // No admite «por encima del avance».
+    await api()
+      .post('/tesoreria/programacion')
+      .send({ items: [{ id_documento_origen: idOs, fecha_programada: '2026-12-04', monto: '10.00', medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E', exceder_avance: true }] })
+      .expect(400);
+    // Una cuota que no es del contrato.
+    await api()
+      .post('/tesoreria/programacion')
+      .send({ items: [{ id_documento_origen: idOs, fecha_programada: '2026-12-04', monto: '10.00', medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E', id_valorizacion: 99999999 }] })
+      .expect(409);
+
+    // Se programa y paga justo el adelanto, ligado a su cuota.
+    const prog = (
+      await api()
+        .post('/tesoreria/programacion')
+        .send({ items: [{ id_documento_origen: idOs, fecha_programada: '2026-12-04', monto: neto.toFixed(2), medio_pago: 'TRANSFERENCIA', urgente: true, observaciones: 'PRUEBA E2E', id_valorizacion: adelanto.id }] })
+        .expect(201)
+    ).body[0];
+    expect(prog.id_valorizacion).toBe(adelanto.id);
+    expect(prog.cuota_tipo).toBe('ADELANTO');
+    await api()
+      .post('/tesoreria/pagos')
+      .send({ id_pago_programado: prog.id, fecha_pago: '2026-12-04', id_cuenta: cuenta, medio_pago: 'TRANSFERENCIA', numero_operacion: 'E2E-VAL' })
+      .expect(201);
+    const pagado = await detalle();
+    const cuotaAdelanto = pagado.cuotas.find((c: { tipo: string }) => c.tipo === 'ADELANTO');
+    expect(cuotaAdelanto.estado_pago).toBe('PAGADA');
+    expect(num(cuotaAdelanto.saldo)).toBe(0);
+    // Nada más liberado: un pago directo adicional se rechaza.
+    const mas = await api().post('/tesoreria/pagos/directo').send({ id_documento_origen: idOs, fecha_pago: '2026-12-04', monto: '50.00', medio_pago: 'TRANSFERENCIA', id_cuenta: cuenta, numero_operacion: 'E2E-VAL-2' });
+    expect(mas.status).toBe(409);
+    expect(mas.body.codigo).toBe('NO_LIBERADO');
+    // Con pagos, lo económico del contrato ya no cambia.
+    await api().patch(`/valorizaciones/contratos/${idContrato}`).send({ numero_valorizaciones: 2 }).expect(409);
+    // La orden sin vistos se anula y su contrato también.
+    await api().post(`/administracion/documentos-origen/${sinVistos}/anular`).send({ motivo: 'Prueba' }).expect(200);
   });
 
   it('un deductivo por monto queda pendiente y se descuenta en la primera valorización', async () => {
@@ -279,7 +342,7 @@ describe('Valorizaciones de contratistas (e2e)', () => {
   });
 
   it('el listado y la consulta por cliente reflejan el contrato', async () => {
-    const lista = (await api().get('/valorizaciones/contratos').query({ id_centro_costo: cc }).expect(200)).body;
+    const lista = (await api().get('/valorizaciones/contratos').query({ id_centro_costo: cc, estado: 'LIQUIDADO' }).expect(200)).body;
     expect(lista.data).toHaveLength(1);
     expect(lista.data[0].estado).toBe('LIQUIDADO');
     const consulta = (await api().get('/valorizaciones/consulta').query({ agrupar: 'obra', id_centro_costo: cc }).expect(200)).body;
@@ -308,7 +371,7 @@ describe('Valorizaciones de contratistas (e2e)', () => {
     // Anular la orden anula su contrato (sin valorizaciones aprobadas).
     await api().post(`/administracion/documentos-origen/${otra}/anular`).send({ motivo: 'Prueba' }).expect(200);
     const anulado = (await api().get('/valorizaciones/contratos').query({ id_centro_costo: cc, estado: 'ANULADO' }).expect(200)).body;
-    expect(anulado.data).toHaveLength(1);
+    expect(anulado.data).toHaveLength(2); // la orden sin vistos de Tesorería y esta
   });
 
   it('las condiciones por tipo de servicio se listan y editan', async () => {

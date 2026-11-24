@@ -38,6 +38,10 @@ export interface ProgramacionRow {
   cuenta_destino: string | null;
   estado: string;
   observaciones: string | null;
+  /** Cuota de un contrato de valorización a la que se ligó el pago (plan 12). */
+  id_valorizacion: number | null;
+  cuota_tipo: string | null;
+  cuota_numero: number | null;
 }
 
 const PROG_SPEC = {
@@ -59,6 +63,9 @@ const PROG_SPEC = {
   cuenta_destino: TN,
   estado: T,
   observaciones: TN,
+  id_valorizacion: IN,
+  cuota_tipo: TN,
+  cuota_numero: IN,
 } as const;
 
 /** Saldo que todavia se puede programar de un concepto del documento (descontando pagado y programado). */
@@ -168,17 +175,18 @@ export class ProgramacionHandler {
           monto: Number(item.monto),
           exceder: item.exceder_avance ?? false,
           motivo: item.observaciones,
+          idValorizacion: item.id_valorizacion,
         });
         const observaciones = excede ? marcarExceso(item.observaciones) : item.observaciones;
         if (item.id_cuenta !== undefined) await this.validarCuenta(tx, item.id_cuenta);
         const destino = item.cuenta_destino ?? (concepto === 'DETRACCION' ? await this.cuentaDetraccionDe(tx, doc.id_anexo) : null);
         const [fila] = await q.rows<{ id: number }>({ id: I }, tx)`
           INSERT INTO pago_programado (id_documento_origen, concepto, fecha_programada, urgente, monto, medio_pago, id_cuenta,
-                                       cuenta_destino, id_programado_por, observaciones)
+                                       cuenta_destino, id_programado_por, observaciones, id_valorizacion)
           VALUES (${item.id_documento_origen}::int, ${concepto}::text, ${item.fecha_programada}::date, ${item.urgente ?? false}::boolean,
                   ${item.monto}::numeric, ${item.medio_pago}::text, NULLIF(${item.id_cuenta ?? 0}::int, 0),
                   NULLIF(${destino ?? ''}::text, ''), NULLIF(${dto.id_programado_por ?? 0}::int, 0),
-                  NULLIF(${observaciones ?? ''}::text, ''))
+                  NULLIF(${observaciones ?? ''}::text, ''), NULLIF(${item.id_valorizacion ?? 0}::int, 0))
           RETURNING id`;
         creadas.push(fila.id);
       }
@@ -300,8 +308,10 @@ export class ProgramacionHandler {
              COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor, cc.centro_costo::text AS centro_costo,
              o.moneda_id::text AS moneda_id, o.moneda_simbolo::text AS moneda_simbolo, g.concepto::text AS concepto,
              g.fecha_programada::text AS fecha_programada, g.urgente, g.monto::text AS monto, g.medio_pago::text AS medio_pago,
-             g.id_cuenta, c.nombre::text AS cuenta, g.cuenta_destino::text AS cuenta_destino, g.estado::text AS estado, g.observaciones
+             g.id_cuenta, c.nombre::text AS cuenta, g.cuenta_destino::text AS cuenta_destino, g.estado::text AS estado, g.observaciones,
+             g.id_valorizacion, v.tipo::text AS cuota_tipo, v.numero AS cuota_numero
         FROM pago_programado g
+        LEFT JOIN valorizacion v ON v.id = g.id_valorizacion
         JOIN "documentosOrigen" o ON o.id = g.id_documento_origen
         LEFT JOIN anexos a ON a.id = o.id_anexo
         LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo

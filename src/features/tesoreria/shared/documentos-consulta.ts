@@ -71,6 +71,15 @@ export interface DocumentoConsultado {
   saldo_por_pagar_detraccion: string;
   fecha_ultimo_pago: string | null;
   estado_pago: string;
+  /** Plan 12: la orden de servicio tiene un contrato de valorización vigente (o en borrador). */
+  tiene_contrato: boolean;
+  id_contrato: number | null;
+  estado_contrato: string | null;
+  /** Lo que ya se puede programar y pagar: lo aprobado en valorizaciones (sin contrato = todo el neto). */
+  exigible: string;
+  exigible_detraccion: string;
+  /** Garantía retenida de las valorizaciones aprobadas (aún no devuelta). */
+  garantia_retenida: string;
   total_filas: number;
 }
 
@@ -123,6 +132,12 @@ const SPEC = {
   saldo_por_pagar_detraccion: T,
   fecha_ultimo_pago: TN,
   estado_pago: T,
+  tiene_contrato: B,
+  id_contrato: IN,
+  estado_contrato: TN,
+  exigible: T,
+  exigible_detraccion: T,
+  garantia_retenida: T,
   total_filas: I,
 } as const;
 
@@ -169,9 +184,12 @@ export async function consultarDocumentos(
            d.programado_detraccion::text AS programado_detraccion,
            GREATEST(d.neto_proveedor - d.pagado_proveedor, 0)::text AS saldo_por_pagar_proveedor,
            GREATEST(d.det - d.pagado_detraccion, 0)::text AS saldo_por_pagar_detraccion,
-           d.fecha_ultimo_pago, d.estado_pago, (count(*) OVER ())::int AS total_filas
+           d.fecha_ultimo_pago, d.estado_pago, d.tiene_contrato, d.id_contrato, d.estado_contrato, d.exigible::text AS exigible,
+           d.exigible_det::text AS exigible_detraccion, d.garantia_n::text AS garantia_retenida, (count(*) OVER ())::int AS total_filas
       FROM (
         SELECT y.*,
+               CASE WHEN y.tiene_contrato THEN LEAST(y.liberado_n, y.neto_proveedor) ELSE y.neto_proveedor END AS exigible,
+               CASE WHEN y.tiene_contrato THEN LEAST(y.liberado_det_n, y.det) ELSE y.det END AS exigible_det,
                CASE WHEN y.estado = 'ANULADO' THEN 'ANULADO'
                     WHEN y.estado = 'PROVISIONAL' THEN 'PROVISIONAL'
                     WHEN (y.neto_proveedor > 0.005 OR y.det > 0.005)
@@ -183,8 +201,12 @@ export async function consultarDocumentos(
             SELECT x.*,
                    COALESCE(x.detraccion_monto_n, 0) AS det,
                    ROUND(x.total_n - x.renta_n - x.dc_n - x.di_n - x.do_n
-                         - COALESCE(x.total_n * x.detraccion_pct_n / 100, 0) - COALESCE(x.retencion_n, 0), 2) AS neto_proveedor,
+                         - COALESCE(x.total_n * x.detraccion_pct_n / 100, 0) - COALESCE(x.retencion_n, 0) - x.deductivos_n, 2) AS neto_proveedor,
                    CASE WHEN x.fecha_vencimiento_manual IS NOT NULL THEN x.fecha_vencimiento_manual
+                        WHEN x.tiene_contrato THEN (SELECT (min(t.d) + COALESCE(x.dias_efectivos, 0))::text FROM (
+                               SELECT v.aprobado_en::date AS d, sum(v.neto) OVER (ORDER BY v.aprobado_en, v.id) AS acum
+                                 FROM valorizacion v WHERE v.id_contrato = x.id_contrato AND v.estado::text = 'APROBADA') t
+                             WHERE t.acum > x.pagado_proveedor + 0.005)
                         WHEN x.dias_efectivos IS NULL THEN NULL
                         WHEN x.clase_documento = 'ORDEN_COMPRA' THEN (x.ultima_recepcion::date + x.dias_efectivos)::text
                         ELSE (x.fecha_emision::date + x.dias_efectivos)::text END AS vencimiento,
@@ -221,13 +243,20 @@ export async function consultarDocumentos(
                                   AND g.concepto = 'PROVEEDOR'), 0) AS programado_proveedor,
                        COALESCE((SELECT sum(g.monto) FROM pago_programado g WHERE g.id_documento_origen = o.id AND g.estado = 'PROGRAMADO'
                                   AND g.concepto = 'DETRACCION'), 0) AS programado_detraccion,
-                       (SELECT max(p.fecha_pago)::text FROM pago p WHERE p.id_documento_origen = o.id AND p.estado = 'REGISTRADO') AS fecha_ultimo_pago
+                       (SELECT max(p.fecha_pago)::text FROM pago p WHERE p.id_documento_origen = o.id AND p.estado = 'REGISTRADO') AS fecha_ultimo_pago,
+                       cv.id AS id_contrato, (cv.id IS NOT NULL) AS tiene_contrato, cv.estado::text AS estado_contrato,
+                       COALESCE(val.liberado, 0) AS liberado_n, COALESCE(val.det_soles, 0) AS liberado_det_n,
+                       COALESCE(val.deductivos, 0) AS deductivos_n, COALESCE(val.garantia, 0) AS garantia_n
                   FROM "documentosOrigen" o
                   LEFT JOIN anexos a ON a.id = o.id_anexo
                   LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo
                   LEFT JOIN centro_costos_principal ccp ON ccp.id = cc.id_centro_costos_principal
                   LEFT JOIN area ar ON ar.id = o.id_area
                   LEFT JOIN requerimiento r ON r.id = o.id_requerimiento
+                  LEFT JOIN contrato_valorizacion cv ON cv.id_documento_origen = o.id AND cv.estado::text <> 'ANULADO'
+                  LEFT JOIN LATERAL (
+                    SELECT sum(v.neto) AS liberado, sum(v.detraccion_soles) AS det_soles, sum(v.descuentos) AS deductivos, sum(v.garantia) AS garantia
+                      FROM valorizacion v WHERE v.id_contrato = cv.id AND v.estado::text = 'APROBADA') val ON true
               ) x
           ) y
       ) d
@@ -247,8 +276,8 @@ export async function consultarDocumentos(
        AND (${anexo}::int = 0 OR d.id_anexo = ${anexo}::int)
        AND (${req}::int = 0 OR d.id_requerimiento = ${req}::int)
        AND (${soloSaldo}::boolean = false OR (d.estado = 'REGISTRADO'
-            AND (d.neto_proveedor - d.pagado_proveedor - d.programado_proveedor > 0.005
-                 OR d.det - d.pagado_detraccion - d.programado_detraccion > 0.005)))
+            AND (d.estado_contrato = 'BORRADOR' OR d.exigible - d.pagado_proveedor - d.programado_proveedor > 0.005
+                 OR d.exigible_det - d.pagado_detraccion - d.programado_detraccion > 0.005)))
      ORDER BY d.id DESC
      LIMIT ${limit}::int OFFSET ${offset}::int`;
 }

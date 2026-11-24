@@ -134,15 +134,16 @@ export class PagosHandler {
         monto: Number(dto.monto),
         exceder: dto.exceder_avance ?? false,
         motivo: dto.observaciones,
+        idValorizacion: dto.id_valorizacion,
       });
       const observacionesProg = excede ? marcarExceso(dto.observaciones) : 'Pago directo';
       const urgente = !esViernes(dto.fecha_pago);
       const [prog] = await q.rows<{ id: number }>({ id: I }, tx)`
         INSERT INTO pago_programado (id_documento_origen, concepto, fecha_programada, urgente, monto, medio_pago, id_cuenta,
-                                     cuenta_destino, id_programado_por, observaciones)
+                                     cuenta_destino, id_programado_por, observaciones, id_valorizacion)
         VALUES (${dto.id_documento_origen}::int, ${concepto}::text, ${dto.fecha_pago}::date, ${urgente}::boolean, ${dto.monto}::numeric,
                 ${dto.medio_pago}::text, ${dto.id_cuenta}::int, NULLIF(${dto.cuenta_destino ?? ''}::text, ''),
-                NULLIF(${dto.id_ejecutado_por ?? 0}::int, 0), ${observacionesProg}::text)
+                NULLIF(${dto.id_ejecutado_por ?? 0}::int, 0), ${observacionesProg}::text, NULLIF(${dto.id_valorizacion ?? 0}::int, 0))
         RETURNING id`;
       return this.ejecutarEnTx(tx, {
         id_pago_programado: prog.id,
@@ -202,15 +203,16 @@ export class PagosHandler {
       id_programado_por: number | null;
       observaciones: string | null;
       id_cuenta: number | null;
+      id_valorizacion: number | null;
     }>(
       {
         id_documento_origen: I, concepto: T, estado: T, monto: T, medio_pago: T, fecha: T, urgente: B,
-        cuenta_destino: TN, id_programado_por: IN, observaciones: TN, id_cuenta: IN,
+        cuenta_destino: TN, id_programado_por: IN, observaciones: TN, id_cuenta: IN, id_valorizacion: IN,
       },
       tx,
     )`
       SELECT id_documento_origen, concepto::text AS concepto, estado::text AS estado, monto::text AS monto, medio_pago::text AS medio_pago,
-             fecha_programada::text AS fecha, urgente, cuenta_destino::text AS cuenta_destino, id_programado_por, observaciones, id_cuenta
+             fecha_programada::text AS fecha, urgente, cuenta_destino::text AS cuenta_destino, id_programado_por, observaciones, id_cuenta, id_valorizacion
         FROM pago_programado WHERE id = ${dto.id_pago_programado}::int FOR UPDATE`;
     if (!prog) throw new NotFoundException(`Programacion ${dto.id_pago_programado} no encontrada`);
     if (prog.estado !== 'PROGRAMADO') throw new ConflictException(`La programación está ${prog.estado}; solo se ejecuta una PROGRAMADO`);
@@ -221,7 +223,11 @@ export class PagosHandler {
     if (Number(monto) > Number(prog.monto) + EPS) {
       throw new BadRequestException(`El monto (${monto}) supera lo programado (${prog.monto})`);
     }
-    const limite = prog.concepto === 'DETRACCION' ? Number(doc.detraccion_monto ?? 0) : Number(doc.neto_proveedor);
+    // Con contrato de valorización el límite es lo aprobado (`exigible`); sin contrato, todo el neto (igual que antes).
+    const limite =
+      prog.concepto === 'DETRACCION'
+        ? Number(doc.tiene_contrato ? doc.exigible_detraccion : (doc.detraccion_monto ?? 0))
+        : Number(doc.tiene_contrato ? doc.exigible : doc.neto_proveedor);
     const pagado = prog.concepto === 'DETRACCION' ? Number(doc.pagado_detraccion) : Number(doc.pagado_proveedor);
     if (pagado + Number(monto) > limite + EPS) {
       throw new BadRequestException(`El pago supera el saldo por pagar (${redondear(Math.max(limite - pagado, 0)).toFixed(2)})`);
@@ -275,10 +281,10 @@ export class PagosHandler {
       const resto = redondear(Number(prog.monto) - Number(monto), 4).toString();
       await q.run(tx)`
         INSERT INTO pago_programado (id_documento_origen, concepto, fecha_programada, urgente, monto, medio_pago, id_cuenta,
-                                     cuenta_destino, id_programado_por, observaciones)
+                                     cuenta_destino, id_programado_por, observaciones, id_valorizacion)
         VALUES (${prog.id_documento_origen}::int, ${prog.concepto}::text, ${prog.fecha}::date, ${prog.urgente}::boolean, ${resto}::numeric,
                 ${prog.medio_pago}::text, NULLIF(${prog.id_cuenta ?? 0}::int, 0), NULLIF(${prog.cuenta_destino ?? ''}::text, ''),
-                NULLIF(${prog.id_programado_por ?? 0}::int, 0), ${'Saldo de un pago parcial de ' + numero}::text)`;
+                NULLIF(${prog.id_programado_por ?? 0}::int, 0), ${'Saldo de un pago parcial de ' + numero}::text, NULLIF(${prog.id_valorizacion ?? 0}::int, 0))`;
     } else {
       await q.run(tx)`UPDATE pago_programado SET estado = 'EJECUTADO' WHERE id = ${dto.id_pago_programado}::int`;
     }
