@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { toDecimalString, toVarchar } from '../../../platform/db/varchar-helpers.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
-import { AlmacenSql, I, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { AlmacenSql, B, I, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
 import { ESTADOS_EDITABLES, type EstadoPpto } from '../aprobacion/estados.js';
 import { ConciliarCompromisosService, type ResultadoConciliacion } from '../compromisos/conciliar-compromisos.service.js';
 import { bloquearPresupuestoPorCodigo, type PresupuestoBloqueado } from '../cotizaciones-ppto/contexto-ppto.js';
@@ -20,12 +20,17 @@ import {
   redondear2,
 } from '../shared/costos-meta.js';
 import { recalcularMeta } from '../shared/recalcular-meta.js';
+import { preciosOferta } from '../../requerimientos/shared/precios-oferta.js';
 import type {
+  AdjudicadoFaseDto,
+  AdjudicadoItemDto,
+  AdjudicadoSubfaseDto,
   AjusteMetaDto,
   MetaFaseDto,
   MetaItemDto,
   MetaSubfaseDto,
   MetaSubfaseNodoDto,
+  PresupuestoMetaAdjudicadoResponseDto,
   PresupuestoMetaResponseDto,
   SyncItemsMetaDto,
 } from './presupuesto-meta.dto.js';
@@ -99,6 +104,81 @@ export class PresupuestoMetaHandler {
       editable: ESTADOS_EDITABLES.includes(ppto.estado_ppto as EstadoPpto),
       totales: { base: f2(base), meta: f2(meta), diferencia: f2(diferenciaMeta(base, meta)), diferencia_pct: pct === null ? null : f2(pct) },
       fases,
+    };
+  }
+
+
+  /**
+   * Meta vs Adjudicado (sin IGV): para cada ítem con proveedor ganador, el precio adjudicado (el de la cotización ganadora, ya repartida entre
+   * los ítems de la subfase) frente a su Meta. La diferencia compara solo lo adjudicado; lo que tiene cantidad y aún no tiene ganador va a «pendiente».
+   */
+  async getMetaAdjudicado(idOrCode: string | number): Promise<PresupuestoMetaAdjudicadoResponseDto> {
+    const ppto = await this.cargarPresupuesto(idOrCode);
+    const codigo = String(ppto.IdPresupuesto ?? '');
+    const fases = await this.arbol(codigo);
+    const q = sqlTag(this.sql);
+    const ganadores = await q.rows<{ id: number; precio: string; incluye_igv: boolean; afecto_igv: boolean; proveedor: string | null }>({
+      id: I,
+      precio: T,
+      incluye_igv: B,
+      afecto_igv: B,
+      proveedor: TN,
+    })`
+      SELECT i.id, d.precio_unitario::text AS precio, c.incluye_igv, c.afecto_igv, COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor
+        FROM "ppto_DetalleItems" i
+        JOIN ppto_cotizacion_detalle d ON d.id = i.id_ppto_cot_detalle_ganadora
+        JOIN ppto_cotizacion c ON c.id = d.id_cotizacion
+        JOIN anexos a ON a.id = c.id_proveedor
+       WHERE i."IdPresupuesto" = ${codigo}::text`;
+    const porItem = new Map(ganadores.map((g) => [g.id, g]));
+
+    let tMeta = 0;
+    let tAdj = 0;
+    let tMetaAdj = 0;
+    let tPend = 0;
+    const salida: AdjudicadoFaseDto[] = fases.map((f) => {
+      let fAdj = 0;
+      let fMetaAdj = 0;
+      let fPend = 0;
+      const subfases = f.subfases.map<AdjudicadoSubfaseDto>((s) => {
+        let sAdj = 0;
+        let sMetaAdj = 0;
+        let sPend = 0;
+        const provs = new Set<string>();
+        const items = s.items.map<AdjudicadoItemDto>((i) => {
+          const g = porItem.get(i.id);
+          const cantidad = Number(i.cantidad);
+          const totalMeta = Number(i.total_meta);
+          const base = { id: i.id, numero: i.numero, descripcion: i.descripcion, unidad: i.unidad, cantidad: i.cantidad, pu_meta: i.pu_meta, total_meta: i.total_meta };
+          if (!g) {
+            if (cantidad > 0) sPend += totalMeta;
+            return { ...base, adjudicado: false, pu_adjudicado: null, total_adjudicado: null, diferencia: null, proveedor: null };
+          }
+          const pu = preciosOferta(Number(g.precio), g.incluye_igv, g.afecto_igv).sin;
+          const total = redondear2(cantidad * pu);
+          sAdj += total;
+          sMetaAdj += totalMeta;
+          if (g.proveedor) provs.add(g.proveedor);
+          return { ...base, adjudicado: true, pu_adjudicado: f2(pu), total_adjudicado: f2(total), diferencia: f2(total - totalMeta), proveedor: g.proveedor };
+        });
+        fAdj += sAdj;
+        fMetaAdj += sMetaAdj;
+        fPend += sPend;
+        return { id: s.id, nombre: s.nombre, meta: s.meta, adjudicado: f2(sAdj), meta_adjudicado: f2(sMetaAdj), diferencia: f2(sAdj - sMetaAdj), pendiente: f2(sPend), proveedores: [...provs], items };
+      });
+      tMeta += Number(f.meta);
+      tAdj += fAdj;
+      tMetaAdj += fMetaAdj;
+      tPend += fPend;
+      return { id: f.id, nombre: f.nombre, meta: f.meta, adjudicado: f2(fAdj), meta_adjudicado: f2(fMetaAdj), diferencia: f2(fAdj - fMetaAdj), pendiente: f2(fPend), subfases };
+    });
+    const dif = tAdj - tMetaAdj;
+    return {
+      id: ppto.id,
+      id_presupuesto: ppto.IdPresupuesto ?? null,
+      estado_ppto: ppto.estado_ppto,
+      totales: { meta: f2(tMeta), adjudicado: f2(tAdj), meta_adjudicado: f2(tMetaAdj), diferencia: f2(dif), diferencia_pct: tMetaAdj > 0 ? f2((dif / tMetaAdj) * 100) : null, pendiente: f2(tPend) },
+      fases: salida,
     };
   }
 

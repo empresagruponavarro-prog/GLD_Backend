@@ -99,3 +99,60 @@ export class PresupuestoMetaResponseDto {
   @ApiProperty({ type: () => MetaTotalesDto }) totales: MetaTotalesDto;
   @ApiProperty({ type: () => [MetaFaseDto] }) fases: MetaFaseDto[];
 }
+
+// ─── Meta vs Adjudicado ───────────────────────────────────────────────────────
+
+export class AdjudicadoItemDto {
+  @ApiProperty() id: number;
+  @ApiPropertyOptional({ nullable: true, type: String, example: '1.01' }) numero: string | null;
+  @ApiProperty() descripcion: string;
+  @ApiProperty({ example: 'M3' }) unidad: string;
+  @ApiProperty({ example: '12.50' }) cantidad: string;
+  @ApiProperty({ example: '315.00' }) pu_meta: string;
+  @ApiProperty({ example: '3937.50' }) total_meta: string;
+  @ApiProperty({ description: 'El ítem ya tiene proveedor ganador' }) adjudicado: boolean;
+  @ApiPropertyOptional({ nullable: true, type: String, description: 'Precio unitario adjudicado sin IGV' }) pu_adjudicado: string | null;
+  @ApiPropertyOptional({ nullable: true, type: String }) total_adjudicado: string | null;
+  @ApiPropertyOptional({ nullable: true, type: String, description: 'Adjudicado − Meta (negativa = se adjudicó por debajo del Meta)' }) diferencia: string | null;
+  @ApiPropertyOptional({ nullable: true, type: String }) proveedor: string | null;
+}
+
+export class AdjudicadoSubfaseDto {
+  @ApiProperty() id: number;
+  @ApiProperty() nombre: string;
+  @ApiProperty({ example: '3937.50', description: 'Meta de toda la subfase' }) meta: string;
+  @ApiProperty({ example: '3500.00', description: 'Suma de lo adjudicado (sin IGV)' }) adjudicado: string;
+  @ApiProperty({ example: '3937.50', description: 'Meta de los ítems ya adjudicados (base de la comparación)' }) meta_adjudicado: string;
+  @ApiProperty({ example: '-437.50', description: 'Adjudicado − Meta de lo adjudicado' }) diferencia: string;
+  @ApiProperty({ example: '0.00', description: 'Meta de los ítems con cantidad que aún no tienen ganador' }) pendiente: string;
+  @ApiProperty({ type: () => [String], description: 'Proveedores ganadores de la subfase' }) proveedores: string[];
+  @ApiProperty({ type: () => [AdjudicadoItemDto] }) items: AdjudicadoItemDto[];
+}
+
+export class AdjudicadoFaseDto {
+  @ApiProperty() id: number;
+  @ApiProperty() nombre: string;
+  @ApiProperty() meta: string;
+  @ApiProperty() adjudicado: string;
+  @ApiProperty() meta_adjudicado: string;
+  @ApiProperty() diferencia: string;
+  @ApiProperty() pendiente: string;
+  @ApiProperty({ type: () => [AdjudicadoSubfaseDto] }) subfases: AdjudicadoSubfaseDto[];
+}
+
+export class AdjudicadoTotalesDto {
+  @ApiProperty({ example: '120000.00' }) meta: string;
+  @ApiProperty({ example: '90000.00' }) adjudicado: string;
+  @ApiProperty({ example: '92000.00' }) meta_adjudicado: string;
+  @ApiProperty({ example: '-2000.00' }) diferencia: string;
+  @ApiPropertyOptional({ nullable: true, type: String, example: '-2.17' }) diferencia_pct: string | null;
+  @ApiProperty({ example: '28000.00', description: 'Meta aún sin adjudicar' }) pendiente: string;
+}
+
+export class PresupuestoMetaAdjudicadoResponseDto {
+  @ApiProperty() id: number;
+  @ApiPropertyOptional({ nullable: true, type: String, example: 'PPTO-2026-014' }) id_presupuesto: string | null;
+  @ApiProperty({ example: 'APROBADO' }) estado_ppto: string;
+  @ApiProperty({ type: () => AdjudicadoTotalesDto }) totales: AdjudicadoTotalesDto;
+  @ApiProperty({ type: () => [AdjudicadoFaseDto] }) fases: AdjudicadoFaseDto[];
+}

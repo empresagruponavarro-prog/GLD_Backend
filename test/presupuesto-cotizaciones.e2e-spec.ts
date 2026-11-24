@@ -298,6 +298,17 @@ describe('Presupuesto Meta: cotizaciones por subpartida y adjudicación (e2e)', 
       expect(res.body.compromisos.creados[0].documentos.map((d: { clase: string }) => d.clase).sort()).toEqual(['ORDEN_COMPRA', 'ORDEN_SERVICIO']);
     });
 
+    it('Meta vs Adjudicado: el ganador de la subpartida aparece con su precio adjudicado (70 repartido) y sin pendientes', async () => {
+      const res = await api().get(`/presupuestos/${idPpto}/meta-adjudicado`).expect(200);
+      const sub = res.body.fases.flatMap((f: { subfases: { id: number }[] }) => f.subfases).find((x: { id: number }) => x.id === c1);
+      expect(sub.items.every((i: { adjudicado: boolean }) => i.adjudicado)).toBe(true);
+      expect(Number(sub.adjudicado)).toBeCloseTo(70, 2);
+      expect(Number(sub.pendiente)).toBe(0);
+      expect(sub.proveedores).toHaveLength(1);
+      expect(Number(sub.diferencia)).toBeCloseTo(Number(sub.adjudicado) - Number(sub.meta_adjudicado), 2);
+      expect(Number(res.body.totales.adjudicado)).toBeGreaterThanOrEqual(70);
+    });
+
     it('el cuadro es de la subpartida, no sugiere ganador y resume un total por proveedor', async () => {
       const c = await cuadro(c1);
       expect(c).toMatchObject({

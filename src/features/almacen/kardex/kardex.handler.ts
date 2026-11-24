@@ -58,7 +58,7 @@ export class KardexHandler {
         LEFT JOIN "CentroCostos" cc ON cc.id = d.id_centro_costo
        WHERE (${prod}::int = 0 OR k.id_producto = ${prod}::int) AND (${alm}::int = 0 OR k.id_almacen = ${alm}::int)
          AND k.fecha >= ${desde}::date AND k.fecha <= ${hasta}::date
-       ORDER BY k.id
+       ORDER BY k.id DESC
        LIMIT ${pageSize}::int OFFSET ${offset}::int`;
     return toPaginated(rows, count.total, page, pageSize);
   }

@@ -71,6 +71,7 @@ export class PlantillasHandler {
         
         const categorias = await this.db.orm.public.ppto_Plantillas_Categorias
           .where((c: any) => c.IdPlantillaFase.eq(fase.IdPlantillaFase))
+          .orderBy((c: any) => c.id.asc())
           .all();
 
         const resultCats = await Promise.all(

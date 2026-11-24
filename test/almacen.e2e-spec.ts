@@ -132,7 +132,7 @@ describe('Control de almacén (e2e)', () => {
 
     const kardex = await api().get(`/almacen/kardex?id_producto=${id}`).expect(200);
     expect(kardex.body.total).toBe(6);
-    const ultimo = kardex.body.data.at(-1);
+    const ultimo = kardex.body.data.at(0); // el Kardex lista del más reciente al más antiguo
     expect(num(ultimo.saldo_total)).toBe(40);
   });
 

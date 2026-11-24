@@ -16,6 +16,7 @@ import {
   AjusteMetaDto,
   MetaSubfaseDto,
   MetaSubfaseNodoDto,
+  PresupuestoMetaAdjudicadoResponseDto,
   PresupuestoMetaResponseDto,
   SyncItemsMetaDto,
 } from './presupuesto-meta.dto.js';
@@ -39,6 +40,18 @@ export class PresupuestoMetaController {
   @ApiNotFoundResponse({ description: 'El presupuesto no existe' })
   get(@Param('idOrCode') idOrCode: string): Promise<PresupuestoMetaResponseDto> {
     return this.handler.getMeta(idOrCode);
+  }
+
+  @Get(':idOrCode/meta-adjudicado')
+  @ApiOperation({
+    summary: 'Presupuesto Meta vs Adjudicado (sin IGV): precio Meta de cada ítem frente al de la cotización ganadora',
+    description: 'La diferencia compara solo lo ya adjudicado; lo que aún no tiene proveedor ganador se informa como pendiente.',
+  })
+  @ApiParam({ name: 'idOrCode', description: 'ID numérico o código IdPresupuesto' })
+  @ApiOkResponse({ type: PresupuestoMetaAdjudicadoResponseDto })
+  @ApiNotFoundResponse({ description: 'El presupuesto no existe' })
+  getAdjudicado(@Param('idOrCode') idOrCode: string): Promise<PresupuestoMetaAdjudicadoResponseDto> {
+    return this.handler.getMetaAdjudicado(idOrCode);
   }
 
   @Put('categorias-asignadas/:idCat/items-meta')
