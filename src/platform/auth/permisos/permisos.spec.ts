@@ -5,6 +5,7 @@ import {
   MODULOS_ADMINISTRACION,
   MODULOS_ADMITEN_ANULAR,
   MODULOS_ADMITEN_APROBAR,
+  MODULOS_ESTRICTOS_VALORIZACIONES,
   SIN_PERMISOS,
   esAccion,
   esClaveModulo,
@@ -13,6 +14,7 @@ import {
   aplicarNivelArea,
   detallePermisosModulo,
   esModuloAdministracion,
+  esModuloEstricto,
   esModuloSinFiltroDeArea,
   nivelDeArea,
   permisosAdministrador,
@@ -32,6 +34,7 @@ const OPS_JSON_MODULOS_NUEVOS = [
   new URL('../../../../migrations/app/20261102T2119_rrhh_trabajadores/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261102T2142_rrhh_catalogos_modulo/ops.json', import.meta.url),
   new URL('../../../../migrations/app/20261105T0241_grp_cadena_obra/ops.json', import.meta.url),
+  new URL('../../../../migrations/app/20261124T0534_valorizaciones/ops.json', import.meta.url),
 ];
 
 interface Operacion {
@@ -58,6 +61,7 @@ function semillaModulos() {
     sqlDe('data.modulo.rrhh.trabajadores', OPS_JSON_MODULOS_NUEVOS[3]),
     sqlDe('data.modulo.rrhh.catalogos', OPS_JSON_MODULOS_NUEVOS[4]),
     sqlDe('data.modulo.proyectos_catalogos', OPS_JSON_MODULOS_NUEVOS[5]),
+    sqlDe('data.modulo.valorizaciones', OPS_JSON_MODULOS_NUEVOS[6]),
   ];
   return sqls.flatMap((sql) => [...sql.matchAll(patron)]).map((m) => ({
     clave: m[1],
@@ -80,8 +84,8 @@ function aprobarHabilitadoPorGrp(): string[] {
 describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   const semilla = semillaModulos();
 
-  it('las semillas traen los 41 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..41', () => {
-    expect(CLAVES_MODULO).toHaveLength(41);
+  it('las semillas traen los 43 módulos de CLAVES_MODULO, en el mismo orden y con orden 1..43', () => {
+    expect(CLAVES_MODULO).toHaveLength(43);
     expect(semilla.map((m) => m.clave)).toEqual([...CLAVES_MODULO]);
     expect(semilla.map((m) => m.orden)).toEqual(CLAVES_MODULO.map((_c, i) => i + 1));
     expect(new Set(CLAVES_MODULO).size).toBe(CLAVES_MODULO.length);
@@ -95,7 +99,7 @@ describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
   it('aprobar/anular según el plan §5', () => {
     const conAprobar = semilla.filter((m) => m.aprobar).map((m) => m.clave);
     const conAnular = semilla.filter((m) => m.anular).map((m) => m.clave);
-    expect(conAprobar).toEqual(['documentos.administracion', 'requerimientos.aprobacion']);
+    expect(conAprobar).toEqual(['documentos.administracion', 'requerimientos.aprobacion', 'valorizaciones', 'valorizaciones.administracion']);
     expect(conAnular).toEqual([
       'documentos.administracion',
       'documentos.origen',
@@ -107,6 +111,7 @@ describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
       'almacen.transferencias',
       'almacen.prestamos',
       'almacen.inventario-inicial',
+      'valorizaciones',
     ]);
   });
 
@@ -141,6 +146,12 @@ describe('CLAVES_MODULO vs semilla de la tabla modulo', () => {
     expect([...MODULOS_ADMINISTRACION]).toEqual(
       semilla.filter((m) => m.grupo === 'Administración').map((m) => m.clave),
     );
+  });
+
+  it('los módulos de valorizaciones se aplican siempre en estricto, como Administración, y los demás no', () => {
+    expect([...MODULOS_ESTRICTOS_VALORIZACIONES]).toEqual(['valorizaciones', 'valorizaciones.administracion']);
+    for (const c of ['valorizaciones', 'valorizaciones.administracion', 'admin.usuarios']) expect(esModuloEstricto(c)).toBe(true);
+    for (const c of ['tesoreria.pagos', 'presupuestos', 'documentos.administracion']) expect(esModuloEstricto(c)).toBe(false);
   });
 
   it('D5: los roles que no son de sistema reciben todo salvo Administración', () => {

@@ -120,6 +120,10 @@
       "model": "centro_costos_principal",
       "namespace": "public"
     },
+    "condicion_servicio": {
+      "model": "condicion_servicio",
+      "namespace": "public"
+    },
     "contrataciones": {
       "model": "Contrataciones",
       "namespace": "public"
@@ -130,6 +134,10 @@
     },
     "contrataciones_PostVenta": {
       "model": "Contrataciones_PostVenta",
+      "namespace": "public"
+    },
+    "contrato_valorizacion": {
+      "model": "contrato_valorizacion",
       "namespace": "public"
     },
     "cotizacion": {
@@ -146,6 +154,10 @@
     },
     "cuentasCajaBancos": {
       "model": "CuentasCajaBancos",
+      "namespace": "public"
+    },
+    "deductivo_proveedor": {
+      "model": "deductivo_proveedor",
       "namespace": "public"
     },
     "departamento": {
@@ -467,6 +479,18 @@
     "usuariosPermisos": {
       "model": "UsuariosPermisos",
       "namespace": "public"
+    },
+    "valorizacion": {
+      "model": "valorizacion",
+      "namespace": "public"
+    },
+    "valorizacion_deductivo": {
+      "model": "valorizacion_deductivo",
+      "namespace": "public"
+    },
+    "valorizacion_linea": {
+      "model": "valorizacion_linea",
+      "namespace": "public"
     }
   },
   "domain": {
@@ -637,6 +661,44 @@
               {
                 "name": "DE_BAJA",
                 "value": "DE_BAJA"
+              }
+            ]
+          },
+          "estado_contrato_val": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "BORRADOR",
+                "value": "BORRADOR"
+              },
+              {
+                "name": "VIGENTE",
+                "value": "VIGENTE"
+              },
+              {
+                "name": "LIQUIDADO",
+                "value": "LIQUIDADO"
+              },
+              {
+                "name": "ANULADO",
+                "value": "ANULADO"
+              }
+            ]
+          },
+          "estado_deductivo": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PENDIENTE",
+                "value": "PENDIENTE"
+              },
+              {
+                "name": "APLICADO",
+                "value": "APLICADO"
+              },
+              {
+                "name": "ANULADO",
+                "value": "ANULADO"
               }
             ]
           },
@@ -820,6 +882,23 @@
               }
             ]
           },
+          "estado_valorizacion": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "BORRADOR",
+                "value": "BORRADOR"
+              },
+              {
+                "name": "APROBADA",
+                "value": "APROBADA"
+              },
+              {
+                "name": "ANULADA",
+                "value": "ANULADA"
+              }
+            ]
+          },
           "medio_pago": {
             "codecId": "pg/text@1",
             "members": [
@@ -846,6 +925,39 @@
               {
                 "name": "PLIN",
                 "value": "PLIN"
+              },
+              {
+                "name": "OTRO",
+                "value": "OTRO"
+              }
+            ]
+          },
+          "motivo_deductivo": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "MATERIAL",
+                "value": "MATERIAL"
+              },
+              {
+                "name": "INCIDENCIA",
+                "value": "INCIDENCIA"
+              },
+              {
+                "name": "PENALIDAD",
+                "value": "PENALIDAD"
+              },
+              {
+                "name": "INCUMPLIMIENTO",
+                "value": "INCUMPLIMIENTO"
+              },
+              {
+                "name": "APOYO",
+                "value": "APOYO"
+              },
+              {
+                "name": "ADICIONAL",
+                "value": "ADICIONAL"
               },
               {
                 "name": "OTRO",
@@ -958,6 +1070,23 @@
               {
                 "name": "TRANSFERENCIA",
                 "value": "TRANSFERENCIA"
+              }
+            ]
+          },
+          "origen_monto_val": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "PLAN",
+                "value": "PLAN"
+              },
+              {
+                "name": "AVANCE",
+                "value": "AVANCE"
+              },
+              {
+                "name": "SUPERVISOR",
+                "value": "SUPERVISOR"
               }
             ]
           },
@@ -1092,6 +1221,23 @@
               {
                 "name": "OTRO",
                 "value": "OTRO"
+              }
+            ]
+          },
+          "tipo_valorizacion": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ADELANTO",
+                "value": "ADELANTO"
+              },
+              {
+                "name": "VALORIZACION",
+                "value": "VALORIZACION"
+              },
+              {
+                "name": "GARANTIA",
+                "value": "GARANTIA"
               }
             ]
           }
@@ -1787,6 +1933,21 @@
                 },
                 "to": {
                   "model": "area",
+                  "namespace": "public"
+                }
+              },
+              "contratosSupervisados": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_supervisor"
+                  ]
+                },
+                "to": {
+                  "model": "contrato_valorizacion",
                   "namespace": "public"
                 }
               },
@@ -7733,6 +7894,21 @@
                   "namespace": "public"
                 }
               },
+              "contratoValorizacion": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_documento_origen"
+                  ]
+                },
+                "to": {
+                  "model": "contrato_valorizacion",
+                  "namespace": "public"
+                }
+              },
               "cotizacionGanadora": {
                 "cardinality": "N:1",
                 "on": {
@@ -7745,6 +7921,21 @@
                 },
                 "to": {
                   "model": "cotizacion",
+                  "namespace": "public"
+                }
+              },
+              "deductivos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_documento_origen"
+                  ]
+                },
+                "to": {
+                  "model": "deductivo_proveedor",
                   "namespace": "public"
                 }
               },
@@ -8132,6 +8323,21 @@
                 },
                 "to": {
                   "model": "requerimiento_detalle",
+                  "namespace": "public"
+                }
+              },
+              "valorizacionLineas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_orden_detalle"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion_linea",
                   "namespace": "public"
                 }
               }
@@ -10365,6 +10571,21 @@
               }
             },
             "relations": {
+              "deductivos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_almacen_detalle"
+                  ]
+                },
+                "to": {
+                  "model": "deductivo_proveedor",
+                  "namespace": "public"
+                }
+              },
               "documento": {
                 "cardinality": "N:1",
                 "on": {
@@ -11518,6 +11739,21 @@
               }
             },
             "relations": {
+              "condicionServicio": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_categoria"
+                  ]
+                },
+                "to": {
+                  "model": "condicion_servicio",
+                  "namespace": "public"
+                }
+              },
               "ordenCompras": {
                 "cardinality": "1:N",
                 "on": {
@@ -11682,6 +11918,418 @@
               },
               "namespaceId": "public",
               "table": "centro_costos_principal"
+            }
+          },
+          "condicion_servicio": {
+            "fields": {
+              "adelanto_porcentaje": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "condiciones_comerciales": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "condiciones_generales": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "dias_credito": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "forma_pago": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 50
+                  }
+                }
+              },
+              "garantia_porcentaje": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_categoria": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "meses_garantia": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero_valorizaciones": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "categoria": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_categoria"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "categoria",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "adelanto_porcentaje": {
+                  "column": "adelanto_porcentaje"
+                },
+                "condiciones_comerciales": {
+                  "column": "condiciones_comerciales"
+                },
+                "condiciones_generales": {
+                  "column": "condiciones_generales"
+                },
+                "dias_credito": {
+                  "column": "dias_credito"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "forma_pago": {
+                  "column": "forma_pago"
+                },
+                "garantia_porcentaje": {
+                  "column": "garantia_porcentaje"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_categoria": {
+                  "column": "id_categoria"
+                },
+                "meses_garantia": {
+                  "column": "meses_garantia"
+                },
+                "numero_valorizaciones": {
+                  "column": "numero_valorizaciones"
+                }
+              },
+              "namespaceId": "public",
+              "table": "condicion_servicio"
+            }
+          },
+          "contrato_valorizacion": {
+            "fields": {
+              "adelanto_porcentaje": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "alcances": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "condiciones_comerciales": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "condiciones_generales": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_contrato_val",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha_primera": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "garantia_porcentaje": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_documento_origen": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_supervisor": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "liquidado_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "meses_garantia": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero_valorizaciones": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "registrado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "updated_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "visto_administracion_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "visto_administracion_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "visto_operaciones_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "visto_operaciones_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "documentoOrigen": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_documento_origen"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
+              "supervisor": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_supervisor"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Anexos",
+                  "namespace": "public"
+                }
+              },
+              "valorizaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_contrato"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "adelanto_porcentaje": {
+                  "column": "adelanto_porcentaje"
+                },
+                "alcances": {
+                  "column": "alcances"
+                },
+                "condiciones_comerciales": {
+                  "column": "condiciones_comerciales"
+                },
+                "condiciones_generales": {
+                  "column": "condiciones_generales"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "fecha_primera": {
+                  "column": "fecha_primera"
+                },
+                "garantia_porcentaje": {
+                  "column": "garantia_porcentaje"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_documento_origen": {
+                  "column": "id_documento_origen"
+                },
+                "id_supervisor": {
+                  "column": "id_supervisor"
+                },
+                "liquidado_en": {
+                  "column": "liquidado_en"
+                },
+                "meses_garantia": {
+                  "column": "meses_garantia"
+                },
+                "numero_valorizaciones": {
+                  "column": "numero_valorizaciones"
+                },
+                "registrado_por": {
+                  "column": "registrado_por"
+                },
+                "updated_at": {
+                  "column": "updated_at"
+                },
+                "visto_administracion_en": {
+                  "column": "visto_administracion_en"
+                },
+                "visto_administracion_por": {
+                  "column": "visto_administracion_por"
+                },
+                "visto_operaciones_en": {
+                  "column": "visto_operaciones_en"
+                },
+                "visto_operaciones_por": {
+                  "column": "visto_operaciones_por"
+                }
+              },
+              "namespaceId": "public",
+              "table": "contrato_valorizacion"
             }
           },
           "cotizacion": {
@@ -12294,6 +12942,239 @@
               },
               "namespaceId": "public",
               "table": "cuenta_tesoreria"
+            }
+          },
+          "deductivo_proveedor": {
+            "fields": {
+              "cantidad": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "descripcion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 300
+                  }
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_deductivo",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "fecha": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_almacen_detalle": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_documento_origen": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_obra_incidencia": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "monto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "motivo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "motivo_deductivo",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "motivo_anulacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "registrado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "sustento_url": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              }
+            },
+            "relations": {
+              "almacenDetalle": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_almacen_detalle"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "almacen_documento_detalle",
+                  "namespace": "public"
+                }
+              },
+              "aplicaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_deductivo"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion_deductivo",
+                  "namespace": "public"
+                }
+              },
+              "documentoOrigen": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_documento_origen"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompra",
+                  "namespace": "public"
+                }
+              },
+              "incidencia": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_obra_incidencia"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "obra_incidencias_rfi",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "cantidad": {
+                  "column": "cantidad"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "descripcion": {
+                  "column": "descripcion"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "fecha": {
+                  "column": "fecha"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_almacen_detalle": {
+                  "column": "id_almacen_detalle"
+                },
+                "id_documento_origen": {
+                  "column": "id_documento_origen"
+                },
+                "id_obra_incidencia": {
+                  "column": "id_obra_incidencia"
+                },
+                "monto": {
+                  "column": "monto"
+                },
+                "motivo": {
+                  "column": "motivo"
+                },
+                "motivo_anulacion": {
+                  "column": "motivo_anulacion"
+                },
+                "registrado_por": {
+                  "column": "registrado_por"
+                },
+                "sustento_url": {
+                  "column": "sustento_url"
+                }
+              },
+              "namespaceId": "public",
+              "table": "deductivo_proveedor"
             }
           },
           "departamento": {
@@ -13885,6 +14766,21 @@
                 },
                 "to": {
                   "model": "CentroCostos",
+                  "namespace": "public"
+                }
+              },
+              "deductivos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_obra_incidencia"
+                  ]
+                },
+                "to": {
+                  "model": "deductivo_proveedor",
                   "namespace": "public"
                 }
               },
@@ -15642,6 +16538,13 @@
                   "kind": "scalar"
                 }
               },
+              "id_valorizacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "medio_pago": {
                 "nullable": false,
                 "type": {
@@ -15722,6 +16625,21 @@
                   "model": "pago",
                   "namespace": "public"
                 }
+              },
+              "valorizacion": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_valorizacion"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -15752,6 +16670,9 @@
                 },
                 "id_programado_por": {
                   "column": "id_programado_por"
+                },
+                "id_valorizacion": {
+                  "column": "id_valorizacion"
                 },
                 "medio_pago": {
                   "column": "medio_pago"
@@ -21680,6 +22601,628 @@
               "namespaceId": "public",
               "table": "usuario_permiso"
             }
+          },
+          "valorizacion": {
+            "fields": {
+              "amortizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "anulado_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "anulado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "aprobado_en": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "aprobado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "avance_pct": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "created_at": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "descuentos": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "detraccion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "detraccion_soles": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "estado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "estado_valorizacion",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "factura_fecha": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "factura_numero": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 30
+                  }
+                }
+              },
+              "factura_url": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "facturable": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "fecha_corte": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/date-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "garantia": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_contrato": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "motivo_anulacion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "motivo_monto": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "neto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "numero_documento": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 20
+                  }
+                }
+              },
+              "observaciones": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "origen_monto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "origen_monto_val",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "registrado_por": {
+                "nullable": true,
+                "type": {
+                  "codecId": "sql/varchar@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "renta_4ta": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "retencion_igv": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "tipo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "tipo_valorizacion",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "valorizado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "vigente": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "contrato": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_contrato"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "contrato_valorizacion",
+                  "namespace": "public"
+                }
+              },
+              "deductivos": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_valorizacion"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion_deductivo",
+                  "namespace": "public"
+                }
+              },
+              "lineas": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_valorizacion"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion_linea",
+                  "namespace": "public"
+                }
+              },
+              "programaciones": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "id_valorizacion"
+                  ]
+                },
+                "to": {
+                  "model": "pago_programado",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "amortizacion": {
+                  "column": "amortizacion"
+                },
+                "anulado_en": {
+                  "column": "anulado_en"
+                },
+                "anulado_por": {
+                  "column": "anulado_por"
+                },
+                "aprobado_en": {
+                  "column": "aprobado_en"
+                },
+                "aprobado_por": {
+                  "column": "aprobado_por"
+                },
+                "avance_pct": {
+                  "column": "avance_pct"
+                },
+                "created_at": {
+                  "column": "created_at"
+                },
+                "descuentos": {
+                  "column": "descuentos"
+                },
+                "detraccion": {
+                  "column": "detraccion"
+                },
+                "detraccion_soles": {
+                  "column": "detraccion_soles"
+                },
+                "estado": {
+                  "column": "estado"
+                },
+                "factura_fecha": {
+                  "column": "factura_fecha"
+                },
+                "factura_numero": {
+                  "column": "factura_numero"
+                },
+                "factura_url": {
+                  "column": "factura_url"
+                },
+                "facturable": {
+                  "column": "facturable"
+                },
+                "fecha_corte": {
+                  "column": "fecha_corte"
+                },
+                "garantia": {
+                  "column": "garantia"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_contrato": {
+                  "column": "id_contrato"
+                },
+                "motivo_anulacion": {
+                  "column": "motivo_anulacion"
+                },
+                "motivo_monto": {
+                  "column": "motivo_monto"
+                },
+                "neto": {
+                  "column": "neto"
+                },
+                "numero": {
+                  "column": "numero"
+                },
+                "numero_documento": {
+                  "column": "numero_documento"
+                },
+                "observaciones": {
+                  "column": "observaciones"
+                },
+                "origen_monto": {
+                  "column": "origen_monto"
+                },
+                "registrado_por": {
+                  "column": "registrado_por"
+                },
+                "renta_4ta": {
+                  "column": "renta_4ta"
+                },
+                "retencion_igv": {
+                  "column": "retencion_igv"
+                },
+                "tipo": {
+                  "column": "tipo"
+                },
+                "valorizado": {
+                  "column": "valorizado"
+                },
+                "vigente": {
+                  "column": "vigente"
+                }
+              },
+              "namespaceId": "public",
+              "table": "valorizacion"
+            }
+          },
+          "valorizacion_deductivo": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_deductivo": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_valorizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "monto": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "deductivo": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_deductivo"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "deductivo_proveedor",
+                  "namespace": "public"
+                }
+              },
+              "valorizacion": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_valorizacion"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "id_deductivo": {
+                  "column": "id_deductivo"
+                },
+                "id_valorizacion": {
+                  "column": "id_valorizacion"
+                },
+                "monto": {
+                  "column": "monto"
+                }
+              },
+              "namespaceId": "public",
+              "table": "valorizacion_deductivo"
+            }
+          },
+          "valorizacion_linea": {
+            "fields": {
+              "avance_acumulado": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "avance_manual": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_orden_detalle": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id_valorizacion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "monto_anterior": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              },
+              "monto_presente": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "ordenDetalle": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_orden_detalle"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "OrdenCompraDetalle",
+                  "namespace": "public"
+                }
+              },
+              "valorizacion": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "id_valorizacion"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "valorizacion",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "avance_acumulado": {
+                  "column": "avance_acumulado"
+                },
+                "avance_manual": {
+                  "column": "avance_manual"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "id_orden_detalle": {
+                  "column": "id_orden_detalle"
+                },
+                "id_valorizacion": {
+                  "column": "id_valorizacion"
+                },
+                "monto_anterior": {
+                  "column": "monto_anterior"
+                },
+                "monto_presente": {
+                  "column": "monto_presente"
+                }
+              },
+              "namespaceId": "public",
+              "table": "valorizacion_linea"
+            }
           }
         }
       }
@@ -25296,6 +26839,124 @@
                 }
               ]
             },
+            "condicion_servicio": {
+              "columns": {
+                "adelanto_porcentaje": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "15"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "condiciones_comerciales": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "condiciones_generales": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "dias_credito": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "estado": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "forma_pago": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 50
+                  }
+                },
+                "garantia_porcentaje": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "10"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_categoria": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "meses_garantia": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 3
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "numero_valorizaciones": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 3
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_categoria"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "condicion_servicio"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "categoria"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_categoria"
+                  ]
+                }
+              ]
+            },
             "contrataciones": {
               "columns": {
                 "Categoria": {
@@ -25799,6 +27460,222 @@
                 ]
               },
               "uniques": []
+            },
+            "contrato_valorizacion": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('BORRADOR', 'VIGENTE', 'LIQUIDADO', 'ANULADO')",
+                  "name": "contrato_valorizacion_estado_check_7819e2d6",
+                  "prefix": "contrato_valorizacion_estado_check"
+                }
+              ],
+              "columns": {
+                "adelanto_porcentaje": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "alcances": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "condiciones_comerciales": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "condiciones_generales": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "BORRADOR"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_contrato_val",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha_primera": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "garantia_porcentaje": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_documento_origen": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_supervisor": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "liquidado_en": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "meses_garantia": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 3
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "numero_valorizaciones": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 3
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "registrado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "updated_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "visto_administracion_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "visto_administracion_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "visto_operaciones_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "visto_operaciones_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_documento_origen"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "contrato_valorizacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "documentosOrigen"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_supervisor"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "contrato_valorizacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "anexos"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_supervisor"
+                  ],
+                  "name": "contrato_valorizacion_id_supervisor_idx_0dfc7298",
+                  "prefix": "contrato_valorizacion_id_supervisor_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_documento_origen"
+                  ]
+                }
+              ]
             },
             "cotizacion": {
               "checks": [
@@ -26372,6 +28249,210 @@
                   ],
                   "name": "cuentasCajaBancos_id_empresa_idx_328936e2",
                   "prefix": "cuentasCajaBancos_id_empresa_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "deductivo_proveedor": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('PENDIENTE', 'APLICADO', 'ANULADO')",
+                  "name": "deductivo_proveedor_estado_check_391cc846",
+                  "prefix": "deductivo_proveedor_estado_check"
+                },
+                {
+                  "expression": "\"motivo\" IN ('MATERIAL', 'INCIDENCIA', 'PENALIDAD', 'INCUMPLIMIENTO', 'APOYO', 'ADICIONAL', 'OTRO')",
+                  "name": "deductivo_proveedor_motivo_check_949afadb",
+                  "prefix": "deductivo_proveedor_motivo_check"
+                }
+              ],
+              "columns": {
+                "cantidad": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "descripcion": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 300
+                  }
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PENDIENTE"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_deductivo",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "fecha": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_almacen_detalle": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "id_documento_origen": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_obra_incidencia": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "monto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "motivo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "motivo_deductivo",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "motivo_anulacion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "registrado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "sustento_url": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_documento_origen"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "deductivo_proveedor"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "documentosOrigen"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_almacen_detalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "deductivo_proveedor"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "almacen_documento_detalle"
+                  }
+                },
+                {
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "id_obra_incidencia"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "deductivo_proveedor"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "obra_incidencias_rfi"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_almacen_detalle"
+                  ],
+                  "name": "deductivo_proveedor_id_almacen_detalle_idx_5721fa31",
+                  "prefix": "deductivo_proveedor_id_almacen_detalle_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_documento_origen"
+                  ],
+                  "name": "deductivo_proveedor_id_documento_origen_idx_90e8b67c",
+                  "prefix": "deductivo_proveedor_id_documento_origen_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_obra_incidencia"
+                  ],
+                  "name": "deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6",
+                  "prefix": "deductivo_proveedor_id_obra_incidencia_idx",
                   "unique": false
                 }
               ],
@@ -31720,6 +33801,11 @@
                   "nativeType": "int4",
                   "nullable": true
                 },
+                "id_valorizacion": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "medio_pago": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -31784,6 +33870,23 @@
                     "namespaceId": "public",
                     "tableName": "cuenta_tesoreria"
                   }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_valorizacion"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "pago_programado"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion"
+                  }
                 }
               ],
               "indexes": [
@@ -31810,6 +33913,14 @@
                   ],
                   "name": "pago_programado_id_documento_origen_idx_90e8b67c",
                   "prefix": "pago_programado_id_documento_origen_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_valorizacion"
+                  ],
+                  "name": "pago_programado_id_valorizacion_idx_5f92de6f",
+                  "prefix": "pago_programado_id_valorizacion_idx",
                   "unique": false
                 }
               ],
@@ -37472,6 +39583,542 @@
                 ]
               },
               "uniques": []
+            },
+            "valorizacion": {
+              "checks": [
+                {
+                  "expression": "\"estado\" IN ('BORRADOR', 'APROBADA', 'ANULADA')",
+                  "name": "valorizacion_estado_check_780a42b8",
+                  "prefix": "valorizacion_estado_check"
+                },
+                {
+                  "expression": "\"origen_monto\" IN ('PLAN', 'AVANCE', 'SUPERVISOR')",
+                  "name": "valorizacion_origen_monto_check_a9336a8b",
+                  "prefix": "valorizacion_origen_monto_check"
+                },
+                {
+                  "expression": "\"tipo\" IN ('ADELANTO', 'VALORIZACION', 'GARANTIA')",
+                  "name": "valorizacion_tipo_check_1fc15f0d",
+                  "prefix": "valorizacion_tipo_check"
+                }
+              ],
+              "columns": {
+                "amortizacion": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "anulado_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "anulado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "aprobado_en": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "aprobado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "avance_pct": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "descuentos": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "detraccion": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "detraccion_soles": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "estado": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "BORRADOR"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "estado_valorizacion",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "factura_fecha": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "factura_numero": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 30
+                  }
+                },
+                "factura_url": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "facturable": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "fecha_corte": {
+                  "codecId": "pg/date-string@1",
+                  "nativeType": "date",
+                  "nullable": true
+                },
+                "garantia": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_contrato": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "motivo_anulacion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "motivo_monto": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "neto": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "numero": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "numero_documento": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 20
+                  }
+                },
+                "observaciones": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "origen_monto": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "PLAN"
+                  },
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "origen_monto_val",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "registrado_por": {
+                  "codecId": "sql/varchar@1",
+                  "nativeType": "character varying",
+                  "nullable": true,
+                  "typeParams": {
+                    "length": 255
+                  }
+                },
+                "renta_4ta": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "retencion_igv": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "tipo": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "tipo_valorizacion",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "valorizado": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "vigente": {
+                  "codecId": "pg/bool@1",
+                  "nativeType": "bool",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_contrato"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "contrato_valorizacion"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_contrato"
+                  ],
+                  "name": "valorizacion_id_contrato_idx_a1795884",
+                  "prefix": "valorizacion_id_contrato_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "numero_documento"
+                  ]
+                },
+                {
+                  "columns": [
+                    "id_contrato",
+                    "tipo",
+                    "numero",
+                    "vigente"
+                  ]
+                }
+              ]
+            },
+            "valorizacion_deductivo": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_deductivo": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_valorizacion": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "monto": {
+                  "codecId": "pg/numeric@1",
+                  "nativeType": "numeric",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_valorizacion"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion_deductivo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_deductivo"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion_deductivo"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "deductivo_proveedor"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_deductivo"
+                  ],
+                  "name": "valorizacion_deductivo_id_deductivo_idx_a532faa2",
+                  "prefix": "valorizacion_deductivo_id_deductivo_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_valorizacion"
+                  ],
+                  "name": "valorizacion_deductivo_id_valorizacion_idx_5f92de6f",
+                  "prefix": "valorizacion_deductivo_id_valorizacion_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "id_valorizacion",
+                    "id_deductivo"
+                  ]
+                }
+              ]
+            },
+            "valorizacion_linea": {
+              "columns": {
+                "avance_acumulado": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "avance_manual": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_orden_detalle": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id_valorizacion": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "monto_anterior": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                },
+                "monto_presente": {
+                  "codecId": "pg/numeric@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "0"
+                  },
+                  "nativeType": "numeric",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "id_valorizacion"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion_linea"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion"
+                  }
+                },
+                {
+                  "onDelete": "restrict",
+                  "source": {
+                    "columns": [
+                      "id_orden_detalle"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "valorizacion_linea"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "ordenCompraDetalle"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "id_orden_detalle"
+                  ],
+                  "name": "valorizacion_linea_id_orden_detalle_idx_af29857d",
+                  "prefix": "valorizacion_linea_id_orden_detalle_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "id_valorizacion"
+                  ],
+                  "name": "valorizacion_linea_id_valorizacion_idx_5f92de6f",
+                  "prefix": "valorizacion_linea_id_valorizacion_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           },
           "valueSet": {
@@ -37541,6 +40188,23 @@
                 "NO_OPERATIVO",
                 "EN_REPARACION",
                 "DE_BAJA"
+              ]
+            },
+            "estado_contrato_val": {
+              "kind": "valueSet",
+              "values": [
+                "BORRADOR",
+                "VIGENTE",
+                "LIQUIDADO",
+                "ANULADO"
+              ]
+            },
+            "estado_deductivo": {
+              "kind": "valueSet",
+              "values": [
+                "PENDIENTE",
+                "APLICADO",
+                "ANULADO"
               ]
             },
             "estado_documento": {
@@ -37618,6 +40282,14 @@
                 "ANULADO"
               ]
             },
+            "estado_valorizacion": {
+              "kind": "valueSet",
+              "values": [
+                "BORRADOR",
+                "APROBADA",
+                "ANULADA"
+              ]
+            },
             "medio_pago": {
               "kind": "valueSet",
               "values": [
@@ -37627,6 +40299,18 @@
                 "DEPOSITO",
                 "YAPE",
                 "PLIN",
+                "OTRO"
+              ]
+            },
+            "motivo_deductivo": {
+              "kind": "valueSet",
+              "values": [
+                "MATERIAL",
+                "INCIDENCIA",
+                "PENALIDAD",
+                "INCUMPLIMIENTO",
+                "APOYO",
+                "ADICIONAL",
                 "OTRO"
               ]
             },
@@ -37670,6 +40354,14 @@
                 "INGRESO",
                 "SALIDA",
                 "TRANSFERENCIA"
+              ]
+            },
+            "origen_monto_val": {
+              "kind": "valueSet",
+              "values": [
+                "PLAN",
+                "AVANCE",
+                "SUPERVISOR"
               ]
             },
             "origen_requerimiento": {
@@ -37727,6 +40419,14 @@
                 "PAGO_SERVICIO",
                 "OTRO"
               ]
+            },
+            "tipo_valorizacion": {
+              "kind": "valueSet",
+              "values": [
+                "ADELANTO",
+                "VALORIZACION",
+                "GARANTIA"
+              ]
             }
           }
         },
@@ -37734,7 +40434,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "4ada217dde77de1c97fc3f38b647aa59c886e577f9d6fa7954ae829842fa2fc9"
+    "storageHash": "19e91f26d3957aa82fbdb26ed53e1a5016fffce35dd25673ee5407384fce52ca"
   },
   "capabilities": {
     "postgres": {

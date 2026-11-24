@@ -201,6 +201,48 @@ enum condicion_retorno {
   DANADO
 }
 
+// ---- Valorizaciones de contratistas (plan 12) ----
+enum estado_contrato_val {
+  BORRADOR
+  VIGENTE
+  LIQUIDADO
+  ANULADO
+}
+
+enum tipo_valorizacion {
+  ADELANTO
+  VALORIZACION
+  GARANTIA
+}
+
+enum estado_valorizacion {
+  BORRADOR
+  APROBADA
+  ANULADA
+}
+
+enum origen_monto_val {
+  PLAN
+  AVANCE
+  SUPERVISOR
+}
+
+enum motivo_deductivo {
+  MATERIAL
+  INCIDENCIA
+  PENALIDAD
+  INCUMPLIMIENTO
+  APOYO
+  ADICIONAL
+  OTRO
+}
+
+enum estado_deductivo {
+  PENDIENTE
+  APLICADO
+  ANULADO
+}
+
 // ============================================================
 // Maestros modernos
 // ============================================================
@@ -222,6 +264,7 @@ model categoria {
   tipo_categoria    tipo_categoria @relation(fields:[id_tipo_categoria], references:[id])
   productos         producto[]
   ordenCompras      OrdenCompra[]
+  condicionServicio condicion_servicio?
   @@map("categoria")
 }
 
@@ -482,6 +525,7 @@ model almacen_documento_detalle {
   id_ppto_detalle_categoria Int?
   pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields:[id_ppto_detalle_categoria], references:[id], onDelete: SetNull)
   kardex         almacen_kardex[]
+  deductivos     deductivo_proveedor[]
   @@index([id_documento])
   @@index([id_orden_compra_detalle])
   @@index([id_ppto_detalle_categoria], map: "almacen_doc_det_subfase_idx")
@@ -667,6 +711,7 @@ model Anexos {
   obraComoRespProcura obra_datos_generales[] @relation("ObraRespProcura")
   fichaTrabajador     trabajador?
   pptoCotizaciones    ppto_cotizacion[] @relation("PptoCotizacionProveedor")
+  contratosSupervisados contrato_valorizacion[] @relation("ContratoSupervisor")
   @@map("anexos")
 }
 
@@ -1172,6 +1217,8 @@ model OrdenCompra {
   pagos                 pago[]
   detalles              OrdenCompraDetalle[]
   almacenDocumentos     almacen_documento[]
+  contratoValorizacion  contrato_valorizacion?
+  deductivos            deductivo_proveedor[]
   @@index([id_requerimiento])
   @@map("documentosOrigen")
 }
@@ -1194,6 +1241,7 @@ model OrdenCompraDetalle {
   id_ppto_detalle_categoria Int?
   pptoDetalleCategoria ppto_DetalleFasesCate? @relation(fields: [id_ppto_detalle_categoria], references: [id], onDelete: SetNull)
   almacenDetalles almacen_documento_detalle[]
+  valorizacionLineas valorizacion_linea[]
   @@index([id_orden_compra])
   @@index([id_requerimiento_detalle])
   @@index([id_ppto_detalle_categoria])
@@ -1836,6 +1884,7 @@ model obra_incidencias_rfi {
   fecha_resolucion              DateTime?
   id_subpartida                 Int?
   subpartida                    obra_subpartida? @relation(fields: [id_subpartida], references: [id], onDelete: SetNull)
+  deductivos                    deductivo_proveedor[]
   @@index([id_subpartida])
   @@map("obra_incidencias_rfi")
 }
@@ -2111,10 +2160,13 @@ model pago_programado {
   estado              estado_programacion @default(PROGRAMADO)
   id_programado_por   Int?
   observaciones       String?
+  id_valorizacion     Int?
   created_at          DateTime            @default(now())
   documentoOrigen     OrdenCompra         @relation(fields:[id_documento_origen], references:[id], onDelete: Restrict)
   cuenta              cuenta_tesoreria?   @relation(fields:[id_cuenta], references:[id])
+  valorizacion        valorizacion?       @relation(fields:[id_valorizacion], references:[id], onDelete: Restrict)
   pagos               pago[]
+  @@index([id_valorizacion])
   @@index([fecha_programada, estado])
   @@index([id_documento_origen])
   @@map("pago_programado")
@@ -2416,4 +2468,150 @@ model distrito {
   obras        obra_datos_generales[]
   @@index([id_provincia])
   @@map("distrito")
+}
+
+// ============================================================
+// Valorizaciones de contratistas (plan 12)
+// ============================================================
+// Condiciones por defecto por tipo de servicio (categoria del producto). id_categoria NULL = condiciones generales.
+model condicion_servicio {
+  id                      Int         @id @default(autoincrement())
+  id_categoria            Int?        @unique
+  adelanto_porcentaje     Decimal     @default("15")
+  garantia_porcentaje     Decimal     @default("10")
+  numero_valorizaciones   Int         @default(3)
+  meses_garantia          Int         @default(3)
+  dias_credito            Int?
+  forma_pago              VarChar(50)?
+  condiciones_generales   String?
+  condiciones_comerciales String?
+  estado                  Boolean     @default(true)
+  categoria               categoria?  @relation(fields: [id_categoria], references: [id], onDelete: Cascade)
+  @@map("condicion_servicio")
+}
+
+// El esquema de pagos de UNA orden de servicio: adelanto + N valorizaciones + fondo de garantia, con sus condiciones y dos vistos.
+model contrato_valorizacion {
+  id                       Int                 @id @default(autoincrement())
+  id_documento_origen      Int                 @unique
+  estado                   estado_contrato_val @default(BORRADOR)
+  adelanto_porcentaje      Decimal             @default("0")
+  garantia_porcentaje      Decimal             @default("0")
+  numero_valorizaciones    Int                 @default(3)
+  meses_garantia           Int                 @default(3)
+  fecha_primera            DateString?
+  id_supervisor            Int?
+  alcances                 String?
+  condiciones_generales    String?
+  condiciones_comerciales  String?
+  visto_operaciones_por    VarChar(255)?
+  visto_operaciones_en     DateTime?
+  visto_administracion_por VarChar(255)?
+  visto_administracion_en  DateTime?
+  liquidado_en             DateString?
+  registrado_por           VarChar(255)?
+  created_at               DateTime            @default(now())
+  updated_at               DateTime            @default(now())
+  documentoOrigen          OrdenCompra         @relation(fields: [id_documento_origen], references: [id], onDelete: Cascade)
+  supervisor               Anexos?             @relation("ContratoSupervisor", fields: [id_supervisor], references: [id], onDelete: SetNull)
+  valorizaciones           valorizacion[]
+  @@index([id_supervisor])
+  @@map("contrato_valorizacion")
+}
+
+// Una cuota del contrato: el adelanto (numero 0), las valorizaciones 1..N (la ultima es la liquidacion) y la devolucion de la garantia.
+// Lo aprobado se guarda congelado; lo pendiente se calcula al leer. `vigente` es true o NULL: la unicidad solo rige entre las no anuladas.
+model valorizacion {
+  id               Int                 @id @default(autoincrement())
+  numero_documento VarChar(20)?        @unique
+  id_contrato      Int
+  tipo             tipo_valorizacion
+  numero           Int
+  estado           estado_valorizacion @default(BORRADOR)
+  vigente          Boolean?
+  fecha_corte      DateString?
+  avance_pct       Decimal?
+  origen_monto     origen_monto_val    @default(PLAN)
+  observaciones    String?
+  motivo_monto     String?
+  valorizado       Decimal             @default("0")
+  amortizacion     Decimal             @default("0")
+  facturable       Decimal             @default("0")
+  renta_4ta        Decimal             @default("0")
+  detraccion       Decimal             @default("0")
+  detraccion_soles Decimal             @default("0")
+  retencion_igv    Decimal             @default("0")
+  garantia         Decimal             @default("0")
+  descuentos       Decimal             @default("0")
+  neto             Decimal             @default("0")
+  factura_numero   VarChar(30)?
+  factura_fecha    DateString?
+  factura_url      VarChar(255)?
+  registrado_por   VarChar(255)?
+  aprobado_por     VarChar(255)?
+  aprobado_en      DateTime?
+  anulado_por      VarChar(255)?
+  anulado_en       DateTime?
+  motivo_anulacion String?
+  created_at       DateTime            @default(now())
+  contrato         contrato_valorizacion @relation(fields: [id_contrato], references: [id], onDelete: Restrict)
+  lineas           valorizacion_linea[]
+  deductivos       valorizacion_deductivo[]
+  programaciones   pago_programado[]
+  @@unique([id_contrato, tipo, numero, vigente])
+  @@index([id_contrato])
+  @@map("valorizacion")
+}
+
+// Foto por partida de una valorizacion aprobada: avance acumulado y lo valorizado antes y ahora.
+model valorizacion_linea {
+  id                Int                @id @default(autoincrement())
+  id_valorizacion   Int
+  id_orden_detalle  Int
+  avance_acumulado  Decimal            @default("0")
+  avance_manual     Boolean            @default(false)
+  monto_anterior    Decimal            @default("0")
+  monto_presente    Decimal            @default("0")
+  valorizacion      valorizacion       @relation(fields: [id_valorizacion], references: [id], onDelete: Cascade)
+  ordenDetalle      OrdenCompraDetalle @relation(fields: [id_orden_detalle], references: [id], onDelete: Restrict)
+  @@index([id_valorizacion])
+  @@index([id_orden_detalle])
+  @@map("valorizacion_linea")
+}
+
+// Descuento extraordinario a una orden de servicio (material entregado, incidencia, penalidad...). Pendiente hasta que una valorizacion lo aplica.
+model deductivo_proveedor {
+  id                  Int                       @id @default(autoincrement())
+  id_documento_origen Int
+  motivo              motivo_deductivo
+  fecha               DateString
+  descripcion         VarChar(300)
+  monto               Decimal
+  estado              estado_deductivo          @default(PENDIENTE)
+  id_almacen_detalle  Int?
+  cantidad            Decimal?
+  id_obra_incidencia  Int?
+  sustento_url        VarChar(255)?
+  registrado_por      VarChar(255)?
+  created_at          DateTime                  @default(now())
+  motivo_anulacion    String?
+  documentoOrigen     OrdenCompra               @relation(fields: [id_documento_origen], references: [id], onDelete: Restrict)
+  almacenDetalle      almacen_documento_detalle? @relation(fields: [id_almacen_detalle], references: [id], onDelete: SetNull)
+  incidencia          obra_incidencias_rfi?     @relation(fields: [id_obra_incidencia], references: [id], onDelete: SetNull)
+  aplicaciones        valorizacion_deductivo[]
+  @@index([id_documento_origen])
+  @@index([id_almacen_detalle])
+  @@map("deductivo_proveedor")
+}
+
+model valorizacion_deductivo {
+  id              Int                 @id @default(autoincrement())
+  id_valorizacion Int
+  id_deductivo    Int
+  monto           Decimal
+  valorizacion    valorizacion        @relation(fields: [id_valorizacion], references: [id], onDelete: Cascade)
+  deductivo       deductivo_proveedor @relation(fields: [id_deductivo], references: [id], onDelete: Restrict)
+  @@unique([id_valorizacion, id_deductivo])
+  @@index([id_deductivo])
+  @@map("valorizacion_deductivo")
 }
