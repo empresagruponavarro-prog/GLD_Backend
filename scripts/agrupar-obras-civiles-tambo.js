@@ -38,29 +38,40 @@ try {
     const [faseOc] = await q('select "IdPlantillaFase" id from "ppto_Plantillas_Fases" where "IdPlantilla"=$1 and "IdpptoFase"=$2', [pl, FASE_OC]);
     const [faseOg] = await q('select "IdPlantillaFase" id from "ppto_Plantillas_Fases" where "IdPlantilla"=$1 and "IdpptoFase"=$2', [pl, FASE_OG]);
     if (!faseOg) throw new Error(`${pl}: no tiene la fase OBRA GRUESA`);
-    let parts;
+    let destino; // fila de plantilla que queda como subpartida OBRAS CIVILES
+    let resto; // filas cuyos ítems se pasan a destino y que se eliminan
     if (faseOc) {
-      parts = await q('select id, id_categoria from "ppto_Plantillas_Categorias" where "IdPlantillaFase"=$1 order by id', [faseOc.id]);
+      const parts = await q('select id from "ppto_Plantillas_Categorias" where "IdPlantillaFase"=$1 order by id', [faseOc.id]);
+      if (!parts.length) { console.log(`${pl}: la fase OBRAS CIVILES no tiene partidas (nada que hacer)`); continue; }
+      destino = parts[0];
+      resto = parts.slice(1);
+      await db.query('update "ppto_Plantillas_Categorias" set "IdPlantillaFase"=$1, "IdpptoFaseCategoria"=$2 where id=$3', [faseOg.id, fc.id, destino.id]);
     } else {
       const todas = await q(
-        `select c.id, c.id_categoria, fc."Descripcion" d from "ppto_Plantillas_Categorias" c join "ppto_FasesCategorias" fc on fc."IdpptoFaseCategoria"=c."IdpptoFaseCategoria" where c."IdPlantillaFase"=$1 order by c.id`,
+        `select c.id, fc."Descripcion" d from "ppto_Plantillas_Categorias" c join "ppto_FasesCategorias" fc on fc."IdpptoFaseCategoria"=c."IdpptoFaseCategoria" where c."IdPlantillaFase"=$1 order by c.id`,
         [faseOg.id],
       );
-      if (todas.some((c) => c.d.toUpperCase() === 'OBRAS CIVILES')) { console.log(`${pl}: ya tiene la subpartida OBRAS CIVILES (nada que hacer)`); continue; }
-      parts = todas.filter((c) => PARTIDAS.includes(norm(c.d)));
+      const oc = todas.find((c) => norm(c.d) === 'OBRAS CIVILES');
+      const sueltas = todas.filter((c) => PARTIDAS.map(norm).includes(norm(c.d)) && c.id !== oc?.id);
+      if (!sueltas.length) { console.log(`${pl}: no hay partidas de obras civiles sueltas (nada que hacer)`); continue; }
+      if (oc) {
+        destino = oc;
+        resto = sueltas;
+      } else {
+        destino = sueltas[0];
+        resto = sueltas.slice(1);
+        // La subpartida OBRAS CIVILES reutiliza la fila de la primera (su id queda entre OBRAS PRELIMINARES y las demás).
+        await db.query('update "ppto_Plantillas_Categorias" set "IdpptoFaseCategoria"=$1 where id=$2', [fc.id, destino.id]);
+      }
     }
-    if (!parts.length) { console.log(`${pl}: no tiene partidas de obras civiles (nada que hacer)`); continue; }
-    const [primera] = parts;
-    // La subpartida OBRAS CIVILES reutiliza la fila de la primera (su id queda entre OBRAS PRELIMINARES y las demás).
-    await db.query('update "ppto_Plantillas_Categorias" set "IdPlantillaFase"=$1, "IdpptoFaseCategoria"=$2 where id=$3', [faseOg.id, fc.id, primera.id]);
-    const resto = parts.slice(1).map((p) => p.id);
-    if (resto.length) {
-      await db.query('update "ppto_Plantillas_Items" set id_plantilla_categoria=$1 where id_plantilla_categoria = any($2::int[])', [primera.id, resto]);
-      await db.query('delete from "ppto_Plantillas_Categorias" where id = any($1::int[])', [resto]);
+    const idsResto = resto.map((r) => r.id);
+    if (idsResto.length) {
+      await db.query('update "ppto_Plantillas_Items" set id_plantilla_categoria=$1 where id_plantilla_categoria = any($2::int[])', [destino.id, idsResto]);
+      await db.query('delete from "ppto_Plantillas_Categorias" where id = any($1::int[])', [idsResto]);
     }
     if (faseOc) await db.query('delete from "ppto_Plantillas_Fases" where "IdPlantillaFase"=$1', [faseOc.id]);
-    const [{ n, venta, costo }] = await q('select count(*) n, sum("VentaTotal") venta, sum("CostoTotal") costo from "ppto_Plantillas_Items" where id_plantilla_categoria=$1', [primera.id]);
-    console.log(`${pl}: ${parts.length} partidas → 1 subpartida OBRAS CIVILES con ${n} ítems (venta ${venta}, costo meta ${costo})`);
+    const [{ n, venta, costo }] = await q('select count(*) n, sum("VentaTotal") venta, sum("CostoTotal") costo from "ppto_Plantillas_Items" where id_plantilla_categoria=$1', [destino.id]);
+    console.log(`${pl}: ${resto.length + 1} partidas → 1 subpartida OBRAS CIVILES con ${n} ítems (venta ${venta}, costo meta ${costo})`);
   }
   console.table(await q(
     `select f."IdPlantilla" plantilla, f."Orden" fase, fc."Descripcion" subpartida, count(i.id) items, sum(i."VentaTotal") venta from "ppto_Plantillas_Fases" f join "ppto_Plantillas_Categorias" c on c."IdPlantillaFase"=f."IdPlantillaFase" join "ppto_FasesCategorias" fc on fc."IdpptoFaseCategoria"=c."IdpptoFaseCategoria" left join "ppto_Plantillas_Items" i on i.id_plantilla_categoria=c.id where f."IdPlantilla" = any($1) and f."IdpptoFase"=$2 group by 1,2,3,c.id order by 1, c.id`,
