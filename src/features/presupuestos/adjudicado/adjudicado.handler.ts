@@ -1,19 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AlmacenSql, I, T, TN, sqlTag } from '../../almacen/shared/almacen-sql.js';
 import { hoyLima } from '../../operaciones-obra/shared/obra-shared.js';
 import { preciosOferta } from '../../requerimientos/shared/precios-oferta.js';
 import { claveMoneda, tcVigente } from '../../tesoreria/shared/tipo-cambio.js';
 import { esSoles } from '../../tesoreria/shared/tributos.js';
-import { leerPresupuesto } from '../cotizaciones-ppto/contexto-ppto.js';
+import { leerPresupuesto, type PresupuestoBloqueado } from '../cotizaciones-ppto/contexto-ppto.js';
 import { armarAdjudicado, type FilaAdjudicado } from './adjudicado.js';
 
 @Injectable()
 export class AdjudicadoHandler {
   constructor(private readonly sql: AlmacenSql) {}
 
+  /** El presupuesto por su id numérico o por su código `IdPresupuesto` (el dosier trabaja con códigos). */
+  private async resolver(idOrCode: string): Promise<PresupuestoBloqueado> {
+    if (/^\d+$/.test(idOrCode)) return leerPresupuesto(this.sql, Number(idOrCode));
+    const q = sqlTag(this.sql);
+    const [p] = await q.rows<{ id: number }>({ id: I })`SELECT id FROM "ppto_Principal" WHERE "IdPresupuesto" = ${idOrCode}::text ORDER BY id LIMIT 1`;
+    if (!p) throw new NotFoundException(`Presupuesto ${idOrCode} no encontrado`);
+    return leerPresupuesto(this.sql, p.id);
+  }
+
   /** Árbol fase → subfase → ítem con el Meta y lo adjudicado, en soles y sin IGV (R-01). */
-  async obtener(idPresupuesto: number) {
-    const ppto = await leerPresupuesto(this.sql, idPresupuesto);
+  async obtener(idOrCode: string) {
+    const ppto = await this.resolver(idOrCode);
     const q = sqlTag(this.sql);
     const filas = await q.rows<Record<string, string | number | boolean | null>>(
       {

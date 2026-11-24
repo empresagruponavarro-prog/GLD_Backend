@@ -1,12 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
 import { AdjudicadoHandler } from './adjudicado.handler.js';
 
 @ApiTags('presupuestos / adjudicado')
-@Controller('presupuestos/:id/adjudicado')
+@Controller('presupuestos/:idOrCode/adjudicado')
 @Modulo('presupuestos')
-@ApiParam({ name: 'id', type: Number, description: 'ID del presupuesto (`ppto_Principal.id`)' })
+@ApiParam({ name: 'idOrCode', type: String, description: 'ID (`ppto_Principal.id`) o código (`IdPresupuesto`) del presupuesto' })
 export class AdjudicadoController {
   constructor(private readonly handler: AdjudicadoHandler) {}
 
@@ -17,7 +17,7 @@ export class AdjudicadoController {
   })
   @ApiOkResponse({ description: 'Árbol con totales por nivel y conteo de ítems adjudicados / sin adjudicar / sin tipo de cambio' })
   @ApiNotFoundResponse({ description: 'El presupuesto no existe' })
-  obtener(@Param('id', ParseIntPipe) id: number) {
-    return this.handler.obtener(id);
+  obtener(@Param('idOrCode') idOrCode: string) {
+    return this.handler.obtener(idOrCode);
   }
 }

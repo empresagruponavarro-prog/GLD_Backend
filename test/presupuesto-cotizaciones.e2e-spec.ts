@@ -576,7 +576,13 @@ describe('Presupuesto Meta: cotizaciones por subpartida y adjudicación (e2e)', 
       const suma = r.fases.reduce((a: number, f: { adjudicado: number }) => a + f.adjudicado, 0);
       expect(r.totales.adjudicado).toBeCloseTo(suma, 2);
       expect(r.totales.diferencia).toBeCloseTo(r.totales.adjudicado - r.totales.meta, 2);
+      // El dosier lo pide por el código del presupuesto, no por su id.
+      const codigo = (await db.query(`select "IdPresupuesto" from "ppto_Principal" where id = $1`, [idPpto])).rows[0].IdPresupuesto as string;
+      const porCodigo = (await api().get(`/presupuestos/${codigo}/adjudicado`).expect(200)).body;
+      expect(porCodigo.id).toBe(idPpto);
+      expect(porCodigo.totales).toEqual(r.totales);
       await api().get('/presupuestos/999999999/adjudicado').expect(404);
+      await api().get('/presupuestos/NO-EXISTE-9/adjudicado').expect(404);
     });
   });
 
