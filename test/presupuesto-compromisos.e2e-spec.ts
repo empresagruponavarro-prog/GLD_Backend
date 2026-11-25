@@ -55,10 +55,14 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
     moneda_id: 'PEN',
     moneda_simbolo: 'S/',
     forma_pago: 'Contado',
+    // Estos tests no prueban la regla de 1 o 3 cotizaciones (D-17): quien adjudica con una sola oferta cara lo hace «con motivo».
+    ...(extra['adjudicar'] ? { sin_tres_cotizaciones: true, comentario_adjudicacion: 'PRUEBA E2E: la regla de 3 cotizaciones se prueba aparte' } : {}),
     ...extra,
   });
   const adjudicar = (idSub: number, idCotizacion: number | null) =>
-    api().put(`/presupuestos/${idPpto}/adjudicacion`).send({ id_detalle_categoria: idSub, id_cotizacion: idCotizacion });
+    api()
+      .put(`/presupuestos/${idPpto}/adjudicacion`)
+      .send({ id_detalle_categoria: idSub, id_cotizacion: idCotizacion, ...(idCotizacion === null ? {} : { sin_tres_cotizaciones: true, comentario: 'PRUEBA E2E' }) });
 
   // ─── lecturas directas de la BD ─────────────────────────────────────────────
   const furs = async (soloVigentes = false) =>
@@ -283,10 +287,24 @@ describe('Presupuesto Meta: compromisos (FUR y órdenes) que se generan al graba
       expect((await lineasDe(fur.id)).length).toBe(3);
     });
 
-    it('cambiar las condiciones de la cotización (forma de pago, crédito) llega a la orden', async () => {
+    it('cambiar las condiciones de UNA cotización (crédito) la separa en su propia orden; las demás conservan las suyas (plan 12, C-1)', async () => {
       const [fur] = await furs();
       await api().patch(`/presupuestos/${idPpto}/cotizaciones/${cotA}`).send({ forma_pago: 'Credito 30', dias_credito: 30 }).expect(200);
-      for (const d of await vigentes(fur.id)) expect(d).toMatchObject({ forma_pago: 'CREDITO 30', dias_credito: 30 });
+      const todos = await furs(true);
+      expect(todos).toHaveLength(2);
+      // El FUR original sigue con lo que conservó (contado) y la subpartida con crédito tiene el suyo.
+      for (const d of await vigentes(fur.id)) expect(d).toMatchObject({ forma_pago: 'CONTADO', dias_credito: 0 });
+      const aparte = todos.find((f) => f.id !== fur.id)!;
+      const ocs = await vigentes(aparte.id);
+      expect(ocs.map((d) => [d.clase_documento, d.forma_pago, d.dias_credito])).toEqual([['ORDEN_COMPRA', 'CREDITO 30', 30]]);
+    });
+
+    it('al volver a igualar las condiciones, las órdenes se reúnen en el FUR original y el separado se anula', async () => {
+      const [fur] = await furs();
+      await api().patch(`/presupuestos/${idPpto}/cotizaciones/${cotA}`).send({ forma_pago: 'Contado', dias_credito: 0 }).expect(200);
+      expect((await furs(true)).map((f) => f.id)).toEqual([fur.id]);
+      expect((await lineasDe(fur.id)).length).toBe(3);
+      for (const d of await vigentes(fur.id)) expect(d).toMatchObject({ forma_pago: 'CONTADO', dias_credito: 0 });
     });
   });
 

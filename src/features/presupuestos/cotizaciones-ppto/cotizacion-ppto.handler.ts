@@ -19,6 +19,7 @@ import {
 } from './cotizacion-ppto.dto.js';
 import { ConciliarCompromisosService, type ResultadoConciliacion } from '../compromisos/conciliar-compromisos.service.js';
 import { aplicarAdjudicacion, type CambioAdjudicacion } from './aplicar-adjudicacion.js';
+import { comentarioConMarca, condicionesSugeridas, exigirCotizacionesSuficientes, yaGanaLaSubpartida } from './cotizaciones-suficientes.js';
 import { cantidadCompleta, modoCotizacion, validarLineasCotizacion } from './adjudicacion.js';
 import {
   bloquearPresupuesto,
@@ -295,6 +296,11 @@ export class CotizacionPptoHandler {
     };
   }
 
+  /** Adelanto y garantía que se proponen según el tipo de servicio de la subpartida (R-02). */
+  async condicionesSugeridas(idSubpartida: number) {
+    return condicionesSugeridas(this.sql, idSubpartida);
+  }
+
   // -------------------------------------------------------------- escritura
 
   async create(idPresupuesto: number, dto: CreatePptoCotizacionDto, user?: AuthUser): Promise<Cotizacion> {
@@ -328,7 +334,7 @@ export class CotizacionPptoHandler {
         RETURNING id`;
       for (const l of lineas) await this.reprorrateo.insertarLinea(tx, cot.id, l);
 
-      await this.aplicarMarcaDeAdjudicacion(tx, ppto, cot.id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null);
+      await this.aplicarMarcaDeAdjudicacion(tx, ppto, cot.id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null, dto.sin_tres_cotizaciones, sub.id);
       return { id: cot.id, compromisos: await this.conciliacion.conciliar(tx, ppto, user) };
     });
     return { ...(await this.getById(idPresupuesto, id)), compromisos };
@@ -339,11 +345,11 @@ export class CotizacionPptoHandler {
       const q = sqlTag(this.sql);
       const ppto = await bloquearPresupuesto(this.sql, tx, idPresupuesto);
       const modo = modoCotizacion(ppto.estado);
-      const [actual] = await q.rows<{ id: number; id_proveedor: number; id_detalle_categoria: number | null }>(
-        { id: I, id_proveedor: I, id_detalle_categoria: IN },
+      const [actual] = await q.rows<{ id: number; id_proveedor: number; id_detalle_categoria: number | null; total_global: string }>(
+        { id: I, id_proveedor: I, id_detalle_categoria: IN, total_global: T },
         tx,
       )`
-        SELECT id, id_proveedor, id_detalle_categoria FROM ppto_cotizacion
+        SELECT id, id_proveedor, id_detalle_categoria, total_global::text AS total_global FROM ppto_cotizacion
          WHERE id = ${id}::int AND id_presupuesto = ${idPresupuesto}::int FOR UPDATE`;
       if (!actual) throw new NotFoundException(`Cotización ${id} no encontrada en el presupuesto ${idPresupuesto}`);
       if (actual.id_detalle_categoria === null) {
@@ -386,7 +392,11 @@ export class CotizacionPptoHandler {
          WHERE id = ${id}::int`;
 
       if (prorrateo) await this.reprorrateo.reemplazarLineas(tx, id, prorrateo.lineas, prorrateo.items);
-      await this.aplicarMarcaDeAdjudicacion(tx, ppto, id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null);
+      await this.aplicarMarcaDeAdjudicacion(tx, ppto, id, dto.adjudicar, user, dto.comentario_adjudicacion ?? null, dto.sin_tres_cotizaciones, actual.id_detalle_categoria);
+      // Subir el total de la que ya gana también cuenta: si no, la regla se esquivaría editando la cotización (D-17).
+      if (dto.total !== undefined && dto.adjudicar !== false && Number(dto.total) > Number(actual.total_global) + 0.005 && (await yaGanaLaSubpartida(this.sql, tx, actual.id_detalle_categoria, id))) {
+        await exigirCotizacionesSuficientes(this.sql, tx, actual.id_detalle_categoria, id, { sinTres: dto.sin_tres_cotizaciones, motivo: dto.comentario_adjudicacion });
+      }
       // Si ya ganaba la subpartida y al volver a prorratear entró un ítem nuevo, la gana completa (nunca queda a medias).
       if (prorrateo && dto.adjudicar === undefined) await this.reprorrateo.completarGanadora(tx, ppto, id, user);
       // Cambiar el total o las condiciones de la cotización ganadora también actualiza el FUR y sus órdenes provisionales.
@@ -445,6 +455,8 @@ export class CotizacionPptoHandler {
     adjudicar: boolean | undefined,
     user: AuthUser | undefined,
     comentario: string | null,
+    sinTres: boolean | undefined,
+    idSubpartida: number | null,
   ): Promise<void> {
     if (adjudicar === undefined) return;
     const q = sqlTag(this.sql);
@@ -457,13 +469,17 @@ export class CotizacionPptoHandler {
       if (cambios.length === 0) throw new BadRequestException('La cotización no ofrece ningún ítem: no se puede adjudicar');
       if (user) await trabajadorDelUsuario(tx.orm.public, user.id, user.usuario);
       else exigirTrabajadorVinculado(null, '(sin sesión)');
+      // Regla de 1 o 3 cotizaciones (D-17): solo al cambiar de ganador.
+      if (idSubpartida !== null && !(await yaGanaLaSubpartida(this.sql, tx, idSubpartida, idCotizacion))) {
+        await exigirCotizacionesSuficientes(this.sql, tx, idSubpartida, idCotizacion, { sinTres, motivo: comentario });
+      }
     } else {
       const ganaba = await q.rows<{ id: number }>({ id: I }, tx)`
         SELECT id FROM "ppto_DetalleItems"
          WHERE id_ppto_cot_detalle_ganadora = ANY(string_to_array(${csv(lineas.map((l) => l.id)) || '0'}::text, ',')::int[])`;
       for (const g of ganaba) cambios.push({ idItem: g.id, idCotDetalle: null });
     }
-    await aplicarAdjudicacion(this.sql, tx, { presupuesto: ppto, cambios, usuario: user?.usuario ?? 'SISTEMA', comentario });
+    await aplicarAdjudicacion(this.sql, tx, { presupuesto: ppto, cambios, usuario: user?.usuario ?? 'SISTEMA', comentario: adjudicar ? comentarioConMarca(comentario, sinTres) : comentario });
   }
 
   /** Cotizaciones (con sus líneas y totales) de un presupuesto, filtradas por fase, subpartida o cotización. */

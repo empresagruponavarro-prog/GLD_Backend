@@ -6,8 +6,8 @@ import { csv } from '../../almacen/shared/oc-saldos.js';
 import { bloquearYConsultar, consultarDocumentos, type DocumentoConsultado } from '../shared/documentos-consulta.js';
 import { ConversorSoles } from '../shared/conversor-soles.js';
 import { cargarTopesAvance, type InfoTope } from '../shared/tope-avance-carga.js';
-import { superaTope } from '../shared/tope-avance.js';
 import { esViernes, redondear } from '../shared/tributos.js';
+import { marcarExceso, verificarTope } from '../shared/verificar-tope.js';
 import {
   CreateProgramacionDto,
   ListProgramacionQueryDto,
@@ -17,13 +17,6 @@ import {
 } from '../tesoreria.dto.js';
 
 const EPS = 0.005;
-
-const MARCA_EXCESO = '[POR ENCIMA DEL AVANCE]';
-/** Deja constancia en las observaciones de que el pago se programó por encima del avance (una sola vez). */
-function marcarExceso(motivo: string | undefined): string {
-  const t = (motivo ?? '').trim();
-  return t.startsWith(MARCA_EXCESO) ? t : `${MARCA_EXCESO} ${t}`;
-}
 
 export interface ProgramacionRow {
   id: number;
@@ -45,6 +38,10 @@ export interface ProgramacionRow {
   cuenta_destino: string | null;
   estado: string;
   observaciones: string | null;
+  /** Cuota de un contrato de valorización a la que se ligó el pago (plan 12). */
+  id_valorizacion: number | null;
+  cuota_tipo: string | null;
+  cuota_numero: number | null;
 }
 
 const PROG_SPEC = {
@@ -66,6 +63,9 @@ const PROG_SPEC = {
   cuenta_destino: TN,
   estado: T,
   observaciones: TN,
+  id_valorizacion: IN,
+  cuota_tipo: TN,
+  cuota_numero: IN,
 } as const;
 
 /** Saldo que todavia se puede programar de un concepto del documento (descontando pagado y programado). */
@@ -170,17 +170,23 @@ export class ProgramacionHandler {
             `El monto (${item.monto}) supera el saldo por programar (${redondear(Math.max(disponible, 0)).toFixed(2)}) de ${concepto} en ${doc.numero_documento ?? doc.id}`,
           );
         }
-        const excede = concepto === 'PROVEEDOR' && (await this.excedeAvance(doc, Number(item.monto), item.exceder_avance ?? false, item.observaciones, 0));
+        const excede = await verificarTope(this.sql, this.db.orm.public, doc, {
+          concepto,
+          monto: Number(item.monto),
+          exceder: item.exceder_avance ?? false,
+          motivo: item.observaciones,
+          idValorizacion: item.id_valorizacion,
+        });
         const observaciones = excede ? marcarExceso(item.observaciones) : item.observaciones;
         if (item.id_cuenta !== undefined) await this.validarCuenta(tx, item.id_cuenta);
         const destino = item.cuenta_destino ?? (concepto === 'DETRACCION' ? await this.cuentaDetraccionDe(tx, doc.id_anexo) : null);
         const [fila] = await q.rows<{ id: number }>({ id: I }, tx)`
           INSERT INTO pago_programado (id_documento_origen, concepto, fecha_programada, urgente, monto, medio_pago, id_cuenta,
-                                       cuenta_destino, id_programado_por, observaciones)
+                                       cuenta_destino, id_programado_por, observaciones, id_valorizacion)
           VALUES (${item.id_documento_origen}::int, ${concepto}::text, ${item.fecha_programada}::date, ${item.urgente ?? false}::boolean,
                   ${item.monto}::numeric, ${item.medio_pago}::text, NULLIF(${item.id_cuenta ?? 0}::int, 0),
                   NULLIF(${destino ?? ''}::text, ''), NULLIF(${dto.id_programado_por ?? 0}::int, 0),
-                  NULLIF(${observaciones ?? ''}::text, ''))
+                  NULLIF(${observaciones ?? ''}::text, ''), NULLIF(${item.id_valorizacion ?? 0}::int, 0))
           RETURNING id`;
         creadas.push(fila.id);
       }
@@ -219,7 +225,13 @@ export class ProgramacionHandler {
       }
       if (dto.id_cuenta !== undefined) await this.validarCuenta(tx, dto.id_cuenta);
       const motivo = dto.observaciones ?? prog.observaciones ?? undefined;
-      const excede = prog.concepto === 'PROVEEDOR' && (await this.excedeAvance(doc, Number(monto), dto.exceder_avance ?? false, motivo, Number(prog.monto)));
+      const excede = await verificarTope(this.sql, this.db.orm.public, doc, {
+        concepto: prog.concepto,
+        monto: Number(monto),
+        exceder: dto.exceder_avance ?? false,
+        motivo,
+        devolver: Number(prog.monto),
+      });
       const observacionesNuevas = excede ? marcarExceso(motivo) : dto.observaciones;
 
       await q.run(tx)`
@@ -255,26 +267,6 @@ export class ProgramacionHandler {
     if (!doc) throw new NotFoundException(`Documento de origen ${id} no encontrado`);
     if (doc.estado !== 'REGISTRADO') throw new ConflictException(`El documento ${doc.numero_documento ?? doc.id} está ${doc.estado}`);
     return doc;
-  }
-
-  /**
-   * Orden de servicio de un presupuesto (plan 09, D-13): lo pagado más lo programado no puede pasar de `neto × max(adelanto %, avance %)`.
-   * Devuelve `true` si el pago excede el tope y se permitió (con `exceder_avance` y el motivo en observaciones); 409 si excede sin permiso.
-   * `devolver` es el monto de la programación que se está cambiando (no cuenta dos veces).
-   */
-  private async excedeAvance(doc: DocumentoConsultado, monto: number, exceder: boolean, motivo: string | undefined, devolver: number): Promise<boolean> {
-    const info = (await cargarTopesAvance(this.sql, this.db.orm.public, [doc])).get(doc.id);
-    if (!info) return false;
-    if (!superaTope(info.tope, info.pagado, info.programado - devolver, monto)) return false;
-    const libre = Math.max(info.tope - info.pagado - (info.programado - devolver), 0);
-    if (!exceder) {
-      throw new ConflictException(
-        `El pago de ${doc.numero_documento ?? doc.id} supera lo que libera el avance de obra: tope ${info.tope.toFixed(2)} (adelanto ${info.adelanto_porcentaje} %, avance ${info.avance_pct} %), ya pagado o programado ${(info.pagado + info.programado - devolver).toFixed(2)}, disponible ${libre.toFixed(2)}. ` +
-          'Registre el avance en Operaciones o programe por encima del avance con «exceder_avance» y el motivo en observaciones',
-      );
-    }
-    if (!motivo || motivo.trim() === '') throw new BadRequestException('Un pago por encima del avance de obra necesita el motivo en observaciones');
-    return true;
   }
 
   private validarFecha(fecha: string, urgente: boolean, observaciones?: string): void {
@@ -316,8 +308,10 @@ export class ProgramacionHandler {
              COALESCE(a."NombreComercial", a."Anexo")::text AS proveedor, cc.centro_costo::text AS centro_costo,
              o.moneda_id::text AS moneda_id, o.moneda_simbolo::text AS moneda_simbolo, g.concepto::text AS concepto,
              g.fecha_programada::text AS fecha_programada, g.urgente, g.monto::text AS monto, g.medio_pago::text AS medio_pago,
-             g.id_cuenta, c.nombre::text AS cuenta, g.cuenta_destino::text AS cuenta_destino, g.estado::text AS estado, g.observaciones
+             g.id_cuenta, c.nombre::text AS cuenta, g.cuenta_destino::text AS cuenta_destino, g.estado::text AS estado, g.observaciones,
+             g.id_valorizacion, v.tipo::text AS cuota_tipo, v.numero AS cuota_numero
         FROM pago_programado g
+        LEFT JOIN valorizacion v ON v.id = g.id_valorizacion
         JOIN "documentosOrigen" o ON o.id = g.id_documento_origen
         LEFT JOIN anexos a ON a.id = o.id_anexo
         LEFT JOIN "CentroCostos" cc ON cc.id = o.id_centro_costo

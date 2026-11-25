@@ -18,6 +18,9 @@ import { DECIMAL_REGEX, FECHA_REGEX } from '../requerimiento/requerimiento.dto.j
 export const MEDIOS_PAGO = ['EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'DEPOSITO', 'YAPE', 'PLIN', 'OTRO'] as const;
 export type MedioPago = (typeof MEDIOS_PAGO)[number];
 
+/** Porcentaje de 0 a 100 con hasta 4 decimales. */
+export const PORCENTAJE_REGEX = /^(?:100(?:\.0{1,4})?|\d{1,2}(?:\.\d{1,4})?)$/;
+
 export class CotizacionLineaDto {
   @ApiProperty({ description: 'requerimiento_detalle.id que se cotiza' })
   @IsInt()
@@ -103,9 +106,9 @@ export class CreateCotizacionDto {
   @Min(0)
   dias_credito?: number;
 
-  @ApiPropertyOptional({ example: '30', description: '% de adelanto que pide el proveedor' })
+  @ApiPropertyOptional({ example: '30', description: '% de adelanto que pide el proveedor (0 a 100)' })
   @IsOptional()
-  @Matches(DECIMAL_REGEX)
+  @Matches(PORCENTAJE_REGEX, { message: 'adelanto_porcentaje debe ser un porcentaje entre 0 y 100' })
   adelanto_porcentaje?: string;
 
   @ApiPropertyOptional({ enum: MEDIOS_PAGO, description: 'Medio de pago que pide el proveedor' })

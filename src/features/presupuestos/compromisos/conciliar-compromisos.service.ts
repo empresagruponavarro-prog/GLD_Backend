@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../../platform/auth/jwt/auth-user.js';
 import { exigirTrabajadorVinculado, trabajadorDelUsuario } from '../../../platform/auth/usuarios/trabajador-del-usuario.js';
 import { AlmacenSql, B, I, IN, T, TN, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { altaAutomaticaDeOrdenes } from '../../valorizaciones/shared/alta-contrato.js';
 import { csv } from '../../almacen/shared/oc-saldos.js';
 import { InventarioLedger } from '../../almacen/shared/inventario-ledger.js';
 import { calcularMontosDocumento, insertarDocumentoOrigen, insertarLineasDocumento, periodoYMes } from '../../documentos/shared/documento-origen-insert.js';
@@ -14,6 +15,7 @@ import { coberturaPorOrigen, resolverCobertura } from './cobertura-origen.js';
 import {
   agruparDeseados,
   claseDe,
+  claveCompleta,
   claveGrupo,
   firmaGrupo,
   planConciliacion,
@@ -22,7 +24,6 @@ import {
   type GrupoDeseado,
   type GrupoExistente,
   type ItemDeseado,
-  type LineaFirma,
   type TipoProducto,
 } from './plan-conciliacion.js';
 
@@ -263,13 +264,15 @@ export class ConciliarCompromisosService {
         cantidad: f.cantidad,
         precioMeta: f.costo_unitario,
         precioCotizado: f.precio,
+        incluyeIgv: f.incluye_igv,
         plazoEntregaDias: f.g_plazo,
         marcaModelo: f.g_marca,
         observaciones: f.g_obs,
       };
     });
     const infoFila = new Map(filas.map((f) => [f.id_item, f]));
-    const grupos = agruparDeseados(deseados, (idCot, lineas) => firmaGrupo(cabeceras.get(idCot)!, lineas.map(aLineaFirma)));
+    // Un grupo = fase + proveedor + condiciones de la cotización (plan 12, C-1): las cotizaciones del grupo se funden en una cabecera.
+    const grupos = agruparDeseados(deseados, (idCot) => cabeceras.get(idCot)!);
 
     // 3) Lo que ya existe, con la misma huella.
     const lineasEx = conciliables.length
@@ -293,7 +296,8 @@ export class ConciliarCompromisosService {
       const cab = fur.id_cotizacion === null ? undefined : cabCopias.get(fur.id_cotizacion);
       const lineas = lineasEx.filter((l) => l.id_requerimiento === fur.id);
       const primeraFase = lineas.map((l) => (l.id_ppto_item === null ? undefined : faseDeItem.get(l.id_ppto_item))).find((x) => x !== undefined) ?? 0;
-      const clave = claveGrupo(fur.id_fase, cab?.idProveedor ?? 0, primeraFase);
+      const base = claveGrupo(fur.id_fase, cab?.idProveedor ?? 0, primeraFase);
+      const clave = cab ? claveCompleta(base, cab) : base;
       const firma = cab
         ? firmaGrupo(
             cab,
@@ -310,7 +314,7 @@ export class ConciliarCompromisosService {
             })),
           )
         : `sin-cotizacion-${fur.id}`;
-      existentes.push({ clave, idRequerimiento: fur.id, firma });
+      existentes.push({ clave, base, idRequerimiento: fur.id, firma });
       infoExistente.set(fur.id, { fur, clave });
     }
 
@@ -330,7 +334,7 @@ export class ConciliarCompromisosService {
       }
       return idTrabajador;
     };
-    const ctx = { tx, ppto, estadoDoc, hoy, infoFila, cabeceras, trabajador };
+    const ctx = { tx, ppto, estadoDoc, hoy, infoFila, trabajador };
 
     for (const e of plan.anular) {
       const f = infoExistente.get(e.idRequerimiento)!.fur;
@@ -375,7 +379,7 @@ export class ConciliarCompromisosService {
     const hoy = hoyLima();
     const { periodo, mes } = periodoYMes(hoy);
     // La fecha de emisión pasa a hoy solo si nadie la completó a mano (sigue siendo la del día en que se generó).
-    return q.run(tx)`
+    const cerradas = await q.rows<{ id: number; clase: string }>({ id: I, clase: T }, tx)`
       UPDATE "documentosOrigen"
          SET estado = 'REGISTRADO',
              fecha_emision = CASE WHEN fecha_emision::date = fecha_creacion::date THEN ${hoy}::date::timestamptz ELSE fecha_emision END,
@@ -383,16 +387,20 @@ export class ConciliarCompromisosService {
              mes = CASE WHEN fecha_emision::date = fecha_creacion::date THEN ${mes}::text ELSE mes END
        WHERE estado::text = 'PROVISIONAL'
          AND id_requerimiento IN (SELECT id FROM requerimiento
-                                   WHERE id_ppto_principal = ${ppto.id}::int AND origen::text = 'PPTO_ADJUDICACION' AND estado::text NOT IN ('ANULADO', 'RECHAZADO'))`;
+                                   WHERE id_ppto_principal = ${ppto.id}::int AND origen::text = 'PPTO_ADJUDICACION' AND estado::text NOT IN ('ANULADO', 'RECHAZADO'))
+      RETURNING id, COALESCE(clase_documento::text, '') AS clase`;
+    // Plan 12: con VALORIZACIONES_ALTA=automatica cada OS que queda registrada abre su contrato (en borrador, a la espera de los dos vistos).
+    await altaAutomaticaDeOrdenes(this.sql, tx, cerradas.filter((d) => d.clase === 'ORDEN_SERVICIO').map((d) => d.id), 'SISTEMA');
+    return cerradas.length;
   }
 
   // ------------------------------------------------------------- crear
 
-  private async crearFur(ctx: Ctx, g: GrupoDeseado): Promise<CompromisoGenerado> {
+  private async crearFur(ctx: Ctx, g: GrupoDeseado<CabeceraCotizacion>): Promise<CompromisoGenerado> {
     const { tx, ppto, hoy } = ctx;
     const q = sqlTag(this.sql);
     const trab = await ctx.trabajador();
-    const cab = ctx.cabeceras.get(g.idCotizacion)!;
+    const cab = g.cabecera;
     const fase = ctx.infoFila.get(g.items[0].idItem)!.fase;
     const numero = await this.ledger.siguienteNumero(tx, 'FUR');
     const justificacion = `[${ppto.codigo}] Compra adjudicada · Fase: ${fase} · Proveedor: ${cab.proveedor ?? cab.idProveedor}`;
@@ -488,10 +496,10 @@ export class ConciliarCompromisosService {
 
   // ------------------------------------------------------------- actualizar
 
-  private async actualizarFur(ctx: Ctx, fur: FurExistente, docs: DocExistente[], g: GrupoDeseado): Promise<CompromisoGenerado> {
+  private async actualizarFur(ctx: Ctx, fur: FurExistente, docs: DocExistente[], g: GrupoDeseado<CabeceraCotizacion>): Promise<CompromisoGenerado> {
     const { tx, ppto } = ctx;
     const q = sqlTag(this.sql);
-    const cab = ctx.cabeceras.get(g.idCotizacion)!;
+    const cab = g.cabecera;
     const fase = ctx.infoFila.get(g.items[0].idItem)!.fase;
     // Un FUR sin cotización copiada (datos incompletos) la recibe ahora.
     const idCopia = fur.id_cotizacion ?? (await this.copiarCotizacion(tx, fur.id, cab));
@@ -586,6 +594,7 @@ export class ConciliarCompromisosService {
       estado: ctx.estadoDoc,
       lineas: g.lineas,
     });
+    if (clase === 'ORDEN_SERVICIO' && ctx.estadoDoc === 'REGISTRADO') await altaAutomaticaDeOrdenes(this.sql, ctx.tx, [doc.id], 'SISTEMA');
     return [{ ...doc, clase }];
   }
 
@@ -651,7 +660,6 @@ interface Ctx {
   estadoDoc: 'PROVISIONAL' | 'REGISTRADO';
   hoy: string;
   infoFila: Map<number, FilaDeseada>;
-  cabeceras: Map<number, CabeceraCotizacion>;
   trabajador: () => Promise<number>;
 }
 
@@ -700,17 +708,4 @@ function cabeceraDe(f: FilaCabecera): CabeceraCotizacion {
   };
 }
 
-function aLineaFirma(i: ItemDeseado): LineaFirma {
-  return {
-    idItem: i.idItem,
-    idProducto: i.idProducto,
-    idSubfase: i.idSubfase,
-    cantidad: i.cantidad,
-    precioMeta: i.precioMeta,
-    precioCotizado: i.precioCotizado,
-    plazoEntregaDias: i.plazoEntregaDias,
-    marcaModelo: i.marcaModelo,
-    observaciones: i.observaciones,
-  };
-}
 

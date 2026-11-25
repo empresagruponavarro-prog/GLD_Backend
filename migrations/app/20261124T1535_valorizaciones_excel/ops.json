@@ -1,0 +1,86 @@
+[
+  {
+    "id": "column.public.condicion_servicio.descuento_fuera_lima",
+    "label": "Add column \"descuento_fuera_lima\" to \"condicion_servicio\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "descuento_fuera_lima",
+        "table": "condicion_servicio"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"descuento_fuera_lima\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "condicion_servicio",
+          "descuento_fuera_lima"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"descuento_fuera_lima\"",
+        "sql": "ALTER TABLE \"public\".\"condicion_servicio\" ADD COLUMN \"descuento_fuera_lima\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"descuento_fuera_lima\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "condicion_servicio",
+          "descuento_fuera_lima"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.valorizacion.reajuste",
+    "label": "Add column \"reajuste\" to \"valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "reajuste",
+        "table": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"reajuste\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "valorizacion",
+          "reajuste"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"reajuste\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion\" ADD COLUMN \"reajuste\" numeric DEFAULT '0'::numeric NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"reajuste\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "valorizacion",
+          "reajuste"
+        ]
+      }
+    ]
+  }
+]

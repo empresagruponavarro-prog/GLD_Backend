@@ -37,6 +37,13 @@ export class CreatePptoCotizacionDto extends OmitType(CreateCotizacionDto, ['lin
   @IsOptional()
   @IsString()
   comentario_adjudicacion?: string;
+
+  @ApiPropertyOptional({
+    description: 'Con `adjudicar`: adjudica aunque la oferta supere el Meta y haya menos de 3 cotizaciones; exige `comentario_adjudicacion` como motivo',
+  })
+  @IsOptional()
+  @IsBoolean()
+  sin_tres_cotizaciones?: boolean;
 }
 
 /**
@@ -62,6 +69,11 @@ export class AdjudicacionDto {
   @IsOptional()
   @IsString()
   comentario?: string;
+
+  @ApiPropertyOptional({ description: 'Adjudica aunque la oferta supere el Meta y haya menos de 3 cotizaciones; exige `comentario` como motivo' })
+  @IsOptional()
+  @IsBoolean()
+  sin_tres_cotizaciones?: boolean;
 }
 
 // ---------------------------------------------------------------- respuesta

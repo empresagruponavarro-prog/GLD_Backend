@@ -15,6 +15,7 @@ import { RequerimientosModule } from './features/requerimientos/requerimientos.m
 import { OperacionesObraModule } from './features/operaciones-obra/operaciones-obra.module.js';
 import { ProyectosCatalogosModule } from './features/proyectos-catalogos/proyectos-catalogos.module.js';
 import { TesoreriaModule } from './features/tesoreria/tesoreria.module.js';
+import { ValorizacionesModule } from './features/valorizaciones/valorizaciones.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { RrhhModule } from './features/rrhh/rrhh.module.js';
 
@@ -28,6 +29,7 @@ import { RrhhModule } from './features/rrhh/rrhh.module.js';
     DocumentosModule,
     RequerimientosModule,
     TesoreriaModule,
+    ValorizacionesModule,
     MaestrosModule,
     PresupuestosModule,
     IncidenciasModule,

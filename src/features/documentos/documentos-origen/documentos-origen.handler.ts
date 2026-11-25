@@ -5,6 +5,8 @@ import type { CodecTypes, Varchar } from '@prisma/orm-postgres/target/codec-type
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, I, T, sqlTag, type Tx } from '../../almacen/shared/almacen-sql.js';
+import { contratoDeDocumento } from '../../valorizaciones/shared/datos.js';
+import { exigirMontosEditables } from '../../valorizaciones/shared/guardas.js';
 import {
   csv,
   estadoRecepcionPorOc,
@@ -595,6 +597,10 @@ export class DocumentosOrigenHandler {
         dto.dscto_compras !== undefined ||
         dto.dscto_intervencion !== undefined ||
         dto.dscto_otros !== undefined;
+      if (cambiaMontos) {
+        const descuentosSueltos = (dto.dscto_compras ?? 0) + (dto.dscto_intervencion ?? 0) + (dto.dscto_otros ?? 0) > 0;
+        await exigirMontosEditables(this.sql, tx, id, descuentosSueltos);
+      }
       if (cambiaMontos && (await this.tieneMovimientoDePago(tx, id))) {
         throw new ConflictException('El documento tiene pagos o programaciones de pago; no se pueden cambiar sus montos');
       }
@@ -673,6 +679,9 @@ export class DocumentosOrigenHandler {
       }
       if (await this.tieneMovimientoDePago(tx, id)) {
         throw new ConflictException('El documento tiene pagos o programaciones de pago (aunque estén anulados); anúlelo en lugar de eliminarlo');
+      }
+      if (await contratoDeDocumento(this.sql, id, tx)) {
+        throw new ConflictException('La orden tiene un contrato de valorización: anúlela en lugar de eliminarla');
       }
       const orm = tx.orm.public as unknown as Orm;
       // Primero eliminar el detalle (FK); al borrar la OC se libera el saldo del requerimiento.

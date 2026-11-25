@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { AlmacenSql, I, IN, T, TN, sqlTag, type Tx } from '../shared/almacen-sql.js';
+import { exigirSalidaSinDeductivos } from '../../valorizaciones/shared/guardas.js';
 import { InventarioLedger, type MotivoMovimiento } from '../shared/inventario-ledger.js';
 import { centroTienePrincipalAprobado, validarSubfases } from '../../presupuestos/shared/subfase-presupuesto.js';
 import {
@@ -238,6 +239,7 @@ export class DocumentoHandler {
       }
       if (doc.estado === 'ANULADO') throw new ConflictException(`El documento ${id} ya está anulado`);
       if (doc.id_documento_anula !== null) throw new BadRequestException('No se puede anular un documento de reversión');
+      if (doc.naturaleza === 'SALIDA') await exigirSalidaSinDeductivos(this.sql, tx, id);
 
       const lineas = await q.rows<{ id_producto: number; cantidad: string; costo_unitario: string | null }>(
         { id_producto: I, cantidad: T, costo_unitario: TN },

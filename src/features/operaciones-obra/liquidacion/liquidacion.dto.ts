@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ResumenPlanosDto } from '../planos-requeridos/planos-requeridos.dto.js';
 
 export class RequisitoLiquidacionDto {
-  @ApiProperty({ enum: ['ESTADO', 'AVANCE', 'FIN_REAL', 'PLANOS'] }) codigo: string;
+  @ApiProperty({ enum: ['ESTADO', 'AVANCE', 'FIN_REAL', 'PLANOS', 'VALORIZACIONES'] }) codigo: string;
   @ApiProperty() cumplido: boolean;
   @ApiProperty() mensaje: string;
 }

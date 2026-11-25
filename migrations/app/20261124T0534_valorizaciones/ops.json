@@ -1,0 +1,1474 @@
+[
+  {
+    "id": "table.condicion_servicio",
+    "label": "Create table \"condicion_servicio\"",
+    "summary": "Creates table \"condicion_servicio\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "condicion_servicio"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"condicion_servicio\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"condicion_servicio\"",
+        "sql": "CREATE TABLE \"public\".\"condicion_servicio\" (\n  \"adelanto_porcentaje\" numeric DEFAULT '15'::numeric NOT NULL,\n  \"condiciones_comerciales\" text,\n  \"condiciones_generales\" text,\n  \"dias_credito\" int4,\n  \"estado\" bool DEFAULT true NOT NULL,\n  \"forma_pago\" character varying(50),\n  \"garantia_porcentaje\" numeric DEFAULT '10'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_categoria\" int4,\n  \"meses_garantia\" int4 DEFAULT 3 NOT NULL,\n  \"numero_valorizaciones\" int4 DEFAULT 3 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"condicion_servicio\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.contrato_valorizacion",
+    "label": "Create table \"contrato_valorizacion\"",
+    "summary": "Creates table \"contrato_valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "contrato_valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"contrato_valorizacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"contrato_valorizacion\"",
+        "sql": "CREATE TABLE \"public\".\"contrato_valorizacion\" (\n  \"adelanto_porcentaje\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"alcances\" text,\n  \"condiciones_comerciales\" text,\n  \"condiciones_generales\" text,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"estado\" text DEFAULT 'BORRADOR' NOT NULL,\n  \"fecha_primera\" date,\n  \"garantia_porcentaje\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_documento_origen\" int4 NOT NULL,\n  \"id_supervisor\" int4,\n  \"liquidado_en\" date,\n  \"meses_garantia\" int4 DEFAULT 3 NOT NULL,\n  \"numero_valorizaciones\" int4 DEFAULT 3 NOT NULL,\n  \"registrado_por\" character varying(255),\n  \"updated_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"visto_administracion_en\" timestamptz,\n  \"visto_administracion_por\" character varying(255),\n  \"visto_operaciones_en\" timestamptz,\n  \"visto_operaciones_por\" character varying(255),\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"contrato_valorizacion_estado_check_7819e2d6\" CHECK (\"estado\" IN ('BORRADOR', 'VIGENTE', 'LIQUIDADO', 'ANULADO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"contrato_valorizacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.deductivo_proveedor",
+    "label": "Create table \"deductivo_proveedor\"",
+    "summary": "Creates table \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"deductivo_proveedor\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"deductivo_proveedor\"",
+        "sql": "CREATE TABLE \"public\".\"deductivo_proveedor\" (\n  \"cantidad\" numeric,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"descripcion\" character varying(300) NOT NULL,\n  \"estado\" text DEFAULT 'PENDIENTE' NOT NULL,\n  \"fecha\" date NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_almacen_detalle\" int4,\n  \"id_documento_origen\" int4 NOT NULL,\n  \"id_obra_incidencia\" int4,\n  \"monto\" numeric NOT NULL,\n  \"motivo\" text NOT NULL,\n  \"motivo_anulacion\" text,\n  \"registrado_por\" character varying(255),\n  \"sustento_url\" character varying(255),\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"deductivo_proveedor_estado_check_391cc846\" CHECK (\"estado\" IN ('PENDIENTE', 'APLICADO', 'ANULADO')),\n  CONSTRAINT \"deductivo_proveedor_motivo_check_949afadb\" CHECK (\"motivo\" IN ('MATERIAL', 'INCIDENCIA', 'PENALIDAD', 'INCUMPLIMIENTO', 'APOYO', 'ADICIONAL', 'OTRO'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"deductivo_proveedor\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.valorizacion",
+    "label": "Create table \"valorizacion\"",
+    "summary": "Creates table \"valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"valorizacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"valorizacion\"",
+        "sql": "CREATE TABLE \"public\".\"valorizacion\" (\n  \"amortizacion\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"anulado_en\" timestamptz,\n  \"anulado_por\" character varying(255),\n  \"aprobado_en\" timestamptz,\n  \"aprobado_por\" character varying(255),\n  \"avance_pct\" numeric,\n  \"created_at\" timestamptz DEFAULT (now()) NOT NULL,\n  \"descuentos\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"detraccion\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"detraccion_soles\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"estado\" text DEFAULT 'BORRADOR' NOT NULL,\n  \"factura_fecha\" date,\n  \"factura_numero\" character varying(30),\n  \"factura_url\" character varying(255),\n  \"facturable\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"fecha_corte\" date,\n  \"garantia\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_contrato\" int4 NOT NULL,\n  \"motivo_anulacion\" text,\n  \"motivo_monto\" text,\n  \"neto\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"numero\" int4 NOT NULL,\n  \"numero_documento\" character varying(20),\n  \"observaciones\" text,\n  \"origen_monto\" text DEFAULT 'PLAN' NOT NULL,\n  \"registrado_por\" character varying(255),\n  \"renta_4ta\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"retencion_igv\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"tipo\" text NOT NULL,\n  \"valorizado\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"vigente\" bool,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"valorizacion_estado_check_780a42b8\" CHECK (\"estado\" IN ('BORRADOR', 'APROBADA', 'ANULADA')),\n  CONSTRAINT \"valorizacion_origen_monto_check_a9336a8b\" CHECK (\"origen_monto\" IN ('PLAN', 'AVANCE', 'SUPERVISOR')),\n  CONSTRAINT \"valorizacion_tipo_check_1fc15f0d\" CHECK (\"tipo\" IN ('ADELANTO', 'VALORIZACION', 'GARANTIA'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"valorizacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.valorizacion_deductivo",
+    "label": "Create table \"valorizacion_deductivo\"",
+    "summary": "Creates table \"valorizacion_deductivo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"valorizacion_deductivo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"valorizacion_deductivo\"",
+        "sql": "CREATE TABLE \"public\".\"valorizacion_deductivo\" (\n  \"id\" SERIAL NOT NULL,\n  \"id_deductivo\" int4 NOT NULL,\n  \"id_valorizacion\" int4 NOT NULL,\n  \"monto\" numeric NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"valorizacion_deductivo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.valorizacion_linea",
+    "label": "Create table \"valorizacion_linea\"",
+    "summary": "Creates table \"valorizacion_linea\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "valorizacion_linea"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"valorizacion_linea\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"valorizacion_linea\"",
+        "sql": "CREATE TABLE \"public\".\"valorizacion_linea\" (\n  \"avance_acumulado\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"avance_manual\" bool DEFAULT false NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"id_orden_detalle\" int4 NOT NULL,\n  \"id_valorizacion\" int4 NOT NULL,\n  \"monto_anterior\" numeric DEFAULT '0'::numeric NOT NULL,\n  \"monto_presente\" numeric DEFAULT '0'::numeric NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"valorizacion_linea\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.pago_programado.id_valorizacion",
+    "label": "Add column \"id_valorizacion\" to \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "id_valorizacion",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"id_valorizacion\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "pago_programado",
+          "id_valorizacion"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"id_valorizacion\"",
+        "sql": "ALTER TABLE \"public\".\"pago_programado\" ADD COLUMN \"id_valorizacion\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"id_valorizacion\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "pago_programado",
+          "id_valorizacion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.condicion_servicio.condicion_servicio_id_categoria_key",
+    "label": "Add unique constraint on \"condicion_servicio\" (id_categoria)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "condicion_servicio_id_categoria_key",
+        "table": "condicion_servicio"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"condicion_servicio_id_categoria_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "condicion_servicio_id_categoria_key",
+          "public",
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"condicion_servicio_id_categoria_key\"",
+        "sql": "ALTER TABLE \"public\".\"condicion_servicio\" ADD CONSTRAINT \"condicion_servicio_id_categoria_key\" UNIQUE (\"id_categoria\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"condicion_servicio_id_categoria_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "condicion_servicio_id_categoria_key",
+          "public",
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.contrato_valorizacion.contrato_valorizacion_id_documento_origen_key",
+    "label": "Add unique constraint on \"contrato_valorizacion\" (id_documento_origen)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "contrato_valorizacion_id_documento_origen_key",
+        "table": "contrato_valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"contrato_valorizacion_id_documento_origen_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_documento_origen_key",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"contrato_valorizacion_id_documento_origen_key\"",
+        "sql": "ALTER TABLE \"public\".\"contrato_valorizacion\" ADD CONSTRAINT \"contrato_valorizacion_id_documento_origen_key\" UNIQUE (\"id_documento_origen\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"contrato_valorizacion_id_documento_origen_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_documento_origen_key",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.valorizacion.valorizacion_numero_documento_key",
+    "label": "Add unique constraint on \"valorizacion\" (numero_documento)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "valorizacion_numero_documento_key",
+        "table": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"valorizacion_numero_documento_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_numero_documento_key",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"valorizacion_numero_documento_key\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion\" ADD CONSTRAINT \"valorizacion_numero_documento_key\" UNIQUE (\"numero_documento\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"valorizacion_numero_documento_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_numero_documento_key",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.valorizacion.valorizacion_id_contrato_tipo_numero_vigente_key",
+    "label": "Add unique constraint on \"valorizacion\" (id_contrato, tipo, numero, vigente)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "valorizacion_id_contrato_tipo_numero_vigente_key",
+        "table": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"valorizacion_id_contrato_tipo_numero_vigente_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_id_contrato_tipo_numero_vigente_key",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"valorizacion_id_contrato_tipo_numero_vigente_key\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion\" ADD CONSTRAINT \"valorizacion_id_contrato_tipo_numero_vigente_key\" UNIQUE (\"id_contrato\", \"tipo\", \"numero\", \"vigente\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"valorizacion_id_contrato_tipo_numero_vigente_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_id_contrato_tipo_numero_vigente_key",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.valorizacion_deductivo.valorizacion_deductivo_id_valorizacion_id_deductivo_key",
+    "label": "Add unique constraint on \"valorizacion_deductivo\" (id_valorizacion, id_deductivo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "valorizacion_deductivo_id_valorizacion_id_deductivo_key",
+        "table": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"valorizacion_deductivo_id_valorizacion_id_deductivo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_valorizacion_id_deductivo_key",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"valorizacion_deductivo_id_valorizacion_id_deductivo_key\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion_deductivo\" ADD CONSTRAINT \"valorizacion_deductivo_id_valorizacion_id_deductivo_key\" UNIQUE (\"id_valorizacion\", \"id_deductivo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"valorizacion_deductivo_id_valorizacion_id_deductivo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_valorizacion_id_deductivo_key",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.contrato_valorizacion.contrato_valorizacion_id_supervisor_idx_0dfc7298",
+    "label": "Create index \"contrato_valorizacion_id_supervisor_idx_0dfc7298\" on \"contrato_valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "contrato_valorizacion_id_supervisor_idx_0dfc7298",
+        "table": "contrato_valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"contrato_valorizacion_id_supervisor_idx_0dfc7298\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrato_valorizacion_id_supervisor_idx_0dfc7298\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"contrato_valorizacion_id_supervisor_idx_0dfc7298\"",
+        "sql": "CREATE INDEX \"contrato_valorizacion_id_supervisor_idx_0dfc7298\" ON \"public\".\"contrato_valorizacion\" (\"id_supervisor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"contrato_valorizacion_id_supervisor_idx_0dfc7298\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"contrato_valorizacion_id_supervisor_idx_0dfc7298\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.deductivo_proveedor.deductivo_proveedor_id_almacen_detalle_idx_5721fa31",
+    "label": "Create index \"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "deductivo_proveedor_id_almacen_detalle_idx_5721fa31",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\"",
+        "sql": "CREATE INDEX \"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\" ON \"public\".\"deductivo_proveedor\" (\"id_almacen_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_almacen_detalle_idx_5721fa31\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.deductivo_proveedor.deductivo_proveedor_id_documento_origen_idx_90e8b67c",
+    "label": "Create index \"deductivo_proveedor_id_documento_origen_idx_90e8b67c\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "deductivo_proveedor_id_documento_origen_idx_90e8b67c",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"deductivo_proveedor_id_documento_origen_idx_90e8b67c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"deductivo_proveedor_id_documento_origen_idx_90e8b67c\"",
+        "sql": "CREATE INDEX \"deductivo_proveedor_id_documento_origen_idx_90e8b67c\" ON \"public\".\"deductivo_proveedor\" (\"id_documento_origen\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"deductivo_proveedor_id_documento_origen_idx_90e8b67c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_documento_origen_idx_90e8b67c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.deductivo_proveedor.deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6",
+    "label": "Create index \"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\"",
+        "sql": "CREATE INDEX \"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\" ON \"public\".\"deductivo_proveedor\" (\"id_obra_incidencia\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"deductivo_proveedor_id_obra_incidencia_idx_fe4f8ed6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.pago_programado.pago_programado_id_valorizacion_idx_5f92de6f",
+    "label": "Create index \"pago_programado_id_valorizacion_idx_5f92de6f\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "pago_programado_id_valorizacion_idx_5f92de6f",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"pago_programado_id_valorizacion_idx_5f92de6f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"pago_programado_id_valorizacion_idx_5f92de6f\"",
+        "sql": "CREATE INDEX \"pago_programado_id_valorizacion_idx_5f92de6f\" ON \"public\".\"pago_programado\" (\"id_valorizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"pago_programado_id_valorizacion_idx_5f92de6f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"pago_programado_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.valorizacion.valorizacion_id_contrato_idx_a1795884",
+    "label": "Create index \"valorizacion_id_contrato_idx_a1795884\" on \"valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "valorizacion_id_contrato_idx_a1795884",
+        "table": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"valorizacion_id_contrato_idx_a1795884\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_id_contrato_idx_a1795884\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"valorizacion_id_contrato_idx_a1795884\"",
+        "sql": "CREATE INDEX \"valorizacion_id_contrato_idx_a1795884\" ON \"public\".\"valorizacion\" (\"id_contrato\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"valorizacion_id_contrato_idx_a1795884\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_id_contrato_idx_a1795884\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.valorizacion_deductivo.valorizacion_deductivo_id_deductivo_idx_a532faa2",
+    "label": "Create index \"valorizacion_deductivo_id_deductivo_idx_a532faa2\" on \"valorizacion_deductivo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "valorizacion_deductivo_id_deductivo_idx_a532faa2",
+        "table": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"valorizacion_deductivo_id_deductivo_idx_a532faa2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo_id_deductivo_idx_a532faa2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"valorizacion_deductivo_id_deductivo_idx_a532faa2\"",
+        "sql": "CREATE INDEX \"valorizacion_deductivo_id_deductivo_idx_a532faa2\" ON \"public\".\"valorizacion_deductivo\" (\"id_deductivo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"valorizacion_deductivo_id_deductivo_idx_a532faa2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo_id_deductivo_idx_a532faa2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.valorizacion_deductivo.valorizacion_deductivo_id_valorizacion_idx_5f92de6f",
+    "label": "Create index \"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\" on \"valorizacion_deductivo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "valorizacion_deductivo_id_valorizacion_idx_5f92de6f",
+        "table": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\"",
+        "sql": "CREATE INDEX \"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\" ON \"public\".\"valorizacion_deductivo\" (\"id_valorizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_deductivo_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.valorizacion_linea.valorizacion_linea_id_orden_detalle_idx_af29857d",
+    "label": "Create index \"valorizacion_linea_id_orden_detalle_idx_af29857d\" on \"valorizacion_linea\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "valorizacion_linea_id_orden_detalle_idx_af29857d",
+        "table": "valorizacion_linea"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"valorizacion_linea_id_orden_detalle_idx_af29857d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea_id_orden_detalle_idx_af29857d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"valorizacion_linea_id_orden_detalle_idx_af29857d\"",
+        "sql": "CREATE INDEX \"valorizacion_linea_id_orden_detalle_idx_af29857d\" ON \"public\".\"valorizacion_linea\" (\"id_orden_detalle\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"valorizacion_linea_id_orden_detalle_idx_af29857d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea_id_orden_detalle_idx_af29857d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.valorizacion_linea.valorizacion_linea_id_valorizacion_idx_5f92de6f",
+    "label": "Create index \"valorizacion_linea_id_valorizacion_idx_5f92de6f\" on \"valorizacion_linea\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "valorizacion_linea_id_valorizacion_idx_5f92de6f",
+        "table": "valorizacion_linea"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"valorizacion_linea_id_valorizacion_idx_5f92de6f\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"valorizacion_linea_id_valorizacion_idx_5f92de6f\"",
+        "sql": "CREATE INDEX \"valorizacion_linea_id_valorizacion_idx_5f92de6f\" ON \"public\".\"valorizacion_linea\" (\"id_valorizacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"valorizacion_linea_id_valorizacion_idx_5f92de6f\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"valorizacion_linea_id_valorizacion_idx_5f92de6f\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.condicion_servicio.condicion_servicio_id_categoria_fkey",
+    "label": "Add foreign key \"condicion_servicio_id_categoria_fkey\" on \"condicion_servicio\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "condicion_servicio_id_categoria_fkey",
+        "table": "condicion_servicio"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"condicion_servicio_id_categoria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "condicion_servicio_id_categoria_fkey",
+          "public",
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"condicion_servicio_id_categoria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"condicion_servicio\"\nADD CONSTRAINT \"condicion_servicio_id_categoria_fkey\"\nFOREIGN KEY (\"id_categoria\")\nREFERENCES \"public\".\"categoria\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"condicion_servicio_id_categoria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "condicion_servicio_id_categoria_fkey",
+          "public",
+          "\"public\".\"condicion_servicio\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrato_valorizacion.contrato_valorizacion_id_documento_origen_fkey",
+    "label": "Add foreign key \"contrato_valorizacion_id_documento_origen_fkey\" on \"contrato_valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrato_valorizacion_id_documento_origen_fkey",
+        "table": "contrato_valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrato_valorizacion_id_documento_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrato_valorizacion_id_documento_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrato_valorizacion\"\nADD CONSTRAINT \"contrato_valorizacion_id_documento_origen_fkey\"\nFOREIGN KEY (\"id_documento_origen\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrato_valorizacion_id_documento_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.contrato_valorizacion.contrato_valorizacion_id_supervisor_fkey",
+    "label": "Add foreign key \"contrato_valorizacion_id_supervisor_fkey\" on \"contrato_valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "contrato_valorizacion_id_supervisor_fkey",
+        "table": "contrato_valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"contrato_valorizacion_id_supervisor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_supervisor_fkey",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"contrato_valorizacion_id_supervisor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"contrato_valorizacion\"\nADD CONSTRAINT \"contrato_valorizacion_id_supervisor_fkey\"\nFOREIGN KEY (\"id_supervisor\")\nREFERENCES \"public\".\"anexos\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"contrato_valorizacion_id_supervisor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "contrato_valorizacion_id_supervisor_fkey",
+          "public",
+          "\"public\".\"contrato_valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.deductivo_proveedor.deductivo_proveedor_id_documento_origen_fkey",
+    "label": "Add foreign key \"deductivo_proveedor_id_documento_origen_fkey\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "deductivo_proveedor_id_documento_origen_fkey",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"deductivo_proveedor_id_documento_origen_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"deductivo_proveedor_id_documento_origen_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"deductivo_proveedor\"\nADD CONSTRAINT \"deductivo_proveedor_id_documento_origen_fkey\"\nFOREIGN KEY (\"id_documento_origen\")\nREFERENCES \"public\".\"documentosOrigen\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"deductivo_proveedor_id_documento_origen_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_documento_origen_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.deductivo_proveedor.deductivo_proveedor_id_almacen_detalle_fkey",
+    "label": "Add foreign key \"deductivo_proveedor_id_almacen_detalle_fkey\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "deductivo_proveedor_id_almacen_detalle_fkey",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"deductivo_proveedor_id_almacen_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_almacen_detalle_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"deductivo_proveedor_id_almacen_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"deductivo_proveedor\"\nADD CONSTRAINT \"deductivo_proveedor_id_almacen_detalle_fkey\"\nFOREIGN KEY (\"id_almacen_detalle\")\nREFERENCES \"public\".\"almacen_documento_detalle\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"deductivo_proveedor_id_almacen_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_almacen_detalle_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.deductivo_proveedor.deductivo_proveedor_id_obra_incidencia_fkey",
+    "label": "Add foreign key \"deductivo_proveedor_id_obra_incidencia_fkey\" on \"deductivo_proveedor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "deductivo_proveedor_id_obra_incidencia_fkey",
+        "table": "deductivo_proveedor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"deductivo_proveedor_id_obra_incidencia_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_obra_incidencia_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"deductivo_proveedor_id_obra_incidencia_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"deductivo_proveedor\"\nADD CONSTRAINT \"deductivo_proveedor_id_obra_incidencia_fkey\"\nFOREIGN KEY (\"id_obra_incidencia\")\nREFERENCES \"public\".\"obra_incidencias_rfi\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"deductivo_proveedor_id_obra_incidencia_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "deductivo_proveedor_id_obra_incidencia_fkey",
+          "public",
+          "\"public\".\"deductivo_proveedor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.valorizacion.valorizacion_id_contrato_fkey",
+    "label": "Add foreign key \"valorizacion_id_contrato_fkey\" on \"valorizacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "valorizacion_id_contrato_fkey",
+        "table": "valorizacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"valorizacion_id_contrato_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_id_contrato_fkey",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"valorizacion_id_contrato_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion\"\nADD CONSTRAINT \"valorizacion_id_contrato_fkey\"\nFOREIGN KEY (\"id_contrato\")\nREFERENCES \"public\".\"contrato_valorizacion\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"valorizacion_id_contrato_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_id_contrato_fkey",
+          "public",
+          "\"public\".\"valorizacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.pago_programado.pago_programado_id_valorizacion_fkey",
+    "label": "Add foreign key \"pago_programado_id_valorizacion_fkey\" on \"pago_programado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "pago_programado_id_valorizacion_fkey",
+        "table": "pago_programado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"pago_programado_id_valorizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"pago_programado_id_valorizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"pago_programado\"\nADD CONSTRAINT \"pago_programado_id_valorizacion_fkey\"\nFOREIGN KEY (\"id_valorizacion\")\nREFERENCES \"public\".\"valorizacion\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"pago_programado_id_valorizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "pago_programado_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"pago_programado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.valorizacion_deductivo.valorizacion_deductivo_id_valorizacion_fkey",
+    "label": "Add foreign key \"valorizacion_deductivo_id_valorizacion_fkey\" on \"valorizacion_deductivo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "valorizacion_deductivo_id_valorizacion_fkey",
+        "table": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"valorizacion_deductivo_id_valorizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"valorizacion_deductivo_id_valorizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion_deductivo\"\nADD CONSTRAINT \"valorizacion_deductivo_id_valorizacion_fkey\"\nFOREIGN KEY (\"id_valorizacion\")\nREFERENCES \"public\".\"valorizacion\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"valorizacion_deductivo_id_valorizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.valorizacion_deductivo.valorizacion_deductivo_id_deductivo_fkey",
+    "label": "Add foreign key \"valorizacion_deductivo_id_deductivo_fkey\" on \"valorizacion_deductivo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "valorizacion_deductivo_id_deductivo_fkey",
+        "table": "valorizacion_deductivo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"valorizacion_deductivo_id_deductivo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_deductivo_fkey",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"valorizacion_deductivo_id_deductivo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion_deductivo\"\nADD CONSTRAINT \"valorizacion_deductivo_id_deductivo_fkey\"\nFOREIGN KEY (\"id_deductivo\")\nREFERENCES \"public\".\"deductivo_proveedor\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"valorizacion_deductivo_id_deductivo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_deductivo_id_deductivo_fkey",
+          "public",
+          "\"public\".\"valorizacion_deductivo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.valorizacion_linea.valorizacion_linea_id_valorizacion_fkey",
+    "label": "Add foreign key \"valorizacion_linea_id_valorizacion_fkey\" on \"valorizacion_linea\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "valorizacion_linea_id_valorizacion_fkey",
+        "table": "valorizacion_linea"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"valorizacion_linea_id_valorizacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_linea_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"valorizacion_linea_id_valorizacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion_linea\"\nADD CONSTRAINT \"valorizacion_linea_id_valorizacion_fkey\"\nFOREIGN KEY (\"id_valorizacion\")\nREFERENCES \"public\".\"valorizacion\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"valorizacion_linea_id_valorizacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_linea_id_valorizacion_fkey",
+          "public",
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.valorizacion_linea.valorizacion_linea_id_orden_detalle_fkey",
+    "label": "Add foreign key \"valorizacion_linea_id_orden_detalle_fkey\" on \"valorizacion_linea\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "valorizacion_linea_id_orden_detalle_fkey",
+        "table": "valorizacion_linea"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"valorizacion_linea_id_orden_detalle_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_linea_id_orden_detalle_fkey",
+          "public",
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"valorizacion_linea_id_orden_detalle_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"valorizacion_linea\"\nADD CONSTRAINT \"valorizacion_linea_id_orden_detalle_fkey\"\nFOREIGN KEY (\"id_orden_detalle\")\nREFERENCES \"public\".\"ordenCompraDetalle\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"valorizacion_linea_id_orden_detalle_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "valorizacion_linea_id_orden_detalle_fkey",
+          "public",
+          "\"public\".\"valorizacion_linea\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data.modulo.valorizaciones",
+    "label": "Módulos «Valorizaciones» y «Condiciones y garantías»; sin permisos por defecto: solo el Administrador",
+    "summary": "Módulos «Valorizaciones» y «Condiciones y garantías»; sin permisos por defecto: solo el Administrador",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "modulo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Módulos «Valorizaciones» y «Condiciones y garantías»; sin permisos por defecto: solo el Administrador",
+        "sql": "INSERT INTO \"public\".\"modulo\" (\"clave\", \"nombre\", \"grupo\", \"ruta\", \"orden\", \"admite_aprobar\", \"admite_anular\")\n         VALUES ('valorizaciones', 'Valorizaciones', 'Documentos', '/valorizaciones/semana', 43, true, true), ('valorizaciones.administracion', 'Condiciones y garantías', 'Documentos', '/valorizaciones/condiciones', 44, true, false)\n         ON CONFLICT (\"clave\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Módulos «Valorizaciones» y «Condiciones y garantías»; sin permisos por defecto: solo el Administrador",
+        "sql": "SELECT (SELECT count(*) FROM \"public\".\"modulo\" WHERE \"clave\" IN ('valorizaciones', 'valorizaciones.administracion')) = 2 AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.correlativo.valorizaciones",
+    "label": "Serie de correlativo VAL (valorizaciones)",
+    "summary": "Serie de correlativo VAL (valorizaciones)",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "almacen_correlativo"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Serie de correlativo VAL (valorizaciones)",
+        "sql": "INSERT INTO \"public\".\"almacen_correlativo\" (serie, ultimo) VALUES ('VAL', 0) ON CONFLICT (serie) DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Serie de correlativo VAL (valorizaciones)",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"almacen_correlativo\" WHERE serie = 'VAL') AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "data.condicion_servicio.semilla",
+    "label": "Condiciones por defecto de los contratistas: generales y por tipo de servicio",
+    "summary": "Condiciones por defecto de los contratistas: generales y por tipo de servicio",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "condicion_servicio"
+      }
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Condiciones por defecto de los contratistas: generales y por tipo de servicio",
+        "sql": "INSERT INTO \"public\".\"condicion_servicio\" (\"id_categoria\", \"adelanto_porcentaje\", \"garantia_porcentaje\", \"numero_valorizaciones\", \"meses_garantia\")\n         SELECT NULL::int, 15, 10, 3, 3 WHERE NOT EXISTS (SELECT 1 FROM \"public\".\"condicion_servicio\" WHERE \"id_categoria\" IS NULL)",
+        "params": []
+      },
+      {
+        "description": "Condiciones por defecto de los contratistas: generales y por tipo de servicio",
+        "sql": "INSERT INTO \"public\".\"condicion_servicio\" (\"id_categoria\", \"adelanto_porcentaje\", \"garantia_porcentaje\", \"numero_valorizaciones\", \"meses_garantia\")\n         SELECT c.\"id\", v.\"adelanto\", 10, 3, 3\n           FROM \"public\".\"categoria\" c\n           JOIN (VALUES ('4. CD - DRYWALL%', 20), ('7. CD - ELECTRICAS%', 15), ('5. CD - PINTURA%', 15)) AS v(\"patron\", \"adelanto\") ON c.\"descripcion\" LIKE v.\"patron\"\n         ON CONFLICT (\"id_categoria\") DO NOTHING",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify Condiciones por defecto de los contratistas: generales y por tipo de servicio",
+        "sql": "SELECT EXISTS (SELECT 1 FROM \"public\".\"condicion_servicio\" WHERE \"id_categoria\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ]
+  }
+]

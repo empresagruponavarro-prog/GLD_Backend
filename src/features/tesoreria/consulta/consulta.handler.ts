@@ -65,8 +65,10 @@ export class ConsultaHandler {
     for (const d of docs) {
       const fecha = d.fecha_emision ?? hoy;
       const totalS = await conv.aSoles(Number(d.total), d.moneda_id, d.moneda_simbolo, fecha);
-      const saldoS =
-        (await conv.aSoles(Number(d.saldo_por_pagar_proveedor), d.moneda_id, d.moneda_simbolo, fecha)) + Number(d.saldo_por_pagar_detraccion);
+      // Con contrato de valorización solo se debe lo aprobado (la garantía retenida y lo no valorizado todavía no).
+      const saldoProv = d.tiene_contrato ? Math.max(Number(d.exigible) - Number(d.pagado_proveedor), 0) : Number(d.saldo_por_pagar_proveedor);
+      const saldoDet = d.tiene_contrato ? Math.max(Number(d.exigible_detraccion) - Number(d.pagado_detraccion), 0) : Number(d.saldo_por_pagar_detraccion);
+      const saldoS = (await conv.aSoles(saldoProv, d.moneda_id, d.moneda_simbolo, fecha)) + saldoDet;
       const pagS = (await conv.aSoles(Number(d.pagado_proveedor), d.moneda_id, d.moneda_simbolo, fecha)) + Number(d.pagado_detraccion);
       const progS = (await conv.aSoles(Number(d.programado_proveedor), d.moneda_id, d.moneda_simbolo, fecha)) + Number(d.programado_detraccion);
       comprometido += totalS;

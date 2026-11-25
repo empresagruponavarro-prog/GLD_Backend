@@ -67,6 +67,13 @@ export class CotizacionPptoController {
     return this.handler.create(id, dto, user);
   }
 
+  @Get('cotizaciones/sugeridas')
+  @ApiOperation({ summary: 'Condiciones que se proponen al cotizar la subpartida (adelanto, garantía) según su tipo de servicio' })
+  @ApiQuery({ name: 'id_detalle_categoria', required: true, type: Number })
+  sugeridas(@Query('id_detalle_categoria', ParseIntPipe) idSubpartida: number) {
+    return this.handler.condicionesSugeridas(idSubpartida);
+  }
+
   @Get('cuadro-comparativo')
   @ApiOperation({ summary: 'Cuadro comparativo de una subpartida: un total por proveedor y su desglose por ítem (no sugiere ganador)' })
   @ApiQuery({ name: 'id_detalle_categoria', required: true, type: Number })

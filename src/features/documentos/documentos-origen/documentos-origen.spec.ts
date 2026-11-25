@@ -424,7 +424,8 @@ describe('documentos-origen', () => {
     });
 
     it('no permite cambiar el IGV de una OC con pagos o programaciones', async () => {
-      sqlRows.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([{ existe: true }]);
+      // 1.º bloqueo de la OC, 2.º ¿tiene contrato de valorización? (no), 3.º ¿tiene pagos o programaciones? (sí)
+      sqlRows.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([]).mockResolvedValueOnce([{ existe: true }]);
       await expect(controller.update(1, { igv: 10 })).rejects.toThrow(/pagos o programaciones/);
       expect(update).not.toHaveBeenCalled();
     });

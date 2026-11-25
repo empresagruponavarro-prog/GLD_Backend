@@ -45,7 +45,8 @@ export class PagosController {
   @Post('directo')
   @ApiOperation({ summary: 'Pagar ahora (crea la programacion y el pago en una operacion)' })
   @ApiCreatedResponse({ description: 'Pago registrado' })
-  @ApiBadRequestResponse({ description: 'Saldo, cuenta o tipo de cambio invalidos' })
+  @ApiBadRequestResponse({ description: 'Saldo, cuenta o tipo de cambio invalidos, o falta el motivo de pagar por encima del avance' })
+  @ApiConflictResponse({ description: 'El documento no esta vigente o el monto supera lo que libera el avance de obra' })
   directo(@Body() dto: PagoDirectoDto): Promise<PagoDetalle> {
     return this.handler.pagarDirecto(dto);
   }
