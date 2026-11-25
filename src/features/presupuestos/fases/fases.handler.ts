@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
-import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
+import { throwIfForeignKeyViolation, throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar, type Varchar255 } from '../../../platform/db/varchar-helpers.js';
 import {
@@ -127,7 +127,12 @@ export class PptoFasesHandler {
       ? await this.db.orm.public.ppto_Fases.first({ IdpptoFase: toVarchar(String(idOrCode)) })
       : await this.db.orm.public.ppto_Fases.first({ id: numId });
     if (!current) throw new NotFoundException(`Fase "${idOrCode}" no encontrada`);
-    await this.db.orm.public.ppto_Fases.where({ id: current.id }).delete();
+    try {
+      await this.db.orm.public.ppto_Fases.where({ id: current.id }).delete();
+    } catch (error) {
+      throwIfForeignKeyViolation(error, 'No se puede eliminar porque está en uso en presupuestos, plantillas u órdenes.');
+      throw error;
+    }
     return { deleted: true, id: current.id, code: current.IdpptoFase };
   }
 

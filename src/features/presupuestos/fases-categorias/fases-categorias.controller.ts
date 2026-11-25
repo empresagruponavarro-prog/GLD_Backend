@@ -7,7 +7,7 @@ import {
   UpdatePptoFaseCategoriaDto,
 } from './fases-categorias.dto.js';
 import { PptoFasesCategoriasHandler } from './fases-categorias.handler.js';
-import { LecturaCompartida, Modulo } from '../../../platform/auth/decorators/permisos.decorator.js';
+import { LecturaCompartida, Modulo, TambienDesde } from '../../../platform/auth/decorators/permisos.decorator.js';
 
 @ApiTags('presupuestos / categorias-fases-maestras')
 @Controller('presupuestos/categorias-fases-maestras')
@@ -32,6 +32,7 @@ export class PptoFasesCategoriasController {
     return this.handler.getById(idOrCode);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Post()
   @ApiOperation({ summary: 'Crear nueva categoría maestra de fase' })
   @ApiCreatedResponse({ type: PptoFaseCategoriaResponseDto })
@@ -39,6 +40,7 @@ export class PptoFasesCategoriasController {
     return this.handler.create(dto);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Patch(':idOrCode')
   @ApiOperation({ summary: 'Actualizar categoría de fase por ID o IdpptoFaseCategoria' })
   @ApiParam({ name: 'idOrCode', description: 'ID o IdpptoFaseCategoria' })
@@ -47,6 +49,7 @@ export class PptoFasesCategoriasController {
     return this.handler.update(idOrCode, dto);
   }
 
+  @TambienDesde('proyectos.categorias')
   @Delete(':idOrCode')
   @ApiOperation({ summary: 'Eliminar categoría de fase por ID o IdpptoFaseCategoria' })
   @ApiParam({ name: 'idOrCode', description: 'ID o IdpptoFaseCategoria' })
