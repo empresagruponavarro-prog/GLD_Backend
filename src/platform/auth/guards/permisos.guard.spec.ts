@@ -73,6 +73,14 @@ class AgendaCtl {
   @Get('pendientes') pendientes() {}
 }
 
+/** Módulo de valorizaciones: se aplica siempre en estricto (plan 12). */
+@Controller('prueba/valorizaciones')
+@Modulo('valorizaciones')
+class ValorizacionesCtl {
+  @Get() listar() {}
+  @Accion('aprobar') @Post(':id/aprobar') aprobar() {}
+}
+
 @Controller('administration/usuarios-alt')
 @Modulo('admin.usuarios')
 class UsuariosAltCtl {
@@ -132,12 +140,15 @@ function sembrar() {
     m(11, 'tesoreria.programacion', 'Programación de pagos', 'Tesorería', { admite_anular: true }),
     m(14, 'almacen.stock', 'Stock actual', 'Almacén', { activo: false }),
     m(32, 'admin.usuarios', 'Usuarios', 'Administración'),
+    m(42, 'valorizaciones', 'Valorizaciones', 'Documentos', { admite_aprobar: true, admite_anular: true }),
   ];
   bd.permisos = [
     { rol_id: 3, modulo_id: 10, ...NADA, ver: true, editar: true },
     { rol_id: 4, modulo_id: 10, ...TODO },
     { rol_id: 4, modulo_id: 14, ...TODO },
     { rol_id: 4, modulo_id: 32, ...TODO },
+    { rol_id: 4, modulo_id: 42, ...TODO },
+    { rol_id: 3, modulo_id: 42, ...NADA, ver: true },
     { rol_id: 5, modulo_id: 11, ...NADA, ver: true },
     { rol_id: 6, modulo_id: 14, ...TODO },
   ];
@@ -474,6 +485,19 @@ describe('PermisosGuard', () => {
       );
       // Con el permiso guardado, pasa.
       await expect(guard.canActivate(ctx(UsuariosCtl, 'listar', 'GET', usuario('Completo')))).resolves.toBe(true);
+    });
+
+    it('valorizaciones se aplica en estricto aun en modo auditoría: sin el permiso, 403; con él, pasa', async () => {
+      vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const guard = crearGuard('auditoria');
+      const e = await evaluar(guard, ctx(ValorizacionesCtl, 'listar', 'GET', usuario('Limitado')));
+      expect((e as ForbiddenException).getResponse()).toMatchObject({ codigo: 'SIN_PERMISO', modulo: 'valorizaciones', accion: 'ver' });
+      expect(registrar).toHaveBeenCalledWith(expect.objectContaining({ modo: 'auditoria', aplicado: true, modulo: 'valorizaciones' }));
+      // El rol Parcial solo puede ver: aprobar (un POST con @Accion('aprobar')) se niega aunque el modo sea auditoría.
+      await expect(guard.canActivate(ctx(ValorizacionesCtl, 'listar', 'GET', usuario('Parcial')))).resolves.toBe(true);
+      const a = await evaluar(guard, ctx(ValorizacionesCtl, 'aprobar', 'POST', usuario('Parcial')));
+      expect((a as ForbiddenException).getResponse()).toMatchObject({ modulo: 'valorizaciones', accion: 'aprobar' });
+      await expect(guard.canActivate(ctx(ValorizacionesCtl, 'aprobar', 'POST', usuario('Completo')))).resolves.toBe(true);
     });
 
     it('permitido: no registra nada', async () => {

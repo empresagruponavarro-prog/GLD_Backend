@@ -51,7 +51,10 @@ export const CLAVES_MODULO = [
   'rrhh.catalogos',
   // 41.º: Proyectos › Catálogos de proyecto (tipos de proyecto, tipos de plano y periodos; migración 20261105T0241_grp_cadena_obra).
   'proyectos.catalogos',
-  // 42.º: Proyectos › Catálogo de categorías (migración 20261124T1500_modulo_categorias).
+  // 42.º y 43.º: Valorizaciones de contratistas y sus condiciones/garantías (migración 20261124T0534_valorizaciones; plan 12).
+  'valorizaciones',
+  'valorizaciones.administracion',
+  // 44.º: Proyectos › Catálogo de categorías (migración 20261124T1500_modulo_categorias).
   'proyectos.categorias',
 ] as const;
 
@@ -129,6 +132,9 @@ export function esAccion(valor: string): valor is Accion {
 export const MODULOS_ADMITEN_APROBAR: readonly ClaveModulo[] = [
   'documentos.administracion',
   'requerimientos.aprobacion',
+  // Plan 12: el visto de Operaciones / aprobar una valorización, y el visto de Administración / devolver la garantía.
+  'valorizaciones',
+  'valorizaciones.administracion',
   // GRP (DG2): aprobar un presupuesto y liquidar una obra (migración 20261105T0241_grp_cadena_obra).
   'presupuestos',
   'obra',
@@ -145,6 +151,7 @@ export const MODULOS_ADMITEN_ANULAR: readonly ClaveModulo[] = [
   'almacen.transferencias',
   'almacen.prestamos',
   'almacen.inventario-inicial',
+  'valorizaciones',
 ];
 
 /** ¿El módulo admite la acción? Las 4 básicas siempre; aprobar/anular según la semilla. */
@@ -153,6 +160,12 @@ export function moduloAdmiteAccion(clave: ClaveModulo, accion: Accion): boolean 
   if (accion === 'anular') return MODULOS_ADMITEN_ANULAR.includes(clave);
   return true;
 }
+
+/**
+ * Módulos con dinero de contratistas (plan 12): como Administración, la API los aplica SIEMPRE en modo estricto. En modo auditoría
+ * (el de defecto) las negativas solo se registran, y los vistos y la aprobación de valorizaciones serían decorativos.
+ */
+export const MODULOS_ESTRICTOS_VALORIZACIONES: readonly ClaveModulo[] = ['valorizaciones', 'valorizaciones.administracion'];
 
 /**
  * Grupo "Administración": en la API se aplica SIEMPRE en modo estricto, también en modo auditoría
@@ -172,6 +185,11 @@ export const MODULOS_SIN_FILTRO_DE_AREA: readonly ClaveModulo[] = [...MODULOS_AD
 
 export function esModuloSinFiltroDeArea(clave: string): boolean {
   return MODULOS_SIN_FILTRO_DE_AREA.some((c) => c === clave);
+}
+
+/** ¿La API aplica este módulo siempre en estricto? (Administración y los de valorizaciones). */
+export function esModuloEstricto(clave: string): boolean {
+  return MODULOS_ADMINISTRACION.some((c) => c === clave) || MODULOS_ESTRICTOS_VALORIZACIONES.some((c) => c === clave);
 }
 
 export function esModuloAdministracion(clave: string): boolean {

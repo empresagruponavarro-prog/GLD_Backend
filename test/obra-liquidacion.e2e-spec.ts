@@ -286,12 +286,12 @@ describe('Catálogos, directorio, planos y liquidación (e2e)', () => {
     it('con planos obligatorios pendientes no se liquida ni se entrega el dosier', async () => {
       const l = (await api().get(`${obra()}/liquidacion`).expect(200)).body;
       expect(l).toMatchObject({ liquidada: false, puede_liquidar: false, estado_cc: 'POR LIQUIDAR', fecha_fin_real: hoy, avance_real: 100 });
-      expect(l.requisitos.map((r: { codigo: string; cumplido: boolean }) => [r.codigo, r.cumplido])).toEqual([['ESTADO', true], ['AVANCE', true], ['FIN_REAL', true], ['PLANOS', false]]);
+      expect(l.requisitos.map((r: { codigo: string; cumplido: boolean }) => [r.codigo, r.cumplido])).toEqual([['ESTADO', true], ['AVANCE', true], ['FIN_REAL', true], ['PLANOS', false], ['VALORIZACIONES', true]]);
       expect(l.planos.faltantes.map((f: { codigo: string }) => f.codigo)).toEqual(['E2E-LIQ-P2']);
 
       const liq = await api().post(`${obra()}/liquidacion`).expect(409);
       expect(liq.body.message).toMatch(/Faltan 1 plano\(s\) obligatorio\(s\)/);
-      expect(liq.body.requisitos).toHaveLength(4);
+      expect(liq.body.requisitos).toHaveLength(5);
       const dos = await api().get(`${obra()}/dosier`).expect(409);
       expect(dos.body.message).toMatch(/dosier.*faltan 1 plano/);
       expect((await ccFila()).estado).toBe('POR LIQUIDAR');

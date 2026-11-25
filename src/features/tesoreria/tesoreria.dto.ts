@@ -170,6 +170,10 @@ export class ProgramacionItemDto {
   @ApiPropertyOptional({ default: false, description: 'Pago de una orden de servicio de un presupuesto por encima de lo que libera el avance de obra: exige el motivo en observaciones' })
   @IsOptional() @IsBoolean()
   exceder_avance?: boolean;
+
+  @ApiPropertyOptional({ description: 'Orden con contrato de valorización: cuota (adelanto, valorización o garantía) a la que se liga el pago' })
+  @IsOptional() @IsInt() @Min(1)
+  id_valorizacion?: number;
 }
 
 export class CreateProgramacionDto {
@@ -324,6 +328,14 @@ export class PagoDirectoDto {
 
   @ApiPropertyOptional() @IsOptional() @IsString()
   observaciones?: string;
+
+  @ApiPropertyOptional({ default: false, description: 'Pago de una orden de servicio de un presupuesto por encima de lo que libera el avance de obra: exige el motivo en observaciones' })
+  @IsOptional() @IsBoolean()
+  exceder_avance?: boolean;
+
+  @ApiPropertyOptional({ description: 'Orden con contrato de valorización: cuota a la que se liga el pago' })
+  @IsOptional() @IsInt() @Min(1)
+  id_valorizacion?: number;
 }
 
 export class AnularPagoDto {
