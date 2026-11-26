@@ -109,7 +109,7 @@ export class ListAnexoQueryDto extends PaginationQueryDto {
   @IsInt()
   AnexoTipoDocIdeId?: number;
 
-  @ApiPropertyOptional({ description: 'Filtro parcial por anexo' })
+  @ApiPropertyOptional({ description: 'Filtro parcial por anexo o por número de documento' })
   @IsOptional()
   @IsString()
   @MaxLength(255)

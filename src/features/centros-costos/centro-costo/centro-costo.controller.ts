@@ -67,6 +67,7 @@ export class CentroCostoController {
     return this.handler.getCatalogosFiltros();
   }
 
+  @TambienDesde('proyectos.categorias')
   @Get('principales')
   @ApiOperation({ summary: 'Listar centros de costos principales' })
   @ApiOkResponse({

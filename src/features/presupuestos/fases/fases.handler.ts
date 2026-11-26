@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, or } from '@prisma/orm-postgres/orm-client';
-import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
-import { throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
+import { toPaginated, type Paginated } from '../../../platform/db/pagination.js';
+import { throwIfForeignKeyViolation, throwIfUniqueViolation } from '../../../platform/db/pg-errors.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
 import { toVarchar, type Varchar255 } from '../../../platform/db/varchar-helpers.js';
 import {
@@ -82,13 +82,14 @@ export class PptoFasesHandler {
     try {
       const created = await this.db.orm.public.ppto_Fases.create({
         IdpptoFase: toVarchar(dto.IdpptoFase),
-        id_empresa: dto.id_empresa,
-        id_centro_costos_principal: dto.id_centro_costos_principal,
+        id_empresa: dto.id_empresa ?? null,
+        id_centro_costos_principal: dto.id_centro_costos_principal ?? null,
         FaseProyecto: toVarchar(dto.FaseProyecto),
       });
       return created as PptoFaseResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdpptoFase "${dto.IdpptoFase}" ya existe`);
+      throwIfForeignKeyViolation(error, 'La empresa o cadena seleccionada no existe');
       throw error;
     }
   }
@@ -102,8 +103,8 @@ export class PptoFasesHandler {
     const id = current.id;
     const data: {
       IdpptoFase?: Varchar255;
-      id_empresa?: number;
-      id_centro_costos_principal?: number;
+      id_empresa?: number | null;
+      id_centro_costos_principal?: number | null;
       FaseProyecto?: Varchar255;
     } = {};
     if (dto.IdpptoFase !== undefined) data.IdpptoFase = toVarchar(dto.IdpptoFase);
@@ -117,6 +118,10 @@ export class PptoFasesHandler {
       return row as PptoFaseResponseDto;
     } catch (error) {
       throwIfUniqueViolation(error, `El IdpptoFase ya existe`);
+      throwIfForeignKeyViolation(
+        error,
+        'No se pudo actualizar la partida: el código está referenciado o la empresa/cadena no existe',
+      );
       throw error;
     }
   }
@@ -127,8 +132,16 @@ export class PptoFasesHandler {
       ? await this.db.orm.public.ppto_Fases.first({ IdpptoFase: toVarchar(String(idOrCode)) })
       : await this.db.orm.public.ppto_Fases.first({ id: numId });
     if (!current) throw new NotFoundException(`Fase "${idOrCode}" no encontrada`);
-    await this.db.orm.public.ppto_Fases.where({ id: current.id }).delete();
-    return { deleted: true, id: current.id, code: current.IdpptoFase };
+    try {
+      await this.db.orm.public.ppto_Fases.where({ id: current.id }).delete();
+      return { deleted: true, id: current.id, code: current.IdpptoFase };
+    } catch (error) {
+      throwIfForeignKeyViolation(
+        error,
+        'No se puede eliminar la partida porque está siendo usada en presupuestos, requerimientos u órdenes de compra',
+      );
+      throw error;
+    }
   }
 
   async getCategoriasDeFase(idpptoFase: string) {

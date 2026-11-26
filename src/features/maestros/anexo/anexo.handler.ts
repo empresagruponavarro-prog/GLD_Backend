@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and } from '@prisma/orm-postgres/orm-client';
+import { and, or } from '@prisma/orm-postgres/orm-client';
 import type { Varchar } from '@prisma/orm-postgres/target/codec-types';
 import { pageParams, toPaginated, type Paginated } from '../../../platform/db/pagination.js';
 import { DB, type Database } from '../../../prisma/prisma.module.js';
@@ -70,7 +70,9 @@ export class AnexoHandler {
             ...(query.AnexoTipoDocIdeId !== undefined
               ? [t.AnexoTipoDocIdeId.eq(query.AnexoTipoDocIdeId)]
               : []),
-            ...(query.Anexo ? [t.Anexo.ilike(`%${query.Anexo}%`)] : []),
+            ...(query.Anexo
+              ? [or(t.Anexo.ilike(`%${query.Anexo}%`), t.NumeroDocIde.ilike(`%${query.Anexo}%`))]
+              : []),
             ...(query.NombreComercial
               ? [t.NombreComercial.ilike(`%${query.NombreComercial}%`)]
               : []),

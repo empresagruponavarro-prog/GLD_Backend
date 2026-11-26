@@ -1,7 +1,17 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { PaginationQueryDto } from '../../../platform/db/pagination.dto.js';
+
+function toNullableNumber({ value }: { value: unknown }): number | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed === '' ? null : Number(trimmed);
+  }
+  return typeof value === 'number' ? value : Number.NaN;
+}
 
 export class CreatePptoFaseDto {
   @ApiProperty({ example: 'FASE-01', description: 'Código único de la fase' })
@@ -10,19 +20,19 @@ export class CreatePptoFaseDto {
   @MaxLength(255)
   IdpptoFase: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Identificador de empresa' })
+  @ApiPropertyOptional({ example: 1, nullable: true, description: 'Identificador de empresa' })
   @IsOptional()
-  @Type(() => Number)
+  @Transform(toNullableNumber)
   @IsNumber()
   @Min(1)
-  id_empresa?: number;
+  id_empresa?: number | null;
 
-  @ApiPropertyOptional({ example: 25, description: 'ID del centro de costo principal (cadena)' })
+  @ApiPropertyOptional({ example: 25, nullable: true, description: 'ID del centro de costo principal (cadena)' })
   @IsOptional()
-  @Type(() => Number)
+  @Transform(toNullableNumber)
   @IsNumber()
   @Min(1)
-  id_centro_costos_principal?: number;
+  id_centro_costos_principal?: number | null;
 
   @ApiPropertyOptional({ example: 'ESTRUCTURAS Y ALBAÑILERIA', description: 'Nombre o descripción de la fase' })
   @IsOptional()
